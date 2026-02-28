@@ -1,9 +1,9 @@
 // ============================================================
 // YPOTI — ROLES, PERMISOS Y GESTION DE USUARIOS
-// Reads via anon client (RLS), writes via Edge Functions
+// Reads via anon client (RLS), writes via direct fetch to Edge Functions
 // ============================================================
 
-import { supabase } from "../lib/supabase";
+import { supabase, supabaseUrl, supabaseAnonKey, getStoredToken } from "../lib/supabase";
 
 // ---- Roles & permissions (unchanged) ----
 export const ROLES = {
@@ -72,6 +72,44 @@ export const ROLES = {
 // ---- Module-level cache ----
 let _users = [];
 
+// ---- Edge Function helper (same pattern as queries.js) ----
+async function invokeAdmin(body) {
+  let token = getStoredToken();
+
+  if (!token) {
+    try {
+      const result = await Promise.race([
+        supabase.auth.getSession(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("TIMEOUT")), 5000)),
+      ]);
+      token = result?.data?.session?.access_token;
+    } catch { /* timeout */ }
+  }
+
+  if (!token) {
+    throw new Error("No hay sesión activa. Por favor, inicia sesión de nuevo.");
+  }
+
+  const res = await fetch(`${supabaseUrl}/functions/v1/admin-users`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+      "apikey": supabaseAnonKey,
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const errBody = await res.json().catch(() => ({}));
+    throw new Error(errBody.error || errBody.message || `Error ${res.status}`);
+  }
+
+  const data = await res.json();
+  if (data?.error) throw new Error(data.error);
+  return data;
+}
+
 // ============================================================
 // INIT — Load profiles from Supabase (anon + RLS)
 // ============================================================
@@ -96,8 +134,6 @@ export async function initUsers() {
       avatar: p.avatar,
       active: p.active !== false,
     }));
-
-    console.log("[Users] Initialized from Supabase:", _users.length, "users");
   } catch (err) {
     console.error("[Users] Init failed:", err);
   }
@@ -112,24 +148,20 @@ export function getUsers() {
 }
 
 // ============================================================
-// ASYNC CRUD — Write via Edge Functions
+// ASYNC CRUD — Write via Edge Functions (direct fetch)
 // ============================================================
 
 /** Create a new user (auth + profile) */
 export async function addUser(user) {
-  const { data, error } = await supabase.functions.invoke("admin-users", {
-    body: {
-      action: "create",
-      email: user.email || user.username,
-      name: user.name,
-      role: user.role || "solicitante",
-      establishment: user.establishment || null,
-      position: user.position || null,
-      avatar: user.avatar || (user.name || "").slice(0, 2).toUpperCase(),
-    },
+  const data = await invokeAdmin({
+    action: "create",
+    email: user.email || user.username,
+    name: user.name,
+    role: user.role || "solicitante",
+    establishment: user.establishment || null,
+    position: user.position || null,
+    avatar: user.avatar || (user.name || "").slice(0, 2).toUpperCase(),
   });
-  if (error) throw new Error(error.message);
-  if (data?.error) throw new Error(data.error);
 
   await initUsers(); // refresh cache
   return _users.find(u => u.id === data.userId);
@@ -137,11 +169,7 @@ export async function addUser(user) {
 
 /** Update an existing user's profile */
 export async function updateUser(id, updates) {
-  const { data, error } = await supabase.functions.invoke("admin-users", {
-    body: { action: "update", userId: id, updates },
-  });
-  if (error) throw new Error(error.message);
-  if (data?.error) throw new Error(data.error);
+  await invokeAdmin({ action: "update", userId: id, updates });
 
   // Update local cache immediately
   _users = _users.map(u => u.id === id ? { ...u, ...updates } : u);
@@ -149,11 +177,7 @@ export async function updateUser(id, updates) {
 
 /** Reset a user's password to default */
 export async function resetPassword(userId) {
-  const { data, error } = await supabase.functions.invoke("admin-users", {
-    body: { action: "reset-password", userId },
-  });
-  if (error) throw new Error(error.message);
-  if (data?.error) throw new Error(data.error);
+  await invokeAdmin({ action: "reset-password", userId });
 }
 
 export async function resetUsersToDefault() {

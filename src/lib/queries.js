@@ -1,27 +1,53 @@
 // ============================================================
 // YPOTI — Supabase Query Layer
 // READs: anon client (RLS handles filtering)
-// WRITEs: Edge Functions (service_role server-side)
+// WRITEs: Edge Functions via direct fetch (bypasses supabase-js locks)
 // ============================================================
 
-import { supabase } from "./supabase";
+import { supabase, supabaseUrl, supabaseAnonKey, getStoredToken } from "./supabase";
 
-// ---- Edge Function helper: ensures JWT is always sent ----
+// ---- Edge Function helper: direct fetch, no supabase-js dependency ----
+// Uses the stored JWT from the fetch-based login.  Falls back to
+// supabase.auth.getSession() only if the stored token is missing.
 async function invokeEdgeFunction(functionName, body) {
-  const { data: { session } } = await supabase.auth.getSession();
+  let token = getStoredToken();
 
-  if (!session?.access_token) {
+  // Fallback: try supabase-js session (with 5s timeout to avoid hangs)
+  if (!token) {
+    try {
+      const result = await Promise.race([
+        supabase.auth.getSession(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("TIMEOUT")), 5000)),
+      ]);
+      token = result?.data?.session?.access_token;
+    } catch {
+      // getSession timed out or failed — token stays null
+    }
+  }
+
+  if (!token) {
     throw new Error("No hay sesión activa. Por favor, inicia sesión de nuevo.");
   }
 
-  const { data, error } = await supabase.functions.invoke(functionName, {
-    body,
+  // Direct fetch to Edge Function endpoint (bypasses supabase.functions.invoke
+  // which can also be blocked by the supabase-js init lock)
+  const res = await fetch(`${supabaseUrl}/functions/v1/${functionName}`, {
+    method: "POST",
     headers: {
-      Authorization: `Bearer ${session.access_token}`,
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+      "apikey": supabaseAnonKey,
     },
+    body: JSON.stringify(body),
   });
 
-  if (error) throw new Error(error.message);
+  if (!res.ok) {
+    const errBody = await res.json().catch(() => ({}));
+    const msg = errBody.error || errBody.message || `Error ${res.status}`;
+    throw new Error(msg);
+  }
+
+  const data = await res.json();
   if (data?.error) throw new Error(data.error);
   return data;
 }
@@ -212,7 +238,7 @@ export async function fetchSingleRequest(requestUuid) {
 }
 
 // ============================================================
-// WRITE OPERATIONS — Via Edge Functions
+// WRITE OPERATIONS — Via Edge Functions (direct fetch)
 // ============================================================
 
 /** Insert a new request (status: borrador) + its items */

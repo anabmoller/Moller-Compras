@@ -3,7 +3,43 @@
 // Reads via anon client (RLS), writes via Edge Functions
 // ============================================================
 
-import { supabase } from "../lib/supabase";
+import { supabase, supabaseUrl, supabaseAnonKey, getStoredToken } from "../lib/supabase";
+
+// ---- Edge Function helper (same pattern as queries.js) ----
+async function invokeAdminData(body) {
+  let token = getStoredToken();
+
+  if (!token) {
+    try {
+      const result = await Promise.race([
+        supabase.auth.getSession(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("TIMEOUT")), 5000)),
+      ]);
+      token = result?.data?.session?.access_token;
+    } catch { /* timeout */ }
+  }
+
+  if (!token) throw new Error("No hay sesión activa.");
+
+  const res = await fetch(`${supabaseUrl}/functions/v1/admin-data`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+      "apikey": supabaseAnonKey,
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const errBody = await res.json().catch(() => ({}));
+    throw new Error(errBody.error || errBody.message || `Error ${res.status}`);
+  }
+
+  const data = await res.json();
+  if (data?.error) throw new Error(data.error);
+  return data;
+}
 
 // ---- Module-level cache ----
 let _params = {
@@ -110,42 +146,23 @@ export function getCompanies() { return _params.companies; }
 // ============================================================
 
 export async function addParameterItem(category, item) {
-  const { data, error } = await supabase.functions.invoke("admin-data", {
-    body: { action: "add-parameter", category, item },
-  });
-  if (error) throw new Error(error.message);
-  if (data?.error) throw new Error(data.error);
-
+  const data = await invokeAdminData({ action: "add-parameter", category, item });
   await initParameters(); // refresh cache
   return data?.data;
 }
 
 export async function updateParameterItem(category, id, updates) {
-  // Find the UUID for this item
   const item = (_params[category] || []).find(i => i.id === id);
   const uuid = item?._uuid || id;
-
-  const { data, error } = await supabase.functions.invoke("admin-data", {
-    body: { action: "update-parameter", category, id: uuid, updates },
-  });
-  if (error) throw new Error(error.message);
-  if (data?.error) throw new Error(data.error);
-
+  await invokeAdminData({ action: "update-parameter", category, id: uuid, updates });
   await initParameters(); // refresh cache
 }
 
 export async function toggleParameterItem(category, id) {
   const item = (_params[category] || []).find(i => i.id === id);
   if (!item) return;
-
   const uuid = item._uuid || id;
-
-  const { data, error } = await supabase.functions.invoke("admin-data", {
-    body: { action: "toggle-parameter", category, id: uuid },
-  });
-  if (error) throw new Error(error.message);
-  if (data?.error) throw new Error(data.error);
-
+  await invokeAdminData({ action: "toggle-parameter", category, id: uuid });
   await initParameters(); // refresh cache
 }
 

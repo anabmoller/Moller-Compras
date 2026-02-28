@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
-import { supabase } from "../lib/supabase";
+import { supabase, supabaseUrl, supabaseAnonKey, setStoredToken, recreateClient } from "../lib/supabase";
 import {
   hasPermission, getUsers, initUsers,
   addUser as addUserToDb, updateUser as updateUserInDb,
@@ -69,9 +69,7 @@ export function AuthProvider({ children }) {
     const safetyTimeout = setTimeout(() => {
       if (mounted) {
         console.warn("[Auth] Session check timed out — clearing stale session, showing login");
-        // Clear stale localStorage token that may be blocking the supabase-js client
-        const baseUrl = import.meta.env.VITE_SUPABASE_URL;
-        const ref = baseUrl?.match(/https:\/\/([^.]+)/)?.[1];
+        const ref = supabaseUrl?.match(/https:\/\/([^.]+)/)?.[1];
         if (ref) {
           try { localStorage.removeItem(`sb-${ref}-auth-token`); } catch {}
         }
@@ -159,8 +157,6 @@ export function AuthProvider({ children }) {
     }
 
     const email = `${cleanUsername}@${EMAIL_DOMAIN}`;
-    const baseUrl = import.meta.env.VITE_SUPABASE_URL;
-    const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
     try {
       // Step 1: Authenticate via Auth REST API (10s timeout)
@@ -168,11 +164,11 @@ export function AuthProvider({ children }) {
       const authTimeout = setTimeout(() => authController.abort(), 10000);
 
       const authRes = await fetch(
-        `${baseUrl}/auth/v1/token?grant_type=password`,
+        `${supabaseUrl}/auth/v1/token?grant_type=password`,
         {
           method: "POST",
           headers: {
-            "apikey": anonKey,
+            "apikey": supabaseAnonKey,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ email, password }),
@@ -204,10 +200,10 @@ export function AuthProvider({ children }) {
       const profileTimeout = setTimeout(() => profileController.abort(), 10000);
 
       const profileRes = await fetch(
-        `${baseUrl}/rest/v1/profiles?id=eq.${authUser.id}&select=*`,
+        `${supabaseUrl}/rest/v1/profiles?id=eq.${authUser.id}&select=*`,
         {
           headers: {
-            "apikey": anonKey,
+            "apikey": supabaseAnonKey,
             "Authorization": `Bearer ${access_token}`,
           },
           signal: profileController.signal,
@@ -231,16 +227,24 @@ export function AuthProvider({ children }) {
         return { success: false, error: "Tu cuenta está desactivada" };
       }
 
-      // Step 3: Hydrate supabase-js client (fire-and-forget)
-      // Clear any stale session from localStorage first
-      const projectRef = baseUrl.match(/https:\/\/([^.]+)/)?.[1];
-      if (projectRef) {
-        try { localStorage.removeItem(`sb-${projectRef}-auth-token`); } catch {}
-      }
-      // setSession hydrates the client so future calls (Edge Functions, etc.) work
-      supabase.auth.setSession({
+      // Step 3: Store token for Edge Function calls + recreate supabase client
+      // The stored token is used by invokeEdgeFunction (direct fetch) immediately.
+      // Recreating the client escapes the hung _initialize() lock from the old client.
+      setStoredToken(access_token);
+
+      const freshClient = recreateClient();
+      // setSession on the FRESH client works instantly (no stale session to block it)
+      freshClient.auth.setSession({
         access_token,
         refresh_token,
+      }).then(() => {
+        // Update stored token on refresh events
+        freshClient.auth.onAuthStateChange((event, sess) => {
+          if (event === "TOKEN_REFRESHED" && sess?.access_token) {
+            setStoredToken(sess.access_token);
+            setSession(sess);
+          }
+        });
       }).catch(err => console.warn("[Auth] setSession hydration failed (non-fatal):", err));
 
       // Step 4: Update React state directly
@@ -267,7 +271,8 @@ export function AuthProvider({ children }) {
   // ---- Logout ----
   const logout = useCallback(async () => {
     if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
-    await supabase.auth.signOut();
+    setStoredToken(null);
+    try { await supabase.auth.signOut(); } catch {}
     setSession(null);
     setProfile(null);
     setAuthError(null);
@@ -280,30 +285,46 @@ export function AuthProvider({ children }) {
 
   // ---- Change password ----
   const changePassword = useCallback(async (newPassword) => {
-    if (!session) {
+    const token = session?.access_token;
+    const userId = session?.user?.id;
+    if (!token || !userId) {
       return { success: false, error: "No hay sesión activa" };
     }
 
     try {
-      // Update password in Supabase Auth
-      const { error: authErr } = await supabase.auth.updateUser({
-        password: newPassword,
+      // Update password via Auth REST API (bypasses potential supabase-js lock)
+      const res = await fetch(`${supabaseUrl}/auth/v1/user`, {
+        method: "PUT",
+        headers: {
+          "apikey": supabaseAnonKey,
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ password: newPassword }),
       });
 
-      if (authErr) {
-        return { success: false, error: authErr.message };
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        return { success: false, error: err.error_description || err.msg || "Error al cambiar contraseña" };
       }
 
-      // Clear force_password_change flag in profile
-      const { error: profileErr } = await supabase
-        .from("profiles")
-        .update({ force_password_change: false })
-        .eq("id", session.user.id);
+      // Clear force_password_change flag in profile via REST API
+      const profileRes = await fetch(
+        `${supabaseUrl}/rest/v1/profiles?id=eq.${userId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "apikey": supabaseAnonKey,
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+            "Prefer": "return=minimal",
+          },
+          body: JSON.stringify({ force_password_change: false }),
+        }
+      );
 
-      if (profileErr) {
-        console.error("[Auth] Failed to clear force_password_change:", profileErr.message);
-        // Password was changed successfully, just the flag update failed
-        // Still mark as success and update local state
+      if (!profileRes.ok) {
+        console.error("[Auth] Failed to clear force_password_change");
       }
 
       // Update local profile state

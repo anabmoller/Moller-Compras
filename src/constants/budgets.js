@@ -3,7 +3,43 @@
 // Reads via anon client (RLS), writes via Edge Functions
 // ============================================================
 
-import { supabase } from "../lib/supabase";
+import { supabase, supabaseUrl, supabaseAnonKey, getStoredToken } from "../lib/supabase";
+
+// ---- Edge Function helper (same pattern as queries.js) ----
+async function invokeAdminData(body) {
+  let token = getStoredToken();
+
+  if (!token) {
+    try {
+      const result = await Promise.race([
+        supabase.auth.getSession(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("TIMEOUT")), 5000)),
+      ]);
+      token = result?.data?.session?.access_token;
+    } catch { /* timeout */ }
+  }
+
+  if (!token) throw new Error("No hay sesión activa.");
+
+  const res = await fetch(`${supabaseUrl}/functions/v1/admin-data`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+      "apikey": supabaseAnonKey,
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const errBody = await res.json().catch(() => ({}));
+    throw new Error(errBody.error || errBody.message || `Error ${res.status}`);
+  }
+
+  const data = await res.json();
+  if (data?.error) throw new Error(data.error);
+  return data;
+}
 
 // ---- Module-level cache ----
 let _budgets = [];
@@ -58,23 +94,13 @@ export function getBudgetsByEstablishment(establishment) {
 // ============================================================
 
 export async function addBudget(budget) {
-  const { data, error } = await supabase.functions.invoke("admin-data", {
-    body: { action: "add-budget", budget },
-  });
-  if (error) throw new Error(error.message);
-  if (data?.error) throw new Error(data.error);
-
+  const data = await invokeAdminData({ action: "add-budget", budget });
   await initBudgets(); // refresh cache
   return data?.data;
 }
 
 export async function updateBudget(id, updates) {
-  const { data, error } = await supabase.functions.invoke("admin-data", {
-    body: { action: "update-budget", budgetId: id, updates },
-  });
-  if (error) throw new Error(error.message);
-  if (data?.error) throw new Error(data.error);
-
+  await invokeAdminData({ action: "update-budget", budgetId: id, updates });
   // Update local cache immediately
   _budgets = _budgets.map(b => b.id === id ? { ...b, ...updates } : b);
 }
