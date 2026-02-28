@@ -6,6 +6,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { colors, font, fontDisplay, inputStyle, shadows, radius } from "../../styles/theme";
 import { STATUS_FLOW, URGENCY_LEVELS, PRIORITY_LEVELS } from "../../constants";
+import { generateCommentId } from "../../utils/ids";
 import AddItemModal from "./AddItemModal";
 import QuotationPanel from "../quotations/QuotationPanel";
 import ApprovalFlow from "../approval/ApprovalFlow";
@@ -176,7 +177,7 @@ export default function RequestDetail({
   const handleAddComment = () => {
     if (!commentText.trim()) return;
     const newComment = {
-      id: `C-${Date.now()}`,
+      id: generateCommentId(),
       autor: currentUser.name,
       avatar: currentUser.avatar,
       fecha: new Date().toISOString(),

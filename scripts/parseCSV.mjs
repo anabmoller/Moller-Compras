@@ -148,7 +148,7 @@ const users = employees.map(emp => {
     id: `u${String(uid++).padStart(3,'0')}`,
     name: titleCase(`${emp.first} ${emp.last}`),
     email: username,
-    password: 'ypoti2026',
+    password: process.env.YPOTI_DEFAULT_PASSWORD || 'changeme',
     role,
     establishment: estab,
     position: titleCase(emp.position || 'Empleado'),

@@ -1,10 +1,10 @@
 import { useState, useEffect, useMemo } from "react";
 import { colors, font, fontDisplay, labelStyle, inputStyle, shadows, radius } from "../../styles/theme";
 import {
-  ESTABLISHMENTS, SECTORS, PRODUCT_TYPES, PRIORITY_LEVELS,
-  TEAM_MEMBERS, INVENTORY_ITEMS, COMPANIES,
+  PRIORITY_LEVELS, INVENTORY_ITEMS,
 } from "../../constants";
 import { useAuth } from "../../context/AuthContext";
+import { getEstablishments, getSectors, getProductTypes } from "../../constants/parameters";
 import { calculateApprovalSteps } from "../../constants/approvalConfig";
 import { findBudgetForPR, wouldExceedBudget, formatGuaranies } from "../../constants/budgets";
 import { getUsers } from "../../constants/users";
@@ -277,7 +277,7 @@ export default function NewRequestForm({ onSubmit, onCancel }) {
                   style={{ ...inputStyle, borderColor: errors.establishment ? colors.danger : colors.border }}
                 >
                   <option value="">Seleccionar...</option>
-                  {ESTABLISHMENTS.map(e => <option key={e} value={e}>{e}</option>)}
+                  {getEstablishments().filter(e => e.active).map(e => <option key={e.name} value={e.name}>{e.name}</option>)}
                 </select>
                 <FieldError field="establishment" />
               </div>
@@ -289,7 +289,7 @@ export default function NewRequestForm({ onSubmit, onCancel }) {
                   style={{ ...inputStyle, borderColor: errors.sector ? colors.danger : colors.border }}
                 >
                   <option value="">Seleccionar...</option>
-                  {SECTORS.map(s => <option key={s} value={s}>{s}</option>)}
+                  {getSectors().filter(s => s.active).map(s => <option key={s.name} value={s.name}>{s.name}</option>)}
                 </select>
                 <FieldError field="sector" />
               </div>
@@ -304,7 +304,7 @@ export default function NewRequestForm({ onSubmit, onCancel }) {
                   style={inputStyle}
                 >
                   <option value="">Seleccionar...</option>
-                  {PRODUCT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                  {getProductTypes().filter(t => t.active).map(t => <option key={t.name} value={t.name}>{t.name}</option>)}
                 </select>
               </div>
             )}
@@ -530,7 +530,7 @@ export default function NewRequestForm({ onSubmit, onCancel }) {
                 style={inputStyle}
               >
                 <option value="">Seleccionar (opcional)...</option>
-                {TEAM_MEMBERS.map(t => <option key={t} value={t}>{t}</option>)}
+                {getUsers().filter(u => u.active && ["comprador", "admin"].includes(u.role)).map(u => <option key={u.username} value={u.name}>{u.name}</option>)}
               </select>
             </div>
 

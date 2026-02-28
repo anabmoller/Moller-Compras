@@ -1,12 +1,17 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { colors, font, fontDisplay, inputStyle, labelStyle, shadows, radius } from "../../styles/theme";
-import { ESTABLISHMENTS } from "../../constants";
+import { getEstablishments } from "../../constants/parameters";
 import { useAuth } from "../../context/AuthContext";
 import { ROLES } from "../../constants/users";
 import BackButton from "../common/BackButton";
 
+// ============================================================
+// YPOTI — User Management Screen (Supabase Backend)
+// Phase 7: Async CRUD via AuthContext → users.js → Supabase
+// ============================================================
+
 export default function UserManagementScreen({ onBack }) {
-  const { users, editUser, addNewUser, resetUsers, can } = useAuth();
+  const { users, editUser, addNewUser, resetUsers, resetUserPassword, can, refreshUsers } = useAuth();
   const [search, setSearch] = useState("");
   const [filterRole, setFilterRole] = useState("all");
   const [filterEstab, setFilterEstab] = useState("all");
@@ -14,6 +19,10 @@ export default function UserManagementScreen({ onBack }) {
   const [editingUser, setEditingUser] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
+  const [actionError, setActionError] = useState("");
+
+  const establishments = useMemo(() => getEstablishments().map(e => e.name), []);
 
   if (!can("manage_users")) {
     return (
@@ -23,31 +32,89 @@ export default function UserManagementScreen({ onBack }) {
     );
   }
 
-  const filtered = useMemo(() => {
-    return users.filter(u => {
-      if (filterRole !== "all" && u.role !== filterRole) return false;
-      if (filterEstab !== "all" && u.establishment !== filterEstab) return false;
-      if (filterActive === "active" && u.active === false) return false;
-      if (filterActive === "inactive" && u.active !== false) return false;
-      if (search) {
-        const q = search.toLowerCase();
-        return (
-          u.name.toLowerCase().includes(q) ||
-          u.email.toLowerCase().includes(q) ||
-          (u.position || "").toLowerCase().includes(q)
-        );
-      }
-      return true;
-    });
-  }, [users, search, filterRole, filterEstab, filterActive]);
+  const filtered = users.filter(u => {
+    if (filterRole !== "all" && u.role !== filterRole) return false;
+    if (filterEstab !== "all" && u.establishment !== filterEstab) return false;
+    if (filterActive === "active" && u.active === false) return false;
+    if (filterActive === "inactive" && u.active !== false) return false;
+    if (search) {
+      const q = search.toLowerCase();
+      return (
+        u.name.toLowerCase().includes(q) ||
+        (u.email || "").toLowerCase().includes(q) ||
+        (u.position || "").toLowerCase().includes(q)
+      );
+    }
+    return true;
+  });
 
-  const roleCounts = useMemo(() => {
-    const counts = {};
-    users.filter(u => u.active !== false).forEach(u => {
-      counts[u.role] = (counts[u.role] || 0) + 1;
-    });
-    return counts;
-  }, [users]);
+  const roleCounts = {};
+  users.filter(u => u.active !== false).forEach(u => {
+    roleCounts[u.role] = (roleCounts[u.role] || 0) + 1;
+  });
+
+  const handleToggleActive = async (user) => {
+    setActionLoading(true);
+    setActionError("");
+    try {
+      await editUser(user.id, { active: user.active === false ? true : false });
+    } catch (err) {
+      setActionError("Error al cambiar estado del usuario");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleEditSave = async (data) => {
+    setActionLoading(true);
+    setActionError("");
+    try {
+      await editUser(editingUser.id, data);
+      setEditingUser(null);
+    } catch (err) {
+      setActionError("Error al guardar cambios");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleAddSave = async (data) => {
+    setActionLoading(true);
+    setActionError("");
+    try {
+      await addNewUser(data);
+      setShowAddForm(false);
+    } catch (err) {
+      setActionError(err.message || "Error al crear usuario");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleResetPassword = async (userId) => {
+    setActionLoading(true);
+    setActionError("");
+    try {
+      await resetUserPassword(userId);
+      setEditingUser(null);
+    } catch (err) {
+      setActionError("Error al resetear contraseña");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleResetAll = async () => {
+    setActionLoading(true);
+    try {
+      await resetUsers();
+      setShowResetConfirm(false);
+    } catch (err) {
+      setActionError("Error al refrescar usuarios");
+    } finally {
+      setActionLoading(false);
+    }
+  };
 
   return (
     <div style={{ animation: "fadeIn 0.3s ease" }}>
@@ -63,7 +130,7 @@ export default function UserManagementScreen({ onBack }) {
             Gestion de Usuarios
           </h2>
           <button
-            onClick={() => { setShowAddForm(true); setEditingUser(null); }}
+            onClick={() => { setShowAddForm(true); setEditingUser(null); setActionError(""); }}
             style={{
               padding: "8px 16px", borderRadius: radius.md, border: "none",
               background: colors.primary, color: "#fff",
@@ -73,6 +140,17 @@ export default function UserManagementScreen({ onBack }) {
             + Nuevo
           </button>
         </div>
+
+        {/* Action error banner */}
+        {actionError && (
+          <div style={{
+            background: "#fef2f2", border: "1px solid #fecaca",
+            borderRadius: radius.md, padding: "8px 12px", marginBottom: 12,
+            fontSize: 13, color: colors.danger, fontWeight: 500,
+          }}>
+            {actionError}
+          </div>
+        )}
 
         {/* Role summary pills */}
         <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16 }}>
@@ -116,7 +194,7 @@ export default function UserManagementScreen({ onBack }) {
             }}
           >
             <option value="all">Todos establec.</option>
-            {ESTABLISHMENTS.map(e => <option key={e} value={e}>{e}</option>)}
+            {establishments.map(e => <option key={e} value={e}>{e}</option>)}
           </select>
           <select
             value={filterActive}
@@ -146,8 +224,9 @@ export default function UserManagementScreen({ onBack }) {
             <UserCard
               key={user.id}
               user={user}
-              onEdit={() => { setEditingUser(user); setShowAddForm(false); }}
-              onToggleActive={() => editUser(user.id, { active: user.active === false ? true : false })}
+              onEdit={() => { setEditingUser(user); setShowAddForm(false); setActionError(""); }}
+              onToggleActive={() => handleToggleActive(user)}
+              disabled={actionLoading}
             />
           ))}
           {filtered.length === 0 && (
@@ -163,15 +242,16 @@ export default function UserManagementScreen({ onBack }) {
         <div style={{ marginTop: 24, paddingTop: 16, borderTop: `1px solid ${colors.borderLight}` }}>
           <button
             onClick={() => setShowResetConfirm(true)}
+            disabled={actionLoading}
             style={{
               width: "100%", padding: "12px", borderRadius: radius.lg,
-              border: `1px solid ${colors.danger}30`,
-              background: colors.danger + "08",
-              color: colors.danger,
+              border: `1px solid ${colors.primary}30`,
+              background: colors.primary + "08",
+              color: colors.primary,
               fontSize: 13, fontWeight: 600, fontFamily: font, cursor: "pointer",
             }}
           >
-            Resetear usuarios a datos originales
+            Refrescar lista de usuarios desde servidor
           </button>
         </div>
       </div>
@@ -181,7 +261,10 @@ export default function UserManagementScreen({ onBack }) {
         <UserFormModal
           user={editingUser}
           title="Editar Usuario"
-          onSave={(data) => { editUser(editingUser.id, data); setEditingUser(null); }}
+          establishments={establishments}
+          loading={actionLoading}
+          onSave={handleEditSave}
+          onResetPassword={() => handleResetPassword(editingUser.id)}
           onClose={() => setEditingUser(null)}
         />
       )}
@@ -191,7 +274,9 @@ export default function UserManagementScreen({ onBack }) {
         <UserFormModal
           user={null}
           title="Nuevo Usuario"
-          onSave={(data) => { addNewUser(data); setShowAddForm(false); }}
+          establishments={establishments}
+          loading={actionLoading}
+          onSave={handleAddSave}
           onClose={() => setShowAddForm(false)}
         />
       )}
@@ -199,9 +284,10 @@ export default function UserManagementScreen({ onBack }) {
       {/* Reset Confirm */}
       {showResetConfirm && (
         <ConfirmModal
-          title="Resetear Usuarios"
-          message="Se perderan todos los cambios realizados a usuarios y se restauraran los datos originales del organigrama. Esta accion no se puede deshacer."
-          onConfirm={() => { resetUsers(); setShowResetConfirm(false); }}
+          title="Refrescar Usuarios"
+          message="Se recargarán todos los usuarios desde el servidor. Los datos locales se actualizarán."
+          confirmLabel="Refrescar"
+          onConfirm={handleResetAll}
           onCancel={() => setShowResetConfirm(false)}
         />
       )}
@@ -210,7 +296,7 @@ export default function UserManagementScreen({ onBack }) {
 }
 
 // ---- User Card ----
-function UserCard({ user, onEdit, onToggleActive }) {
+function UserCard({ user, onEdit, onToggleActive, disabled }) {
   const role = ROLES[user.role];
   const isActive = user.active !== false;
 
@@ -250,7 +336,7 @@ function UserCard({ user, onEdit, onToggleActive }) {
           fontSize: 11, color: colors.textLight,
           whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
         }}>
-          @{user.email} · {user.position || "—"} · {user.establishment}
+          @{user.email || user.username} · {user.position || "—"} · {user.establishment}
         </div>
       </div>
 
@@ -268,9 +354,10 @@ function UserCard({ user, onEdit, onToggleActive }) {
       <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
         <button
           onClick={onEdit}
+          disabled={disabled}
           style={{
             width: 32, height: 32, borderRadius: radius.md, border: "none",
-            background: colors.surface, cursor: "pointer",
+            background: colors.surface, cursor: disabled ? "default" : "pointer",
             display: "flex", alignItems: "center", justifyContent: "center",
             fontSize: 14,
           }}
@@ -280,10 +367,11 @@ function UserCard({ user, onEdit, onToggleActive }) {
         </button>
         <button
           onClick={onToggleActive}
+          disabled={disabled}
           style={{
             width: 32, height: 32, borderRadius: radius.md, border: "none",
             background: isActive ? colors.danger + "10" : colors.success + "10",
-            cursor: "pointer",
+            cursor: disabled ? "default" : "pointer",
             display: "flex", alignItems: "center", justifyContent: "center",
             fontSize: 14,
           }}
@@ -297,11 +385,11 @@ function UserCard({ user, onEdit, onToggleActive }) {
 }
 
 // ---- User Form Modal ----
-function UserFormModal({ user, title, onSave, onClose }) {
+function UserFormModal({ user, title, establishments, loading, onSave, onResetPassword, onClose }) {
+  const isEditing = !!user;
   const [form, setForm] = useState({
     name: user?.name || "",
-    email: user?.email || "",
-    password: user?.password || "ypoti2026",
+    email: user?.email || user?.username || "",
     role: user?.role || "solicitante",
     establishment: user?.establishment || "General",
     position: user?.position || "",
@@ -311,14 +399,26 @@ function UserFormModal({ user, title, onSave, onClose }) {
 
   const handleSave = () => {
     if (!form.name.trim()) { setError("Nombre es obligatorio"); return; }
-    if (!form.email.trim()) { setError("Usuario es obligatorio"); return; }
-    if (!form.password) { setError("Contraseña es obligatoria"); return; }
+    if (!isEditing && !form.email.trim()) { setError("Usuario es obligatorio"); return; }
 
     // Generate avatar if empty
     const parts = form.name.trim().split(/\s+/);
     const avatar = form.avatar || (parts[0]?.charAt(0) + (parts[1]?.charAt(0) || "")).toUpperCase();
 
-    onSave({ ...form, name: form.name.trim(), email: form.email.trim(), avatar });
+    const saveData = {
+      name: form.name.trim(),
+      role: form.role,
+      establishment: form.establishment,
+      position: form.position,
+      avatar,
+    };
+
+    // Only include email for new users
+    if (!isEditing) {
+      saveData.email = form.email.trim();
+    }
+
+    onSave(saveData);
   };
 
   const set = (key, val) => { setForm(f => ({ ...f, [key]: val })); setError(""); };
@@ -358,29 +458,36 @@ function UserFormModal({ user, title, onSave, onClose }) {
             />
           </div>
 
-          {/* Username */}
-          <div>
-            <label style={labelStyle}>Usuario (login) *</label>
-            <input
-              value={form.email}
-              onChange={e => set("email", e.target.value)}
-              style={{ ...inputStyle, borderRadius: radius.md, height: 42 }}
-              placeholder="Ej: juan.rodriguez"
-              autoCapitalize="none"
-              autoCorrect="off"
-            />
-          </div>
+          {/* Username (only for new users) */}
+          {!isEditing && (
+            <div>
+              <label style={labelStyle}>Usuario (login) *</label>
+              <input
+                value={form.email}
+                onChange={e => set("email", e.target.value)}
+                style={{ ...inputStyle, borderRadius: radius.md, height: 42 }}
+                placeholder="Ej: juan.rodriguez"
+                autoCapitalize="none"
+                autoCorrect="off"
+              />
+              <div style={{ fontSize: 11, color: colors.textLight, marginTop: 4 }}>
+                La contraseña por defecto será "ypoti2026" — el usuario deberá cambiarla al primer inicio de sesión.
+              </div>
+            </div>
+          )}
 
-          {/* Password */}
-          <div>
-            <label style={labelStyle}>Contraseña *</label>
-            <input
-              value={form.password}
-              onChange={e => set("password", e.target.value)}
-              style={{ ...inputStyle, borderRadius: radius.md, height: 42 }}
-              placeholder="Contraseña"
-            />
-          </div>
+          {isEditing && (
+            <div>
+              <label style={labelStyle}>Usuario (login)</label>
+              <div style={{
+                ...inputStyle, borderRadius: radius.md, height: 42,
+                display: "flex", alignItems: "center", color: colors.textMuted,
+                background: colors.surface,
+              }}>
+                @{user.email || user.username}
+              </div>
+            </div>
+          )}
 
           {/* Role */}
           <div>
@@ -407,7 +514,8 @@ function UserFormModal({ user, title, onSave, onClose }) {
               onChange={e => set("establishment", e.target.value)}
               style={{ ...inputStyle, borderRadius: radius.md, height: 42, cursor: "pointer" }}
             >
-              {ESTABLISHMENTS.map(e => <option key={e} value={e}>{e}</option>)}
+              <option value="">Sin asignar</option>
+              {establishments.map(e => <option key={e} value={e}>{e}</option>)}
             </select>
           </div>
 
@@ -422,10 +530,28 @@ function UserFormModal({ user, title, onSave, onClose }) {
             />
           </div>
 
+          {/* Reset password button (only for editing) */}
+          {isEditing && onResetPassword && (
+            <button
+              onClick={onResetPassword}
+              disabled={loading}
+              style={{
+                padding: "10px 14px", borderRadius: radius.md,
+                border: `1px solid ${colors.warning}30`,
+                background: colors.warningLight || "#FFFBEB",
+                color: colors.warning, fontSize: 12, fontWeight: 600,
+                fontFamily: font, cursor: loading ? "default" : "pointer",
+                textAlign: "center",
+              }}
+            >
+              {loading ? "Reseteando..." : "Resetear contraseña a valor por defecto"}
+            </button>
+          )}
+
           {/* Error */}
           {error && (
             <div style={{
-              background: "#fef2f2", border: `1px solid #fecaca`,
+              background: "#fef2f2", border: "1px solid #fecaca",
               borderRadius: radius.md, padding: "8px 12px",
               fontSize: 13, color: colors.danger, fontWeight: 500,
             }}>
@@ -448,15 +574,19 @@ function UserFormModal({ user, title, onSave, onClose }) {
             </button>
             <button
               onClick={handleSave}
+              disabled={loading}
               style={{
                 flex: 1, padding: "12px", borderRadius: radius.lg,
                 border: "none",
-                background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.primaryDark} 100%)`,
+                background: loading
+                  ? colors.textMuted
+                  : `linear-gradient(135deg, ${colors.primary} 0%, ${colors.primaryDark} 100%)`,
                 color: "#fff", fontSize: 14, fontWeight: 600, fontFamily: font,
-                cursor: "pointer", boxShadow: `0 4px 12px ${colors.primary}30`,
+                cursor: loading ? "default" : "pointer",
+                boxShadow: loading ? "none" : `0 4px 12px ${colors.primary}30`,
               }}
             >
-              Guardar
+              {loading ? "Guardando..." : "Guardar"}
             </button>
           </div>
         </div>
@@ -466,7 +596,7 @@ function UserFormModal({ user, title, onSave, onClose }) {
 }
 
 // ---- Confirm Modal ----
-function ConfirmModal({ title, message, onConfirm, onCancel }) {
+function ConfirmModal({ title, message, confirmLabel = "Confirmar", onConfirm, onCancel }) {
   return (
     <div style={{
       position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)",
@@ -508,11 +638,11 @@ function ConfirmModal({ title, message, onConfirm, onCancel }) {
             style={{
               flex: 1, padding: "12px", borderRadius: radius.lg,
               border: "none",
-              background: colors.danger, color: "#fff",
+              background: colors.primary, color: "#fff",
               fontSize: 14, fontWeight: 600, fontFamily: font, cursor: "pointer",
             }}
           >
-            Confirmar
+            {confirmLabel}
           </button>
         </div>
       </div>

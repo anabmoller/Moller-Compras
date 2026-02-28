@@ -1,13 +1,13 @@
 // ============================================================
 // YPOTI — Budget Management Screen (Admin)
-// Módulo 10 — CRUD de presupuestos por área
+// Phase 7 — Async CRUD via Supabase-backed budgets.js
 // ============================================================
-import { useState } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { colors, font, fontDisplay, labelStyle, inputStyle, shadows, radius } from "../../styles/theme";
-import { ESTABLISHMENTS, SECTORS } from "../../constants";
+import { getEstablishments, getSectors } from "../../constants/parameters";
 import {
-  getBudgets, addBudget, updateBudget,
-  resetBudgetsToDefault, getBudgetPercent, getBudgetRemaining,
+  getBudgets, addBudget, updateBudget, initBudgets,
+  getBudgetPercent, getBudgetRemaining,
   formatGuaranies,
 } from "../../constants/budgets";
 import BackButton from "../common/BackButton";
@@ -15,11 +15,12 @@ import PageHeader from "../common/PageHeader";
 import ModalBackdrop from "../common/ModalBackdrop";
 
 export default function BudgetManagementScreen({ onBack }) {
-  const [budgets, setBudgets] = useState(getBudgets());
+  const [budgets, setBudgets] = useState(() => getBudgets());
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [filterEst, setFilterEst] = useState("all");
   const [showConfirmReset, setShowConfirmReset] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const [form, setForm] = useState({
     name: "", establishment: "", sector: "", period: "2026",
@@ -27,7 +28,10 @@ export default function BudgetManagementScreen({ onBack }) {
     planned: 0, consumed: 0,
   });
 
-  const refresh = () => setBudgets(getBudgets());
+  const establishments = useMemo(() => getEstablishments().map(e => e.name), []);
+  const sectors = useMemo(() => getSectors().map(s => s.name), []);
+
+  const refresh = useCallback(() => setBudgets([...getBudgets()]), []);
 
   const update = (key, val) => setForm(prev => ({ ...prev, [key]: val }));
 
@@ -46,35 +50,42 @@ export default function BudgetManagementScreen({ onBack }) {
   const totalConsumed = filtered.reduce((s, b) => s + b.consumed, 0);
   const totalPercent = totalPlanned > 0 ? Math.round((totalConsumed / totalPlanned) * 100) : 0;
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.name || !form.establishment || !form.planned) return;
-    if (editingId) {
-      updateBudget(editingId, {
-        name: form.name,
-        establishment: form.establishment,
-        sector: form.sector,
-        period: form.period,
-        startDate: form.startDate,
-        endDate: form.endDate,
-        planned: Number(form.planned),
-        consumed: Number(form.consumed),
-      });
-    } else {
-      addBudget({
-        name: form.name,
-        establishment: form.establishment,
-        sector: form.sector,
-        period: form.period,
-        startDate: form.startDate,
-        endDate: form.endDate,
-        planned: Number(form.planned),
-        consumed: Number(form.consumed),
-      });
+    setSaving(true);
+    try {
+      if (editingId) {
+        await updateBudget(editingId, {
+          name: form.name,
+          establishment: form.establishment,
+          sector: form.sector,
+          period: form.period,
+          startDate: form.startDate,
+          endDate: form.endDate,
+          planned: Number(form.planned),
+          consumed: Number(form.consumed),
+        });
+      } else {
+        await addBudget({
+          name: form.name,
+          establishment: form.establishment,
+          sector: form.sector,
+          period: form.period,
+          startDate: form.startDate,
+          endDate: form.endDate,
+          planned: Number(form.planned),
+          consumed: Number(form.consumed),
+        });
+      }
+      refresh();
+      setShowForm(false);
+      setEditingId(null);
+      setForm({ name: "", establishment: "", sector: "", period: "2026", startDate: "2026-01-01", endDate: "2026-12-31", planned: 0, consumed: 0 });
+    } catch (err) {
+      console.error("[Budget] Save failed:", err);
+    } finally {
+      setSaving(false);
     }
-    refresh();
-    setShowForm(false);
-    setEditingId(null);
-    setForm({ name: "", establishment: "", sector: "", period: "2026", startDate: "2026-01-01", endDate: "2026-12-31", planned: 0, consumed: 0 });
   };
 
   const handleEdit = (budget) => {
@@ -92,15 +103,29 @@ export default function BudgetManagementScreen({ onBack }) {
     setShowForm(true);
   };
 
-  const handleDeactivate = (id) => {
-    updateBudget(id, { active: false });
-    refresh();
+  const handleDeactivate = async (id) => {
+    setSaving(true);
+    try {
+      await updateBudget(id, { active: false });
+      refresh();
+    } catch (err) {
+      console.error("[Budget] Deactivate failed:", err);
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const handleReset = () => {
-    resetBudgetsToDefault();
-    refresh();
-    setShowConfirmReset(false);
+  const handleReset = async () => {
+    setSaving(true);
+    try {
+      await initBudgets(); // Refresh from Supabase
+      refresh();
+      setShowConfirmReset(false);
+    } catch (err) {
+      console.error("[Budget] Reset failed:", err);
+    } finally {
+      setSaving(false);
+    }
   };
 
   const barColor = (pct) => pct >= 90 ? colors.danger : pct >= 70 ? colors.warning : colors.success;
@@ -168,7 +193,7 @@ export default function BudgetManagementScreen({ onBack }) {
             style={{ ...inputStyle, flex: 1, fontSize: 13 }}
           >
             <option value="all">Todos los establecimientos</option>
-            {ESTABLISHMENTS.map(e => <option key={e} value={e}>{e}</option>)}
+            {establishments.map(e => <option key={e} value={e}>{e}</option>)}
           </select>
           <button
             onClick={() => {
@@ -291,14 +316,15 @@ export default function BudgetManagementScreen({ onBack }) {
       <div style={{ padding: "16px 20px" }}>
         <button
           onClick={() => setShowConfirmReset(true)}
+          disabled={saving}
           style={{
             width: "100%", padding: "12px", borderRadius: radius.md,
             border: `1px solid ${colors.border}`, background: colors.surface,
             color: colors.textLight, fontSize: 12, fontWeight: 500,
-            fontFamily: font, cursor: "pointer",
+            fontFamily: font, cursor: saving ? "default" : "pointer",
           }}
         >
-          Resetear presupuestos a valores por defecto
+          Refrescar presupuestos desde servidor
         </button>
       </div>
 
@@ -310,11 +336,10 @@ export default function BudgetManagementScreen({ onBack }) {
             maxWidth: 340, width: "100%",
           }}>
             <div style={{ fontSize: 16, fontWeight: 700, color: colors.text, marginBottom: 8 }}>
-              ⚠ Resetear presupuestos
+              Refrescar presupuestos
             </div>
             <div style={{ fontSize: 13, color: colors.textLight, marginBottom: 20, lineHeight: 1.5 }}>
-              Esto restaurará todos los presupuestos a los valores por defecto.
-              Los cambios realizados se perderán.
+              Se recargarán todos los presupuestos desde el servidor.
             </div>
             <div style={{ display: "flex", gap: 8 }}>
               <button
@@ -330,14 +355,15 @@ export default function BudgetManagementScreen({ onBack }) {
               </button>
               <button
                 onClick={handleReset}
+                disabled={saving}
                 style={{
                   flex: 1, padding: "12px", borderRadius: radius.md,
-                  border: "none", background: colors.danger,
+                  border: "none", background: colors.primary,
                   color: "#fff", fontSize: 13, fontWeight: 600,
-                  fontFamily: font, cursor: "pointer",
+                  fontFamily: font, cursor: saving ? "default" : "pointer",
                 }}
               >
-                Resetear
+                {saving ? "Cargando..." : "Refrescar"}
               </button>
             </div>
           </div>
@@ -385,7 +411,7 @@ export default function BudgetManagementScreen({ onBack }) {
                     style={inputStyle}
                   >
                     <option value="">Seleccionar...</option>
-                    {ESTABLISHMENTS.map(e => <option key={e} value={e}>{e}</option>)}
+                    {establishments.map(e => <option key={e} value={e}>{e}</option>)}
                   </select>
                 </div>
                 <div style={{ flex: 1 }}>
@@ -396,7 +422,7 @@ export default function BudgetManagementScreen({ onBack }) {
                     style={inputStyle}
                   >
                     <option value="">Seleccionar...</option>
-                    {SECTORS.map(s => <option key={s} value={s}>{s}</option>)}
+                    {sectors.map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
                 </div>
               </div>
@@ -470,16 +496,17 @@ export default function BudgetManagementScreen({ onBack }) {
               <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
                 {editingId && (
                   <button
-                    onClick={() => {
-                      handleDeactivate(editingId);
+                    onClick={async () => {
+                      await handleDeactivate(editingId);
                       setShowForm(false);
                       setEditingId(null);
                     }}
+                    disabled={saving}
                     style={{
                       padding: "12px 16px", borderRadius: radius.md,
                       border: `1px solid ${colors.danger}20`, background: colors.dangerLight,
                       color: colors.danger, fontSize: 12, fontWeight: 600,
-                      fontFamily: font, cursor: "pointer",
+                      fontFamily: font, cursor: saving ? "default" : "pointer",
                     }}
                   >
                     Desactivar
@@ -498,20 +525,20 @@ export default function BudgetManagementScreen({ onBack }) {
                 </button>
                 <button
                   onClick={handleSave}
-                  disabled={!form.name || !form.establishment || !form.planned}
+                  disabled={!form.name || !form.establishment || !form.planned || saving}
                   style={{
                     flex: 1, padding: "12px", borderRadius: radius.md, border: "none",
-                    background: form.name && form.establishment && form.planned
+                    background: form.name && form.establishment && form.planned && !saving
                       ? `linear-gradient(135deg, ${colors.primary} 0%, ${colors.primaryDark} 100%)`
                       : colors.border,
-                    color: form.name && form.establishment && form.planned ? "#fff" : colors.textLight,
+                    color: form.name && form.establishment && form.planned && !saving ? "#fff" : colors.textLight,
                     fontSize: 13, fontWeight: 600, fontFamily: font,
-                    cursor: form.name && form.establishment && form.planned ? "pointer" : "default",
-                    boxShadow: form.name && form.establishment && form.planned
+                    cursor: form.name && form.establishment && form.planned && !saving ? "pointer" : "default",
+                    boxShadow: form.name && form.establishment && form.planned && !saving
                       ? `0 2px 8px ${colors.primary}30` : "none",
                   }}
                 >
-                  {editingId ? "Guardar" : "Crear"}
+                  {saving ? "Guardando..." : editingId ? "Guardar" : "Crear"}
                 </button>
               </div>
             </div>

@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { colors, font, globalCSS } from "./styles/theme";
 
+import ErrorBoundary from "./components/common/ErrorBoundary";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { AppProvider, useApp } from "./context/AppContext";
 
 import LoginScreen from "./components/auth/LoginScreen";
+import ChangePasswordScreen from "./components/auth/ChangePasswordScreen";
 import Header from "./components/layout/Header";
 import BottomNav from "./components/layout/BottomNav";
 import DesktopSidebar from "./components/layout/DesktopSidebar";
@@ -25,11 +27,11 @@ import ApprovalConfigScreen from "./components/admin/ApprovalConfigScreen";
 // ============================================================
 
 function AppContent() {
-  const { currentUser, isAuthenticated, can } = useAuth();
+  const { currentUser, isAuthenticated, loading, can, forcePasswordChange } = useAuth();
   const {
     requests, notification, statusCounts, pendingApprovals, showNotif,
     addRequest, confirmRequest, approveStep, rejectRequest, sendForRevision,
-    advanceStatus, updateRequest,
+    advanceStatus, updateRequest, dataLoading,
   } = useApp();
 
   const [screen, setScreen] = useState("dashboard");
@@ -40,8 +42,59 @@ function AppContent() {
   const [filterEstablishment, setFilterEstablishment] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Show loading spinner while checking Supabase session
+  if (loading) {
+    return (
+      <div style={{
+        fontFamily: font, background: colors.bg, minHeight: "100vh",
+        display: "flex", alignItems: "center", justifyContent: "center",
+      }}>
+        <div style={{ textAlign: "center" }}>
+          <div style={{
+            width: 48, height: 48, borderRadius: 12,
+            background: colors.primary,
+            display: "inline-flex", alignItems: "center", justifyContent: "center",
+            marginBottom: 16,
+          }}>
+            <span style={{ color: "#fff", fontSize: 20, fontWeight: 700 }}>Y</span>
+          </div>
+          <p style={{ color: colors.textLight, fontSize: 14 }}>Cargando...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!isAuthenticated) {
     return <LoginScreen />;
+  }
+
+  // Force password change on first login
+  if (forcePasswordChange) {
+    return <ChangePasswordScreen />;
+  }
+
+  // Show loading while Supabase data initializes (parameters, budgets, users, requests)
+  if (dataLoading) {
+    return (
+      <div style={{
+        fontFamily: font, background: colors.bg, minHeight: "100vh",
+        display: "flex", alignItems: "center", justifyContent: "center",
+      }}>
+        <div style={{ textAlign: "center" }}>
+          <div style={{
+            width: 48, height: 48, borderRadius: 12,
+            background: colors.primary,
+            display: "inline-flex", alignItems: "center", justifyContent: "center",
+            marginBottom: 16,
+            boxShadow: `0 4px 16px ${colors.primary}30`,
+          }}>
+            <span style={{ color: "#fff", fontSize: 20, fontWeight: 700 }}>Y</span>
+          </div>
+          <p style={{ color: colors.textLight, fontSize: 14, margin: "0 0 4px" }}>Cargando datos...</p>
+          <p style={{ color: colors.textMuted, fontSize: 12, margin: 0 }}>Conectando con el servidor</p>
+        </div>
+      </div>
+    );
   }
 
   // Filter requests based on role
@@ -208,10 +261,12 @@ function AppContent() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <AppProvider>
-        <AppContent />
-      </AppProvider>
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <AppProvider>
+          <AppContent />
+        </AppProvider>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }

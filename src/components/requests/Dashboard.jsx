@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { colors, font, radius, shadows } from "../../styles/theme";
-import { ESTABLISHMENTS } from "../../constants";
+import { getEstablishments } from "../../constants/parameters";
 import RequestCard from "./RequestCard";
 import RequestsTable from "./RequestsTable";
 import { formatGuaranies } from "../../utils/statusHelpers";
@@ -115,7 +115,7 @@ export default function Dashboard({
             }}
           >
             <option value="all">Todos estab.</option>
-            {ESTABLISHMENTS.map(e => <option key={e} value={e}>{e}</option>)}
+            {getEstablishments().map(e => <option key={e.name} value={e.name}>{e.name}</option>)}
           </select>
           {/* View Toggle (desktop) */}
           <div className="desktop-view-toggle" style={{

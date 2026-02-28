@@ -3,12 +3,17 @@
 // Reglas, mapeos y thresholds del Módulo 9
 // ============================================================
 
-// ---- Empresas del Grupo ----
+import { getParameters } from "./parameters";
+
+// ---- Empresas del Grupo (approval workflow) ----
+// NOTE: The full company list with RUC/activity is in constants/index.js.
+// This shorter list uses IDs referenced by ESTABLISHMENT_COMPANY and
+// DIRECTOR_BY_COMPANY throughout the approval engine.
 export const COMPANIES = [
   { id: "rb", name: "Rural Bioenergia S.A.", type: "empresa" },
-  { id: "ch", name: "Chacobras", type: "empresa" },
-  { id: "lc", name: "La Constancia", type: "empresa" },
-  { id: "cp", name: "Control Pasto", type: "empresa" },
+  { id: "ch", name: "Chacobras S.A.", type: "empresa" },
+  { id: "lc", name: "La Constancia S.A.", type: "empresa" },
+  { id: "cp", name: "Control Pasto S.A.", type: "empresa" },
   { id: "am", name: "Ana Moller", type: "persona_fisica" },
   { id: "gm", name: "Gabriel Moller", type: "persona_fisica" },
   { id: "pm", name: "Pedro Moller", type: "persona_fisica" },
@@ -29,7 +34,7 @@ export const ESTABLISHMENT_COMPANY = {
 };
 
 // ---- Gerente de Área por Establecimiento (Step ①) ----
-// username → matches user.email in defaultUsers
+// username → matches user.username in profiles table
 export const MANAGER_BY_ESTABLISHMENT = {
   "Ypoti":        "fabiano",
   "Cerro Memby":  "fabiano",
@@ -115,6 +120,11 @@ export function calculateApprovalSteps(pr, users = []) {
   const steps = [];
   const resolveUser = (username) => users.find(u => u.email === username);
 
+  // Dynamic resolution from admin parameters (with hardcoded fallback)
+  const params = getParameters();
+  const paramEstab = params.establishments?.find(e => e.name === pr.establishment);
+  const paramCompany = params.companies?.find(c => c.name === paramEstab?.company);
+
   const isEmergency = pr.urgency === "emergencia";
   const amount = pr.totalAmount || 0;
   const companyId = pr.company || ESTABLISHMENT_COMPANY[pr.establishment] || "rb";
@@ -137,7 +147,9 @@ export function calculateApprovalSteps(pr, users = []) {
   }
 
   // ---- R1/R4: Gerente de Área (siempre presente) ----
-  const managerUsername = MANAGER_BY_ESTABLISHMENT[pr.establishment] || "fabiano";
+  // Try dynamic lookup from admin parameters, fall back to hardcoded map
+  const dynamicManager = paramEstab?.manager?.toLowerCase();
+  const managerUsername = dynamicManager || MANAGER_BY_ESTABLISHMENT[pr.establishment] || "fabiano";
   const managerUser = resolveUser(managerUsername);
   steps.push({
     type: STEP_TYPES.MANAGER,
@@ -153,7 +165,9 @@ export function calculateApprovalSteps(pr, users = []) {
 
   // ---- R2: Director si valor ≥ ₲5M ----
   if (amount >= THRESHOLDS.DIRECTOR_REQUIRED) {
-    const directorUsername = DIRECTOR_BY_COMPANY[companyId] || "paulo";
+    // Try dynamic lookup from admin parameters, fall back to hardcoded map
+    const dynamicDirector = paramCompany?.director?.toLowerCase();
+    const directorUsername = dynamicDirector || DIRECTOR_BY_COMPANY[companyId] || "paulo";
     const directorUser = resolveUser(directorUsername);
     steps.push({
       type: STEP_TYPES.DIRECTOR,

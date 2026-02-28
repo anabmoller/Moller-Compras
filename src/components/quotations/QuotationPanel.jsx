@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { colors, font, fontDisplay, inputStyle, labelStyle, shadows, radius } from "../../styles/theme";
+import { generateQuotationId } from "../../utils/ids";
 
 export default function QuotationPanel({ request, onClose, onSave }) {
   const [quotations, setQuotations] = useState(request.quotations || []);
@@ -16,12 +17,18 @@ export default function QuotationPanel({ request, onClose, onSave }) {
   const update = (key, val) => setForm(prev => ({ ...prev, [key]: val }));
 
   const addQuotation = () => {
-    if (!form.supplier || !form.price) return;
+    if (!form.supplier.trim() || !form.price) return;
+    const price = parseFloat(form.price);
+    if (isNaN(price) || price <= 0) return;
+    const deliveryDays = Math.max(0, Math.min(9999, parseInt(form.deliveryDays) || 0));
     const newQ = {
-      id: `Q-${Date.now()}`,
-      ...form,
-      price: parseFloat(form.price),
-      deliveryDays: parseInt(form.deliveryDays) || 0,
+      id: generateQuotationId(),
+      supplier: form.supplier.trim().slice(0, 200),
+      currency: form.currency,
+      price,
+      deliveryDays,
+      paymentTerms: (form.paymentTerms || "").trim().slice(0, 500),
+      notes: (form.notes || "").trim().slice(0, 1000),
       date: new Date().toISOString().slice(0, 10),
       selected: false,
     };

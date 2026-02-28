@@ -1,9 +1,11 @@
 // ============================================================
 // YPOTI — ROLES, PERMISOS Y GESTION DE USUARIOS
+// Reads via anon client (RLS), writes via Edge Functions
 // ============================================================
 
-import { DEFAULT_USERS } from "./defaultUsers";
+import { supabase } from "../lib/supabase";
 
+// ---- Roles & permissions (unchanged) ----
 export const ROLES = {
   admin: {
     key: "admin",
@@ -16,9 +18,19 @@ export const ROLES = {
       "view_analytics", "view_inventory", "manage_settings", "manage_users",
     ],
   },
+  diretoria: {
+    key: "diretoria",
+    label: "Diretoria",
+    description: "Vision completa del sistema, aprobacion de alto nivel",
+    color: "#1a4731",
+    permissions: [
+      "create_request", "view_all_requests", "approve_manager",
+      "approve_purchase", "view_analytics", "view_inventory", "advance_status",
+    ],
+  },
   gerente: {
     key: "gerente",
-    label: "Gerente / Director",
+    label: "Gerente",
     description: "Aprobacion de solicitudes y vision general",
     color: "#2d5a27",
     permissions: [
@@ -57,60 +69,102 @@ export const ROLES = {
   },
 };
 
-// ---- localStorage-backed user list ----
-const USERS_STORAGE_KEY = "ypoti_users";
+// ---- Module-level cache ----
+let _users = [];
 
-function loadUsers() {
-  const saved = localStorage.getItem(USERS_STORAGE_KEY);
-  if (saved) {
-    try {
-      return JSON.parse(saved);
-    } catch { /* fall through */ }
+// ============================================================
+// INIT — Load profiles from Supabase (anon + RLS)
+// ============================================================
+
+export async function initUsers() {
+  try {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .order("name", { ascending: true });
+
+    if (error) throw error;
+
+    _users = (data || []).map(p => ({
+      id: p.id,                // UUID
+      name: p.name,
+      email: p.username,       // backward compat: approval engine uses "email" as username
+      username: p.username,
+      role: p.role,
+      establishment: p.establishment,
+      position: p.position,
+      avatar: p.avatar,
+      active: p.active !== false,
+    }));
+
+    console.log("[Users] Initialized from Supabase:", _users.length, "users");
+  } catch (err) {
+    console.error("[Users] Init failed:", err);
   }
-  // Seed from defaults on first load
-  localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(DEFAULT_USERS));
-  return [...DEFAULT_USERS];
 }
 
-let _users = loadUsers();
+// ============================================================
+// SYNCHRONOUS GETTERS
+// ============================================================
 
 export function getUsers() {
   return _users;
 }
 
-export function saveUsers(users) {
-  _users = users;
-  localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+// ============================================================
+// ASYNC CRUD — Write via Edge Functions
+// ============================================================
+
+/** Create a new user (auth + profile) */
+export async function addUser(user) {
+  const { data, error } = await supabase.functions.invoke("admin-users", {
+    body: {
+      action: "create",
+      email: user.email || user.username,
+      name: user.name,
+      role: user.role || "solicitante",
+      establishment: user.establishment || null,
+      position: user.position || null,
+      avatar: user.avatar || (user.name || "").slice(0, 2).toUpperCase(),
+    },
+  });
+  if (error) throw new Error(error.message);
+  if (data?.error) throw new Error(data.error);
+
+  await initUsers(); // refresh cache
+  return _users.find(u => u.id === data.userId);
 }
 
-export function addUser(user) {
-  const maxId = _users.reduce((max, u) => {
-    const num = parseInt(u.id.replace("u", ""), 10);
-    return num > max ? num : max;
-  }, 0);
-  const newUser = {
-    ...user,
-    id: `u${String(maxId + 1).padStart(3, "0")}`,
-    active: true,
-  };
-  _users = [..._users, newUser];
-  localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(_users));
-  return newUser;
-}
+/** Update an existing user's profile */
+export async function updateUser(id, updates) {
+  const { data, error } = await supabase.functions.invoke("admin-users", {
+    body: { action: "update", userId: id, updates },
+  });
+  if (error) throw new Error(error.message);
+  if (data?.error) throw new Error(data.error);
 
-export function updateUser(id, updates) {
+  // Update local cache immediately
   _users = _users.map(u => u.id === id ? { ...u, ...updates } : u);
-  localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(_users));
 }
 
-export function resetUsersToDefault() {
-  _users = [...DEFAULT_USERS];
-  localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(_users));
+/** Reset a user's password to default */
+export async function resetPassword(userId) {
+  const { data, error } = await supabase.functions.invoke("admin-users", {
+    body: { action: "reset-password", userId },
+  });
+  if (error) throw new Error(error.message);
+  if (data?.error) throw new Error(data.error);
+}
+
+export async function resetUsersToDefault() {
+  console.warn("[Users] resetUsersToDefault is not available in Supabase mode");
+  await initUsers();
   return _users;
 }
 
-// Keep backward compat — USERS is now a getter
-export const USERS = _users;
+// ============================================================
+// PERMISSION CHECK (unchanged)
+// ============================================================
 
 export function hasPermission(user, permission) {
   if (!user) return false;

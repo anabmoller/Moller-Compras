@@ -2,15 +2,15 @@ import { useState, useCallback } from "react";
 import { colors, font, fontDisplay, inputStyle, labelStyle, shadows, radius } from "../../styles/theme";
 import {
   getParameters, addParameterItem, updateParameterItem,
-  toggleParameterItem, resetParametersToDefault,
+  toggleParameterItem, initParameters,
 } from "../../constants/parameters";
 
 const TABS = [
-  { key: "establishments", label: "Establecimientos", icon: "📍" },
-  { key: "sectors", label: "Sectores", icon: "🏷" },
-  { key: "productTypes", label: "Tipos Producto", icon: "📦" },
-  { key: "suppliers", label: "Proveedores", icon: "🏪" },
-  { key: "companies", label: "Empresas", icon: "🏢" },
+  { key: "establishments", label: "Establecimientos", icon: "\u{1F4CD}" },
+  { key: "sectors", label: "Sectores", icon: "\u{1F3F7}" },
+  { key: "productTypes", label: "Tipos Producto", icon: "\u{1F4E6}" },
+  { key: "suppliers", label: "Proveedores", icon: "\u{1F3EA}" },
+  { key: "companies", label: "Empresas", icon: "\u{1F3E2}" },
 ];
 
 export default function ParametersScreen({ onBack }) {
@@ -19,6 +19,7 @@ export default function ParametersScreen({ onBack }) {
   const [editingItem, setEditingItem] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState("");
+  const [saving, setSaving] = useState(false);
 
   const refresh = useCallback(() => setParams({ ...getParameters() }), []);
 
@@ -28,26 +29,50 @@ export default function ParametersScreen({ onBack }) {
   );
   const activeCount = items.filter(i => i.active).length;
 
-  const handleSave = (formData) => {
-    if (editingItem) {
-      updateParameterItem(tab, editingItem.id, formData);
-    } else {
-      addParameterItem(tab, formData);
-    }
-    refresh();
-    setShowForm(false);
-    setEditingItem(null);
-  };
-
-  const handleToggle = (id) => {
-    toggleParameterItem(tab, id);
-    refresh();
-  };
-
-  const handleReset = () => {
-    if (window.confirm("¿Resetear todos los parámetros a valores por defecto?")) {
-      resetParametersToDefault();
+  const handleSave = async (formData) => {
+    setSaving(true);
+    try {
+      if (editingItem) {
+        await updateParameterItem(tab, editingItem.id, formData);
+      } else {
+        await addParameterItem(tab, formData);
+      }
       refresh();
+      setShowForm(false);
+      setEditingItem(null);
+    } catch (err) {
+      console.error("[Parameters] Save failed:", err);
+      alert("Error al guardar: " + err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleToggle = async (id) => {
+    setSaving(true);
+    try {
+      await toggleParameterItem(tab, id);
+      refresh();
+    } catch (err) {
+      console.error("[Parameters] Toggle failed:", err);
+      alert("Error al cambiar estado: " + err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleReset = async () => {
+    if (window.confirm("\u00BFRefrescar todos los par\u00E1metros desde el servidor?")) {
+      setSaving(true);
+      try {
+        await initParameters();
+        refresh();
+      } catch (err) {
+        console.error("[Parameters] Refresh failed:", err);
+        alert("Error al refrescar: " + err.message);
+      } finally {
+        setSaving(false);
+      }
     }
   };
 
@@ -59,13 +84,14 @@ export default function ParametersScreen({ onBack }) {
           background: "transparent", border: "none", cursor: "pointer",
           fontFamily: font, fontSize: 14, color: colors.primary, fontWeight: 500,
         }}>
-          ← Volver
+          \u2190 Volver
         </button>
-        <button onClick={handleReset} style={{
-          background: "transparent", border: "none", cursor: "pointer",
-          fontFamily: font, fontSize: 12, color: colors.warning, fontWeight: 500,
+        <button onClick={handleReset} disabled={saving} style={{
+          background: "transparent", border: "none", cursor: saving ? "default" : "pointer",
+          fontFamily: font, fontSize: 12, color: saving ? colors.textMuted : colors.warning, fontWeight: 500,
+          opacity: saving ? 0.6 : 1,
         }}>
-          Resetear
+          {saving ? "Cargando..." : "Refrescar"}
         </button>
       </div>
 
@@ -108,7 +134,7 @@ export default function ParametersScreen({ onBack }) {
             background: colors.card, border: `1px solid ${colors.border}`,
             borderRadius: radius.lg, padding: "8px 12px",
           }}>
-            <span style={{ fontSize: 14, opacity: 0.4 }}>🔍</span>
+            <span style={{ fontSize: 14, opacity: 0.4 }}>{"\u{1F50D}"}</span>
             <input
               placeholder="Buscar..."
               value={search}
@@ -119,11 +145,14 @@ export default function ParametersScreen({ onBack }) {
               }}
             />
           </div>
-          <button onClick={() => { setEditingItem(null); setShowForm(true); }} style={{
+          <button onClick={() => { setEditingItem(null); setShowForm(true); }} disabled={saving} style={{
             padding: "8px 16px", borderRadius: radius.lg, border: "none",
-            background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.primaryDark} 100%)`,
+            background: saving
+              ? colors.border
+              : `linear-gradient(135deg, ${colors.primary} 0%, ${colors.primaryDark} 100%)`,
             color: "#fff", fontSize: 12, fontWeight: 600, fontFamily: font,
-            cursor: "pointer", whiteSpace: "nowrap",
+            cursor: saving ? "default" : "pointer", whiteSpace: "nowrap",
+            opacity: saving ? 0.6 : 1,
           }}>
             + Nuevo
           </button>
@@ -133,7 +162,7 @@ export default function ParametersScreen({ onBack }) {
         <div style={{
           fontSize: 11, color: colors.textLight, marginBottom: 10, fontWeight: 500,
         }}>
-          {activeCount} activos de {items.length} total · Mostrando {filtered.length}
+          {activeCount} activos de {items.length} total \u00B7 Mostrando {filtered.length}
         </div>
 
         {/* Form Modal */}
@@ -143,6 +172,7 @@ export default function ParametersScreen({ onBack }) {
             item={editingItem}
             onSave={handleSave}
             onCancel={() => { setShowForm(false); setEditingItem(null); }}
+            saving={saving}
           />
         )}
 
@@ -168,26 +198,27 @@ export default function ParametersScreen({ onBack }) {
                 )}
               </div>
               <div style={{ fontSize: 11, color: colors.textLight, marginTop: 2 }}>
-                {tab === "establishments" && `${item.company || ""} · Gte: ${item.manager || "—"} · ${item.location || ""}`}
+                {tab === "establishments" && `${item.company || ""} \u00B7 Gte: ${item.manager || "\u2014"} \u00B7 ${item.location || ""}`}
                 {tab === "sectors" && (item.description || "")}
                 {tab === "productTypes" && (item.description || "")}
-                {tab === "suppliers" && `${item.category || ""} · ${item.phone || ""}`}
-                {tab === "companies" && `${item.type === "empresa" ? "Empresa" : "Persona Física"} · Dir: ${item.director || "—"}`}
+                {tab === "suppliers" && `${item.category || ""} \u00B7 ${item.phone || ""}`}
+                {tab === "companies" && `${item.type === "empresa" ? "Empresa" : "Persona F\u00EDsica"} \u00B7 Dir: ${item.director || "\u2014"}`}
               </div>
             </div>
             <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
-              <button onClick={() => { setEditingItem(item); setShowForm(true); }} style={{
+              <button onClick={() => { setEditingItem(item); setShowForm(true); }} disabled={saving} style={{
                 background: colors.primary + "10", border: "none", borderRadius: radius.md,
-                padding: "6px 10px", cursor: "pointer", fontSize: 12, color: colors.primary,
-                fontWeight: 500, fontFamily: font,
+                padding: "6px 10px", cursor: saving ? "default" : "pointer", fontSize: 12, color: colors.primary,
+                fontWeight: 500, fontFamily: font, opacity: saving ? 0.5 : 1,
               }}>
                 Editar
               </button>
-              <button onClick={() => handleToggle(item.id)} style={{
+              <button onClick={() => handleToggle(item.id)} disabled={saving} style={{
                 background: item.active ? colors.danger + "10" : colors.success + "10",
                 border: "none", borderRadius: radius.md, padding: "6px 10px",
-                cursor: "pointer", fontSize: 12, fontFamily: font, fontWeight: 500,
+                cursor: saving ? "default" : "pointer", fontSize: 12, fontFamily: font, fontWeight: 500,
                 color: item.active ? colors.danger : colors.success,
+                opacity: saving ? 0.5 : 1,
               }}>
                 {item.active ? "Desact." : "Activar"}
               </button>
@@ -206,31 +237,31 @@ export default function ParametersScreen({ onBack }) {
 }
 
 // ---- Dynamic Form based on tab ----
-function ParameterForm({ tab, item, onSave, onCancel }) {
+function ParameterForm({ tab, item, onSave, onCancel, saving }) {
   const FIELDS = {
     establishments: [
       { key: "name", label: "Nombre", required: true },
-      { key: "code", label: "Código", required: true },
+      { key: "code", label: "C\u00F3digo", required: true },
       { key: "company", label: "Empresa" },
       { key: "manager", label: "Gerente Responsable" },
-      { key: "location", label: "Ubicación" },
+      { key: "location", label: "Ubicaci\u00F3n" },
     ],
     sectors: [
       { key: "name", label: "Nombre", required: true },
-      { key: "icon", label: "Ícono (emoji)" },
-      { key: "description", label: "Descripción" },
+      { key: "icon", label: "\u00CDcono (emoji)" },
+      { key: "description", label: "Descripci\u00F3n" },
     ],
     productTypes: [
       { key: "name", label: "Nombre", required: true },
-      { key: "icon", label: "Ícono (emoji)" },
-      { key: "description", label: "Descripción" },
+      { key: "icon", label: "\u00CDcono (emoji)" },
+      { key: "description", label: "Descripci\u00F3n" },
     ],
     suppliers: [
-      { key: "name", label: "Nombre / Razón Social", required: true },
+      { key: "name", label: "Nombre / Raz\u00F3n Social", required: true },
       { key: "ruc", label: "RUC" },
-      { key: "phone", label: "Teléfono" },
+      { key: "phone", label: "Tel\u00E9fono" },
       { key: "email", label: "Email" },
-      { key: "category", label: "Categoría" },
+      { key: "category", label: "Categor\u00EDa" },
     ],
     companies: [
       { key: "name", label: "Nombre", required: true },
@@ -248,7 +279,7 @@ function ParameterForm({ tab, item, onSave, onCancel }) {
     return empty;
   });
 
-  const canSubmit = fields.filter(f => f.required).every(f => form[f.key]?.trim());
+  const canSubmit = !saving && fields.filter(f => f.required).every(f => form[f.key]?.trim());
 
   return (
     <div style={{
@@ -270,6 +301,7 @@ function ParameterForm({ tab, item, onSave, onCancel }) {
               <select
                 value={form[f.key] || ""}
                 onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
+                disabled={saving}
                 style={{ ...inputStyle, padding: "10px 12px", fontSize: 13 }}
               >
                 <option value="">Seleccionar...</option>
@@ -280,6 +312,7 @@ function ParameterForm({ tab, item, onSave, onCancel }) {
                 value={form[f.key] || ""}
                 onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
                 placeholder={f.label}
+                disabled={saving}
                 style={{ ...inputStyle, padding: "10px 12px", fontSize: 13 }}
               />
             )}
@@ -287,11 +320,11 @@ function ParameterForm({ tab, item, onSave, onCancel }) {
         ))}
       </div>
       <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
-        <button onClick={onCancel} style={{
+        <button onClick={onCancel} disabled={saving} style={{
           flex: 1, padding: 12, borderRadius: radius.lg,
           border: `1px solid ${colors.border}`, background: colors.card,
           color: colors.text, fontSize: 13, fontWeight: 600, fontFamily: font,
-          cursor: "pointer",
+          cursor: saving ? "default" : "pointer",
         }}>
           Cancelar
         </button>
@@ -308,7 +341,7 @@ function ParameterForm({ tab, item, onSave, onCancel }) {
             cursor: canSubmit ? "pointer" : "default",
           }}
         >
-          {item ? "Guardar Cambios" : "Crear"}
+          {saving ? "Guardando..." : (item ? "Guardar Cambios" : "Crear")}
         </button>
       </div>
     </div>

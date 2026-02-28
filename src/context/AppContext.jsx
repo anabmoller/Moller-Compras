@@ -1,234 +1,358 @@
-import { createContext, useContext, useState, useCallback, useEffect } from "react";
-import { STATUS_FLOW, SAMPLE_REQUESTS } from "../constants";
+// ============================================================
+// YPOTI — AppContext (Edge Functions Backend)
+// All writes go through Edge Functions; reads use anon+RLS
+// ============================================================
+
+import { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
+import { STATUS_FLOW } from "../constants";
 import { useAuth } from "./AuthContext";
-import { calculateApprovalSteps, getCurrentStep, isFullyApproved, STEP_STATUS } from "../constants/approvalConfig";
-import { findBudgetForPR, wouldExceedBudget, consumeBudget } from "../constants/budgets";
-import { getUsers } from "../constants/users";
+import { supabase } from "../lib/supabase";
+import { getCurrentStep, STEP_STATUS } from "../constants/approvalConfig";
+import { initParameters } from "../constants/parameters";
+import { initBudgets } from "../constants/budgets";
+import { initUsers, hasPermission } from "../constants/users";
+import { sanitizeName, sanitizeMultiline, sanitizeNumber } from "../utils/sanitize";
+import {
+  fetchAllRequests,
+  fetchSingleRequest,
+  insertRequest,
+  confirmRequestInDb,
+  approveStepInDb,
+  rejectRequestInDb,
+  sendForRevisionInDb,
+  advanceStatusInDb,
+  updateRequestInDb,
+  addCommentInDb,
+  addQuotationInDb,
+} from "../lib/queries";
 
 const AppContext = createContext(null);
-
-import { STORAGE_KEYS } from "../constants/storageKeys";
 
 export function AppProvider({ children }) {
   const { currentUser } = useAuth();
 
-  const [requests, setRequests] = useState(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.REQUESTS);
-    if (saved) {
-      try { return JSON.parse(saved); }
-      catch { return SAMPLE_REQUESTS; }
-    }
-    return SAMPLE_REQUESTS;
-  });
-
+  const [requests, setRequests] = useState([]);
   const [notification, setNotification] = useState(null);
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.REQUESTS, JSON.stringify(requests));
-  }, [requests]);
+  const [dataLoading, setDataLoading] = useState(true);
 
   const showNotif = useCallback((msg, type = "success") => {
     setNotification({ msg, type });
     setTimeout(() => setNotification(null), 3000);
   }, []);
 
-  // ---- Create new request (status: borrador) ----
-  const addRequest = useCallback((newReq) => {
-    const id = `SC-2026-${String(requests.length + 1).padStart(3, "0")}`;
-    setRequests(prev => [{
-      ...newReq,
-      id,
-      date: new Date().toISOString().slice(0, 10),
-      status: "borrador",
-      createdBy: currentUser?.name || "Unknown",
-      approvalSteps: null,
-      approvalHistory: [],
-      totalAmount: newReq.totalAmount || 0,
-      company: newReq.company || null,
-      sector: newReq.sector || null,
-      priority: (newReq.urgency || newReq.priority || "media").toLowerCase(),
-      budgetId: null,
-      budgetExceeded: false,
-    }, ...prev]);
-    showNotif("Solicitud creada con éxito");
-  }, [requests.length, showNotif, currentUser]);
+  // ---- Initialize all data from Supabase ----
+  useEffect(() => {
+    if (!currentUser) {
+      setDataLoading(false);
+      return;
+    }
 
-  // ---- Confirm request → calculate approval steps and move to pending ----
-  const confirmRequest = useCallback((reqId) => {
-    const users = getUsers();
-    setRequests(prev => prev.map(r => {
-      if (r.id !== reqId) return r;
-      if (r.status !== "borrador") return r;
+    let mounted = true;
 
-      // Find matching budget
-      const budget = findBudgetForPR(r.establishment, r.sector);
-      const exceeds = budget ? wouldExceedBudget(budget, r.totalAmount || 0) : false;
+    async function loadAll() {
+      try {
+        // Init reference data + users in parallel
+        await Promise.all([
+          initParameters(),
+          initBudgets(),
+          initUsers(),
+        ]);
 
-      // Calculate approval steps
-      const steps = calculateApprovalSteps({
-        establishment: r.establishment,
-        totalAmount: r.totalAmount || 0,
-        urgency: (r.urgency || r.priority || "media").toLowerCase(),
-        sector: r.sector || "",
-        company: r.company || null,
-        budgetExceeded: exceeds,
-      }, users);
-
-      return {
-        ...r,
-        status: "pendiente_aprobacion",
-        approvalSteps: steps,
-        approvalHistory: [
-          ...(r.approvalHistory || []),
-          {
-            action: "confirmed",
-            by: currentUser?.name || "Unknown",
-            at: new Date().toISOString(),
-            note: "Solicitud confirmada y enviada para aprobación",
-          },
-        ],
-        budgetId: budget?.id || null,
-        budgetExceeded: exceeds,
-        confirmedAt: new Date().toISOString(),
-      };
-    }));
-    showNotif("Solicitud enviada para aprobación");
-  }, [currentUser, showNotif]);
-
-  // ---- Approve current step ----
-  const approveStep = useCallback((reqId, comment = "") => {
-    const now = new Date().toISOString();
-    setRequests(prev => prev.map(r => {
-      if (r.id !== reqId || !r.approvalSteps) return r;
-
-      const currentStep = getCurrentStep(r.approvalSteps);
-      if (!currentStep) return r;
-
-      // Check if current user can approve this step
-      if (currentUser?.email !== currentStep.approverUsername) return r;
-
-      // Mark current step as approved
-      const updatedSteps = r.approvalSteps.map(s =>
-        s === currentStep
-          ? { ...s, status: STEP_STATUS.APPROVED, approvedAt: now, approvedBy: currentUser.name }
-          : s
-      );
-
-      // Check if all steps are now approved
-      const allApproved = isFullyApproved(updatedSteps);
-
-      // Build history entry
-      const historyEntry = {
-        action: "approved",
-        step: currentStep.label,
-        by: currentUser.name,
-        at: now,
-        note: comment || `Aprobado por ${currentUser.name}`,
-      };
-
-      // If fully approved, consume budget and advance status
-      if (allApproved && r.budgetId) {
-        consumeBudget(r.budgetId, r.totalAmount || 0);
+        // Load all requests with nested data
+        const reqs = await fetchAllRequests();
+        if (mounted) {
+          setRequests(reqs);
+          console.log("[App] Loaded", reqs.length, "requests from Supabase");
+        }
+      } catch (err) {
+        console.error("[App] Data load failed:", err);
+        if (mounted) showNotif("Error cargando datos", "error");
+      } finally {
+        if (mounted) setDataLoading(false);
       }
+    }
 
-      return {
-        ...r,
-        approvalSteps: updatedSteps,
-        status: allApproved ? "aprobado" : r.status,
-        approvalHistory: [...(r.approvalHistory || []), historyEntry],
-        ...(allApproved ? { approvedAt: now } : {}),
-      };
-    }));
-    showNotif("Paso aprobado correctamente", "success");
+    loadAll();
+
+    return () => { mounted = false; };
   }, [currentUser, showNotif]);
 
-  // ---- Reject request ----
-  const rejectRequest = useCallback((reqId, reason = "") => {
-    const now = new Date().toISOString();
-    setRequests(prev => prev.map(r => {
-      if (r.id !== reqId || !r.approvalSteps) return r;
+  // ---- Realtime: subscribe to requests table changes ----
+  useEffect(() => {
+    if (!currentUser) return;
 
-      const currentStep = getCurrentStep(r.approvalSteps);
-      if (!currentStep) return r;
-      if (currentUser?.email !== currentStep.approverUsername) return r;
+    const channel = supabase
+      .channel("requests-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "requests" },
+        async (payload) => {
+          try {
+            if (payload.eventType === "INSERT") {
+              const req = await fetchSingleRequest(payload.new.id);
+              if (req) {
+                setRequests(prev => {
+                  // Avoid duplicates (the creating user already added it)
+                  if (prev.some(r => r._uuid === req._uuid)) return prev;
+                  return [req, ...prev];
+                });
+              }
+            } else if (payload.eventType === "UPDATE") {
+              const req = await fetchSingleRequest(payload.new.id);
+              if (req) {
+                setRequests(prev => prev.map(r => r._uuid === req._uuid ? req : r));
+              }
+            } else if (payload.eventType === "DELETE") {
+              const oldId = payload.old.id;
+              setRequests(prev => prev.filter(r => r._uuid !== oldId));
+            }
+          } catch (err) {
+            console.error("[Realtime] Error handling change:", err);
+          }
+        }
+      )
+      .subscribe((status) => {
+        if (status === "SUBSCRIBED") {
+          console.log("[Realtime] Subscribed to requests changes");
+        }
+      });
 
-      const updatedSteps = r.approvalSteps.map(s =>
-        s === currentStep
-          ? { ...s, status: STEP_STATUS.REJECTED, approvedAt: now, approvedBy: currentUser.name }
-          : s
-      );
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [currentUser]);
 
-      return {
-        ...r,
-        approvalSteps: updatedSteps,
-        status: "rechazado",
-        approvalHistory: [...(r.approvalHistory || []), {
-          action: "rejected",
-          step: currentStep.label,
-          by: currentUser.name,
-          at: now,
-          note: reason || `Rechazado por ${currentUser.name}`,
-        }],
-        rejectedAt: now,
-      };
-    }));
-    showNotif("Solicitud rechazada", "error");
-  }, [currentUser, showNotif]);
-
-  // ---- Send for revision (back to borrador) ----
-  const sendForRevision = useCallback((reqId, reason = "") => {
-    const now = new Date().toISOString();
-    setRequests(prev => prev.map(r => {
-      if (r.id !== reqId) return r;
-
-      // Reset all approval steps to pending
-      const resetSteps = r.approvalSteps
-        ? r.approvalSteps.map(s => ({ ...s, status: STEP_STATUS.PENDING, approvedAt: null, approvedBy: null }))
-        : null;
-
-      return {
-        ...r,
-        approvalSteps: resetSteps,
-        status: "borrador",
-        approvalHistory: [...(r.approvalHistory || []), {
-          action: "revision",
-          by: currentUser?.name || "Unknown",
-          at: now,
-          note: reason || "Devuelto para revisión",
-        }],
-      };
-    }));
-    showNotif("Devuelto para revisión");
-  }, [currentUser, showNotif]);
-
-  // ---- Legacy advance status (for post-approval flow) ----
-  const advanceStatus = useCallback((reqId) => {
-    setRequests(prev => prev.map(r => {
-      if (r.id !== reqId) return r;
-      const idx = STATUS_FLOW.findIndex(s => s.key === r.status);
-      if (idx < STATUS_FLOW.length - 1) {
-        return {
-          ...r,
-          status: STATUS_FLOW[idx + 1].key,
-          approvalHistory: [...(r.approvalHistory || []), {
-            action: "advanced",
-            by: currentUser?.name || "Unknown",
-            at: new Date().toISOString(),
-            note: `Avanzado a ${STATUS_FLOW[idx + 1].label}`,
-          }],
-        };
+  // ---- Helper: refresh a single request from Supabase ----
+  const refreshRequest = useCallback(async (requestUuid) => {
+    try {
+      const req = await fetchSingleRequest(requestUuid);
+      if (req) {
+        setRequests(prev => prev.map(r => r._uuid === requestUuid ? req : r));
       }
-      return r;
-    }));
-    showNotif("Status actualizado");
-  }, [showNotif, currentUser]);
-
-  const updateRequest = useCallback((reqId, updates) => {
-    setRequests(prev => prev.map(r =>
-      r.id === reqId ? { ...r, ...updates } : r
-    ));
+    } catch (err) {
+      console.error("[App] refreshRequest failed:", err);
+    }
   }, []);
 
+  // ---- Create new request (status: borrador) ----
+  const addRequest = useCallback(async (newReq) => {
+    if (!hasPermission(currentUser, "create_request")) {
+      showNotif("Sin permiso para crear solicitudes", "error");
+      return;
+    }
+
+    try {
+      const sanitized = {
+        ...newReq,
+        name: sanitizeName(newReq.name),
+        requester: sanitizeName(newReq.requester),
+        reason: sanitizeMultiline(newReq.reason, 1000),
+        purpose: sanitizeMultiline(newReq.purpose, 1000),
+        equipment: sanitizeName(newReq.equipment),
+        suggestedSupplier: sanitizeName(newReq.suggestedSupplier),
+        notes: sanitizeMultiline(newReq.notes, 2000),
+        totalAmount: sanitizeNumber(newReq.totalAmount, { min: 0 }),
+      };
+
+      // Edge Function derives created_by from JWT — no need to pass currentUser
+      const uuid = await insertRequest(sanitized);
+      const req = await fetchSingleRequest(uuid);
+      if (req) {
+        setRequests(prev => [req, ...prev]);
+      }
+      showNotif("Solicitud creada con \u00E9xito");
+    } catch (err) {
+      console.error("[App] addRequest failed:", err);
+      showNotif("Error al crear solicitud", "error");
+    }
+  }, [showNotif, currentUser]);
+
+  // ---- Confirm request → Edge Function calculates steps server-side ----
+  const confirmRequest = useCallback(async (reqId) => {
+    if (!currentUser) return;
+
+    const req = requests.find(r => r.id === reqId);
+    if (!req) return;
+    if (req.createdBy !== currentUser.name && !hasPermission(currentUser, "view_all_requests")) return;
+    if (req.status !== "borrador") return;
+
+    try {
+      // Edge Function handles EVERYTHING server-side:
+      // - Finds budget
+      // - Calculates approval steps
+      // - Updates request status
+      // - Inserts steps and history
+      await confirmRequestInDb(req._uuid);
+      await refreshRequest(req._uuid);
+      showNotif("Solicitud enviada para aprobaci\u00F3n");
+    } catch (err) {
+      console.error("[App] confirmRequest failed:", err);
+      showNotif("Error al confirmar solicitud", "error");
+    }
+  }, [currentUser, requests, showNotif, refreshRequest]);
+
+  // ---- Approve current step ----
+  const approveStep = useCallback(async (reqId, comment = "") => {
+    const req = requests.find(r => r.id === reqId);
+    if (!req || !req.approvalSteps) return;
+
+    const currentStep = getCurrentStep(req.approvalSteps);
+    if (!currentStep) return;
+    if (currentUser?.email !== currentStep.approverUsername) return;
+
+    try {
+      // Edge Function verifies approver, updates step, handles budget
+      const result = await approveStepInDb(req._uuid, comment);
+
+      // If budget was consumed, refresh budget cache
+      if (result?.allApproved && req.budgetId) {
+        await initBudgets();
+      }
+
+      await refreshRequest(req._uuid);
+      showNotif("Paso aprobado correctamente", "success");
+    } catch (err) {
+      console.error("[App] approveStep failed:", err);
+      showNotif("Error al aprobar", "error");
+    }
+  }, [currentUser, requests, showNotif, refreshRequest]);
+
+  // ---- Reject request ----
+  const rejectRequest = useCallback(async (reqId, reason = "") => {
+    if (!hasPermission(currentUser, "approve_manager") && !hasPermission(currentUser, "approve_purchase")) {
+      showNotif("Sin permiso para rechazar solicitudes", "error");
+      return;
+    }
+
+    const req = requests.find(r => r.id === reqId);
+    if (!req || !req.approvalSteps) return;
+
+    const currentStep = getCurrentStep(req.approvalSteps);
+    if (!currentStep) return;
+    if (currentUser?.email !== currentStep.approverUsername) return;
+
+    try {
+      // Edge Function verifies approver and handles rejection
+      await rejectRequestInDb(req._uuid, sanitizeMultiline(reason, 1000));
+      await refreshRequest(req._uuid);
+      showNotif("Solicitud rechazada", "error");
+    } catch (err) {
+      console.error("[App] rejectRequest failed:", err);
+      showNotif("Error al rechazar", "error");
+    }
+  }, [currentUser, requests, showNotif, refreshRequest]);
+
+  // ---- Send for revision (back to borrador) ----
+  const sendForRevision = useCallback(async (reqId, reason = "") => {
+    if (!hasPermission(currentUser, "approve_manager") && !hasPermission(currentUser, "approve_purchase")) {
+      showNotif("Sin permiso para devolver solicitudes", "error");
+      return;
+    }
+
+    const req = requests.find(r => r.id === reqId);
+    if (!req) return;
+
+    try {
+      // Edge Function handles step reset and status change
+      await sendForRevisionInDb(req._uuid, sanitizeMultiline(reason, 1000));
+      await refreshRequest(req._uuid);
+      showNotif("Devuelto para revisi\u00F3n");
+    } catch (err) {
+      console.error("[App] sendForRevision failed:", err);
+      showNotif("Error al devolver", "error");
+    }
+  }, [currentUser, requests, showNotif, refreshRequest]);
+
+  // ---- Advance status (post-approval flow) ----
+  const advanceStatus = useCallback(async (reqId) => {
+    if (!hasPermission(currentUser, "advance_status")) {
+      showNotif("Sin permiso para avanzar el status", "error");
+      return;
+    }
+
+    const req = requests.find(r => r.id === reqId);
+    if (!req) return;
+
+    const idx = STATUS_FLOW.findIndex(s => s.key === req.status);
+    if (idx >= STATUS_FLOW.length - 1) return;
+
+    try {
+      const newStatus = STATUS_FLOW[idx + 1].key;
+      await advanceStatusInDb(req._uuid, newStatus);
+      await refreshRequest(req._uuid);
+      showNotif("Status actualizado");
+    } catch (err) {
+      console.error("[App] advanceStatus failed:", err);
+      showNotif("Error al avanzar status", "error");
+    }
+  }, [showNotif, currentUser, requests, refreshRequest]);
+
+  // ---- Update request (general edits) ----
+  const updateRequest = useCallback(async (reqId, updates) => {
+    if (!currentUser) return;
+
+    const target = requests.find(r => r.id === reqId);
+    if (!target) return;
+
+    if (target.createdBy !== currentUser.name && !hasPermission(currentUser, "view_all_requests")) {
+      showNotif("Sin permiso para editar esta solicitud", "error");
+      return;
+    }
+
+    // Prevent status/workflow manipulation client-side
+    const sanitized = { ...updates };
+    delete sanitized.status;
+    delete sanitized.approvalSteps;
+    delete sanitized.approvalHistory;
+    delete sanitized.budgetId;
+    delete sanitized.budgetExceeded;
+    delete sanitized.confirmedAt;
+    delete sanitized.approvedAt;
+    delete sanitized.rejectedAt;
+
+    // Sanitize text fields
+    if (sanitized.notes !== undefined) sanitized.notes = sanitizeMultiline(sanitized.notes, 2000);
+    if (sanitized.reason !== undefined) sanitized.reason = sanitizeMultiline(sanitized.reason, 1000);
+    if (sanitized.name !== undefined) sanitized.name = sanitizeName(sanitized.name);
+    if (sanitized.suggestedSupplier !== undefined) sanitized.suggestedSupplier = sanitizeName(sanitized.suggestedSupplier);
+
+    try {
+      // Handle comments — detect new ones and insert individually
+      if (Array.isArray(sanitized.comments)) {
+        const existingIds = new Set((target.comments || []).map(c => c.id));
+        const newComments = sanitized.comments.filter(c => !existingIds.has(c.id));
+        for (const c of newComments) {
+          // Edge Function derives author from JWT
+          await addCommentInDb(target._uuid, sanitizeMultiline(c.texto, 2000));
+        }
+        delete sanitized.comments;
+      }
+
+      // Handle quotations — detect new ones and insert individually
+      if (Array.isArray(sanitized.quotations)) {
+        const existingIds = new Set((target.quotations || []).map(q => q.id));
+        const newQuotations = sanitized.quotations.filter(q => !existingIds.has(q.id));
+        for (const q of newQuotations) {
+          await addQuotationInDb(target._uuid, q);
+        }
+        delete sanitized.quotations;
+      }
+
+      // Update main request fields
+      const fieldsToSkip = ["items", "id", "_uuid", "createdAt", "createdBy", "createdById", "date"];
+      const hasDbUpdates = Object.keys(sanitized).some(k => !fieldsToSkip.includes(k));
+      if (hasDbUpdates) {
+        await updateRequestInDb(target._uuid, sanitized);
+      }
+
+      await refreshRequest(target._uuid);
+    } catch (err) {
+      console.error("[App] updateRequest failed:", err);
+      showNotif("Error al actualizar", "error");
+    }
+  }, [currentUser, requests, showNotif, refreshRequest]);
+
+  // ---- Computed values ----
   const rejectedCount = requests.filter(r => r.status === "rechazado").length;
   const statusCounts = [
     ...STATUS_FLOW.map(s => ({
@@ -236,7 +360,7 @@ export function AppProvider({ children }) {
       count: requests.filter(r => r.status === s.key).length,
     })),
     ...(rejectedCount > 0 ? [{
-      key: "rechazado", label: "Rechazado", color: "#e74c3c", icon: "❌",
+      key: "rechazado", label: "Rechazado", color: "#e74c3c", icon: "\u274C",
       count: rejectedCount,
     }] : []),
   ];
@@ -254,6 +378,7 @@ export function AppProvider({ children }) {
       notification,
       statusCounts,
       pendingApprovals,
+      dataLoading,
       showNotif,
       addRequest,
       confirmRequest,

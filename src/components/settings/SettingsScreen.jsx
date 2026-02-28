@@ -1,7 +1,6 @@
 import { colors, font, fontDisplay, shadows, radius } from "../../styles/theme";
 import { useAuth } from "../../context/AuthContext";
 import { ROLES } from "../../constants/users";
-import { STORAGE_KEYS } from "../../constants/storageKeys";
 import BackButton from "../common/BackButton";
 
 export default function SettingsScreen({ onBack, onNavigate }) {
@@ -93,9 +92,9 @@ export default function SettingsScreen({ onBack, onNavigate }) {
           }}>
             Informacion del Sistema
           </div>
-          <SettingsRow label="Version" value="3.0.0 (PDR v3)" />
+          <SettingsRow label="Version" value="4.0.0 (Supabase)" />
           <SettingsRow label="Establecimiento" value={currentUser.establishment} />
-          <SettingsRow label="Datos" value="localStorage" />
+          <SettingsRow label="Datos" value="Supabase Cloud" />
         </div>
 
         {/* Data Management */}
@@ -124,10 +123,9 @@ export default function SettingsScreen({ onBack, onNavigate }) {
             )}
             <button
               onClick={() => {
-                localStorage.removeItem(STORAGE_KEYS.REQUESTS);
-                localStorage.removeItem(STORAGE_KEYS.BUDGETS);
-                localStorage.removeItem(STORAGE_KEYS.PARAMETERS);
-                window.location.reload();
+                if (window.confirm("\u00BFRecargar la aplicaci\u00F3n y refrescar datos desde el servidor?")) {
+                  window.location.reload();
+                }
               }}
               style={{
                 width: "100%", padding: "12px", borderRadius: radius.lg,
@@ -138,7 +136,7 @@ export default function SettingsScreen({ onBack, onNavigate }) {
                 cursor: "pointer", marginBottom: 8,
               }}
             >
-              Resetear datos a valores de ejemplo
+              Recargar datos del servidor
             </button>
           </div>
         )}
