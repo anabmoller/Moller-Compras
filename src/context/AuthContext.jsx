@@ -152,10 +152,15 @@ export function AuthProvider({ children }) {
     const email = `${cleanUsername}@${EMAIL_DOMAIN}`;
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      // Timeout: if signInWithPassword hangs, fail after 10s
+      const authResult = await Promise.race([
+        supabase.auth.signInWithPassword({ email, password }),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("LOGIN_TIMEOUT")), 10000)
+        ),
+      ]);
+
+      const { data, error } = authResult;
 
       if (error) {
         const msg = error.message.includes("Invalid login")
@@ -165,8 +170,14 @@ export function AuthProvider({ children }) {
         return { success: false, error: msg };
       }
 
-      // Load profile
-      const p = await loadProfile(data.user.id);
+      // Load profile (with timeout)
+      const p = await Promise.race([
+        loadProfile(data.user.id),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("PROFILE_TIMEOUT")), 10000)
+        ),
+      ]);
+
       if (!p) {
         await supabase.auth.signOut();
         return { success: false, error: "Perfil de usuario no encontrado" };
@@ -183,7 +194,10 @@ export function AuthProvider({ children }) {
 
       return { success: true, user: p };
     } catch (err) {
-      const msg = "Error de conexión. Intenta de nuevo.";
+      const isTimeout = err.message === "LOGIN_TIMEOUT" || err.message === "PROFILE_TIMEOUT";
+      const msg = isTimeout
+        ? "El servidor no responde. Intenta de nuevo."
+        : "Error de conexión. Intenta de nuevo.";
       setAuthError(msg);
       return { success: false, error: msg };
     }
