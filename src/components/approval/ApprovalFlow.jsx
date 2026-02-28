@@ -28,7 +28,7 @@ export default function ApprovalFlow({ steps, style }) {
         fontSize: 12, fontWeight: 600, color: colors.textLight,
         marginBottom: 14, textTransform: "uppercase", letterSpacing: 1,
       }}>
-        Flujo de Aprobación
+        Flujo de Autorización y Aprobación
       </div>
 
       {/* Horizontal dots flow */}

@@ -119,7 +119,7 @@ export default function SettingsScreen({ onBack, onNavigate }) {
               <AdminButton icon="⚙" label="Parametros del Sistema" onClick={() => onNavigate("parameters")} color={colors.primary} />
             )}
             {can("manage_settings") && (
-              <AdminButton icon="🔄" label="Flujo de Aprobacion" onClick={() => onNavigate("approvalConfig")} color={colors.primary} />
+              <AdminButton icon="🔄" label="Autorización y Aprobación" onClick={() => onNavigate("approvalConfig")} color={colors.primary} />
             )}
             <button
               onClick={() => {

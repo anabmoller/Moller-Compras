@@ -26,6 +26,13 @@ export function getStoredToken() { return _accessToken; }
 // ---- Supabase client ----
 // `export let` so we can recreate the client after login (to escape a
 // hung _initialize lock from a stale session).
+//
+// Clear any stale auth token from localStorage BEFORE creating the client
+// so _initialize() finds nothing to refresh and completes instantly.
+// This eliminates "orphaned lock not released within 5000ms" warnings.
+const _ref = supabaseUrl?.match(/https:\/\/([^.]+)/)?.[1];
+if (_ref) { try { localStorage.removeItem(`sb-${_ref}-auth-token`); } catch {} }
+
 export let supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 /**

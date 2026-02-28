@@ -156,14 +156,14 @@ export function calculateApprovalSteps(
     });
   }
 
-  // ---- R1/R4: Gerente de Area (siempre presente) ----
+  // ---- R1/R4: Gerente de Area — AUTORIZACIÓN (siempre presente) ----
   const dynamicManager = paramEstab?.manager?.toLowerCase();
   const managerUsername =
     dynamicManager || MANAGER_BY_ESTABLISHMENT[pr.establishment] || "fabiano";
   const managerUser = resolveUser(managerUsername);
   steps.push({
     type: STEP_TYPES.MANAGER,
-    label: "Gerente de Área",
+    label: "Autorización — Gerente de Área",
     approverUsername: managerUsername,
     approverName: managerUser?.name || managerUsername,
     sla: isEmergency ? SLA.MANAGER_EMERGENCY : SLA.MANAGER_NORMAL,
@@ -181,7 +181,7 @@ export function calculateApprovalSteps(
     const directorUser = resolveUser(directorUsername);
     steps.push({
       type: STEP_TYPES.DIRECTOR,
-      label: "Director / CFO",
+      label: "Aprobación — Director / CFO",
       approverUsername: directorUsername,
       approverName: directorUser?.name || directorUsername,
       sla: isEmergency ? SLA.DIRECTOR_EMERGENCY : SLA.DIRECTOR_NORMAL,

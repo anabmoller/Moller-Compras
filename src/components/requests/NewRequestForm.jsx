@@ -582,7 +582,7 @@ export default function NewRequestForm({ onSubmit, onCancel }) {
               border: `1px solid ${colors.primary}15`,
             }}>
               <div style={{ fontSize: 12, fontWeight: 600, color: colors.primary, marginBottom: 6 }}>
-                🔄 Flujo de Aprobacion Automatico
+                🔄 Flujo de Autorización y Aprobación
               </div>
               {approvalPreview && approvalPreview.length > 0 ? (
                 <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>

@@ -21,7 +21,7 @@ export const ROLES = {
   diretoria: {
     key: "diretoria",
     label: "Diretoria",
-    description: "Vision completa del sistema, aprobacion de alto nivel",
+    description: "Visión completa del sistema, aprobación de alto nivel",
     color: "#1a4731",
     permissions: [
       "create_request", "view_all_requests", "approve_manager",
@@ -31,7 +31,7 @@ export const ROLES = {
   gerente: {
     key: "gerente",
     label: "Gerente",
-    description: "Aprobacion de solicitudes y vision general",
+    description: "Autorización de solicitudes y visión general",
     color: "#2d5a27",
     permissions: [
       "create_request", "view_all_requests", "approve_manager",
@@ -41,7 +41,7 @@ export const ROLES = {
   lider: {
     key: "lider",
     label: "Lider / Supervisor",
-    description: "Aprobacion a nivel de area y seguimiento",
+    description: "Autorización a nivel de área y seguimiento",
     color: "#2980b9",
     permissions: [
       "create_request", "view_all_requests", "approve_manager",

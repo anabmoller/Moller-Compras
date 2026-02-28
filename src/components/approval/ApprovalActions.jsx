@@ -27,7 +27,7 @@ export default function ApprovalActions({ request, currentUser, onApprove, onRej
         <span style={{ fontSize: 20 }}>⏳</span>
         <div>
           <div style={{ fontSize: 13, fontWeight: 600, color: colors.warning }}>
-            Pendiente de aprobación
+            Pendiente de autorización/aprobación
           </div>
           <div style={{ fontSize: 12, color: colors.warning }}>
             Esperando: {currentStep.approverName} ({currentStep.label})
@@ -49,7 +49,7 @@ export default function ApprovalActions({ request, currentUser, onApprove, onRej
           fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.7)",
           marginBottom: 4, textTransform: "uppercase", letterSpacing: 1,
         }}>
-          Tu aprobación requerida
+          Tu autorización requerida
         </div>
         <div style={{ fontSize: 14, color: "#fff", fontWeight: 500, marginBottom: 14 }}>
           {currentStep.label} — Paso {request.approvalSteps.indexOf(currentStep) + 1} de {request.approvalSteps.length}

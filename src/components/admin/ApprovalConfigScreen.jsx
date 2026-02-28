@@ -35,8 +35,8 @@ export default function ApprovalConfigScreen({ onBack }) {
       <BackButton onClick={onBack} />
       <div style={{ marginBottom: 20 }}>
         <PageHeader
-          title="Flujo de Aprobacion"
-          subtitle="Configuracion del workflow de aprobacion de compras"
+          title="Flujo de Autorización y Aprobación"
+          subtitle="Configuración del workflow de autorización y aprobación de compras"
         />
       </div>
 
@@ -114,9 +114,9 @@ export default function ApprovalConfigScreen({ onBack }) {
         </div>
 
         {/* Thresholds Card */}
-        <Card title="Umbrales de Aprobacion" icon="📐">
-          <ThresholdRow label="Director requerido" value={formatGuaranies(THRESHOLDS.DIRECTOR_REQUIRED)} desc="Compras >= este monto requieren Director" />
-          <ThresholdRow label="Overbudget" value={formatGuaranies(THRESHOLDS.OVERBUDGET_DIRECTOR)} desc="Compras >= este monto requieren aprobacion extra" />
+        <Card title="Umbrales de Aprobación" icon="📐">
+          <ThresholdRow label="Director requerido" value={formatGuaranies(THRESHOLDS.DIRECTOR_REQUIRED)} desc="Compras >= este monto requieren aprobación del Director" />
+          <ThresholdRow label="Overbudget" value={formatGuaranies(THRESHOLDS.OVERBUDGET_DIRECTOR)} desc="Compras >= este monto requieren aprobación extra" />
         </Card>
 
         {/* SLA Card */}
@@ -198,7 +198,7 @@ export default function ApprovalConfigScreen({ onBack }) {
               💉 Regla Veterinaria (R5)
             </div>
             <div style={{ fontSize: 12, color: colors.text, marginBottom: 4 }}>
-              Solicitudes de sectores veterinarios requieren aprobacion previa del especialista.
+              Solicitudes de sectores veterinarios requieren autorización previa del especialista.
             </div>
             <div style={{ fontSize: 11, color: colors.textLight }}>
               Aprobador: <strong>{VET_APPROVER}</strong>
@@ -215,7 +215,7 @@ export default function ApprovalConfigScreen({ onBack }) {
               ⚠ Regla Overbudget (R6)
             </div>
             <div style={{ fontSize: 12, color: colors.text, marginBottom: 4 }}>
-              Cuando una solicitud excede el presupuesto del sector, se activa un paso adicional de aprobacion.
+              Cuando una solicitud excede el presupuesto del sector, se activa un paso adicional de aprobación.
             </div>
             <div style={{ fontSize: 11, color: colors.textLight }}>
               Aprobador: <strong>{OVERBUDGET_APPROVER}</strong>
@@ -226,12 +226,12 @@ export default function ApprovalConfigScreen({ onBack }) {
         {/* Rules Summary */}
         <Card title="Resumen de Reglas" icon="📜">
           {[
-            { id: "R1", desc: "Toda SC requiere aprobacion del Gerente de Area asignado al establecimiento", color: colors.warning },
-            { id: "R2", desc: `SC >= ${formatGuaranies(THRESHOLDS.DIRECTOR_REQUIRED)} requiere aprobacion del Director de la empresa`, color: colors.primary },
-            { id: "R3", desc: `SC >= ${formatGuaranies(THRESHOLDS.OVERBUDGET_DIRECTOR)} requiere aprobacion de ${OVERBUDGET_APPROVER}`, color: colors.danger },
+            { id: "R1", desc: "Toda SC requiere autorización del Gerente de Área asignado al establecimiento", color: colors.warning },
+            { id: "R2", desc: `SC >= ${formatGuaranies(THRESHOLDS.DIRECTOR_REQUIRED)} requiere aprobación del Director de la empresa`, color: colors.primary },
+            { id: "R3", desc: `SC >= ${formatGuaranies(THRESHOLDS.OVERBUDGET_DIRECTOR)} requiere aprobación de ${OVERBUDGET_APPROVER}`, color: colors.danger },
             { id: "R4", desc: "Emergencias: SLA reducido (Gerente 4h, Director 8h)", color: colors.accent },
-            { id: "R5", desc: "Sectores Vet/Farmacia requieren aprobacion de especialista", color: "#7c6bb5" },
-            { id: "R6", desc: "Exceso de presupuesto activa paso overbudget", color: colors.danger },
+            { id: "R5", desc: "Sectores Vet/Farmacia requieren autorización de especialista", color: "#7c6bb5" },
+            { id: "R6", desc: "Exceso de presupuesto activa paso de aprobación overbudget", color: colors.danger },
           ].map(rule => (
             <div key={rule.id} style={{
               display: "flex", gap: 10, padding: "10px 0",
