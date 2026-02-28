@@ -62,7 +62,6 @@ export function AppProvider({ children }) {
         const reqs = await fetchAllRequests();
         if (mounted) {
           setRequests(reqs);
-          console.log("[App] Loaded", reqs.length, "requests from Supabase");
         }
       } catch (err) {
         console.error("[App] Data load failed:", err);
@@ -111,11 +110,7 @@ export function AppProvider({ children }) {
           }
         }
       )
-      .subscribe((status) => {
-        if (status === "SUBSCRIBED") {
-          console.log("[Realtime] Subscribed to requests changes");
-        }
-      });
+      .subscribe();
 
     return () => {
       supabase.removeChannel(channel);

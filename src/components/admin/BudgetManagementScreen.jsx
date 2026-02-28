@@ -21,6 +21,7 @@ export default function BudgetManagementScreen({ onBack }) {
   const [filterEst, setFilterEst] = useState("all");
   const [showConfirmReset, setShowConfirmReset] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [actionError, setActionError] = useState(null);
 
   const [form, setForm] = useState({
     name: "", establishment: "", sector: "", period: "2026",
@@ -83,6 +84,7 @@ export default function BudgetManagementScreen({ onBack }) {
       setForm({ name: "", establishment: "", sector: "", period: "2026", startDate: "2026-01-01", endDate: "2026-12-31", planned: 0, consumed: 0 });
     } catch (err) {
       console.error("[Budget] Save failed:", err);
+      setActionError("Error al guardar presupuesto: " + (err.message || "Error desconocido"));
     } finally {
       setSaving(false);
     }
@@ -110,6 +112,7 @@ export default function BudgetManagementScreen({ onBack }) {
       refresh();
     } catch (err) {
       console.error("[Budget] Deactivate failed:", err);
+      setActionError("Error al desactivar: " + (err.message || "Error desconocido"));
     } finally {
       setSaving(false);
     }
@@ -123,6 +126,7 @@ export default function BudgetManagementScreen({ onBack }) {
       setShowConfirmReset(false);
     } catch (err) {
       console.error("[Budget] Reset failed:", err);
+      setActionError("Error al recargar: " + (err.message || "Error desconocido"));
     } finally {
       setSaving(false);
     }
@@ -138,6 +142,21 @@ export default function BudgetManagementScreen({ onBack }) {
         title="Presupuestos"
         subtitle="Gestión de presupuestos por establecimiento y sector"
       />
+
+      {/* Error banner */}
+      {actionError && (
+        <div style={{
+          margin: "0 20px 12px", padding: "10px 14px", borderRadius: radius.md,
+          background: colors.danger + "10", border: `1px solid ${colors.danger}30`,
+          display: "flex", justifyContent: "space-between", alignItems: "center",
+        }}>
+          <span style={{ fontSize: 12, color: colors.danger, fontWeight: 500 }}>{actionError}</span>
+          <button onClick={() => setActionError(null)} style={{
+            background: "none", border: "none", cursor: "pointer",
+            fontSize: 14, color: colors.danger, padding: "0 4px",
+          }}>✕</button>
+        </div>
+      )}
 
       {/* Summary card */}
       <div style={{ padding: "0 20px", marginBottom: 16 }}>

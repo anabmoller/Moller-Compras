@@ -20,6 +20,7 @@ export default function ParametersScreen({ onBack }) {
   const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState("");
   const [saving, setSaving] = useState(false);
+  const [actionError, setActionError] = useState(null);
 
   const refresh = useCallback(() => setParams({ ...getParameters() }), []);
 
@@ -42,7 +43,7 @@ export default function ParametersScreen({ onBack }) {
       setEditingItem(null);
     } catch (err) {
       console.error("[Parameters] Save failed:", err);
-      alert("Error al guardar: " + err.message);
+      setActionError("Error al guardar: " + (err.message || "Error desconocido"));
     } finally {
       setSaving(false);
     }
@@ -55,7 +56,7 @@ export default function ParametersScreen({ onBack }) {
       refresh();
     } catch (err) {
       console.error("[Parameters] Toggle failed:", err);
-      alert("Error al cambiar estado: " + err.message);
+      setActionError("Error al cambiar estado: " + (err.message || "Error desconocido"));
     } finally {
       setSaving(false);
     }
@@ -69,7 +70,7 @@ export default function ParametersScreen({ onBack }) {
         refresh();
       } catch (err) {
         console.error("[Parameters] Refresh failed:", err);
-        alert("Error al refrescar: " + err.message);
+        setActionError("Error al refrescar: " + (err.message || "Error desconocido"));
       } finally {
         setSaving(false);
       }
@@ -106,6 +107,21 @@ export default function ParametersScreen({ onBack }) {
           Configurar establecimientos, sectores, productos y proveedores
         </div>
       </div>
+
+      {/* Error banner */}
+      {actionError && (
+        <div style={{
+          margin: "0 20px 12px", padding: "10px 14px", borderRadius: radius.md,
+          background: colors.danger + "10", border: `1px solid ${colors.danger}30`,
+          display: "flex", justifyContent: "space-between", alignItems: "center",
+        }}>
+          <span style={{ fontSize: 12, color: colors.danger, fontWeight: 500 }}>{actionError}</span>
+          <button onClick={() => setActionError(null)} style={{
+            background: "none", border: "none", cursor: "pointer",
+            fontSize: 14, color: colors.danger, padding: "0 4px",
+          }}>✕</button>
+        </div>
+      )}
 
       {/* Tab Bar */}
       <div style={{

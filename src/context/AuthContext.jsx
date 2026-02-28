@@ -68,7 +68,6 @@ export function AuthProvider({ children }) {
     // Safety: if auth never resolves, clear stale session and show login
     const safetyTimeout = setTimeout(() => {
       if (mounted) {
-        console.warn("[Auth] Session check timed out — clearing stale session, showing login");
         const ref = supabaseUrl?.match(/https:\/\/([^.]+)/)?.[1];
         if (ref) {
           try { localStorage.removeItem(`sb-${ref}-auth-token`); } catch {}
@@ -123,7 +122,6 @@ export function AuthProvider({ children }) {
     if (!isAuthenticated) return;
     if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
     inactivityTimer.current = setTimeout(async () => {
-      console.log("[Auth] Session expired due to inactivity");
       await supabase.auth.signOut();
       setSession(null);
       setProfile(null);
@@ -245,7 +243,7 @@ export function AuthProvider({ children }) {
             setSession(sess);
           }
         });
-      }).catch(err => console.warn("[Auth] setSession hydration failed (non-fatal):", err));
+      }).catch(() => {});
 
       // Step 4: Update React state directly
       const sessionObj = {
@@ -402,7 +400,6 @@ export function AuthProvider({ children }) {
 
   // Reset all users to defaults (not available in Supabase mode)
   const resetUsers = useCallback(async () => {
-    console.warn("[Auth] resetUsers: Not available in Supabase mode. Refreshing from DB instead.");
     await refreshUsers();
   }, [refreshUsers]);
 

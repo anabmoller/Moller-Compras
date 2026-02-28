@@ -71,7 +71,6 @@ export async function initBudgets() {
       active: b.active !== false,
     }));
 
-    console.log("[Budgets] Initialized from Supabase:", _budgets.length, "budgets");
   } catch (err) {
     console.error("[Budgets] Init failed:", err);
   }
@@ -110,7 +109,6 @@ export function saveBudgets() {
 }
 
 export async function resetBudgetsToDefault() {
-  console.warn("[Budgets] resetBudgetsToDefault is not available in Supabase mode");
   await initBudgets();
   return _budgets;
 }

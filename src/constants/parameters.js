@@ -118,13 +118,6 @@ export async function initParameters() {
       })),
     };
 
-    console.log("[Params] Initialized from Supabase:", {
-      establishments: _params.establishments.length,
-      sectors: _params.sectors.length,
-      productTypes: _params.productTypes.length,
-      suppliers: _params.suppliers.length,
-      companies: _params.companies.length,
-    });
   } catch (err) {
     console.error("[Params] Init failed:", err);
   }
@@ -167,7 +160,6 @@ export async function toggleParameterItem(category, id) {
 }
 
 export async function resetParametersToDefault() {
-  console.warn("[Params] resetParametersToDefault is not available in Supabase mode");
   await initParameters();
   return _params;
 }

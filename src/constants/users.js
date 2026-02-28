@@ -181,7 +181,6 @@ export async function resetPassword(userId) {
 }
 
 export async function resetUsersToDefault() {
-  console.warn("[Users] resetUsersToDefault is not available in Supabase mode");
   await initUsers();
   return _users;
 }
