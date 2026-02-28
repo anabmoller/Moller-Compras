@@ -16,7 +16,7 @@ export default function SettingsScreen({ onBack, onNavigate }) {
           fontFamily: fontDisplay, fontSize: 22, fontWeight: 600,
           color: colors.text, margin: "0 0 20px",
         }}>
-          Configuracion
+          Configuración
         </h2>
 
         {/* User Profile Card */}
@@ -90,9 +90,9 @@ export default function SettingsScreen({ onBack, onNavigate }) {
             fontSize: 12, fontWeight: 600, color: colors.textLight,
             marginBottom: 10, textTransform: "uppercase", letterSpacing: 1,
           }}>
-            Informacion del Sistema
+            Información del Sistema
           </div>
-          <SettingsRow label="Version" value="4.0.0 (Supabase)" />
+          <SettingsRow label="Versión" value="4.0.0 (Supabase)" />
           <SettingsRow label="Establecimiento" value={currentUser.establishment} />
           <SettingsRow label="Datos" value="Supabase Cloud" />
         </div>
@@ -107,16 +107,16 @@ export default function SettingsScreen({ onBack, onNavigate }) {
               fontSize: 12, fontWeight: 600, color: colors.textLight,
               marginBottom: 10, textTransform: "uppercase", letterSpacing: 1,
             }}>
-              Administracion
+              Administración
             </div>
             {can("manage_users") && (
-              <AdminButton icon="👥" label="Gestion de Usuarios" onClick={() => onNavigate("users")} color={colors.primary} />
+              <AdminButton icon="👥" label="Gestión de Usuarios" onClick={() => onNavigate("users")} color={colors.primary} />
             )}
             {can("view_analytics") && (
-              <AdminButton icon="💰" label="Gestion de Presupuestos" onClick={() => onNavigate("budgets")} color={colors.primary} />
+              <AdminButton icon="💰" label="Gestión de Presupuestos" onClick={() => onNavigate("budgets")} color={colors.primary} />
             )}
             {can("manage_settings") && (
-              <AdminButton icon="⚙" label="Parametros del Sistema" onClick={() => onNavigate("parameters")} color={colors.primary} />
+              <AdminButton icon="⚙" label="Parámetros del Sistema" onClick={() => onNavigate("parameters")} color={colors.primary} />
             )}
             {can("manage_settings") && (
               <AdminButton icon="🔄" label="Autorización y Aprobación" onClick={() => onNavigate("approvalConfig")} color={colors.primary} />
@@ -153,7 +153,7 @@ export default function SettingsScreen({ onBack, onNavigate }) {
             boxShadow: `0 4px 16px ${colors.accent}30`,
           }}
         >
-          Cerrar Sesion
+          Cerrar Sesión
         </button>
       </div>
     </div>

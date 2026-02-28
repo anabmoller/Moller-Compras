@@ -1,5 +1,6 @@
 import { colors, font, radius, shadows } from "../../styles/theme";
 import { getStatusDisplay, getStatusProgress, getPriorityDisplay, formatGuaranies } from "../../utils/statusHelpers";
+import { getSectors } from "../../constants/parameters";
 
 export default function RequestCard({ request: r, onClick }) {
   const status = getStatusDisplay(r.status);
@@ -84,7 +85,7 @@ export default function RequestCard({ request: r, onClick }) {
         </span>
         {r.sector && (
           <span style={{ fontSize: 11, color: colors.textMuted }}>
-            · {r.sector}
+            · {getSectors().find(s => s.name === r.sector)?.icon || ""} {r.sector}
           </span>
         )}
         {r.totalAmount > 0 && (

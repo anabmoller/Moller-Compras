@@ -16,6 +16,7 @@ import { useAuth } from "../../context/AuthContext";
 import { formatGuaranies } from "../../constants/budgets";
 import { getStatusDisplay, getPriorityDisplay } from "../../utils/statusHelpers";
 import { fmtDate, fmtDateTime } from "../../utils/dateFormatters";
+import { getSectors, getProductTypes } from "../../constants/parameters";
 
 // ---- Sub-components ----
 
@@ -379,8 +380,16 @@ export default function RequestDetail({
             color={urgency?.color}
             icon={urgency?.icon}
           />
-          <InfoCell label="Sector" value={r.sector || r.type} />
-          <InfoCell label="Tipo de Producto" value={r.type} />
+          <InfoCell
+            label="Sector"
+            value={r.sector || r.type}
+            icon={getSectors().find(s => s.name === (r.sector || r.type))?.icon}
+          />
+          <InfoCell
+            label="Tipo de Producto"
+            value={r.type}
+            icon={getProductTypes().find(t => t.name === r.type)?.icon}
+          />
           <InfoCell label="Cantidad" value={r.quantity} />
           <InfoCell label="Asignado a" value={r.assignee || "Sin asignar"} />
           {r.equipment && <InfoCell label="Equipo" value={r.equipment} span2 />}

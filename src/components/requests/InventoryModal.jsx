@@ -67,7 +67,7 @@ export default function InventoryModal({ onSelect, onClose, onNewProduct }) {
                 fontFamily: fontDisplay, fontSize: 20, fontWeight: 600,
                 color: colors.text, margin: 0,
               }}>
-                Catalogo de Productos
+                Catálogo de Productos
               </h3>
               <div style={{ fontSize: 11, color: colors.textLight, marginTop: 2 }}>
                 {INVENTORY_ITEMS.length} productos disponibles
@@ -85,7 +85,7 @@ export default function InventoryModal({ onSelect, onClose, onNewProduct }) {
           <SearchInput
             value={search}
             onChange={setSearch}
-            placeholder="Buscar por nombre, codigo o tipo..."
+            placeholder="Buscar por nombre, código o tipo..."
             autoFocus
             style={{ marginBottom: 10 }}
           />
@@ -215,7 +215,7 @@ export default function InventoryModal({ onSelect, onClose, onNewProduct }) {
               + Agregar producto nuevo
             </div>
             <div style={{ fontSize: 11, color: colors.textLight, marginTop: 2 }}>
-              No esta en el catalogo? Crealo manualmente
+              ¿No está en el catálogo? Créalo manualmente
             </div>
           </div>
         </div>

@@ -102,7 +102,7 @@ export default function ParametersScreen({ onBack }) {
           fontFamily: fontDisplay, fontSize: 22, fontWeight: 600,
           color: colors.text, margin: "0 0 4px",
         }}>
-          Parametros del Sistema
+          Parámetros del Sistema
         </h2>
         <div style={{ fontSize: 13, color: colors.textLight, marginBottom: 16 }}>
           Configurar establecimientos, sectores, productos y proveedores

@@ -131,9 +131,9 @@ export default function NewRequestForm({ onSubmit, onCancel }) {
   };
 
   const stepTitles = [
-    { title: "¿Que necesitas?", sub: "Selecciona del catalogo o crea un producto nuevo" },
-    { title: "Detalles", sub: "Cantidad, urgencia y justificacion de la compra" },
-    { title: "Revision y Envio", sub: "Verifica los datos antes de crear la solicitud" },
+    { title: "¿Qué necesitas?", sub: "Selecciona del catálogo o crea un producto nuevo" },
+    { title: "Detalles", sub: "Cantidad, urgencia y justificación de la compra" },
+    { title: "Revisión y Envío", sub: "Verifica los datos antes de crear la solicitud" },
   ];
 
   const FieldError = ({ field }) => errors[field]
@@ -257,7 +257,7 @@ export default function NewRequestForm({ onSubmit, onCancel }) {
                 <input
                   value={form.name}
                   onChange={e => update("name", e.target.value)}
-                  placeholder="Descripcion del producto o servicio"
+                  placeholder="Descripción del producto o servicio"
                   style={{ ...inputStyle, borderColor: errors.name ? colors.danger : colors.border }}
                 />
                 <FieldError field="name" />
@@ -270,7 +270,7 @@ export default function NewRequestForm({ onSubmit, onCancel }) {
                 <input
                   value={form.name}
                   onChange={e => update("name", e.target.value)}
-                  placeholder="Descripcion del producto o servicio"
+                  placeholder="Descripción del producto o servicio"
                   style={inputStyle}
                 />
               </div>
@@ -315,7 +315,7 @@ export default function NewRequestForm({ onSubmit, onCancel }) {
                   style={{ ...inputStyle, borderColor: errors.sector ? colors.danger : colors.border }}
                 >
                   <option value="">Seleccionar...</option>
-                  {getSectors().filter(s => s.active).map(s => <option key={s.name} value={s.name}>{s.name}</option>)}
+                  {getSectors().filter(s => s.active).map(s => <option key={s.name} value={s.name}>{s.icon ? `${s.icon} ` : ""}{s.name}</option>)}
                 </select>
                 <FieldError field="sector" />
               </div>
@@ -330,7 +330,7 @@ export default function NewRequestForm({ onSubmit, onCancel }) {
                   style={inputStyle}
                 >
                   <option value="">Seleccionar...</option>
-                  {getProductTypes().filter(t => t.active).map(t => <option key={t.name} value={t.name}>{t.name}</option>)}
+                  {getProductTypes().filter(t => t.active).map(t => <option key={t.name} value={t.name}>{t.icon ? `${t.icon} ` : ""}{t.name}</option>)}
                 </select>
               </div>
             )}
@@ -492,7 +492,7 @@ export default function NewRequestForm({ onSubmit, onCancel }) {
               <textarea
                 value={form.purpose}
                 onChange={e => update("purpose", e.target.value)}
-                placeholder="Descripcion del uso previsto..."
+                placeholder="Descripción del uso previsto..."
                 rows={2}
                 style={{ ...inputStyle, resize: "vertical" }}
               />
@@ -647,7 +647,7 @@ export default function NewRequestForm({ onSubmit, onCancel }) {
                 Resumen de la solicitud
               </div>
               <SummaryRow label="Producto" value={form.name} />
-              {form.inventoryItem && <SummaryRow label="Codigo" value={form.inventoryItem.code} />}
+              {form.inventoryItem && <SummaryRow label="Código" value={form.inventoryItem.code} />}
               <SummaryRow label="Solicitante" value={form.requester} />
               <SummaryRow label="Establecimiento" value={form.establishment} />
               <SummaryRow label="Sector" value={form.sector} />
