@@ -215,7 +215,7 @@ export default function ParametersScreen({ onBack }) {
                 )}
               </div>
               <div style={{ fontSize: 11, color: colors.textLight, marginTop: 2 }}>
-                {tab === "establishments" && `${item.company || ""} \u00B7 Gte: ${item.manager || "\u2014"} \u00B7 ${item.location || ""}`}
+                {tab === "establishments" && `${item.company || ""} \u00B7 Gte: ${item.manager || "\u2014"}${item.senacsa_code ? ` \u00B7 SENACSA: ${item.senacsa_code}` : ""} \u00B7 ${item.location || ""}`}
                 {tab === "sectors" && (item.description || "")}
                 {tab === "productTypes" && (item.description || "")}
                 {tab === "suppliers" && `${item.category || ""} \u00B7 ${item.phone || ""}`}
@@ -260,9 +260,9 @@ function ParameterForm({ tab, item, onSave, onCancel, saving }) {
     const users = getUsers().filter(u => u.active);
     return {
       gerente: users.filter(u => ["gerente", "admin"].includes(u.role))
-        .map(u => ({ value: u.username, label: `${u.name} (${u.username})` })),
+        .map(u => ({ value: u.username, label: u.name })),
       diretoria: users.filter(u => ["diretoria", "admin"].includes(u.role))
-        .map(u => ({ value: u.username, label: `${u.name} (${u.username})` })),
+        .map(u => ({ value: u.username, label: u.name })),
     };
   }, []);
 
@@ -270,6 +270,7 @@ function ParameterForm({ tab, item, onSave, onCancel, saving }) {
     establishments: [
       { key: "name", label: "Nombre", required: true },
       { key: "code", label: "Código", required: true },
+      { key: "senacsa_code", label: "Código SENACSA" },
       { key: "company", label: "Empresa" },
       { key: "manager", label: "Gerente Responsable", type: "user_select", roleFilter: "gerente" },
       { key: "location", label: "Ubicación" },
@@ -306,6 +307,16 @@ function ParameterForm({ tab, item, onSave, onCancel, saving }) {
     fields.forEach(f => { empty[f.key] = ""; });
     return empty;
   });
+
+  // Auto-generate establishment code from name (e.g. "Cerro Memby" → "CMB")
+  // Takes first letter of each word, uppercase, max 4 chars
+  const autoGenerateCode = useCallback((name) => {
+    if (!name) return "";
+    return name.trim().split(/\s+/).map(w => w[0] || "").join("").toUpperCase().slice(0, 4);
+  }, []);
+
+  // Track whether user has manually edited the code field
+  const [codeManuallyEdited, setCodeManuallyEdited] = useState(!!item);
 
   const canSubmit = !saving && fields.filter(f => f.required).every(f => form[f.key]?.trim());
 
@@ -350,7 +361,18 @@ function ParameterForm({ tab, item, onSave, onCancel, saving }) {
             ) : (
               <input
                 value={form[f.key] || ""}
-                onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
+                onChange={e => {
+                  const val = e.target.value;
+                  if (tab === "establishments" && f.key === "name" && !codeManuallyEdited) {
+                    // Auto-generate code from name
+                    setForm(prev => ({ ...prev, name: val, code: autoGenerateCode(val) }));
+                  } else if (tab === "establishments" && f.key === "code") {
+                    setCodeManuallyEdited(true);
+                    setForm(prev => ({ ...prev, code: val }));
+                  } else {
+                    setForm(prev => ({ ...prev, [f.key]: val }));
+                  }
+                }}
                 placeholder={f.label}
                 disabled={saving}
                 style={{ ...inputStyle, padding: "10px 12px", fontSize: 13 }}

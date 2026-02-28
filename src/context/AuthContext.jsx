@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
-import { supabase, supabaseUrl, supabaseAnonKey, setStoredToken, recreateClient } from "../lib/supabase";
+import { supabase, supabaseUrl, supabaseAnonKey, setStoredToken } from "../lib/supabase";
 import {
   hasPermission, getUsers, initUsers,
   addUser as addUserToDb, updateUser as updateUserInDb,
@@ -83,6 +83,10 @@ export function AuthProvider({ children }) {
 
         if (event === "INITIAL_SESSION" || event === "SIGNED_IN") {
           if (newSession?.user) {
+            // Keep _accessToken in sync with supabase-js auth state
+            if (newSession.access_token) {
+              setStoredToken(newSession.access_token);
+            }
             setSession(newSession);
             if (!profileFetchRef.current) {
               profileFetchRef.current = true;
@@ -102,9 +106,12 @@ export function AuthProvider({ children }) {
             clearTimeout(safetyTimeout);
           }
         } else if (event === "SIGNED_OUT") {
+          setStoredToken(null);
           setSession(null);
           setProfile(null);
         } else if (event === "TOKEN_REFRESHED" && newSession) {
+          // CRITICAL: update _accessToken so Edge Functions use the fresh JWT
+          setStoredToken(newSession.access_token);
           setSession(newSession);
         }
       }
@@ -225,25 +232,21 @@ export function AuthProvider({ children }) {
         return { success: false, error: "Tu cuenta está desactivada" };
       }
 
-      // Step 3: Store token for Edge Function calls + recreate supabase client
+      // Step 3: Store token for Edge Function calls + hydrate supabase-js client
       // The stored token is used by invokeEdgeFunction (direct fetch) immediately.
-      // Recreating the client escapes the hung _initialize() lock from the old client.
+      // Since localStorage was cleared before client creation, _initialize() completed
+      // instantly — setSession() works on the existing client without blocking.
       setStoredToken(access_token);
 
-      const freshClient = recreateClient();
-      // setSession on the FRESH client works instantly (no stale session to block it)
-      freshClient.auth.setSession({
+      // Hydrate the SINGLE supabase-js client with the session from fetch-based login.
+      // The onAuthStateChange listener (useEffect above) handles TOKEN_REFRESHED events
+      // and keeps _accessToken in sync — no need for a second listener here.
+      supabase.auth.setSession({
         access_token,
         refresh_token,
-      }).then(() => {
-        // Update stored token on refresh events
-        freshClient.auth.onAuthStateChange((event, sess) => {
-          if (event === "TOKEN_REFRESHED" && sess?.access_token) {
-            setStoredToken(sess.access_token);
-            setSession(sess);
-          }
-        });
-      }).catch(() => {});
+      }).catch((err) => {
+        console.error("[Auth] setSession failed:", err);
+      });
 
       // Step 4: Update React state directly
       const sessionObj = {

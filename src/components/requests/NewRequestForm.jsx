@@ -315,7 +315,7 @@ export default function NewRequestForm({ onSubmit, onCancel }) {
                   style={{ ...inputStyle, borderColor: errors.sector ? colors.danger : colors.border }}
                 >
                   <option value="">Seleccionar...</option>
-                  {getSectors().filter(s => s.active).map(s => <option key={s.name} value={s.name}>{s.icon ? `${s.icon} ` : ""}{s.name}</option>)}
+                  {getSectors().filter(s => s.active).map(s => <option key={s.name} value={s.name}>{s.name}</option>)}
                 </select>
                 <FieldError field="sector" />
               </div>
@@ -330,7 +330,7 @@ export default function NewRequestForm({ onSubmit, onCancel }) {
                   style={inputStyle}
                 >
                   <option value="">Seleccionar...</option>
-                  {getProductTypes().filter(t => t.active).map(t => <option key={t.name} value={t.name}>{t.icon ? `${t.icon} ` : ""}{t.name}</option>)}
+                  {getProductTypes().filter(t => t.active).map(t => <option key={t.name} value={t.name}>{t.name}</option>)}
                 </select>
               </div>
             )}

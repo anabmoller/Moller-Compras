@@ -1,5 +1,7 @@
 // ============================================================
 // YPOTI — Supabase Client + Token Store
+// CRITICAL: Only ONE createClient() call in the entire app.
+// Edge Functions use _accessToken via direct fetch (not supabase-js).
 // ============================================================
 
 import { createClient } from "@supabase/supabase-js";
@@ -16,38 +18,23 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 // ---- Token store ----
 // The fetch-based login stores the JWT here so that Edge Function calls
-// and reads can work immediately, without waiting for supabase-js to
-// hydrate its internal session (which can be blocked by the init lock).
+// can work immediately via direct fetch. This is the SINGLE SOURCE OF TRUTH
+// for the access token used in all Edge Function calls.
 let _accessToken = null;
 
-export function setStoredToken(token) { _accessToken = token; }
+export function setStoredToken(token) {
+  _accessToken = token;
+}
 export function getStoredToken() { return _accessToken; }
 
-// ---- Supabase client ----
-// `export let` so we can recreate the client after login (to escape a
-// hung _initialize lock from a stale session).
-//
+// ---- Supabase client (SINGLE INSTANCE) ----
 // Clear any stale auth token from localStorage BEFORE creating the client
 // so _initialize() finds nothing to refresh and completes instantly.
-// This eliminates "orphaned lock not released within 5000ms" warnings.
+// This eliminates "orphaned lock not released within 5000ms" warnings
+// and prevents the _initialize() lock from blocking setSession() later.
 const _ref = supabaseUrl?.match(/https:\/\/([^.]+)/)?.[1];
 if (_ref) { try { localStorage.removeItem(`sb-${_ref}-auth-token`); } catch {} }
 
-export let supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-/**
- * Recreate the supabase client from scratch.
- * Call this after a fetch-based login to get a fresh client with no
- * stale session in its internal state.  The new client's _initialize()
- * will complete instantly (nothing to refresh), so setSession() works.
- */
-export function recreateClient() {
-  // Derive project ref for localStorage cleanup
-  const ref = supabaseUrl?.match(/https:\/\/([^.]+)/)?.[1];
-  if (ref) {
-    try { localStorage.removeItem(`sb-${ref}-auth-token`); } catch {}
-  }
-
-  supabase = createClient(supabaseUrl, supabaseAnonKey);
-  return supabase;
-}
+// SINGLE client — never recreated. This prevents "Multiple GoTrueClient
+// instances" warning and ensures one consistent auth state.
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
