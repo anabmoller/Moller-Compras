@@ -58,6 +58,21 @@ export const OVERBUDGET_APPROVER = "ana.moller";
 export const VET_APPROVER = "rodrigo.ferreira";
 export const VET_SECTORS = ["Veterinária", "Farmacia", "Veterinaria"];
 
+// ---- Super-Approvers: can approve any step up to their limit ----
+export const SUPER_APPROVERS: Record<string, number> = {
+  "mauricio": Infinity,
+  "ronei": 100_000_000_000,
+};
+
+/** Check if a user can approve a specific step (including super-approver powers) */
+export function canUserApproveStep(username: string, step: { approverUsername: string }, requestAmount = 0): boolean {
+  if (!username || !step) return false;
+  if (username === step.approverUsername) return true;
+  const superLimit = SUPER_APPROVERS[username];
+  if (superLimit !== undefined && requestAmount <= superLimit) return true;
+  return false;
+}
+
 // ---- Thresholds (en Guaranies) ----
 export const THRESHOLDS = {
   DIRECTOR_REQUIRED: 5_000_000,

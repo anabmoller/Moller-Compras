@@ -90,6 +90,12 @@ export const OVERBUDGET_APPROVER = "ana.moller";
 export const VET_APPROVER = "rodrigo.ferreira";
 export const VET_SECTORS = ["Veterinária", "Farmacia", "Veterinaria"];
 
+// ---- Super-Approvers: can approve any step up to their limit ----
+export const SUPER_APPROVERS = {
+  "mauricio": Infinity,            // Can approve any amount
+  "ronei": 100_000_000_000,       // ₲100B (effectively unlimited)
+};
+
 // ---- Thresholds (en Guaraníes ₲) ----
 export const THRESHOLDS = {
   DIRECTOR_REQUIRED: 5_000_000,       // ≥ ₲5M → requiere Director
@@ -238,10 +244,15 @@ export function calculateApprovalSteps(pr, users = []) {
 
 /**
  * Check if a user can approve a specific step
+ * Super-approvers can approve any step within their amount limit
  */
-export function canUserApproveStep(user, step) {
+export function canUserApproveStep(user, step, requestAmount = 0) {
   if (!user || !step) return false;
-  return user.email === step.approverUsername;
+  if (user.email === step.approverUsername) return true;
+  // Super-approver check
+  const superLimit = SUPER_APPROVERS[user.email];
+  if (superLimit !== undefined && requestAmount <= superLimit) return true;
+  return false;
 }
 
 /**

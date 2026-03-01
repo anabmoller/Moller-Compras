@@ -8,7 +8,7 @@ import { STATUS_FLOW, SAMPLE_REQUESTS } from "../constants";
 import { normalizeStatus } from "../utils/statusHelpers";
 import { useAuth } from "./AuthContext";
 import { supabase } from "../lib/supabase";
-import { getCurrentStep, STEP_STATUS } from "../constants/approvalConfig";
+import { getCurrentStep, canUserApproveStep, STEP_STATUS } from "../constants/approvalConfig";
 import { initParameters } from "../constants/parameters";
 import { initBudgets } from "../constants/budgets";
 import { initUsers, hasPermission } from "../constants/users";
@@ -202,7 +202,7 @@ export function AppProvider({ children }) {
 
     const currentStep = getCurrentStep(req.approvalSteps);
     if (!currentStep) return;
-    if (currentUser?.email !== currentStep.approverUsername) return;
+    if (!canUserApproveStep(currentUser, currentStep, req.totalAmount)) return;
 
     try {
       // Edge Function verifies approver, updates step, handles budget
@@ -379,7 +379,7 @@ export function AppProvider({ children }) {
     return requests.filter(r => {
       if (!r.approvalSteps || r.status === "rechazado") return false;
       const step = getCurrentStep(r.approvalSteps);
-      return step && currentUser && step.approverUsername === currentUser.email;
+      return step && currentUser && canUserApproveStep(currentUser, step, r.totalAmount);
     });
   }, [requests, currentUser]);
 

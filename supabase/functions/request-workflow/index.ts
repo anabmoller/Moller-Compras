@@ -15,6 +15,7 @@ import {
 import {
   calculateApprovalSteps,
   isFullyApproved,
+  canUserApproveStep,
   STEP_STATUS,
 } from "../_shared/approvalEngine.ts";
 import { sanitizeText, sanitizeMultiline } from "../_shared/sanitize.ts";
@@ -200,8 +201,9 @@ Deno.serve(async (req) => {
         );
         if (!currentStep) throw new Error("No pending step found");
 
-        // Authorization: caller must be the designated approver
-        if (caller.username !== currentStep.approver_username) {
+        // Authorization: caller must be the designated approver or a super-approver
+        const totalAmount = Number(request.total_amount) || 0;
+        if (!canUserApproveStep(caller.username, { approverUsername: currentStep.approver_username }, totalAmount)) {
           throw new Error(
             `Not authorized: expected ${currentStep.approver_username}, got ${caller.username}`,
           );
@@ -308,8 +310,11 @@ Deno.serve(async (req) => {
         );
         if (!currentStep) throw new Error("No pending step found");
 
-        // Authorization
-        if (caller.username !== currentStep.approver_username) {
+        // Authorization (includes super-approvers)
+        const { data: reqForReject } = await supabaseAdmin
+          .from("requests").select("total_amount").eq("id", requestUuid).single();
+        const rejectAmount = Number(reqForReject?.total_amount) || 0;
+        if (!canUserApproveStep(caller.username, { approverUsername: currentStep.approver_username }, rejectAmount)) {
           throw new Error("Not authorized to reject this step");
         }
 
