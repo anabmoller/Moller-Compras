@@ -18,6 +18,7 @@ import { getStatusDisplay, getPriorityDisplay, normalizeStatus } from "../../uti
 import { fmtDate } from "../../utils/dateFormatters";
 import { getSectors, getProductTypes } from "../../constants/parameters";
 import { MANAGER_MAP, COMPANY_MAP, PRESIDENT_MAP, ESTABLISHMENT_COMPANY, USER_DISPLAY_NAMES, SUPER_APPROVERS } from "../../constants/approvalConfig";
+import { supabase } from "../../lib/supabase";
 
 // ---- Extracted sub-components ----
 import RequestHeader from "./RequestHeader";
@@ -407,11 +408,20 @@ export default function RequestDetail({
                             <div className="flex-1 min-w-0">
                               <div className="text-xs font-medium text-white truncate">{att.name}</div>
                             </div>
-                            {att.url && (
-                              <a href={att.url} target="_blank" rel="noopener noreferrer"
-                                className="bg-emerald-500/[0.06] border-none rounded px-2 py-1 text-[10px] text-emerald-400 font-semibold no-underline">
+                            {(att.path || att.url) && (
+                              <button
+                                onClick={async () => {
+                                  if (att.path) {
+                                    try {
+                                      const { data } = await supabase.storage.from("attachments").createSignedUrl(att.path, 3600);
+                                      if (data?.signedUrl) { window.open(data.signedUrl, "_blank"); return; }
+                                    } catch { /* fall through */ }
+                                  }
+                                  if (att.url) window.open(att.url, "_blank");
+                                }}
+                                className="bg-emerald-500/[0.06] border-none rounded px-2 py-1 text-[10px] text-emerald-400 font-semibold cursor-pointer">
                                 Ver
-                              </a>
+                              </button>
                             )}
                           </div>
                         ))}

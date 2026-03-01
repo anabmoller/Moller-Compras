@@ -51,15 +51,16 @@ export default function AttachmentUpload({ requestUuid, attachments = [], onAtta
 
       if (uploadError) throw uploadError;
 
-      const { data: urlData } = supabase.storage
+      // Use signed URL (works for both public and private buckets)
+      const { data: urlData } = await supabase.storage
         .from("attachments")
-        .getPublicUrl(filePath);
+        .createSignedUrl(filePath, 3600);
 
       const newAttachment = {
         id: `att_${timestamp}`,
         name: file.name,
         path: filePath,
-        url: urlData?.publicUrl || "",
+        url: urlData?.signedUrl || "",
         size: file.size,
         type: file.type,
         uploadedAt: new Date().toISOString(),
@@ -93,6 +94,22 @@ export default function AttachmentUpload({ requestUuid, attachments = [], onAtta
 
   const isImage = (type) => type?.startsWith("image/");
 
+  // Generate a fresh signed URL on demand (handles expired stored URLs)
+  const openAttachment = async (att) => {
+    if (att.path) {
+      try {
+        const { data } = await supabase.storage
+          .from("attachments")
+          .createSignedUrl(att.path, 3600);
+        if (data?.signedUrl) {
+          window.open(data.signedUrl, "_blank");
+          return;
+        }
+      } catch { /* fall through to stored URL */ }
+    }
+    if (att.url) window.open(att.url, "_blank");
+  };
+
   return (
     <div>
       {/* Uploaded files preview */}
@@ -125,15 +142,13 @@ export default function AttachmentUpload({ requestUuid, attachments = [], onAtta
 
               {/* View / Remove buttons */}
               <div className="flex gap-1 flex-shrink-0">
-                {att.url && (
-                  <a
-                    href={att.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-emerald-500/[0.06] border-none rounded px-2 py-1 text-[10px] text-emerald-400 font-semibold no-underline cursor-pointer"
+                {(att.path || att.url) && (
+                  <button
+                    onClick={() => openAttachment(att)}
+                    className="bg-emerald-500/[0.06] border-none rounded px-2 py-1 text-[10px] text-emerald-400 font-semibold cursor-pointer"
                   >
                     Ver
-                  </a>
+                  </button>
                 )}
                 <button
                   onClick={() => handleRemove(att)}
