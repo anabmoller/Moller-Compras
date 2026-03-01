@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
-import { supabase, supabaseUrl, supabaseAnonKey, setStoredToken } from "../lib/supabase";
+import { supabase, supabaseUrl, supabaseAnonKey, setStoredToken, getStoredToken } from "../lib/supabase";
 import {
   hasPermission, getUsers, initUsers,
   addUser as addUserToDb, updateUser as updateUserInDb,
@@ -8,7 +8,7 @@ import {
 
 // ============================================================
 // YPOTI — AuthContext (Supabase Auth)
-// Phase 4: Authentication migrated from localStorage to Supabase
+// FIX v4: Robust token management — no more Invalid JWT
 // ============================================================
 
 const AuthContext = createContext(null);
@@ -46,6 +46,30 @@ export function AuthProvider({ children }) {
   // ---- Load profile from Supabase ----
   const loadProfile = useCallback(async (userId) => {
     if (!userId) return null;
+
+    // Use the stored token if available (more reliable than relying on supabase-js client state)
+    const token = getStoredToken();
+    if (token) {
+      try {
+        const res = await fetch(
+          `${supabaseUrl}/rest/v1/profiles?id=eq.${userId}&select=*`,
+          {
+            headers: {
+              "apikey": supabaseAnonKey,
+              "Authorization": `Bearer ${token}`,
+            },
+          }
+        );
+        if (res.ok) {
+          const profiles = await res.json();
+          return profiles?.[0] || null;
+        }
+      } catch (err) {
+        console.warn("[Auth] REST profile fetch failed, falling back to client:", err);
+      }
+    }
+
+    // Fallback to supabase-js client
     const { data, error } = await supabase
       .from("profiles")
       .select("*")
@@ -60,35 +84,31 @@ export function AuthProvider({ children }) {
   }, []);
 
   // ---- Initialize: listen for auth state changes ----
-  // Uses INITIAL_SESSION event (supabase-js v2.39+) instead of getSession()
-  // which can hang if token refresh stalls during client initialization.
   useEffect(() => {
     let mounted = true;
 
-    // Safety: if auth never resolves, clear stale session and show login
+    // Safety timeout: if auth never resolves within 8s, show login
     const safetyTimeout = setTimeout(() => {
-      if (mounted) {
-        const ref = supabaseUrl?.match(/https:\/\/([^.]+)/)?.[1];
-        if (ref) {
-          try { localStorage.removeItem(`sb-${ref}-auth-token`); } catch {}
-        }
+      if (mounted && loading) {
+        console.warn("[Auth] Safety timeout — showing login screen");
         setLoading(false);
       }
-    }, 5000);
+    }, 8000);
 
-    // Single listener handles everything: initial session + subsequent changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, newSession) => {
         if (!mounted) return;
 
-        if (event === "INITIAL_SESSION" || event === "SIGNED_IN") {
-          if (newSession?.user) {
-            // Keep _accessToken in sync with supabase-js auth state
-            if (newSession.access_token) {
-              setStoredToken(newSession.access_token);
-            }
+        console.log("[Auth] Event:", event, "hasSession:", !!newSession);
+
+        if (event === "INITIAL_SESSION" || event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
+          if (newSession?.access_token) {
+            // CRITICAL: Always keep _accessToken in sync
+            setStoredToken(newSession.access_token);
             setSession(newSession);
-            if (!profileFetchRef.current) {
+
+            // Load profile on initial session or sign-in (not on every token refresh)
+            if ((event === "INITIAL_SESSION" || event === "SIGNED_IN") && !profileFetchRef.current) {
               profileFetchRef.current = true;
               try {
                 const p = await loadProfile(newSession.user.id);
@@ -100,7 +120,8 @@ export function AuthProvider({ children }) {
               }
             }
           }
-          // Resolve loading after initial session (whether or not there's a user)
+
+          // Resolve loading after initial session check
           if (event === "INITIAL_SESSION" && mounted) {
             setLoading(false);
             clearTimeout(safetyTimeout);
@@ -109,10 +130,6 @@ export function AuthProvider({ children }) {
           setStoredToken(null);
           setSession(null);
           setProfile(null);
-        } else if (event === "TOKEN_REFRESHED" && newSession) {
-          // CRITICAL: update _accessToken so Edge Functions use the fresh JWT
-          setStoredToken(newSession.access_token);
-          setSession(newSession);
         }
       }
     );
@@ -122,7 +139,7 @@ export function AuthProvider({ children }) {
       subscription?.unsubscribe();
       clearTimeout(safetyTimeout);
     };
-  }, [loadProfile]);
+  }, [loadProfile, loading]);
 
   // ---- Inactivity timeout ----
   const resetInactivityTimer = useCallback(() => {
@@ -130,6 +147,7 @@ export function AuthProvider({ children }) {
     if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
     inactivityTimer.current = setTimeout(async () => {
       await supabase.auth.signOut();
+      setStoredToken(null);
       setSession(null);
       setProfile(null);
     }, SESSION_TIMEOUT_MS);
@@ -149,9 +167,6 @@ export function AuthProvider({ children }) {
   }, [isAuthenticated, resetInactivityTimer]);
 
   // ---- Login via direct fetch (bypasses supabase-js init lock) ----
-  // supabase.auth.signInWithPassword() can hang indefinitely when a stale
-  // session causes the internal _initialize() lock to block.  Using fetch()
-  // against the Auth REST API directly — proven to work via curl.
   const login = useCallback(async (username, password) => {
     setAuthError(null);
 
@@ -200,7 +215,10 @@ export function AuthProvider({ children }) {
         return { success: false, error: "Respuesta de autenticación inválida" };
       }
 
-      // Step 2: Load profile via REST API (10s timeout)
+      // Step 2: Store token IMMEDIATELY so Edge Functions work right away
+      setStoredToken(access_token);
+
+      // Step 3: Load profile via REST API (uses stored token)
       const profileController = new AbortController();
       const profileTimeout = setTimeout(() => profileController.abort(), 10000);
 
@@ -225,30 +243,47 @@ export function AuthProvider({ children }) {
       const p = profiles?.[0] || null;
 
       if (!p) {
+        setStoredToken(null);
         return { success: false, error: "Perfil de usuario no encontrado" };
       }
 
       if (p.active === false) {
+        setStoredToken(null);
         return { success: false, error: "Tu cuenta está desactivada" };
       }
 
-      // Step 3: Store token for Edge Function calls + hydrate supabase-js client
-      // The stored token is used by invokeEdgeFunction (direct fetch) immediately.
-      // Since localStorage was cleared before client creation, _initialize() completed
-      // instantly — setSession() works on the existing client without blocking.
-      setStoredToken(access_token);
+      // Step 4: Hydrate supabase-js client — AWAIT it, with timeout
+      // This is important for: (a) RLS reads via supabase client, (b) token auto-refresh
+      try {
+        const setSessionResult = await Promise.race([
+          supabase.auth.setSession({ access_token, refresh_token }),
+          new Promise((_, reject) => setTimeout(() => reject(new Error("setSession timeout")), 5000)),
+        ]);
 
-      // Hydrate the SINGLE supabase-js client with the session from fetch-based login.
-      // The onAuthStateChange listener (useEffect above) handles TOKEN_REFRESHED events
-      // and keeps _accessToken in sync — no need for a second listener here.
-      supabase.auth.setSession({
-        access_token,
-        refresh_token,
-      }).catch((err) => {
-        console.error("[Auth] setSession failed:", err);
-      });
+        if (setSessionResult?.error) {
+          // Non-fatal: Edge Functions still work via stored token
+          console.warn("[Auth] setSession returned error (non-fatal):", setSessionResult.error.message);
+        }
+      } catch (err) {
+        // Non-fatal: supabase-js won't auto-refresh, but stored token works for ~1 hour
+        console.warn("[Auth] setSession failed (non-fatal):", err.message);
+        // Manually store in localStorage so supabase-js can pick it up on next page load
+        try {
+          const ref = supabaseUrl?.match(/https:\/\/([^.]+)/)?.[1];
+          if (ref) {
+            localStorage.setItem(`sb-${ref}-auth-token`, JSON.stringify({
+              access_token,
+              refresh_token,
+              token_type: "bearer",
+              expires_in: 3600,
+              expires_at: Math.floor(Date.now() / 1000) + 3600,
+              user: authUser,
+            }));
+          }
+        } catch {}
+      }
 
-      // Step 4: Update React state directly
+      // Step 5: Update React state
       const sessionObj = {
         access_token,
         refresh_token,
@@ -279,21 +314,20 @@ export function AuthProvider({ children }) {
     setAuthError(null);
   }, []);
 
-  // ---- Permission check (uses ROLES from constants/users.js) ----
+  // ---- Permission check ----
   const can = useCallback((permission) => {
     return hasPermission(currentUser, permission);
   }, [currentUser]);
 
   // ---- Change password ----
   const changePassword = useCallback(async (newPassword) => {
-    const token = session?.access_token;
+    const token = getStoredToken() || session?.access_token;
     const userId = session?.user?.id;
     if (!token || !userId) {
       return { success: false, error: "No hay sesión activa" };
     }
 
     try {
-      // Update password via Auth REST API (bypasses potential supabase-js lock)
       const res = await fetch(`${supabaseUrl}/auth/v1/user`, {
         method: "PUT",
         headers: {
@@ -309,7 +343,7 @@ export function AuthProvider({ children }) {
         return { success: false, error: err.error_description || err.msg || "Error al cambiar contraseña" };
       }
 
-      // Clear force_password_change flag in profile via REST API
+      // Clear force_password_change flag
       const profileRes = await fetch(
         `${supabaseUrl}/rest/v1/profiles?id=eq.${userId}`,
         {
@@ -328,9 +362,7 @@ export function AuthProvider({ children }) {
         console.error("[Auth] Failed to clear force_password_change");
       }
 
-      // Update local profile state
       setProfile(prev => prev ? { ...prev, force_password_change: false } : prev);
-
       return { success: true };
     } catch (err) {
       return { success: false, error: "Error al cambiar contraseña" };
@@ -344,11 +376,10 @@ export function AuthProvider({ children }) {
     if (p) setProfile(p);
   }, [session, loadProfile]);
 
-  // ---- User management (Supabase-backed via users.js) ----
+  // ---- User management ----
   const [users, setUsers] = useState([]);
   const [usersLoading, setUsersLoading] = useState(false);
 
-  // Refresh users list from Supabase cache
   const refreshUsers = useCallback(async () => {
     setUsersLoading(true);
     try {
@@ -361,18 +392,16 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  // Load users once on mount (after auth is ready)
   useEffect(() => {
     if (isAuthenticated) {
-      setUsers(getUsers()); // sync from cache (AppContext already called initUsers)
+      setUsers(getUsers());
     }
   }, [isAuthenticated]);
 
-  // Add new user (creates Supabase auth + profile)
   const addNewUser = useCallback(async (userData) => {
     try {
       const newUser = await addUserToDb(userData);
-      setUsers(getUsers()); // refresh from cache
+      setUsers(getUsers());
       return newUser;
     } catch (err) {
       console.error("[Auth] addNewUser failed:", err);
@@ -380,18 +409,16 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  // Edit existing user profile
   const editUser = useCallback(async (userId, updates) => {
     try {
       await updateUserInDb(userId, updates);
-      setUsers(getUsers()); // refresh from cache
+      setUsers(getUsers());
     } catch (err) {
       console.error("[Auth] editUser failed:", err);
       throw err;
     }
   }, []);
 
-  // Reset user's password to default
   const resetUserPassword = useCallback(async (userId) => {
     try {
       await resetPasswordInDb(userId);
@@ -401,14 +428,12 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  // Reset all users to defaults (not available in Supabase mode)
   const resetUsers = useCallback(async () => {
     await refreshUsers();
   }, [refreshUsers]);
 
   return (
     <AuthContext.Provider value={{
-      // Core auth
       currentUser,
       isAuthenticated,
       loading,
@@ -416,16 +441,10 @@ export function AuthProvider({ children }) {
       login,
       logout,
       can,
-
-      // Password management
       changePassword,
       forcePasswordChange: currentUser?.force_password_change ?? false,
-
-      // Profile
       profile,
       refreshProfile,
-
-      // User management (Supabase-backed)
       users,
       usersLoading,
       addNewUser,

@@ -54,6 +54,7 @@ Deno.serve(async (req) => {
             equipment: sanitizeName(r.equipment),
             suggested_supplier: sanitizeName(r.suggestedSupplier),
             notes: sanitizeMultiline(r.notes, 2000),
+            assignee: r.assignee || null,
             date: new Date().toISOString().slice(0, 10),
           })
           .select()

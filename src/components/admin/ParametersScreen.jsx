@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo } from "react";
 import { colors, font, fontDisplay, inputStyle, labelStyle, shadows, radius } from "../../styles/theme";
 import {
   getParameters, addParameterItem, updateParameterItem,
-  toggleParameterItem, initParameters,
+  toggleParameterItem, initParameters, getCompanies,
 } from "../../constants/parameters";
 import { getUsers } from "../../constants/users";
 
@@ -13,6 +13,55 @@ const TABS = [
   { key: "suppliers", label: "Proveedores", icon: "\u{1F3EA}" },
   { key: "companies", label: "Empresas", icon: "\u{1F3E2}" },
 ];
+
+// ============================================================
+// SENACSA + SMGeo reference data (real, from screenshots)
+// Used to auto-fill when creating/editing establishments
+// ============================================================
+const SENACSA_DATA = {
+  "SANTA MARIA":      { code: "0101190045", unidadZonal: "CONCEPCION", departamento: "Concepción", municipio: "" },
+  "CIELO AZUL":       { code: "0101230338", unidadZonal: "CONCEPCION", departamento: "Concepción", municipio: "Paso Barreto", lat: "", lng: "" },
+  "YPOTI":            { code: "0103780002", unidadZonal: "HORQUETA",   departamento: "Concepción", municipio: "Horqueta", lat: "-23.315485", lng: "-56.712392" },
+  "YPOTI2":           { code: "0103780080", unidadZonal: "HORQUETA",   departamento: "Concepción", municipio: "Horqueta" },
+  "ESTANCIA YPOTI":   { code: "0103780002", unidadZonal: "HORQUETA",   departamento: "Concepción", municipio: "Horqueta", lat: "-23.3157237", lng: "-56.7113371" },
+  "CERRO MEMBY":      { code: "0107310001", unidadZonal: "YBY YAU",    departamento: "Concepción", municipio: "Yby Yaú", lat: "-22.951316", lng: "-56.457662" },
+  "ESTANCIA CERRO MEMBY": { code: "0107310001", unidadZonal: "YBY YAU", departamento: "Concepción", municipio: "Yby Yaú", lat: "-22.951316", lng: "-56.457662" },
+  "YBY PORA":         { code: "0107240013", unidadZonal: "YBY YAU",    departamento: "Concepción", municipio: "Yby Yaú" },
+  "YBYPORA":          { code: "0107240013", unidadZonal: "YBY YAU",    departamento: "Concepción", municipio: "Yby Yaú" },
+  "SANTA CLARA":      { code: "0210150007", unidadZonal: "SANTA ROSA DEL AGUARAY", departamento: "San Pedro", municipio: "Tacuatí", lat: "-23.474297", lng: "-56.236926" },
+  "EST. SANTA CLARA": { code: "0210150007", unidadZonal: "SANTA ROSA DEL AGUARAY", departamento: "San Pedro", municipio: "Tacuatí", lat: "-23.474297", lng: "-56.236926" },
+  "LUSIPAR":          { code: "0210150003", unidadZonal: "SANTA ROSA DEL AGUARAY", departamento: "San Pedro", municipio: "Tacuatí", lat: "-23.4333312", lng: "-56.3069802" },
+  "ESTANCIA LUSIPAR": { code: "0210150003", unidadZonal: "SANTA ROSA DEL AGUARAY", departamento: "San Pedro", municipio: "Tacuatí", lat: "-23.4333312", lng: "-56.3069802" },
+};
+
+// Lookup by name (case-insensitive, partial match)
+function lookupSenacsa(name) {
+  if (!name) return null;
+  const upper = name.toUpperCase().trim();
+  if (SENACSA_DATA[upper]) return SENACSA_DATA[upper];
+  for (const [key, data] of Object.entries(SENACSA_DATA)) {
+    if (upper.includes(key) || key.includes(upper)) return data;
+  }
+  return null;
+}
+
+// ---- Helper: format "pedro.moller" → "Pedro Moller" ----
+function formatName(raw) {
+  if (!raw) return "—";
+  const username = raw.includes("@") ? raw.split("@")[0] : raw;
+  const parts = username.split(/[.\s_-]+/);
+  return parts
+    .map(p => p.charAt(0).toUpperCase() + p.slice(1).toLowerCase())
+    .join(" ");
+}
+
+// ---- Helper: auto-generate establishment code ----
+function autoGenerateCode(name) {
+  if (!name) return "";
+  const words = name.trim().split(/\s+/);
+  if (words.length === 1) return words[0].substring(0, 3).toUpperCase();
+  return words.map(w => (w[0] || "")).join("").toUpperCase().slice(0, 4);
+}
 
 export default function ParametersScreen({ onBack }) {
   const [tab, setTab] = useState("establishments");
@@ -29,7 +78,7 @@ export default function ParametersScreen({ onBack }) {
   const filtered = items.filter(i =>
     !search || (i.name || "").toLowerCase().includes(search.toLowerCase())
   );
-  const activeCount = items.filter(i => i.active).length;
+  const activeCount = items.filter(i => i.active !== false).length;
 
   const handleSave = async (formData) => {
     setSaving(true);
@@ -78,6 +127,30 @@ export default function ParametersScreen({ onBack }) {
     }
   };
 
+  // ---- Render subtitle for each item type ----
+  const renderSubtitle = (item) => {
+    switch (tab) {
+      case "establishments": {
+        const mgrName = formatName(item.manager);
+        const parts = [item.company, `Gte: ${mgrName}`];
+        if (item.senacsa_code) parts.push(`SENACSA: ${item.senacsa_code}`);
+        if (item.senacsa_unidad_zonal) parts.push(item.senacsa_unidad_zonal);
+        else if (item.location) parts.push(item.location);
+        return parts.filter(Boolean).join(" · ");
+      }
+      case "sectors":
+        return item.description || "";
+      case "productTypes":
+        return item.description || "";
+      case "suppliers":
+        return [item.category, item.phone].filter(Boolean).join(" · ");
+      case "companies":
+        return `${item.type === "empresa" ? "Empresa" : "Persona Física"} · Dir: ${formatName(item.director)}`;
+      default:
+        return "";
+    }
+  };
+
   return (
     <div style={{ animation: "fadeIn 0.3s ease" }}>
       {/* Header */}
@@ -86,7 +159,7 @@ export default function ParametersScreen({ onBack }) {
           background: "transparent", border: "none", cursor: "pointer",
           fontFamily: font, fontSize: 14, color: colors.primary, fontWeight: 500,
         }}>
-          \u2190 Volver
+          ← Volver
         </button>
         <button onClick={handleReset} disabled={saving} style={{
           background: "transparent", border: "none", cursor: saving ? "default" : "pointer",
@@ -179,7 +252,7 @@ export default function ParametersScreen({ onBack }) {
         <div style={{
           fontSize: 11, color: colors.textLight, marginBottom: 10, fontWeight: 500,
         }}>
-          {activeCount} activos de {items.length} total \u00B7 Mostrando {filtered.length}
+          {activeCount} activos de {items.length} total · Mostrando {filtered.length}
         </div>
 
         {/* Form Modal */}
@@ -198,10 +271,9 @@ export default function ParametersScreen({ onBack }) {
           <div key={item.id} style={{
             background: colors.card, borderRadius: radius.lg, padding: "14px 16px",
             marginBottom: 8, border: `1px solid ${colors.borderLight}`,
-            opacity: item.active ? 1 : 0.5,
+            opacity: (item.active !== false) ? 1 : 0.5,
             display: "flex", alignItems: "center", gap: 12, boxShadow: shadows.xs,
           }}>
-            {item.icon && <span style={{ fontSize: 20 }}>{item.icon}</span>}
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: 14, fontWeight: 600, color: colors.text }}>
                 {item.name}
@@ -215,11 +287,7 @@ export default function ParametersScreen({ onBack }) {
                 )}
               </div>
               <div style={{ fontSize: 11, color: colors.textLight, marginTop: 2 }}>
-                {tab === "establishments" && `${item.company || ""} \u00B7 Gte: ${item.manager || "\u2014"}${item.senacsa_code ? ` \u00B7 SENACSA: ${item.senacsa_code}` : ""} \u00B7 ${item.location || ""}`}
-                {tab === "sectors" && (item.description || "")}
-                {tab === "productTypes" && (item.description || "")}
-                {tab === "suppliers" && `${item.category || ""} \u00B7 ${item.phone || ""}`}
-                {tab === "companies" && `${item.type === "empresa" ? "Empresa" : "Persona F\u00EDsica"} \u00B7 Dir: ${item.director || "\u2014"}`}
+                {renderSubtitle(item)}
               </div>
             </div>
             <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
@@ -231,13 +299,13 @@ export default function ParametersScreen({ onBack }) {
                 Editar
               </button>
               <button onClick={() => handleToggle(item.id)} disabled={saving} style={{
-                background: item.active ? colors.danger + "10" : colors.success + "10",
+                background: (item.active !== false) ? colors.danger + "10" : colors.success + "10",
                 border: "none", borderRadius: radius.md, padding: "6px 10px",
                 cursor: saving ? "default" : "pointer", fontSize: 12, fontFamily: font, fontWeight: 500,
-                color: item.active ? colors.danger : colors.success,
+                color: (item.active !== false) ? colors.danger : colors.success,
                 opacity: saving ? 0.5 : 1,
               }}>
-                {item.active ? "Desact." : "Activar"}
+                {(item.active !== false) ? "Desact." : "Activar"}
               </button>
             </div>
           </div>
@@ -253,9 +321,10 @@ export default function ParametersScreen({ onBack }) {
   );
 }
 
-// ---- Dynamic Form based on tab ----
+// ==============================================================
+// Dynamic Form — with SENACSA auto-fill + all fixes
+// ==============================================================
 function ParameterForm({ tab, item, onSave, onCancel, saving }) {
-  // Build user options for role-based dropdowns
   const usersByRole = useMemo(() => {
     const users = getUsers().filter(u => u.active);
     return {
@@ -266,23 +335,43 @@ function ParameterForm({ tab, item, onSave, onCancel, saving }) {
     };
   }, []);
 
+  // FIX #1: Companies list for dropdown
+  const companyOptions = useMemo(() => {
+    try {
+      const companies = getCompanies();
+      if (companies && companies.length > 0) return companies.map(c => c.name).filter(Boolean);
+    } catch { /* fallback */ }
+    return [
+      "Rural Bioenergia S.A.",
+      "Chacobras S.A.",
+      "La Constancia S.A.",
+      "Control Pasto S.A.",
+      "Ana Moller",
+      "Gabriel Moller",
+      "Pedro Moller",
+    ];
+  }, []);
+
   const FIELDS = {
     establishments: [
-      { key: "name", label: "Nombre", required: true },
-      { key: "code", label: "Código", required: true },
-      { key: "senacsa_code", label: "Código SENACSA" },
-      { key: "company", label: "Empresa" },
+      { key: "name", label: "Nombre del Establecimiento", required: true },
+      { key: "code", label: "Código (auto)", required: true, hint: "Se genera automáticamente del nombre" },
+      { key: "senacsa_code", label: "Código SENACSA", hint: "Se auto-completa al escribir el nombre" },
+      { key: "senacsa_unidad_zonal", label: "Unidad Zonal SENACSA" },
+      { key: "company", label: "Empresa", type: "select", options: "companies", required: true },
       { key: "manager", label: "Gerente Responsable", type: "user_select", roleFilter: "gerente" },
-      { key: "location", label: "Ubicación" },
+      { key: "departamento", label: "Departamento" },
+      { key: "municipio", label: "Municipio" },
+      { key: "location", label: "Ubicación (texto libre)" },
+      { key: "latitude", label: "Latitud", hint: "Ej: -23.3154" },
+      { key: "longitude", label: "Longitud", hint: "Ej: -56.7123" },
     ],
     sectors: [
       { key: "name", label: "Nombre", required: true },
-      { key: "icon", label: "Ícono (emoji)" },
       { key: "description", label: "Descripción" },
     ],
     productTypes: [
       { key: "name", label: "Nombre", required: true },
-      { key: "icon", label: "Ícono (emoji)" },
       { key: "description", label: "Descripción" },
     ],
     suppliers: [
@@ -308,17 +397,43 @@ function ParameterForm({ tab, item, onSave, onCancel, saving }) {
     return empty;
   });
 
-  // Auto-generate establishment code from name (e.g. "Cerro Memby" → "CMB")
-  // Takes first letter of each word, uppercase, max 4 chars
-  const autoGenerateCode = useCallback((name) => {
-    if (!name) return "";
-    return name.trim().split(/\s+/).map(w => w[0] || "").join("").toUpperCase().slice(0, 4);
-  }, []);
-
-  // Track whether user has manually edited the code field
   const [codeManuallyEdited, setCodeManuallyEdited] = useState(!!item);
+  const [senacsaAutoFilled, setSenacsaAutoFilled] = useState(false);
 
-  const canSubmit = !saving && fields.filter(f => f.required).every(f => form[f.key]?.trim());
+  const canSubmit = !saving && fields.filter(f => f.required).every(f => (form[f.key] || "").toString().trim());
+
+  const resolveOptions = (f) => {
+    if (f.options === "companies") return companyOptions;
+    if (Array.isArray(f.options)) return f.options;
+    return [];
+  };
+
+  // Auto-fill SENACSA data when name changes
+  const handleNameChange = useCallback((val) => {
+    const updates = { name: val };
+
+    if (!codeManuallyEdited) {
+      updates.code = autoGenerateCode(val);
+    }
+
+    if (tab === "establishments") {
+      const senacsa = lookupSenacsa(val);
+      if (senacsa) {
+        updates.senacsa_code = senacsa.code || "";
+        updates.senacsa_unidad_zonal = senacsa.unidadZonal || "";
+        if (senacsa.departamento) updates.departamento = senacsa.departamento;
+        if (senacsa.municipio) updates.municipio = senacsa.municipio;
+        if (senacsa.lat) updates.latitude = senacsa.lat;
+        if (senacsa.lng) updates.longitude = senacsa.lng;
+        if (senacsa.departamento && !updates.location) {
+          updates.location = senacsa.departamento;
+        }
+        setSenacsaAutoFilled(true);
+      }
+    }
+
+    setForm(prev => ({ ...prev, ...updates }));
+  }, [codeManuallyEdited, tab]);
 
   return (
     <div style={{
@@ -330,12 +445,29 @@ function ParameterForm({ tab, item, onSave, onCancel, saving }) {
       }}>
         {item ? `Editar: ${item.name}` : "Nuevo Registro"}
       </div>
+
+      {/* SENACSA auto-fill indicator */}
+      {senacsaAutoFilled && tab === "establishments" && (
+        <div style={{
+          padding: "8px 12px", borderRadius: radius.md, marginBottom: 12,
+          background: colors.success + "10", border: `1px solid ${colors.success}30`,
+          fontSize: 11, color: colors.success, fontWeight: 500,
+        }}>
+          ✓ Datos SENACSA auto-completados desde la base de referencia
+        </div>
+      )}
+
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         {fields.map(f => (
           <div key={f.key}>
             <label style={{ ...labelStyle, fontSize: 11 }}>
               {f.label} {f.required && <span style={{ color: colors.danger }}>*</span>}
             </label>
+            {f.hint && (
+              <div style={{ fontSize: 10, color: colors.textMuted || colors.textLight, marginBottom: 2, fontStyle: "italic" }}>
+                {f.hint}
+              </div>
+            )}
             {f.type === "select" ? (
               <select
                 value={form[f.key] || ""}
@@ -344,7 +476,11 @@ function ParameterForm({ tab, item, onSave, onCancel, saving }) {
                 style={{ ...inputStyle, padding: "10px 12px", fontSize: 13 }}
               >
                 <option value="">Seleccionar...</option>
-                {f.options.map(o => <option key={o} value={o}>{o}</option>)}
+                {resolveOptions(f).map(o => (
+                  <option key={o} value={o}>
+                    {o === "empresa" ? "Empresa" : o === "persona_fisica" ? "Persona Física" : o}
+                  </option>
+                ))}
               </select>
             ) : f.type === "user_select" ? (
               <select
@@ -363,9 +499,8 @@ function ParameterForm({ tab, item, onSave, onCancel, saving }) {
                 value={form[f.key] || ""}
                 onChange={e => {
                   const val = e.target.value;
-                  if (tab === "establishments" && f.key === "name" && !codeManuallyEdited) {
-                    // Auto-generate code from name
-                    setForm(prev => ({ ...prev, name: val, code: autoGenerateCode(val) }));
+                  if (tab === "establishments" && f.key === "name") {
+                    handleNameChange(val);
                   } else if (tab === "establishments" && f.key === "code") {
                     setCodeManuallyEdited(true);
                     setForm(prev => ({ ...prev, code: val }));
@@ -375,12 +510,45 @@ function ParameterForm({ tab, item, onSave, onCancel, saving }) {
                 }}
                 placeholder={f.label}
                 disabled={saving}
-                style={{ ...inputStyle, padding: "10px 12px", fontSize: 13 }}
+                style={{
+                  ...inputStyle, padding: "10px 12px", fontSize: 13,
+                  ...(senacsaAutoFilled && ["senacsa_code", "senacsa_unidad_zonal", "latitude", "longitude", "departamento", "municipio"].includes(f.key) && form[f.key]
+                    ? { background: colors.success + "08", borderColor: colors.success + "40" }
+                    : {}
+                  ),
+                }}
               />
             )}
           </div>
         ))}
       </div>
+
+      {/* Map preview if coordinates exist */}
+      {tab === "establishments" && form.latitude && form.longitude && (
+        <div style={{ marginTop: 12 }}>
+          <label style={{ ...labelStyle, fontSize: 11, marginBottom: 4, display: "block" }}>
+            📍 Vista previa ubicación
+          </label>
+          <div style={{
+            borderRadius: radius.lg, overflow: "hidden", border: `1px solid ${colors.border}`,
+            height: 180,
+          }}>
+            <iframe
+              title="Ubicación del establecimiento"
+              width="100%"
+              height="180"
+              frameBorder="0"
+              style={{ border: 0 }}
+              src={`https://www.openstreetmap.org/export/embed.html?bbox=${Number(form.longitude) - 0.03}%2C${Number(form.latitude) - 0.02}%2C${Number(form.longitude) + 0.03}%2C${Number(form.latitude) + 0.02}&layer=mapnik&marker=${form.latitude}%2C${form.longitude}`}
+              loading="lazy"
+            />
+          </div>
+          <div style={{ fontSize: 10, color: colors.textLight, marginTop: 4, textAlign: "center" }}>
+            Lat: {form.latitude} · Lng: {form.longitude}
+          </div>
+        </div>
+      )}
+
       <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
         <button onClick={onCancel} disabled={saving} style={{
           flex: 1, padding: 12, borderRadius: radius.lg,

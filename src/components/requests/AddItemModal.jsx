@@ -34,10 +34,10 @@ export default function AddItemModal({ onClose, onAdd }) {
   };
 
   return (
-    <ModalBackdrop onClose={onClose}>
+    <ModalBackdrop onClose={onClose} variant="center">
       <div style={{
-        background: colors.bg, borderRadius: `${radius.xl}px ${radius.xl}px 0 0`,
-        maxWidth: 480, width: "100%", maxHeight: "85vh",
+        background: colors.bg, borderRadius: radius.xl,
+        maxWidth: 480, width: "100%", maxHeight: "70vh",
         overflow: "hidden", display: "flex", flexDirection: "column",
         animation: "slideUp 0.25s ease",
       }}>

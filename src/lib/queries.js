@@ -3,34 +3,53 @@
 // READs: anon client (RLS handles filtering)
 // WRITEs: Edge Functions via direct fetch (bypasses supabase-js locks)
 // ============================================================
+// FIX v4: More robust token retrieval with clear error messages
+// ============================================================
 
 import { supabase, supabaseUrl, supabaseAnonKey, getStoredToken } from "./supabase";
 
 // ---- Edge Function helper: direct fetch, no supabase-js dependency ----
-// Uses the stored JWT from the fetch-based login.  Falls back to
-// supabase.auth.getSession() only if the stored token is missing.
 async function invokeEdgeFunction(functionName, body) {
+  // Primary: use the in-memory stored token (set by login or onAuthStateChange)
   let token = getStoredToken();
 
-  // Fallback: try supabase-js session (with 5s timeout to avoid hangs)
+  // Fallback 1: try supabase-js session (with 3s timeout)
   if (!token) {
     try {
       const result = await Promise.race([
         supabase.auth.getSession(),
-        new Promise((_, reject) => setTimeout(() => reject(new Error("TIMEOUT")), 5000)),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("TIMEOUT")), 3000)),
       ]);
       token = result?.data?.session?.access_token;
+      // If we got it from supabase-js, also update the store for next time
+      if (token) {
+        const { setStoredToken } = await import("./supabase");
+        setStoredToken(token);
+      }
     } catch {
-      // getSession timed out or failed — token stays null
+      // getSession timed out or failed — try localStorage directly
     }
+  }
+
+  // Fallback 2: try reading from localStorage directly
+  if (!token) {
+    try {
+      const ref = supabaseUrl?.match(/https:\/\/([^.]+)/)?.[1];
+      if (ref) {
+        const raw = localStorage.getItem(`sb-${ref}-auth-token`);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          token = parsed?.access_token;
+        }
+      }
+    } catch {}
   }
 
   if (!token) {
     throw new Error("No hay sesión activa. Por favor, inicia sesión de nuevo.");
   }
 
-  // Direct fetch to Edge Function endpoint (bypasses supabase.functions.invoke
-  // which can also be blocked by the supabase-js init lock)
+  // Direct fetch to Edge Function endpoint
   const res = await fetch(`${supabaseUrl}/functions/v1/${functionName}`, {
     method: "POST",
     headers: {
@@ -42,6 +61,32 @@ async function invokeEdgeFunction(functionName, body) {
   });
 
   if (!res.ok) {
+    // If 401, the token might be expired — try to refresh
+    if (res.status === 401) {
+      const freshToken = await tryRefreshToken();
+      if (freshToken) {
+        // Retry with the fresh token
+        const retryRes = await fetch(`${supabaseUrl}/functions/v1/${functionName}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${freshToken}`,
+            "apikey": supabaseAnonKey,
+          },
+          body: JSON.stringify(body),
+        });
+
+        if (retryRes.ok) {
+          const data = await retryRes.json();
+          if (data?.error) throw new Error(data.error);
+          return data;
+        }
+      }
+
+      // Refresh failed — force re-login
+      throw new Error("Sesión expirada. Por favor, inicia sesión de nuevo.");
+    }
+
     const errBody = await res.json().catch(() => ({}));
     const msg = errBody.error || errBody.message || `Error ${res.status}`;
     throw new Error(msg);
@@ -50,6 +95,25 @@ async function invokeEdgeFunction(functionName, body) {
   const data = await res.json();
   if (data?.error) throw new Error(data.error);
   return data;
+}
+
+// ---- Try to refresh the token when we get a 401 ----
+async function tryRefreshToken() {
+  try {
+    const { data, error } = await Promise.race([
+      supabase.auth.refreshSession(),
+      new Promise((_, reject) => setTimeout(() => reject(new Error("TIMEOUT")), 5000)),
+    ]);
+
+    if (error || !data?.session?.access_token) return null;
+
+    const newToken = data.session.access_token;
+    const { setStoredToken } = await import("./supabase");
+    setStoredToken(newToken);
+    return newToken;
+  } catch {
+    return null;
+  }
 }
 
 // ---- Transformers: Supabase (snake_case) -> Frontend (camelCase) ----
@@ -157,7 +221,6 @@ function transformHistoryEntry(row) {
   };
 }
 
-// ---- Helper: group array items by a key ----
 function groupBy(arr, key) {
   const map = {};
   for (const item of arr) {
@@ -172,7 +235,6 @@ function groupBy(arr, key) {
 // FETCH OPERATIONS (anon client + RLS)
 // ============================================================
 
-/** Fetch all requests with nested data */
 export async function fetchAllRequests() {
   const [reqRes, itemsRes, quotRes, commRes, stepsRes, histRes] = await Promise.all([
     supabase.from("requests").select("*").order("created_at", { ascending: false }),
@@ -211,7 +273,6 @@ export async function fetchAllRequests() {
   ));
 }
 
-/** Fetch a single request with all nested data */
 export async function fetchSingleRequest(requestUuid) {
   const [reqRes, itemsRes, quotRes, commRes, stepsRes, histRes] = await Promise.all([
     supabase.from("requests").select("*").eq("id", requestUuid).single(),
@@ -241,7 +302,6 @@ export async function fetchSingleRequest(requestUuid) {
 // WRITE OPERATIONS — Via Edge Functions (direct fetch)
 // ============================================================
 
-/** Insert a new request (status: borrador) + its items */
 export async function insertRequest(req) {
   const data = await invokeEdgeFunction("request-mutations", {
     action: "create", request: req,
@@ -249,56 +309,48 @@ export async function insertRequest(req) {
   return data.requestUuid;
 }
 
-/** Confirm request: server calculates steps, submits for approval */
 export async function confirmRequestInDb(requestUuid) {
   await invokeEdgeFunction("request-workflow", {
     action: "confirm", requestUuid,
   });
 }
 
-/** Approve current step */
 export async function approveStepInDb(requestUuid, comment) {
   return await invokeEdgeFunction("request-workflow", {
     action: "approve", requestUuid, comment,
   });
 }
 
-/** Reject request at current step */
 export async function rejectRequestInDb(requestUuid, reason) {
   await invokeEdgeFunction("request-workflow", {
     action: "reject", requestUuid, reason,
   });
 }
 
-/** Send request back for revision */
 export async function sendForRevisionInDb(requestUuid, reason) {
   await invokeEdgeFunction("request-workflow", {
     action: "revision", requestUuid, reason,
   });
 }
 
-/** Advance request status to next step in STATUS_FLOW */
 export async function advanceStatusInDb(requestUuid, newStatus) {
   await invokeEdgeFunction("request-workflow", {
     action: "advance", requestUuid, newStatus,
   });
 }
 
-/** Update request fields */
 export async function updateRequestInDb(requestUuid, updates) {
   await invokeEdgeFunction("request-mutations", {
     action: "update", requestUuid, updates,
   });
 }
 
-/** Add a comment to a request */
 export async function addCommentInDb(requestUuid, texto) {
   await invokeEdgeFunction("request-mutations", {
     action: "add-comment", requestUuid, texto,
   });
 }
 
-/** Add a quotation to a request */
 export async function addQuotationInDb(requestUuid, quotation) {
   await invokeEdgeFunction("request-mutations", {
     action: "add-quotation", requestUuid, quotation,

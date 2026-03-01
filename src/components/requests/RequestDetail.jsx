@@ -8,6 +8,7 @@ import { colors, font, fontDisplay, inputStyle, shadows, radius } from "../../st
 import { STATUS_FLOW, URGENCY_LEVELS, PRIORITY_LEVELS } from "../../constants";
 import { generateCommentId } from "../../utils/ids";
 import AddItemModal from "./AddItemModal";
+import AttachmentUpload from "./AttachmentUpload";
 import QuotationPanel from "../quotations/QuotationPanel";
 import ApprovalFlow from "../approval/ApprovalFlow";
 import ApprovalActions from "../approval/ApprovalActions";
@@ -151,12 +152,16 @@ export default function RequestDetail({
   // Items state (editable in borrador)
   const [items, setItems] = useState(r.items || []);
 
+  // Attachments state
+  const [attachments, setAttachments] = useState(r.adjuntos || []);
+
   // Sync state if request changes
   useEffect(() => {
     setComments(r.comments || []);
     setNote(r.reason || r.notes || "");
     setItems(r.items || []);
-  }, [r.id, r.comments, r.notes, r.reason, r.items]);
+    setAttachments(r.adjuntos || []);
+  }, [r.id, r.comments, r.notes, r.reason, r.items, r.adjuntos]);
 
   const status = getStatusDisplay(r.status);
   const statusIdx = STATUS_FLOW.findIndex(s => s.key === r.status);
@@ -215,6 +220,11 @@ export default function RequestDetail({
     setItems(updated);
     setShowAddItem(false);
     if (onUpdateRequest) onUpdateRequest(r.id, { items: updated, totalAmount: calcItemsTotal(updated) });
+  };
+
+  const handleAttachmentsChange = (updated) => {
+    setAttachments(updated);
+    if (onUpdateRequest) onUpdateRequest(r.id, { adjuntos: updated });
   };
 
   // ---- RENDER ----
@@ -773,10 +783,10 @@ export default function RequestDetail({
         )}
       </div>
 
-      {/* ===== ATTACHMENTS (collapsible placeholder) ===== */}
+      {/* ===== ATTACHMENTS ===== */}
       <div style={{ padding: "8px 20px" }}>
         <SectionTitle
-          count={r.adjuntos?.length || 0}
+          count={attachments.length}
           collapsed={!showAttachments}
           onToggle={() => setShowAttachments(!showAttachments)}
         >
@@ -785,33 +795,13 @@ export default function RequestDetail({
         {showAttachments && (
           <div style={{
             background: colors.card, borderRadius: radius.lg, padding: 16,
-            border: `1px solid ${colors.borderLight}`, textAlign: "center",
+            border: `1px solid ${colors.borderLight}`,
           }}>
-            <div style={{
-              border: `2px dashed ${colors.border}`, borderRadius: radius.lg,
-              padding: "20px 16px", color: colors.textLight,
-            }}>
-              <div style={{ fontSize: 24, marginBottom: 6 }}>📎</div>
-              <div style={{ fontSize: 12, fontWeight: 500 }}>
-                Arrastrar archivos o hacer clic para subir
-              </div>
-              <div style={{ fontSize: 10, marginTop: 4, color: colors.border }}>
-                PDF, JPG, PNG — Máximo 25 MB
-              </div>
-            </div>
-            {r.adjuntos?.length > 0 && (
-              <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 4 }}>
-                {r.adjuntos.map((a, i) => (
-                  <div key={i} style={{
-                    fontSize: 12, color: colors.primary, padding: "6px 10px",
-                    background: colors.primary + "08", borderRadius: radius.md,
-                    textAlign: "left",
-                  }}>
-                    📎 {a.name || a}
-                  </div>
-                ))}
-              </div>
-            )}
+            <AttachmentUpload
+              requestUuid={r._uuid}
+              attachments={attachments}
+              onAttachmentsChange={handleAttachmentsChange}
+            />
           </div>
         )}
       </div>

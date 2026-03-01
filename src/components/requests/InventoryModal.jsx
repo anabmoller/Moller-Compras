@@ -47,12 +47,13 @@ export default function InventoryModal({ onSelect, onClose, onNewProduct }) {
       style={{
         position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
         background: "rgba(0,0,0,0.5)", zIndex: 1000,
-        display: "flex", alignItems: "flex-end", justifyContent: "center",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        padding: 16,
       }}
     >
       <div style={{
-        background: colors.bg, borderRadius: `${radius.xl}px ${radius.xl}px 0 0`,
-        maxWidth: 560, width: "100%", maxHeight: "85vh",
+        background: colors.bg, borderRadius: radius.xl,
+        maxWidth: 560, width: "100%", maxHeight: "70vh",
         overflow: "hidden", display: "flex", flexDirection: "column",
         animation: "fadeIn 0.2s ease",
       }}>

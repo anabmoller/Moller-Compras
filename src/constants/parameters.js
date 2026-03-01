@@ -80,14 +80,23 @@ export async function initParameters() {
         companyId: e.company_id,
         manager: e.manager,
         location: e.location,
+        // New fields
+        senacsa_code: e.senacsa_code || "",
+        senacsa_unidad_zonal: e.senacsa_unidad_zonal || "",
+        departamento: e.departamento || "",
+        municipio: e.municipio || "",
+        latitude: e.latitude || "",
+        longitude: e.longitude || "",
         active: e.active !== false,
       })),
       sectors: (sectors.data || []).map(s => ({
         id: s.legacy_id || s.id,
         _uuid: s.id,
-        name: s.name,
+        // Data cleanup: fix known bad names from DB (e.g. "building Feedlot" → "Feedlot")
+        name: (s.name || "").replace(/^building\s+/i, ""),
         icon: s.icon,
         description: s.description,
+        lider: s.lider || "",
         active: s.active !== false,
       })),
       productTypes: (types.data || []).map(t => ({
@@ -115,6 +124,15 @@ export async function initParameters() {
         ruc: c.ruc,
         type: c.type,
         director: c.director,
+        // New fields
+        presidente: c.presidente || "",
+        contacto_nombre: c.contacto_nombre || "",
+        contacto_email: c.contacto_email || "",
+        contacto_celular: c.contacto_celular || "",
+        direccion: c.direccion || "",
+        sucursales: c.sucursales || "",
+        observaciones: c.observaciones || "",
+        active: c.active !== false,
       })),
     };
 

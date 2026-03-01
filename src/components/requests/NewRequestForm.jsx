@@ -14,6 +14,10 @@ import InventoryModal from "./InventoryModal";
 
 const UNITS = ["Unidad", "Litro", "Kg", "Dosis", "Bolsa", "Balde", "Caja", "Rollo", "Metro", "Otro"];
 
+// Establishments that are NOT farms (no auto-assign)
+const OFICINA_ESTABLISHMENTS = ["Oficina"];
+const DEFAULT_FARM_ASSIGNEE = "Laura Rivas";
+
 export default function NewRequestForm({ onSubmit, onCancel }) {
   const { currentUser } = useAuth();
   const { requests } = useApp();
@@ -42,7 +46,16 @@ export default function NewRequestForm({ onSubmit, onCancel }) {
   const [errors, setErrors] = useState({});
 
   const update = (key, val) => {
-    setForm(prev => ({ ...prev, [key]: val }));
+    setForm(prev => {
+      const next = { ...prev, [key]: val };
+      // Auto-assign Laura Rivas for farm establishments (anything except Oficina)
+      if (key === "establishment" && val) {
+        next.assignee = OFICINA_ESTABLISHMENTS.includes(val)
+          ? ""
+          : DEFAULT_FARM_ASSIGNEE;
+      }
+      return next;
+    });
     setErrors(prev => ({ ...prev, [key]: undefined }));
   };
 
@@ -126,7 +139,25 @@ export default function NewRequestForm({ onSubmit, onCancel }) {
   const handleNext = () => {
     if (validate()) {
       if (step < 3) setStep(s => s + 1);
-      else onSubmit(form);
+      else {
+        // Auto-create item from the selected product so it appears in ITEMS section
+        const formToSubmit = { ...form };
+        if (form.name) {
+          const unitPrice = form.totalAmount && form.quantity
+            ? Math.round(form.totalAmount / form.quantity)
+            : 0;
+          formToSubmit.items = [{
+            name: form.name,
+            code: form.inventoryItem?.code || "",
+            quantity: form.quantity || 1,
+            unit: form.unit || "Unidad",
+            unitPrice,
+            totalPrice: form.totalAmount || 0,
+            notes: "",
+          }];
+        }
+        onSubmit(formToSubmit);
+      }
     }
   };
 
