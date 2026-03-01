@@ -23,7 +23,7 @@ export default function QuotationPanel({ request, currentUser, onClose, onSave }
       if (step && canUserApproveStep(currentUser, step, request.totalAmount)) return true;
     }
     // Diretoria role can select
-    if (currentUser.role === "diretoria" || currentUser.role === "gerente") return true;
+    if (["diretoria", "director", "super_approver", "gerente"].includes(currentUser.role)) return true;
     return false;
   }, [currentUser, request]);
 

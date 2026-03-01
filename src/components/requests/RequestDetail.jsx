@@ -17,7 +17,7 @@ import { formatGuaranies } from "../../constants/budgets";
 import { getStatusDisplay, getPriorityDisplay, normalizeStatus } from "../../utils/statusHelpers";
 import { fmtDate } from "../../utils/dateFormatters";
 import { getSectors, getProductTypes } from "../../constants/parameters";
-import { MANAGER_MAP, COMPANY_MAP, PRESIDENT_MAP, ESTABLISHMENT_COMPANY, USER_DISPLAY_NAMES } from "../../constants/approvalConfig";
+import { MANAGER_MAP, COMPANY_MAP, PRESIDENT_MAP, ESTABLISHMENT_COMPANY, USER_DISPLAY_NAMES, SUPER_APPROVERS } from "../../constants/approvalConfig";
 
 // ---- Extracted sub-components ----
 import RequestHeader from "./RequestHeader";
@@ -152,7 +152,9 @@ export default function RequestDetail({
   const isCancelado = r.status === "cancelado";
   const isInApproval = normalizedStatus === "pend_autorizacion" || normalizedStatus === "pend_aprobacion";
   const canCancel = onCancel && !isCancelado && normalizedStatus !== "recibido" && normalizedStatus !== "sap"
-    && (r.createdBy === activeUser?.name || activeUser?.role === "diretoria");
+    && (r.createdBy === activeUser?.name
+      || ["diretoria", "director", "super_approver", "admin"].includes(activeUser?.role)
+      || SUPER_APPROVERS[activeUser?.email] !== undefined);
 
   const urgency = URGENCY_LEVELS.find(u => u.value === (r.priority || r.urgency));
   const priority = getPriorityDisplay(r.priority || r.urgency);

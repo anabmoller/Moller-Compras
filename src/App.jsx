@@ -87,6 +87,7 @@ function AppContent() {
         name: devMode.name,
         role: devMode.role,
         email: devMode.username || currentUser?.email,
+        avatar: devMode.name.split(/\s+/).map(w => w[0]).join("").slice(0, 2).toUpperCase(),
       });
     } else {
       setDevOverride(null);

@@ -5,9 +5,9 @@ import BackButton from "../common/BackButton";
 const DEV_USERS = [
   { name: "Ramón Sosa", username: "ramon.sosa", role: "solicitante", label: "Solicitante" },
   { name: "Paulo Becker", username: "paulo", role: "gerente", label: "Autoriza / Aprueba hasta ₲5M" },
-  { name: "Laura Rivas", username: "laura.rivas", role: "comprador", label: "Presupuesta (Compras)" },
-  { name: "Ronei Ferreira", username: "ronei", role: "diretoria", label: "Autoriza todo / Aprueba hasta ₲50M" },
-  { name: "Mauricio Moller", username: "mauricio", role: "diretoria", label: "Autoriza y aprueba cualquier momento" },
+  { name: "Laura Rivas", username: "laura.rivas", role: "compras", label: "Presupuesta (Compras)" },
+  { name: "Ronei Ferreira", username: "ronei", role: "director", label: "Autoriza todo / Aprueba hasta ₲50M" },
+  { name: "Mauricio Moller", username: "mauricio", role: "super_approver", label: "Autoriza y aprueba cualquier monto" },
 ];
 
 export default function SettingsScreen({ onBack, onNavigate, devMode, onSetDevMode }) {
@@ -110,7 +110,7 @@ export default function SettingsScreen({ onBack, onNavigate, devMode, onSetDevMo
               {DEV_USERS.map(u => (
                 <button
                   key={u.name}
-                  onClick={() => onSetDevMode && onSetDevMode({ name: u.name, role: u.role, label: u.label })}
+                  onClick={() => onSetDevMode && onSetDevMode({ name: u.name, role: u.role, label: u.label, username: u.username })}
                   className={`w-full px-3.5 py-2.5 rounded-lg border text-left text-[13px] font-medium cursor-pointer transition-colors flex items-center justify-between ${
                     devMode?.name === u.name
                       ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
