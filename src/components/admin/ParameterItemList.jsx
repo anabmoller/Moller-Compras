@@ -1,5 +1,5 @@
 function formatName(raw) {
-  if (!raw) return "\u2014";
+  if (!raw) return "—";
   const username = raw.includes("@") ? raw.split("@")[0] : raw;
   const parts = username.split(/[.\s_-]+/);
   return parts
@@ -18,7 +18,7 @@ function SortHeader({ label, sortKey, active, dir, onClick, flex = "flex-1" }) {
     >
       {label}
       <span className="text-[9px]">
-        {isActive ? (dir === "asc" ? "\u25B2" : "\u25BC") : "\u21C5"}
+        {isActive ? (dir === "asc" ? "▲" : "▼") : "⇅"}
       </span>
     </button>
   );
@@ -34,7 +34,7 @@ export default function ParameterItemList({
       <div className="flex gap-2 mb-2 px-1">
         <SortHeader label="Nombre" sortKey="name" active={sortKey} dir={sortDir} onClick={onToggleSort} flex="flex-1" />
         {tab === "establishments" && <SortHeader label="Empresa" sortKey="company" active={sortKey} dir={sortDir} onClick={onToggleSort} flex="w-24" />}
-        {tab === "suppliers" && <SortHeader label="Categor\u00EDa" sortKey="category" active={sortKey} dir={sortDir} onClick={onToggleSort} flex="w-24" />}
+        {tab === "suppliers" && <SortHeader label="Categoría" sortKey="category" active={sortKey} dir={sortDir} onClick={onToggleSort} flex="w-24" />}
         {tab === "companies" && <SortHeader label="Tipo" sortKey="type" active={sortKey} dir={sortDir} onClick={onToggleSort} flex="w-24" />}
         <div className="w-[130px] flex-shrink-0" />
       </div>

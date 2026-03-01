@@ -5,8 +5,8 @@ import { supabase } from "../../lib/supabase";
 // ---- Extend GROUP_COLORS for new groups ----
 const ALL_GROUP_COLORS = {
   ...GROUP_COLORS,
-  "Mercader\u00EDa": "#6366F1",
-  "Agr\u00EDcola": "#2563EB",
+  "Mercadería": "#6366F1",
+  "Agrícola": "#2563EB",
   "Otro": "#9CA3AF",
 };
 
@@ -67,7 +67,7 @@ export default function ProductDetailPanel({ product, onClose }) {
   }, [priceHistory]);
 
   const fmt = (n, cur = "USD") => {
-    if (!n && n !== 0) return "\u2014";
+    if (!n && n !== 0) return "—";
     if (cur === "PYG" || cur === "GS") return `Gs ${Math.round(n).toLocaleString()}`;
     return `${cur} ${n.toFixed(2)}`;
   };
@@ -107,7 +107,7 @@ export default function ProductDetailPanel({ product, onClose }) {
               onClick={onClose}
               className="bg-white/5 border-none rounded-full w-7 h-7 flex items-center justify-center cursor-pointer text-sm text-slate-400 shrink-0 hover:bg-white/10 transition-colors"
             >
-              {"\u2715"}
+              {"✕"}
             </button>
           </div>
         </div>
@@ -119,7 +119,7 @@ export default function ProductDetailPanel({ product, onClose }) {
               <InfoField label="Fabricante" value={product.manufacturer} />
             )}
             {product.presentation && (
-              <InfoField label="Presentaci\u00F3n" value={product.presentation} />
+              <InfoField label="Presentación" value={product.presentation} />
             )}
             {product.unit && (
               <InfoField label="Unidad" value={product.unit} />
@@ -128,13 +128,13 @@ export default function ProductDetailPanel({ product, onClose }) {
               <InfoField label="Especie" value={product.species} />
             )}
             {product.administration_route && (
-              <InfoField label="V\u00EDa Admin." value={product.administration_route} />
+              <InfoField label="Vía Admin." value={product.administration_route} />
             )}
             {product.tipo_uso && (
               <InfoField label="Tipo de Uso" value={product.tipo_uso} />
             )}
             {product.deposit && (
-              <InfoField label="Dep\u00F3sito" value={product.deposit} />
+              <InfoField label="Depósito" value={product.deposit} />
             )}
             {product.criticality && (
               <InfoField label="Criticidad" value={product.criticality} />
@@ -145,7 +145,7 @@ export default function ProductDetailPanel({ product, onClose }) {
         {/* Supplier price history */}
         <div className="px-5 pb-5 border-t border-white/[0.06]">
           <div className="text-xs font-bold text-white py-3.5 pb-2.5 flex items-center gap-1.5">
-            {"\uD83D\uDCCA"} Historial de Proveedores & Precios
+            {"📊"} Historial de Proveedores & Precios
           </div>
 
           {loading ? (
@@ -154,12 +154,12 @@ export default function ProductDetailPanel({ product, onClose }) {
             </div>
           ) : supplierStats.length === 0 ? (
             <div className="bg-white/5 rounded-xl px-4 py-5 text-center">
-              <div className="text-2xl mb-1.5">{"\uD83D\uDCCB"}</div>
+              <div className="text-2xl mb-1.5">{"📋"}</div>
               <div className="text-xs text-slate-400 font-medium">
                 Sin historial de compras registrado
               </div>
               <div className="text-[11px] text-slate-500 mt-1">
-                Los precios aparecer{"\u00E1"}n a medida que se registren compras
+                Los precios aparecer{"á"}n a medida que se registren compras
               </div>
             </div>
           ) : (
@@ -176,12 +176,12 @@ export default function ProductDetailPanel({ product, onClose }) {
                   <div className="flex justify-between items-center">
                     <div className="flex-1">
                       <div className="text-[13px] font-semibold text-white flex items-center gap-1.5">
-                        {idx === 0 && <span className="text-[11px]">{"\u2B50"}</span>}
+                        {idx === 0 && <span className="text-[11px]">{"⭐"}</span>}
                         {s.name}
                       </div>
                       <div className="text-[10px] text-slate-400 mt-0.5">
                         {s.transactions} compra{s.transactions !== 1 ? "s" : ""}
-                        {s.totalQty > 0 && ` \u00B7 ${s.totalQty.toLocaleString()} unidades`}
+                        {s.totalQty > 0 && ` · ${s.totalQty.toLocaleString()} unidades`}
                       </div>
                     </div>
                     <div className="text-right">
@@ -216,7 +216,7 @@ export default function ProductDetailPanel({ product, onClose }) {
           {priceHistory.length > 0 && (
             <>
               <div className="text-[11px] font-semibold text-slate-300 pt-3.5 pb-1.5">
-                {"\u00DA"}ltimas transacciones
+                {"Ú"}ltimas transacciones
               </div>
               {priceHistory.slice(0, 5).map((ph, idx) => (
                 <div
@@ -224,14 +224,14 @@ export default function ProductDetailPanel({ product, onClose }) {
                   className={`flex justify-between py-1.5 text-[11px] ${idx < 4 ? "border-b border-white/[0.06]" : ""}`}
                 >
                   <span className="text-slate-400">
-                    {ph.date ? new Date(ph.date).toLocaleDateString("es-PY") : "\u2014"}
+                    {ph.date ? new Date(ph.date).toLocaleDateString("es-PY") : "—"}
                   </span>
                   <span className="text-slate-300 flex-1 ml-3">
-                    {ph.suppliers?.name || "\u2014"}
+                    {ph.suppliers?.name || "—"}
                   </span>
                   <span className="font-semibold text-white">
                     {fmt(ph.unit_price, ph.currency)}
-                    {ph.quantity ? ` \u00D7 ${ph.quantity}` : ""}
+                    {ph.quantity ? ` × ${ph.quantity}` : ""}
                   </span>
                 </div>
               ))}

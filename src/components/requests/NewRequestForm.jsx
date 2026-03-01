@@ -20,17 +20,17 @@ const PRODUCT_CACHE_TTL = 5 * 60 * 1000;
 function getApprovalPreview(amount, establishment) {
   const dn = (u) => USER_DISPLAY_NAMES[u] || u;
   const managerUsername = MANAGER_MAP[establishment] || "ronei";
-  const steps = [{ label: "Autorizaci\u00F3n \u2014 Gerente de \u00C1rea", person: dn(managerUsername), icon: "\u2460" }];
+  const steps = [{ label: "Autorización — Gerente de Área", person: dn(managerUsername), icon: "①" }];
   if (amount >= 5_000_000) {
     const company = ESTABLISHMENT_COMPANY[establishment] || "Rural Bioenergia S.A.";
     const directorUsername = COMPANY_MAP[company] || "ronei";
-    steps.push({ label: "Aprobaci\u00F3n Director", person: dn(directorUsername), icon: "\u2461" });
+    steps.push({ label: "Aprobación Director", person: dn(directorUsername), icon: "②" });
   }
   if (amount >= 50_000_000) {
     const company = ESTABLISHMENT_COMPANY[establishment] || "Rural Bioenergia S.A.";
     const presidentUsername = PRESIDENT_MAP[company];
     if (presidentUsername) {
-      steps.push({ label: "Aprobaci\u00F3n Presidente", person: dn(presidentUsername), icon: "\u2462" });
+      steps.push({ label: "Aprobación Presidente", person: dn(presidentUsername), icon: "③" });
     }
   }
   return steps;
@@ -60,7 +60,7 @@ export default function NewRequestForm({ onSubmit, onCancel, usdRate = 7800, usd
         const ref = pricingByCode[p.code] || {};
         return {
           n: p.name || "Sin nombre",
-          c: p.code || "\u2014",
+          c: p.code || "—",
           g: ref.g || p.categories?.name || "",
           u: ref.u || p.unit_of_measure || "unidad",
           up: ref.up || 0,
@@ -161,9 +161,9 @@ export default function NewRequestForm({ onSubmit, onCancel, usdRate = 7800, usd
   };
 
   const stepTitles = [
-    { title: "Items", sub: "Selecciona productos del cat\u00E1logo y agrega cantidades" },
-    { title: "Detalles", sub: "Urgencia, justificaci\u00F3n y notas" },
-    { title: "Revisi\u00F3n y Env\u00EDo", sub: "Verifica los datos antes de enviar" },
+    { title: "Items", sub: "Selecciona productos del catálogo y agrega cantidades" },
+    { title: "Detalles", sub: "Urgencia, justificación y notas" },
+    { title: "Revisión y Envío", sub: "Verifica los datos antes de enviar" },
   ];
 
   const FieldError = ({ field }) => errors[field]
@@ -253,7 +253,7 @@ export default function NewRequestForm({ onSubmit, onCancel, usdRate = 7800, usd
               background: step === 3 ? '#6366f1' : '#10b981',
             }}
           >
-            {step === 3 ? "Crear Solicitud \u2713" : "Siguiente \u2192"}
+            {step === 3 ? "Crear Solicitud ✓" : "Siguiente →"}
           </button>
         </div>
       </div>

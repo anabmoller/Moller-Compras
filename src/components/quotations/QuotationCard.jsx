@@ -28,7 +28,7 @@ export default function QuotationCard({
           <div className="text-sm font-semibold text-white">{q.supplier}</div>
           <div className="text-[11px] text-slate-400 mt-0.5">
             {q.date}
-            {q.deliveryDays > 0 && ` \u00B7 ${q.deliveryDays} dias entrega`}
+            {q.deliveryDays > 0 && ` · ${q.deliveryDays} dias entrega`}
           </div>
         </div>
         <div className="text-right">
@@ -49,7 +49,7 @@ export default function QuotationCard({
                   {qi.name}
                 </span>
                 <span className={`text-[11px] font-semibold flex-shrink-0 ${isBest ? 'text-green-400' : 'text-white'}`}>
-                  {qi.unitPrice.toLocaleString()} \u00D7 {qi.quantity} = {qi.subtotal.toLocaleString()}
+                  {qi.unitPrice.toLocaleString()} × {qi.quantity} = {qi.subtotal.toLocaleString()}
                 </span>
               </div>
             ) : null;
@@ -67,7 +67,7 @@ export default function QuotationCard({
       )}
       {q.attachment && (
         <div className="mt-2 flex items-center gap-1.5 text-[11px] text-blue-400 bg-blue-500/[0.06] px-2 py-1 rounded">
-          {q.attachment.type?.startsWith("image/") ? "\uD83D\uDDBC" : "\uD83D\uDCC4"} {q.attachment.name}
+          {q.attachment.type?.startsWith("image/") ? "🖼" : "📄"} {q.attachment.name}
         </div>
       )}
     </div>

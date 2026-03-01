@@ -1,8 +1,8 @@
 import SummaryRow from "../common/SummaryRow";
 
 function fmtGs(n) {
-  if (!n) return "\u20B2 0";
-  return "\u20B2 " + Math.round(n).toLocaleString("es-PY");
+  if (!n) return "₲ 0";
+  return "₲ " + Math.round(n).toLocaleString("es-PY");
 }
 
 export default function RequestStepReview({
@@ -49,7 +49,7 @@ export default function RequestStepReview({
 
       {/* Approval flow visual (C8 / Task 7) */}
       <div className="bg-emerald-500/[0.04] rounded-xl px-3.5 py-3 border border-emerald-500/[0.08]">
-        <div className="text-xs font-semibold text-emerald-400 mb-2.5">{"\uD83D\uDD04"} Flujo de Aprobaci{"\u00F3"}n</div>
+        <div className="text-xs font-semibold text-emerald-400 mb-2.5">{"🔄"} Flujo de Aprobaci{"ó"}n</div>
         <div className="flex items-center gap-0">
           {approvalSteps.map((s, i) => (
             <div key={i} className="flex items-center">
@@ -69,8 +69,8 @@ export default function RequestStepReview({
       {/* Budget warning */}
       {budgetInfo?.exceeds && (
         <div className="bg-amber-500/[0.06] rounded-lg px-3 py-2.5 border border-amber-500/[0.19]">
-          <div className="text-[11px] font-semibold text-amber-400">{"\u26A0"} Esta solicitud excede el presupuesto asignado</div>
-          <div className="text-[10px] text-slate-400 mt-0.5">Se requerir{"\u00E1"} aprobaci{"\u00F3"}n adicional del Director</div>
+          <div className="text-[11px] font-semibold text-amber-400">{"⚠"} Esta solicitud excede el presupuesto asignado</div>
+          <div className="text-[10px] text-slate-400 mt-0.5">Se requerir{"á"} aprobaci{"ó"}n adicional del Director</div>
         </div>
       )}
     </div>

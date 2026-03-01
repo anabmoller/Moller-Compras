@@ -27,11 +27,11 @@ export default function RequestStepDetails({ form, errors, onUpdateForm, FieldEr
       </div>
 
       <div>
-        <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">{"\u00BF"}Por qu{"\u00E9"} necesitas estos productos? *</label>
+        <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">{"¿"}Por qu{"é"} necesitas estos productos? *</label>
         <textarea
           value={form.reason}
           onChange={e => onUpdateForm("reason", e.target.value)}
-          placeholder="Justificaci\u00F3n de la compra..."
+          placeholder="Justificación de la compra..."
           rows={3}
           className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50 resize-y ${errors.reason ? 'border-red-500' : 'border-white/[0.1]'}`}
         />
@@ -43,7 +43,7 @@ export default function RequestStepDetails({ form, errors, onUpdateForm, FieldEr
         <textarea
           value={form.notes}
           onChange={e => onUpdateForm("notes", e.target.value)}
-          placeholder="Observaciones, especificaciones t\u00E9cnicas..."
+          placeholder="Observaciones, especificaciones técnicas..."
           rows={2}
           className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50 resize-y"
         />

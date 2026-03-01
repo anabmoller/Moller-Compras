@@ -7,15 +7,15 @@ import ParameterForm from "./ParameterForm";
 import ParameterItemList from "./ParameterItemList";
 
 const TABS = [
-  { key: "establishments", label: "Establecimientos", icon: "\uD83D\uDCCD" },
-  { key: "sectors", label: "Sectores", icon: "\uD83C\uDFF7" },
-  { key: "productTypes", label: "Tipos Producto", icon: "\uD83D\uDCE6" },
-  { key: "suppliers", label: "Proveedores", icon: "\uD83C\uDFEA" },
-  { key: "companies", label: "Empresas", icon: "\uD83C\uDFE2" },
+  { key: "establishments", label: "Establecimientos", icon: "📍" },
+  { key: "sectors", label: "Sectores", icon: "🏷" },
+  { key: "productTypes", label: "Tipos Producto", icon: "📦" },
+  { key: "suppliers", label: "Proveedores", icon: "🏪" },
+  { key: "companies", label: "Empresas", icon: "🏢" },
 ];
 
 function formatName(raw) {
-  if (!raw) return "\u2014";
+  if (!raw) return "—";
   const username = raw.includes("@") ? raw.split("@")[0] : raw;
   const parts = username.split(/[.\s_-]+/);
   return parts
@@ -87,7 +87,7 @@ export default function ParametersScreen({ onBack }) {
   };
 
   const handleReset = async () => {
-    if (window.confirm("\u00BFRefrescar todos los par\u00E1metros desde el servidor?")) {
+    if (window.confirm("¿Refrescar todos los parámetros desde el servidor?")) {
       setSaving(true);
       try {
         await initParameters();
@@ -109,16 +109,16 @@ export default function ParametersScreen({ onBack }) {
         if (item.senacsa_code) parts.push(`SENACSA: ${item.senacsa_code}`);
         if (item.senacsa_unidad_zonal) parts.push(item.senacsa_unidad_zonal);
         else if (item.location) parts.push(item.location);
-        return parts.filter(Boolean).join(" \u00B7 ");
+        return parts.filter(Boolean).join(" · ");
       }
       case "sectors":
         return item.description || "";
       case "productTypes":
         return item.description || "";
       case "suppliers":
-        return [item.category, item.phone].filter(Boolean).join(" \u00B7 ");
+        return [item.category, item.phone].filter(Boolean).join(" · ");
       case "companies":
-        return `${item.type === "empresa" ? "Empresa" : "Persona F\u00EDsica"} \u00B7 Dir: ${formatName(item.director)}`;
+        return `${item.type === "empresa" ? "Empresa" : "Persona Física"} · Dir: ${formatName(item.director)}`;
       default:
         return "";
     }
@@ -129,7 +129,7 @@ export default function ParametersScreen({ onBack }) {
       {/* Header */}
       <div className="px-5 py-3 flex justify-between items-center">
         <button onClick={onBack} className="bg-transparent border-none cursor-pointer text-sm text-emerald-400 font-medium">
-          {"\u2190"} Volver
+          {"←"} Volver
         </button>
         <button onClick={handleReset} disabled={saving} className={`bg-transparent border-none text-xs font-medium ${saving ? 'cursor-default text-slate-500 opacity-60' : 'cursor-pointer text-amber-400'}`}>
           {saving ? "Cargando..." : "Refrescar"}
@@ -138,7 +138,7 @@ export default function ParametersScreen({ onBack }) {
 
       <div className="px-5">
         <h2 className="text-[22px] font-semibold text-white mb-1 mt-0">
-          Par{"\u00E1"}metros del Sistema
+          Par{"á"}metros del Sistema
         </h2>
         <div className="text-[13px] text-slate-400 mb-4">
           Configurar establecimientos, sectores, productos y proveedores
@@ -149,7 +149,7 @@ export default function ParametersScreen({ onBack }) {
       {actionError && (
         <div className="mx-5 mb-3 px-3.5 py-2.5 rounded-lg bg-red-500/[0.06] border border-red-500/[0.19] flex justify-between items-center">
           <span className="text-xs text-red-400 font-medium">{actionError}</span>
-          <button onClick={() => setActionError(null)} className="bg-none border-none cursor-pointer text-sm text-red-400 px-1">{"\u2715"}</button>
+          <button onClick={() => setActionError(null)} className="bg-none border-none cursor-pointer text-sm text-red-400 px-1">{"✕"}</button>
         </div>
       )}
 
@@ -170,7 +170,7 @@ export default function ParametersScreen({ onBack }) {
         {/* Search + Add */}
         <div className="flex gap-2 mb-3">
           <div className="flex-1 flex items-center gap-2 bg-white/[0.03] border border-white/[0.06] rounded-xl px-3 py-2">
-            <span className="text-sm opacity-40">{"\uD83D\uDD0D"}</span>
+            <span className="text-sm opacity-40">{"🔍"}</span>
             <input
               placeholder="Buscar..."
               value={search}

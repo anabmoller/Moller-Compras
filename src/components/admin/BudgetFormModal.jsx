@@ -53,7 +53,7 @@ export default function BudgetFormModal({
 
           <div className="flex gap-2">
             <div className="flex-1">
-              <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Per{"\u00ED"}odo</label>
+              <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Per{"í"}odo</label>
               <input
                 value={form.period}
                 onChange={e => onUpdate("period", e.target.value)}
@@ -162,7 +162,7 @@ export default function BudgetFormModal({
 
           <div className="flex gap-2">
             <div className="flex-1">
-              <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Monto Planificado ({"\u20B2"})</label>
+              <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Monto Planificado ({"₲"})</label>
               <input
                 type="number"
                 value={form.planned || ""}
@@ -178,7 +178,7 @@ export default function BudgetFormModal({
               )}
             </div>
             <div className="flex-1">
-              <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Consumido ({"\u20B2"})</label>
+              <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Consumido ({"₲"})</label>
               <input
                 type="number"
                 value={form.consumed || ""}

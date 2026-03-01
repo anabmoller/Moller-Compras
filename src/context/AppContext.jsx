@@ -158,7 +158,7 @@ export function AppProvider({ children }) {
       if (req) {
         setRequests(prev => [req, ...prev]);
       }
-      showNotif("Solicitud creada con \u00E9xito");
+      showNotif("Solicitud creada con éxito");
     } catch (err) {
       console.error("[App] addRequest failed:", err);
       showNotif("Error al crear solicitud", "error");
@@ -183,12 +183,12 @@ export function AppProvider({ children }) {
       await confirmRequestInDb(req._uuid);
       await refreshRequest(req._uuid);
       notifyStatusChange(req, "pend_autorizacion");
-      showNotif("Solicitud enviada para aprobaci\u00F3n");
+      showNotif("Solicitud enviada para aprobación");
     } catch (err) {
       console.error("[App] confirmRequest failed:", err);
       const msg = err?.message || "";
       if (msg.includes("borrador")) {
-        showNotif("La solicitud ya fue confirmada o no est\u00E1 en estado borrador", "error");
+        showNotif("La solicitud ya fue confirmada o no está en estado borrador", "error");
       } else {
         showNotif("Error al confirmar solicitud", "error");
       }
@@ -262,7 +262,7 @@ export function AppProvider({ children }) {
       // Edge Function handles step reset and status change
       await sendForRevisionInDb(req._uuid, sanitizeMultiline(reason, 1000));
       await refreshRequest(req._uuid);
-      showNotif("Devuelto para revisi\u00F3n");
+      showNotif("Devuelto para revisión");
     } catch (err) {
       console.error("[App] sendForRevision failed:", err);
       showNotif("Error al devolver", "error");
@@ -369,7 +369,7 @@ export function AppProvider({ children }) {
         count: requests.filter(r => normalizeStatus(r.status) === s.key).length,
       })),
       ...(rejectedCount > 0 ? [{
-        key: "rechazado", label: "Rechazado", color: "#e74c3c", icon: "\u274C",
+        key: "rechazado", label: "Rechazado", color: "#e74c3c", icon: "❌",
         count: rejectedCount,
       }] : []),
     ];

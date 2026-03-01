@@ -13,7 +13,7 @@ export default function BudgetGroupList({ grouped, filterEst, onEdit }) {
           <div key={est} className="mb-5">
             <div className="flex justify-between items-center mb-2">
               <div className="text-[13px] font-bold text-white uppercase tracking-wide">
-                {"\uD83D\uDCCD"} {est}
+                {"📍"} {est}
               </div>
               <div className="text-[11px] font-semibold" style={{ color: barColor(estPct) }}>
                 {formatGuaranies(estConsumed)} / {formatGuaranies(estTotal)} ({estPct}%)

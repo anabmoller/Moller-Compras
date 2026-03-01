@@ -126,14 +126,14 @@ export default function BudgetManagementScreen({ onBack }) {
       <BackButton onClick={onBack} />
       <PageHeader
         title="Presupuestos"
-        subtitle="Gesti\u00F3n de presupuestos por establecimiento y sector"
+        subtitle="Gestión de presupuestos por establecimiento y sector"
       />
 
       {/* Error banner */}
       {actionError && (
         <div className="mx-5 mb-3 px-3.5 py-2.5 rounded-lg bg-red-500/[0.06] border border-red-500/[0.19] flex justify-between items-center">
           <span className="text-xs text-red-400 font-medium">{actionError}</span>
-          <button onClick={() => setActionError(null)} className="bg-none border-none cursor-pointer text-sm text-red-400 px-1">{"\u2715"}</button>
+          <button onClick={() => setActionError(null)} className="bg-none border-none cursor-pointer text-sm text-red-400 px-1">{"✕"}</button>
         </div>
       )}
 
@@ -194,7 +194,7 @@ export default function BudgetManagementScreen({ onBack }) {
               Refrescar presupuestos
             </div>
             <div className="text-[13px] text-slate-400 mb-5 leading-relaxed">
-              Se recargar{"\u00E1"}n todos los presupuestos desde el servidor.
+              Se recargar{"á"}n todos los presupuestos desde el servidor.
             </div>
             <div className="flex gap-2">
               <button

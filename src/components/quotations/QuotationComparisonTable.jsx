@@ -28,7 +28,7 @@ export default function QuotationComparisonTable({
                 const isBest = price > 0 && bestItemPrices[idx] === price;
                 return (
                   <td key={q.id} className={`px-3 py-2 text-center font-semibold ${isBest ? 'text-green-400 bg-green-500/[0.04]' : 'text-white'}`}>
-                    {price > 0 ? price.toLocaleString() : "\u2014"}
+                    {price > 0 ? price.toLocaleString() : "—"}
                     {price > 0 && (
                       <div className="text-[10px] text-slate-400 font-normal">
                         = {(price * (it.quantity || it.cantidad || 0)).toLocaleString()}
@@ -58,7 +58,7 @@ export default function QuotationComparisonTable({
               const isFastest = q.id === fastest?.id;
               return (
                 <td key={q.id} className={`px-3 py-2 text-center ${isFastest ? 'text-emerald-400 font-semibold' : 'text-slate-400'}`}>
-                  {q.deliveryDays > 0 ? `${q.deliveryDays}d` : "\u2014"}
+                  {q.deliveryDays > 0 ? `${q.deliveryDays}d` : "—"}
                 </td>
               );
             })}

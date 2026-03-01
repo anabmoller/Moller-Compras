@@ -9,8 +9,8 @@ function autoUnit(code) {
 }
 
 function fmtGs(n) {
-  if (!n) return "\u20B2 0";
-  return "\u20B2 " + Math.round(n).toLocaleString("es-PY");
+  if (!n) return "₲ 0";
+  return "₲ " + Math.round(n).toLocaleString("es-PY");
 }
 
 export default function RequestStepItems({
@@ -38,8 +38,8 @@ export default function RequestStepItems({
     if (!selectedProduct || !itemUnitPrice || !selectedProduct.up) return null;
     const refUp = selectedProduct.up;
     const pct = ((itemUnitPrice - refUp) / refUp) * 100;
-    if (pct > 20) return { level: "red", pct: pct.toFixed(0), msg: "Precio unitario supera referencia por m\u00E1s del 20%" };
-    if (pct > 5) return { level: "yellow", pct: pct.toFixed(0), msg: "Precio unitario supera referencia por m\u00E1s del 5%" };
+    if (pct > 20) return { level: "red", pct: pct.toFixed(0), msg: "Precio unitario supera referencia por más del 20%" };
+    if (pct > 5) return { level: "yellow", pct: pct.toFixed(0), msg: "Precio unitario supera referencia por más del 5%" };
     return null;
   }, [selectedProduct, itemUnitPrice]);
 
@@ -112,7 +112,7 @@ export default function RequestStepItems({
           value={productSearch}
           onChange={e => { setProductSearch(e.target.value); setShowDropdown(true); setSelectedProduct(null); }}
           onFocus={() => productSearch.length >= 2 && setShowDropdown(true)}
-          placeholder="Escribe nombre o c\u00F3digo (ej: MAIZ, AGRO-000003)..."
+          placeholder="Escribe nombre o código (ej: MAIZ, AGRO-000003)..."
           className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50"
         />
         {/* Dropdown */}
@@ -137,17 +137,17 @@ export default function RequestStepItems({
       {selectedProduct && (
         <div className="bg-blue-500/[0.04] rounded-xl px-3.5 py-3 border border-blue-500/[0.12]">
           <div className="text-xs font-semibold text-blue-400 mb-2 flex items-center gap-1.5">
-            {"\uD83D\uDCCA"} Referencia de Precios
+            {"📊"} Referencia de Precios
           </div>
           <div className="text-[11px] text-slate-300 leading-relaxed">
             <div>Precio unitario ref.: <span className="font-semibold text-white">{fmtGs(selectedProduct.up)}</span> / {selectedProduct.u}
               {selectedProduct.ld && <span className="text-slate-500"> ({selectedProduct.ld} - {selectedProduct.ls})</span>}
             </div>
-            <div className="mt-0.5">En USD: <span className="font-semibold text-white">$ {usdRate > 0 ? Math.round(selectedProduct.up / usdRate).toLocaleString("en-US") : "\u2014"}</span> / {selectedProduct.u}
-              <span className="text-slate-500"> (TC: 1 USD = \u20B2 {usdRate.toLocaleString("es-PY")} {usdLive ? "(live)" : "(offline)"})</span>
+            <div className="mt-0.5">En USD: <span className="font-semibold text-white">$ {usdRate > 0 ? Math.round(selectedProduct.up / usdRate).toLocaleString("en-US") : "—"}</span> / {selectedProduct.u}
+              <span className="text-slate-500"> (TC: 1 USD = ₲ {usdRate.toLocaleString("es-PY")} {usdLive ? "(live)" : "(offline)"})</span>
             </div>
             {itemQty > 1 && selectedProduct.up > 0 && (
-              <div className="mt-0.5">Monto Est: <span className="font-semibold text-white">{fmtGs(itemQty * selectedProduct.up)}</span> ({itemQty} \u00D7 {fmtGs(selectedProduct.up)})</div>
+              <div className="mt-0.5">Monto Est: <span className="font-semibold text-white">{fmtGs(itemQty * selectedProduct.up)}</span> ({itemQty} × {fmtGs(selectedProduct.up)})</div>
             )}
           </div>
 
@@ -168,7 +168,7 @@ export default function RequestStepItems({
               />
             </div>
             <div className="flex-1">
-              <label className="block text-[10px] text-slate-400 mb-1">P. Unit. (\u20B2)</label>
+              <label className="block text-[10px] text-slate-400 mb-1">P. Unit. (₲)</label>
               <input
                 type="number"
                 value={itemUnitPrice || ""}
@@ -189,13 +189,13 @@ export default function RequestStepItems({
             </button>
           </div>
           {itemAmount > 0 && (
-            <div className="text-[10px] text-emerald-400 mt-1">Total: {fmtGs(itemAmount)} ({itemQty} \u00D7 {fmtGs(itemUnitPrice)})</div>
+            <div className="text-[10px] text-emerald-400 mt-1">Total: {fmtGs(itemAmount)} ({itemQty} × {fmtGs(itemUnitPrice)})</div>
           )}
 
           {/* Price deviation warning */}
           {priceDeviation && (
             <div className={`mt-2 text-[11px] font-medium ${priceDeviation.level === "red" ? "text-red-400" : "text-amber-400"}`}>
-              {"\u26A0"} {priceDeviation.msg} ({priceDeviation.pct}%)
+              {"⚠"} {priceDeviation.msg} ({priceDeviation.pct}%)
             </div>
           )}
         </div>
@@ -212,7 +212,7 @@ export default function RequestStepItems({
             <div key={i} className="px-3 py-2 flex items-center gap-2 border-b border-white/[0.04] last:border-b-0">
               <div className="flex-1 min-w-0">
                 <div className="text-sm text-white font-medium truncate">{it.product}</div>
-                <div className="text-[10px] text-slate-500">{it.code} \u00B7 {it.qty} {it.unit} \u00B7 {fmtGs(it.estimatedAmount)}</div>
+                <div className="text-[10px] text-slate-500">{it.code} · {it.qty} {it.unit} · {fmtGs(it.estimatedAmount)}</div>
               </div>
               <button
                 onClick={() => removeItem(i)}

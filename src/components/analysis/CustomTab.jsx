@@ -185,7 +185,7 @@ export default function CustomTab({ analyses, onRemove, onAdd }) {
     <div className="space-y-4 animate-fade-in">
       {analyses.length === 0 ? (
         <Card hover={false} className="p-8 text-center">
-          <div className="text-3xl mb-2">{'\ud83d\udcca'}</div>
+          <div className="text-3xl mb-2">{'📊'}</div>
           <div className="text-sm text-slate-400 font-medium">No hay analisis personalizados</div>
           <div className="text-xs text-slate-500 mt-1 mb-4">Crea tu primer analisis con el boton de arriba</div>
           <button

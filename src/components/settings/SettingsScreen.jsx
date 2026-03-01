@@ -86,7 +86,7 @@ export default function SettingsScreen({ onBack, onNavigate, devMode, onSetDevMo
             )}
             <button
               onClick={() => {
-                if (window.confirm("\u00BFRecargar la aplicaci\u00F3n y refrescar datos desde el servidor?")) {
+                if (window.confirm("¿Recargar la aplicación y refrescar datos desde el servidor?")) {
                   window.location.reload();
                 }
               }}

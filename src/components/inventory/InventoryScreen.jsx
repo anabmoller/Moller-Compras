@@ -11,23 +11,23 @@ import InventoryProductList from "./InventoryProductList";
 const CATEGORY_TO_GROUP = {
   "Veterinaria": "Veterinaria",
   "Hacienda": "Hacienda",
-  "Productos Agr\u00EDcolas": "Agr\u00EDcola",
-  "Insumos Agr\u00EDcolas": "Agr\u00EDcola",
+  "Productos Agrícolas": "Agrícola",
+  "Insumos Agrícolas": "Agrícola",
   "Combustible": "Combustible",
   "Lubricantes": "Mantenimiento",
   "Repuestos": "Mantenimiento",
-  "Materia Prima": "Nutrici\u00F3n",
+  "Materia Prima": "Nutrición",
   "Infraestructura": "Operacional",
-  "Tecnolog\u00EDa": "Operacional",
+  "Tecnología": "Operacional",
   "Menaje/Cocina": "Operacional",
-  "Mercader\u00EDa": "Mercader\u00EDa",
-  "Nutrici\u00F3n Animal": "Nutrici\u00F3n",
+  "Mercadería": "Mercadería",
+  "Nutrición Animal": "Nutrición",
 };
 
 const ALL_GROUP_COLORS = {
   ...GROUP_COLORS,
-  "Mercader\u00EDa": "#6366F1",
-  "Agr\u00EDcola": "#2563EB",
+  "Mercadería": "#6366F1",
+  "Agrícola": "#2563EB",
   "Otro": "#9CA3AF",
 };
 
@@ -79,7 +79,7 @@ export default function InventoryScreen({ onBack }) {
         const group = CATEGORY_TO_GROUP[catName] || catName || "Otro";
         return {
           id: p.id,
-          code: p.code || "\u2014",
+          code: p.code || "—",
           name: p.name || "Sin nombre",
           group,
           category: catName,
@@ -139,10 +139,10 @@ export default function InventoryScreen({ onBack }) {
     return (
       <div className="animate-[fadeIn_0.3s_ease]">
         <BackButton onClick={onBack} />
-        <PageHeader title="Cat\u00E1logo de Productos" subtitle="Cargando..." />
+        <PageHeader title="Catálogo de Productos" subtitle="Cargando..." />
         <div className="text-center py-[60px] text-slate-400">
-          <div className="text-[28px] mb-2">{"\uD83D\uDCE6"}</div>
-          <div className="text-[13px]">Cargando cat{"\u00E1"}logo...</div>
+          <div className="text-[28px] mb-2">{"📦"}</div>
+          <div className="text-[13px]">Cargando cat{"á"}logo...</div>
         </div>
       </div>
     );
@@ -152,8 +152,8 @@ export default function InventoryScreen({ onBack }) {
     <div className="animate-[fadeIn_0.3s_ease]">
       <BackButton onClick={onBack} />
       <PageHeader
-        title="Cat\u00E1logo de Productos"
-        subtitle={`${stats.total} productos \u00B7 ${stats.groups} grupos \u00B7 ${stats.types} categor\u00EDas`}
+        title="Catálogo de Productos"
+        subtitle={`${stats.total} productos · ${stats.groups} grupos · ${stats.types} categorías`}
       />
 
       {/* KPI cards -- top 5 groups by count */}
@@ -194,7 +194,7 @@ export default function InventoryScreen({ onBack }) {
         <SearchInput
           value={search}
           onChange={setSearch}
-          placeholder="Buscar por nombre, c\u00F3digo, fabricante..."
+          placeholder="Buscar por nombre, código, fabricante..."
           style={{ marginBottom: 10 }}
         />
 
@@ -222,8 +222,8 @@ export default function InventoryScreen({ onBack }) {
       <div className="px-5 pt-1 pb-2">
         <div className="text-[11px] text-slate-400 font-medium">
           {filtered.length} productos
-          {filterGroup !== "all" && ` \u00B7 ${filterGroup}`}
-          {search && ` \u00B7 "${search}"`}
+          {filterGroup !== "all" && ` · ${filterGroup}`}
+          {search && ` · "${search}"`}
         </div>
       </div>
 

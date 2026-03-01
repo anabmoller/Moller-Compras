@@ -170,7 +170,7 @@ export default function QuotationAddForm({ items, currency: initCurrency, onAdd,
                   <div className="text-xs text-white font-medium truncate">{it.name || it.nombre || "Item"}</div>
                   <div className="text-[10px] text-slate-400">
                     {it.quantity || it.cantidad || 0} {it.unit || it.unidad || "un"}
-                    {(it.codigo || it.code) && ` \u00B7 ${it.codigo || it.code}`}
+                    {(it.codigo || it.code) && ` · ${it.codigo || it.code}`}
                   </div>
                 </div>
                 <div className="w-[110px] flex-shrink-0">
@@ -241,7 +241,7 @@ export default function QuotationAddForm({ items, currency: initCurrency, onAdd,
               {attachment.type.startsWith("image/") ? (
                 <img src={attachment.data} alt="" className="w-10 h-10 object-cover rounded" />
               ) : (
-                <div className="w-10 h-10 bg-red-500/[0.08] rounded flex items-center justify-center text-lg">{"\uD83D\uDCC4"}</div>
+                <div className="w-10 h-10 bg-red-500/[0.08] rounded flex items-center justify-center text-lg">{"📄"}</div>
               )}
               <div className="flex-1 min-w-0">
                 <div className="text-xs text-white truncate">{attachment.name}</div>
@@ -259,7 +259,7 @@ export default function QuotationAddForm({ items, currency: initCurrency, onAdd,
               onClick={() => fileRef.current?.click()}
               className="w-full py-2.5 rounded-lg border border-dashed border-white/[0.12] bg-white/[0.02] text-xs text-slate-400 cursor-pointer"
             >
-              {"\uD83D\uDCCE"} Seleccionar archivo
+              {"📎"} Seleccionar archivo
             </button>
           )}
         </div>

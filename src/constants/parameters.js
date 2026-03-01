@@ -5,6 +5,14 @@
 
 import { supabase, supabaseUrl, supabaseAnonKey, getStoredToken } from "../lib/supabase";
 
+// Strip emoji text prefixes from DB names (e.g. "wheat Agricultura" → "Agricultura")
+function cleanName(name) {
+  if (!name) return "";
+  return name
+    .replace(/^(wheat|office|building|pill|cow|tractor|wrench|truck|factory|seedling|ear_of_rice|syringe|package|hammer|gear|fuel)\s+/i, "")
+    .replace(/^[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}]\s*/u, "");
+}
+
 // ---- Edge Function helper (same pattern as queries.js) ----
 async function invokeAdminData(body) {
   let token = getStoredToken();
@@ -74,7 +82,7 @@ export async function initParameters() {
       establishments: (estab.data || []).map(e => ({
         id: e.legacy_id || e.id,
         _uuid: e.id,
-        name: (e.name || "").replace(/^building\s+/i, ""),
+        name: cleanName(e.name),
         code: e.code,
         company: companyMap[e.company_id] || "",
         companyId: e.company_id,
@@ -92,8 +100,7 @@ export async function initParameters() {
       sectors: (sectors.data || []).map(s => ({
         id: s.legacy_id || s.id,
         _uuid: s.id,
-        // Data cleanup: fix known bad names from DB (e.g. "building Feedlot" → "Feedlot")
-        name: (s.name || "").replace(/^building\s+/i, ""),
+        name: cleanName(s.name),
         icon: s.icon,
         description: s.description,
         lider: s.lider || "",

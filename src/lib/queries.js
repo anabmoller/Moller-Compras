@@ -116,9 +116,13 @@ async function tryRefreshToken() {
 
 // ---- Transformers: Supabase (snake_case) -> Frontend (camelCase) ----
 
-// Strip "building " prefix from establishment/sector names (DB cleanup)
+// Strip emoji text prefixes from establishment/sector names (DB cleanup)
+// DB stores names like "wheat Agricultura", "building Feedlot", etc.
 function cleanName(name) {
-  return (name || "").replace(/^(building|office)\s+/i, "");
+  if (!name) return "";
+  return name
+    .replace(/^(wheat|office|building|pill|cow|tractor|wrench|truck|factory|seedling|ear_of_rice|syringe|package|hammer|gear|fuel)\s+/i, "")
+    .replace(/^[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}]\s*/u, "");
 }
 
 function transformRequest(row, items = [], quotations = [], comments = [], steps = [], history = []) {

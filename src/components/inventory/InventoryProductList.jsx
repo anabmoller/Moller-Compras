@@ -2,8 +2,8 @@ import { GROUP_COLORS } from "../../constants";
 
 const ALL_GROUP_COLORS = {
   ...GROUP_COLORS,
-  "Mercader\u00EDa": "#6366F1",
-  "Agr\u00EDcola": "#2563EB",
+  "Mercadería": "#6366F1",
+  "Agrícola": "#2563EB",
   "Otro": "#9CA3AF",
 };
 
@@ -64,7 +64,7 @@ export default function InventoryProductList({ groupedItems, onSelectProduct }) 
                     >
                       {item.presentation || item.unit || item.category}
                     </span>
-                    <span className="text-xs text-slate-500">{"\u203A"}</span>
+                    <span className="text-xs text-slate-500">{"›"}</span>
                   </div>
                 </div>
               ))}
