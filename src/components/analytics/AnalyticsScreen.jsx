@@ -1,6 +1,5 @@
 import { useState, useMemo } from "react";
-import { colors, font, fontDisplay, shadows, radius } from "../../styles/theme";
-import { URGENCY_LEVELS, PRIORITY_LEVELS } from "../../constants";
+import { PRIORITY_LEVELS } from "../../constants";
 import { formatGuaranies, getBudgets } from "../../constants/budgets";
 import KPICard from "../common/KPICard";
 
@@ -74,48 +73,40 @@ export default function AnalyticsScreen({ requests, statusCounts, onBack }) {
   }, [requests]);
 
   return (
-    <div style={{ animation: "fadeIn 0.3s ease" }}>
-      <div style={{ padding: "12px 20px" }}>
-        <button onClick={onBack} style={{
-          background: "transparent", border: "none", cursor: "pointer",
-          fontFamily: font, fontSize: 14, color: colors.primary, fontWeight: 500,
-        }}>
+    <div className="animate-fade-in">
+      <div className="py-3 px-5">
+        <button onClick={onBack} className="bg-transparent border-none cursor-pointer text-sm text-emerald-400 font-medium p-0">
           ← Volver
         </button>
       </div>
 
-      <div style={{ padding: "0 20px 8px" }}>
-        <h2 style={{
-          fontFamily: fontDisplay, fontSize: 22, fontWeight: 600,
-          color: colors.text, margin: "0 0 4px",
-        }}>
+      <div className="px-5 pb-2">
+        <h2 className="text-[22px] font-semibold text-white m-0 mb-1">
           Análisis y Reportes
         </h2>
-        <div style={{ fontSize: 13, color: colors.textLight, marginBottom: 12 }}>
+        <div className="text-sm text-slate-400 mb-3">
           {requests.length} solicitudes · {formatGuaranies(stats.totalAmount)} total
         </div>
       </div>
 
       {/* Tab Bar */}
-      <div style={{
-        display: "flex", gap: 4, padding: "0 20px 16px",
-        overflowX: "auto", scrollbarWidth: "none",
-      }}>
+      <div className="flex gap-1 px-5 pb-4 overflow-x-auto scrollbar-none">
         {TABS.map(t => (
-          <button key={t.key} onClick={() => setTab(t.key)} style={{
-            flex: 1, padding: "10px 12px", borderRadius: radius.md, border: "none",
-            background: tab === t.key ? colors.primary : colors.card,
-            color: tab === t.key ? "#fff" : colors.textLight,
-            fontSize: 12, fontWeight: 600, fontFamily: font, cursor: "pointer",
-            boxShadow: tab === t.key ? shadows.md : shadows.card,
-            transition: "all 0.15s",
-          }}>
+          <button
+            key={t.key}
+            onClick={() => setTab(t.key)}
+            className={`flex-1 px-3 py-2.5 rounded-lg border-none text-xs font-semibold cursor-pointer transition-all ${
+              tab === t.key
+                ? 'bg-emerald-500/15 text-emerald-400 shadow-md'
+                : 'bg-white/[0.03] text-slate-400 hover:bg-white/[0.06]'
+            }`}
+          >
             {t.icon} {t.label}
           </button>
         ))}
       </div>
 
-      <div style={{ padding: "0 20px 120px" }}>
+      <div className="px-5 pb-[120px]">
         {tab === "overview" && <OverviewTab stats={stats} requests={requests} statusCounts={statusCounts} />}
         {tab === "purchases" && <PurchasesTab stats={stats} />}
         {tab === "budgets" && <BudgetsTab />}
@@ -124,61 +115,49 @@ export default function AnalyticsScreen({ requests, statusCounts, onBack }) {
   );
 }
 
-// ==== TAB 1: Vision General ====
 function OverviewTab({ stats, requests, statusCounts }) {
   return (
     <>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 16 }}>
-        <KPICard label="Total Solicitudes" value={requests.length} color={colors.primary} />
-        <KPICard label="Pendientes" value={stats.pendingCount} color={stats.pendingCount > 5 ? colors.danger : colors.warning} />
-        <KPICard label="Completadas" value={stats.completedCount} color={colors.success} />
-        <KPICard label="Emergencias" value={stats.emergencyCount} color={colors.danger} />
+      <div className="grid grid-cols-2 gap-2.5 mb-4">
+        <KPICard label="Total Solicitudes" value={requests.length} color="#10b981" />
+        <KPICard label="Pendientes" value={stats.pendingCount} color={stats.pendingCount > 5 ? "#ef4444" : "#f59e0b"} />
+        <KPICard label="Completadas" value={stats.completedCount} color="#10b981" />
+        <KPICard label="Emergencias" value={stats.emergencyCount} color="#ef4444" />
       </div>
 
-      <div style={{
-        background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.primaryDark} 100%)`,
-        borderRadius: radius.xl, padding: 20, marginBottom: 16, color: "#fff",
-      }}>
-        <div style={{ fontSize: 11, opacity: 0.7, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>
-          Monto Total Gestionado
-        </div>
-        <div style={{ fontSize: 28, fontWeight: 700, fontFamily: font }}>{formatGuaranies(stats.totalAmount)}</div>
-        <div style={{ fontSize: 12, opacity: 0.7, marginTop: 4 }}>
-          Promedio por solicitud: {formatGuaranies(stats.avgAmount)}
-        </div>
+      <div className="bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-2xl p-5 mb-4 text-white">
+        <div className="text-[11px] opacity-70 uppercase tracking-widest mb-1">Monto Total Gestionado</div>
+        <div className="text-[28px] font-bold">{formatGuaranies(stats.totalAmount)}</div>
+        <div className="text-xs opacity-70 mt-1">Promedio por solicitud: {formatGuaranies(stats.avgAmount)}</div>
       </div>
 
-      <Card title="Pipeline de Compras">
+      <AnalyticsCard title="Pipeline de Compras">
         {statusCounts.map(s => (
-          <div key={s.key} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-            <span style={{ fontSize: 14, width: 22, textAlign: "center" }}>{s.icon}</span>
-            <div style={{ flex: 1 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
-                <span style={{ fontSize: 12, color: colors.text }}>{s.label}</span>
-                <span style={{ fontSize: 12, fontWeight: 600, color: s.color }}>{s.count}</span>
+          <div key={s.key} className="flex items-center gap-2.5 mb-2.5">
+            <span className="text-sm w-5.5 text-center">{s.icon}</span>
+            <div className="flex-1">
+              <div className="flex justify-between mb-0.5">
+                <span className="text-xs text-white">{s.label}</span>
+                <span className="text-xs font-semibold" style={{ color: s.color }}>{s.count}</span>
               </div>
-              <BarChart value={s.count} max={Math.max(...statusCounts.map(x => x.count), 1)} color={s.color} />
+              <ProgressBar value={s.count} max={Math.max(...statusCounts.map(x => x.count), 1)} color={s.color} />
             </div>
           </div>
         ))}
-      </Card>
+      </AnalyticsCard>
 
-      <Card title="Por Prioridad">
+      <AnalyticsCard title="Por Prioridad">
         {PRIORITY_LEVELS.map(u => (
-          <div key={u.value} style={{
-            display: "flex", justifyContent: "space-between", alignItems: "center",
-            padding: "8px 0", borderBottom: `1px solid ${colors.borderLight}`,
-          }}>
-            <span style={{ fontSize: 13, color: colors.text }}>{u.icon} {u.label}</span>
-            <span style={{ fontSize: 13, fontWeight: 600, color: u.color }}>{stats.byUrgency[u.value] || 0}</span>
+          <div key={u.value} className="flex justify-between items-center py-2 border-b border-white/[0.06]">
+            <span className="text-sm text-white">{u.icon} {u.label}</span>
+            <span className="text-sm font-semibold" style={{ color: u.color }}>{stats.byUrgency[u.value] || 0}</span>
           </div>
         ))}
-      </Card>
+      </AnalyticsCard>
     </>
   );
 }
 
-// ==== TAB 2: Compras ====
 function PurchasesTab({ stats }) {
   const [sortBy, setSortBy] = useState("amount");
 
@@ -194,104 +173,92 @@ function PurchasesTab({ stats }) {
 
   return (
     <>
-      <Card title="Compras por Establecimiento" action={
-        <button onClick={() => setSortBy(sortBy === "amount" ? "count" : "amount")} style={{
-          background: "transparent", border: "none", fontSize: 11,
-          color: colors.primary, cursor: "pointer", fontFamily: font, fontWeight: 500,
-        }}>
+      <AnalyticsCard title="Compras por Establecimiento" action={
+        <button
+          onClick={() => setSortBy(sortBy === "amount" ? "count" : "amount")}
+          className="bg-transparent border-none text-[11px] text-emerald-400 cursor-pointer font-medium"
+        >
           Por {sortBy === "amount" ? "cantidad" : "monto"}
         </button>
       }>
         {estEntries.map(([est, data]) => (
-          <div key={est} style={{ marginBottom: 10 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
-              <span style={{ fontSize: 12, color: colors.text }}>📍 {est}</span>
-              <div style={{ display: "flex", gap: 12 }}>
-                <span style={{ fontSize: 11, color: colors.textLight }}>{data.count} sol.</span>
-                <span style={{ fontSize: 12, fontWeight: 600, color: colors.primary }}>{formatGuaranies(data.amount)}</span>
+          <div key={est} className="mb-2.5">
+            <div className="flex justify-between mb-0.5">
+              <span className="text-xs text-white">📍 {est}</span>
+              <div className="flex gap-3">
+                <span className="text-[11px] text-slate-400">{data.count} sol.</span>
+                <span className="text-xs font-semibold text-emerald-400">{formatGuaranies(data.amount)}</span>
               </div>
             </div>
-            <BarChart value={data.amount} max={maxEstAmount} color={colors.primary} />
+            <ProgressBar value={data.amount} max={maxEstAmount} color="#10b981" />
           </div>
         ))}
-      </Card>
+      </AnalyticsCard>
 
-      <Card title="Compras por Sector">
+      <AnalyticsCard title="Compras por Sector">
         {secEntries.map(([sec, data]) => (
-          <div key={sec} style={{ marginBottom: 10 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
-              <span style={{ fontSize: 12, color: colors.text }}>{sec}</span>
-              <span style={{ fontSize: 12, fontWeight: 600, color: colors.accent }}>{formatGuaranies(data.amount)}</span>
+          <div key={sec} className="mb-2.5">
+            <div className="flex justify-between mb-0.5">
+              <span className="text-xs text-white">{sec}</span>
+              <span className="text-xs font-semibold text-amber-400">{formatGuaranies(data.amount)}</span>
             </div>
-            <BarChart value={data.amount} max={maxSecAmount} color={colors.accent} />
+            <ProgressBar value={data.amount} max={maxSecAmount} color="#f59e0b" />
           </div>
         ))}
-      </Card>
+      </AnalyticsCard>
 
-      <Card title="Por Tipo de Producto">
+      <AnalyticsCard title="Por Tipo de Producto">
         {typeEntries.map(([type, data]) => (
-          <div key={type} style={{
-            display: "flex", justifyContent: "space-between", alignItems: "center",
-            padding: "8px 0", borderBottom: `1px solid ${colors.borderLight}`,
-          }}>
-            <span style={{ fontSize: 12, color: colors.text }}>{type}</span>
-            <div style={{ textAlign: "right" }}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: colors.primary }}>{formatGuaranies(data.amount)}</div>
-              <div style={{ fontSize: 10, color: colors.textLight }}>{data.count} solicitudes</div>
+          <div key={type} className="flex justify-between items-center py-2 border-b border-white/[0.06]">
+            <span className="text-xs text-white">{type}</span>
+            <div className="text-right">
+              <div className="text-xs font-semibold text-emerald-400">{formatGuaranies(data.amount)}</div>
+              <div className="text-[10px] text-slate-500">{data.count} solicitudes</div>
             </div>
           </div>
         ))}
-      </Card>
+      </AnalyticsCard>
 
       {monthEntries.length > 0 && (
-        <Card title="Tendencia Mensual">
+        <AnalyticsCard title="Tendencia Mensual">
           {monthEntries.map(([month, data]) => {
             const maxM = Math.max(...monthEntries.map(([, v]) => v.amount), 1);
             const monthLabel = new Date(month + "-01").toLocaleDateString("es-PY", { month: "short", year: "numeric" });
             return (
-              <div key={month} style={{ marginBottom: 10 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
-                  <span style={{ fontSize: 12, color: colors.text, textTransform: "capitalize" }}>{monthLabel}</span>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: colors.primary }}>
+              <div key={month} className="mb-2.5">
+                <div className="flex justify-between mb-0.5">
+                  <span className="text-xs text-white capitalize">{monthLabel}</span>
+                  <span className="text-xs font-semibold text-emerald-400">
                     {formatGuaranies(data.amount)} ({data.count})
                   </span>
                 </div>
-                <BarChart value={data.amount} max={maxM} color={colors.success} />
+                <ProgressBar value={data.amount} max={maxM} color="#10b981" />
               </div>
             );
           })}
-        </Card>
+        </AnalyticsCard>
       )}
 
-      <Card title="Top Solicitantes">
+      <AnalyticsCard title="Top Solicitantes">
         {reqEntries.map(([name, data], i) => (
-          <div key={name} style={{
-            display: "flex", alignItems: "center", gap: 10,
-            padding: "8px 0", borderBottom: `1px solid ${colors.borderLight}`,
-          }}>
-            <span style={{
-              width: 24, height: 24, borderRadius: radius.md, display: "flex",
-              alignItems: "center", justifyContent: "center", fontSize: 11,
-              fontWeight: 700, color: "#fff",
-              background: i < 3 ? colors.primary : colors.textLight,
-            }}>
+          <div key={name} className="flex items-center gap-2.5 py-2 border-b border-white/[0.06]">
+            <span className={`w-6 h-6 rounded-lg flex items-center justify-center text-[11px] font-bold text-white ${i < 3 ? 'bg-emerald-600' : 'bg-slate-600'}`}>
               {i + 1}
             </span>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 13, fontWeight: 500, color: colors.text }}>{name}</div>
+            <div className="flex-1">
+              <div className="text-sm font-medium text-white">{name}</div>
             </div>
-            <div style={{ textAlign: "right" }}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: colors.primary }}>{data.count}</div>
-              <div style={{ fontSize: 10, color: colors.textLight }}>{formatGuaranies(data.amount)}</div>
+            <div className="text-right">
+              <div className="text-xs font-semibold text-emerald-400">{data.count}</div>
+              <div className="text-[10px] text-slate-500">{formatGuaranies(data.amount)}</div>
             </div>
           </div>
         ))}
-      </Card>
+      </AnalyticsCard>
     </>
   );
 }
 
-// ==== TAB 3: Presupuestos ====
 function BudgetsTab() {
   const budgets = getBudgets().filter(b => b.active);
   const totalPlanned = budgets.reduce((s, b) => s + b.planned, 0);
@@ -306,33 +273,24 @@ function BudgetsTab() {
 
   return (
     <>
-      <div style={{
-        background: `linear-gradient(135deg, ${overallPct > 80 ? colors.danger : colors.primary} 0%, ${overallPct > 80 ? "#a82020" : colors.primaryDark} 100%)`,
-        borderRadius: radius.xl, padding: 20, marginBottom: 16, color: "#fff",
-      }}>
-        <div style={{ fontSize: 11, opacity: 0.7, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>
-          Presupuesto Global 2026
+      <div className={`bg-gradient-to-br ${overallPct > 80 ? 'from-red-600 to-red-800' : 'from-emerald-600 to-emerald-800'} rounded-2xl p-5 mb-4 text-white`}>
+        <div className="text-[11px] opacity-70 uppercase tracking-widest mb-1">Presupuesto Global 2026</div>
+        <div className="flex justify-between items-baseline">
+          <div className="text-2xl font-bold">{overallPct}%</div>
+          <div className="text-xs opacity-80">{formatGuaranies(totalConsumed)} / {formatGuaranies(totalPlanned)}</div>
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-          <div style={{ fontSize: 24, fontWeight: 700, fontFamily: font }}>{overallPct}%</div>
-          <div style={{ fontSize: 12, opacity: 0.8 }}>
-            {formatGuaranies(totalConsumed)} / {formatGuaranies(totalPlanned)}
-          </div>
+        <div className="h-1.5 rounded-full bg-white/20 mt-3">
+          <div
+            className="h-full rounded-full bg-white transition-all duration-500"
+            style={{ width: `${Math.min(overallPct, 100)}%` }}
+          />
         </div>
-        <div style={{ height: 6, borderRadius: 3, background: "rgba(255,255,255,0.2)", marginTop: 12 }}>
-          <div style={{
-            height: "100%", borderRadius: 3, background: "#fff",
-            width: `${Math.min(overallPct, 100)}%`, transition: "width 0.5s ease",
-          }} />
-        </div>
-        <div style={{ fontSize: 11, opacity: 0.7, marginTop: 8 }}>
-          Disponible: {formatGuaranies(totalPlanned - totalConsumed)}
-        </div>
+        <div className="text-[11px] opacity-70 mt-2">Disponible: {formatGuaranies(totalPlanned - totalConsumed)}</div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 16 }}>
-        <KPICard label="Presupuestos Activos" value={budgets.length} color={colors.primary} />
-        <KPICard label="Sobre 80%" value={budgets.filter(b => (b.consumed / b.planned) * 100 > 80).length} color={colors.danger} />
+      <div className="grid grid-cols-2 gap-2.5 mb-4">
+        <KPICard label="Presupuestos Activos" value={budgets.length} color="#10b981" />
+        <KPICard label="Sobre 80%" value={budgets.filter(b => (b.consumed / b.planned) * 100 > 80).length} color="#ef4444" />
       </div>
 
       {Object.entries(byEst).sort((a, b) => a[0].localeCompare(b[0])).map(([est, estBudgets]) => {
@@ -341,48 +299,38 @@ function BudgetsTab() {
         const estPct = estPlanned > 0 ? Math.round((estConsumed / estPlanned) * 100) : 0;
 
         return (
-          <Card key={est} title={`📍 ${est}`} subtitle={`${estPct}% ejecutado`}>
+          <AnalyticsCard key={est} title={`📍 ${est}`} subtitle={`${estPct}% ejecutado`}>
             {estBudgets.map(b => {
               const pct = b.planned > 0 ? Math.round((b.consumed / b.planned) * 100) : 0;
-              const barColor = pct > 90 ? colors.danger : pct > 70 ? colors.warning : colors.success;
+              const barColor = pct > 90 ? '#ef4444' : pct > 70 ? '#f59e0b' : '#10b981';
               return (
-                <div key={b.id} style={{ marginBottom: 12 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
-                    <span style={{ fontSize: 12, color: colors.text, fontWeight: 500 }}>{b.sector}</span>
-                    <span style={{ fontSize: 11, fontWeight: 600, color: barColor }}>{pct}%</span>
+                <div key={b.id} className="mb-3">
+                  <div className="flex justify-between mb-0.5">
+                    <span className="text-xs font-medium text-white">{b.sector}</span>
+                    <span className="text-[11px] font-semibold" style={{ color: barColor }}>{pct}%</span>
                   </div>
-                  <BarChart value={b.consumed} max={b.planned} color={barColor} height={6} />
-                  <div style={{ display: "flex", justifyContent: "space-between", marginTop: 3 }}>
-                    <span style={{ fontSize: 10, color: colors.textLight }}>{formatGuaranies(b.consumed)}</span>
-                    <span style={{ fontSize: 10, color: colors.textLight }}>{formatGuaranies(b.planned)}</span>
+                  <ProgressBar value={b.consumed} max={b.planned} color={barColor} height={6} />
+                  <div className="flex justify-between mt-0.5">
+                    <span className="text-[10px] text-slate-500">{formatGuaranies(b.consumed)}</span>
+                    <span className="text-[10px] text-slate-500">{formatGuaranies(b.planned)}</span>
                   </div>
                 </div>
               );
             })}
-          </Card>
+          </AnalyticsCard>
         );
       })}
     </>
   );
 }
 
-// ==== Shared Components ====
-function Card({ title, subtitle, action, children }) {
+function AnalyticsCard({ title, subtitle, action, children }) {
   return (
-    <div style={{
-      background: colors.card, borderRadius: radius.lg, padding: 16,
-      border: `1px solid ${colors.borderLight}`, marginBottom: 12,
-      boxShadow: shadows.card,
-    }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+    <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-4 mb-3">
+      <div className="flex justify-between items-center mb-3">
         <div>
-          <div style={{
-            fontSize: 12, fontWeight: 600, color: colors.textLight,
-            textTransform: "uppercase", letterSpacing: 1,
-          }}>
-            {title}
-          </div>
-          {subtitle && <div style={{ fontSize: 11, color: colors.textLight, marginTop: 2 }}>{subtitle}</div>}
+          <div className="text-xs font-semibold text-slate-400 uppercase tracking-widest">{title}</div>
+          {subtitle && <div className="text-[11px] text-slate-500 mt-0.5">{subtitle}</div>}
         </div>
         {action}
       </div>
@@ -391,14 +339,14 @@ function Card({ title, subtitle, action, children }) {
   );
 }
 
-function BarChart({ value, max, color, height = 4 }) {
+function ProgressBar({ value, max, color, height = 4 }) {
   const pct = max > 0 ? Math.max(2, (value / max) * 100) : 0;
   return (
-    <div style={{ height, borderRadius: height / 2, background: colors.border }}>
-      <div style={{
-        height: "100%", borderRadius: height / 2, background: color,
-        width: `${Math.min(pct, 100)}%`, transition: "width 0.5s ease",
-      }} />
+    <div className="rounded-full bg-white/[0.08]" style={{ height }}>
+      <div
+        className="h-full rounded-full transition-all duration-500"
+        style={{ background: color, width: `${Math.min(pct, 100)}%` }}
+      />
     </div>
   );
 }

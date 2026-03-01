@@ -1,4 +1,3 @@
-import { colors, font, fontDisplay, shadows, radius } from "../../styles/theme";
 import { useAuth } from "../../context/AuthContext";
 import { ROLES } from "../../constants/users";
 import BackButton from "../common/BackButton";
@@ -8,73 +7,41 @@ export default function SettingsScreen({ onBack, onNavigate }) {
   const role = ROLES[currentUser.role];
 
   return (
-    <div style={{ animation: "fadeIn 0.3s ease" }}>
+    <div className="animate-fadeIn">
       <BackButton onClick={onBack} />
 
-      <div style={{ padding: "0 20px 16px" }}>
-        <h2 style={{
-          fontFamily: fontDisplay, fontSize: 22, fontWeight: 600,
-          color: colors.text, margin: "0 0 20px",
-        }}>
+      <div className="px-5 pb-4">
+        <h2 className="text-[22px] font-semibold text-white mb-5 mt-0">
           Configuración
         </h2>
 
         {/* User Profile Card */}
-        <div style={{
-          background: colors.card, borderRadius: radius.xl, padding: 20,
-          border: `1px solid ${colors.borderLight}`, marginBottom: 16,
-          textAlign: "center",
-        }}>
-          <div style={{
-            width: 64, height: 64, borderRadius: radius.xl,
-            background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.primaryDark} 100%)`,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            color: "#fff", fontWeight: 700, fontSize: 22,
-            margin: "0 auto 12px",
-          }}>
+        <div className="bg-white/[0.03] rounded-2xl p-5 border border-white/[0.06] mb-4 text-center">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-white font-bold text-[22px] mx-auto mb-3">
             {currentUser.avatar}
           </div>
-          <div style={{ fontSize: 18, fontWeight: 600, color: colors.text }}>
+          <div className="text-lg font-semibold text-white">
             {currentUser.name}
           </div>
-          <div style={{
-            fontSize: 13, color: colors.textLight, marginTop: 2,
-          }}>
+          <div className="text-[13px] text-slate-400 mt-0.5">
             {currentUser.email}
           </div>
-          <div style={{
-            display: "inline-block", marginTop: 8,
-            fontSize: 11, fontWeight: 600,
-            color: colors.primary,
-            background: colors.primary + "12",
-            padding: "4px 12px", borderRadius: radius.md,
-          }}>
+          <div className="inline-block mt-2 text-[11px] font-semibold text-emerald-400 bg-emerald-500/[0.07] px-3 py-1 rounded-lg">
             {role.label}
           </div>
         </div>
 
         {/* Role Info */}
-        <div style={{
-          background: colors.card, borderRadius: radius.xl, padding: 16,
-          border: `1px solid ${colors.borderLight}`, marginBottom: 16,
-        }}>
-          <div style={{
-            fontSize: 12, fontWeight: 600, color: colors.textLight,
-            marginBottom: 10, textTransform: "uppercase", letterSpacing: 1,
-          }}>
+        <div className="bg-white/[0.03] rounded-2xl p-4 border border-white/[0.06] mb-4">
+          <div className="text-xs font-semibold text-slate-400 mb-2.5 uppercase tracking-wide">
             Tu Rol y Permisos
           </div>
-          <div style={{ fontSize: 13, color: colors.text, marginBottom: 12 }}>
+          <div className="text-[13px] text-white mb-3">
             {role.description}
           </div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+          <div className="flex flex-wrap gap-1.5">
             {role.permissions.map(p => (
-              <span key={p} style={{
-                fontSize: 10, fontWeight: 500,
-                color: colors.success,
-                background: colors.success + "10",
-                padding: "3px 8px", borderRadius: radius.sm,
-              }}>
+              <span key={p} className="text-[10px] font-medium text-green-400 bg-green-500/[0.06] px-2 py-0.5 rounded">
                 {p.replace(/_/g, " ")}
               </span>
             ))}
@@ -82,14 +49,8 @@ export default function SettingsScreen({ onBack, onNavigate }) {
         </div>
 
         {/* App Info */}
-        <div style={{
-          background: colors.card, borderRadius: radius.xl, padding: 16,
-          border: `1px solid ${colors.borderLight}`, marginBottom: 16,
-        }}>
-          <div style={{
-            fontSize: 12, fontWeight: 600, color: colors.textLight,
-            marginBottom: 10, textTransform: "uppercase", letterSpacing: 1,
-          }}>
+        <div className="bg-white/[0.03] rounded-2xl p-4 border border-white/[0.06] mb-4">
+          <div className="text-xs font-semibold text-slate-400 mb-2.5 uppercase tracking-wide">
             Información del Sistema
           </div>
           <SettingsRow label="Versión" value="4.0.0 (Supabase)" />
@@ -99,27 +60,21 @@ export default function SettingsScreen({ onBack, onNavigate }) {
 
         {/* Data Management */}
         {can("manage_settings") && (
-          <div style={{
-            background: colors.card, borderRadius: radius.xl, padding: 16,
-            border: `1px solid ${colors.borderLight}`, marginBottom: 16,
-          }}>
-            <div style={{
-              fontSize: 12, fontWeight: 600, color: colors.textLight,
-              marginBottom: 10, textTransform: "uppercase", letterSpacing: 1,
-            }}>
+          <div className="bg-white/[0.03] rounded-2xl p-4 border border-white/[0.06] mb-4">
+            <div className="text-xs font-semibold text-slate-400 mb-2.5 uppercase tracking-wide">
               Administración
             </div>
             {can("manage_users") && (
-              <AdminButton icon="👥" label="Gestión de Usuarios" onClick={() => onNavigate("users")} color={colors.primary} />
+              <AdminButton icon="👥" label="Gestión de Usuarios" onClick={() => onNavigate("users")} />
             )}
             {can("view_analytics") && (
-              <AdminButton icon="💰" label="Gestión de Presupuestos" onClick={() => onNavigate("budgets")} color={colors.primary} />
+              <AdminButton icon="💰" label="Gestión de Presupuestos" onClick={() => onNavigate("budgets")} />
             )}
             {can("manage_settings") && (
-              <AdminButton icon="⚙" label="Parámetros del Sistema" onClick={() => onNavigate("parameters")} color={colors.primary} />
+              <AdminButton icon="⚙" label="Parámetros del Sistema" onClick={() => onNavigate("parameters")} />
             )}
             {can("manage_settings") && (
-              <AdminButton icon="🔄" label="Autorización y Aprobación" onClick={() => onNavigate("approvalConfig")} color={colors.primary} />
+              <AdminButton icon="🔄" label="Autorización y Aprobación" onClick={() => onNavigate("approvalConfig")} />
             )}
             <button
               onClick={() => {
@@ -127,14 +82,7 @@ export default function SettingsScreen({ onBack, onNavigate }) {
                   window.location.reload();
                 }
               }}
-              style={{
-                width: "100%", padding: "12px", borderRadius: radius.lg,
-                border: `1px solid ${colors.warning}40`,
-                background: colors.warning + "08",
-                color: colors.warning,
-                fontSize: 13, fontWeight: 600, fontFamily: font,
-                cursor: "pointer", marginBottom: 8,
-              }}
+              className="w-full p-3 rounded-xl border border-amber-500/25 bg-amber-500/[0.05] text-amber-400 text-[13px] font-semibold cursor-pointer mb-2"
             >
               Recargar datos del servidor
             </button>
@@ -144,14 +92,7 @@ export default function SettingsScreen({ onBack, onNavigate }) {
         {/* Logout */}
         <button
           onClick={logout}
-          style={{
-            width: "100%", padding: "14px", borderRadius: radius.lg,
-            border: "none",
-            background: `linear-gradient(135deg, ${colors.accent} 0%, ${colors.accentLight} 100%)`,
-            color: "#fff", fontSize: 14, fontWeight: 600, fontFamily: font,
-            cursor: "pointer", marginBottom: 120,
-            boxShadow: `0 4px 16px ${colors.accent}30`,
-          }}
+          className="w-full py-3.5 rounded-xl border-none bg-gradient-to-br from-blue-400 to-blue-500 text-white text-sm font-semibold cursor-pointer mb-[120px] shadow-lg shadow-blue-500/20"
         >
           Cerrar Sesión
         </button>
@@ -160,21 +101,13 @@ export default function SettingsScreen({ onBack, onNavigate }) {
   );
 }
 
-function AdminButton({ icon, label, onClick, color }) {
+function AdminButton({ icon, label, onClick }) {
   return (
     <button
       onClick={onClick}
-      style={{
-        width: "100%", padding: "12px", borderRadius: radius.lg,
-        border: `1px solid ${color}40`,
-        background: color + "08",
-        color: color,
-        fontSize: 13, fontWeight: 600, fontFamily: font,
-        cursor: "pointer", marginBottom: 8,
-        display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-      }}
+      className="w-full p-3 rounded-xl border border-emerald-500/25 bg-emerald-500/[0.05] text-emerald-400 text-[13px] font-semibold cursor-pointer mb-2 flex items-center justify-center gap-2"
     >
-      <span style={{ fontSize: 16 }}>{icon}</span>
+      <span className="text-base">{icon}</span>
       {label}
     </button>
   );
@@ -182,12 +115,9 @@ function AdminButton({ icon, label, onClick, color }) {
 
 function SettingsRow({ label, value }) {
   return (
-    <div style={{
-      display: "flex", justifyContent: "space-between",
-      padding: "8px 0", borderBottom: `1px solid ${colors.borderLight}`,
-    }}>
-      <span style={{ fontSize: 13, color: colors.textLight }}>{label}</span>
-      <span style={{ fontSize: 13, fontWeight: 500, color: colors.text }}>{value}</span>
+    <div className="flex justify-between py-2 border-b border-white/[0.06]">
+      <span className="text-[13px] text-slate-400">{label}</span>
+      <span className="text-[13px] font-medium text-white">{value}</span>
     </div>
   );
 }

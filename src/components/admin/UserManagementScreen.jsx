@@ -1,5 +1,4 @@
 import { useState, useMemo, useCallback } from "react";
-import { colors, font, fontDisplay, inputStyle, labelStyle, shadows, radius } from "../../styles/theme";
 import { getEstablishments } from "../../constants/parameters";
 import { useAuth } from "../../context/AuthContext";
 import { ROLES } from "../../constants/users";
@@ -26,7 +25,7 @@ export default function UserManagementScreen({ onBack }) {
 
   if (!can("manage_users")) {
     return (
-      <div style={{ padding: 40, textAlign: "center", color: colors.textLight }}>
+      <div className="p-10 text-center text-slate-400">
         No tienes permiso para acceder a esta seccion.
       </div>
     );
@@ -117,25 +116,18 @@ export default function UserManagementScreen({ onBack }) {
   };
 
   return (
-    <div style={{ animation: "fadeIn 0.3s ease" }}>
+    <div className="animate-fadeIn">
       {/* Header */}
       <BackButton onClick={onBack} />
 
-      <div style={{ padding: "0 20px 120px" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-          <h2 style={{
-            fontFamily: fontDisplay, fontSize: 22, fontWeight: 600,
-            color: colors.text, margin: 0,
-          }}>
+      <div className="px-5 pb-[120px]">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-[22px] font-semibold text-white m-0">
             Gestion de Usuarios
           </h2>
           <button
             onClick={() => { setShowAddForm(true); setEditingUser(null); setActionError(""); }}
-            style={{
-              padding: "8px 16px", borderRadius: radius.md, border: "none",
-              background: colors.primary, color: "#fff",
-              fontSize: 13, fontWeight: 600, fontFamily: font, cursor: "pointer",
-            }}
+            className="px-4 py-2 rounded-lg border-none bg-emerald-500 text-white text-[13px] font-semibold cursor-pointer"
           >
             + Nuevo
           </button>
@@ -143,27 +135,21 @@ export default function UserManagementScreen({ onBack }) {
 
         {/* Action error banner */}
         {actionError && (
-          <div style={{
-            background: "#fef2f2", border: "1px solid #fecaca",
-            borderRadius: radius.md, padding: "8px 12px", marginBottom: 12,
-            fontSize: 13, color: colors.danger, fontWeight: 500,
-          }}>
+          <div className="bg-red-500/[0.06] border border-red-300/20 rounded-lg px-3 py-2 mb-3 text-[13px] text-red-400 font-medium">
             {actionError}
           </div>
         )}
 
         {/* Role summary pills */}
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16 }}>
+        <div className="flex flex-wrap gap-1.5 mb-4">
           {Object.entries(ROLES).map(([key, role]) => (
             <button
               key={key}
               onClick={() => setFilterRole(filterRole === key ? "all" : key)}
+              className="px-2.5 py-1 rounded-lg border-none text-[11px] font-semibold cursor-pointer transition-all duration-150"
               style={{
-                padding: "4px 10px", borderRadius: radius.md, border: "none",
-                background: filterRole === key ? (role.color || colors.primary) : (role.color || colors.primary) + "12",
-                color: filterRole === key ? "#fff" : (role.color || colors.primary),
-                fontSize: 11, fontWeight: 600, fontFamily: font, cursor: "pointer",
-                transition: "all 0.15s",
+                background: filterRole === key ? (role.color || '#10b981') : (role.color || '#10b981') + "12",
+                color: filterRole === key ? '#fff' : (role.color || '#10b981'),
               }}
             >
               {role.label} ({roleCounts[key] || 0})
@@ -172,26 +158,18 @@ export default function UserManagementScreen({ onBack }) {
         </div>
 
         {/* Search & Filters */}
-        <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
+        <div className="flex gap-2 mb-3 flex-wrap">
           <input
             type="text"
             placeholder="Buscar nombre, usuario o cargo..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            style={{
-              ...inputStyle,
-              flex: 1, minWidth: 180, height: 40, fontSize: 13,
-              borderRadius: radius.md, padding: "0 12px",
-            }}
+            className="flex-1 min-w-[180px] h-10 px-3 rounded-lg border border-white/[0.1] bg-white/[0.05] text-[13px] text-white outline-none transition-colors focus:border-emerald-500/50"
           />
           <select
             value={filterEstab}
             onChange={e => setFilterEstab(e.target.value)}
-            style={{
-              ...inputStyle,
-              width: "auto", height: 40, fontSize: 12, borderRadius: radius.md,
-              padding: "0 8px", cursor: "pointer",
-            }}
+            className="w-auto h-10 px-2 rounded-lg border border-white/[0.1] bg-white/[0.05] text-xs text-white outline-none cursor-pointer"
           >
             <option value="all">Todos establec.</option>
             {establishments.map(e => <option key={e} value={e}>{e}</option>)}
@@ -199,11 +177,7 @@ export default function UserManagementScreen({ onBack }) {
           <select
             value={filterActive}
             onChange={e => setFilterActive(e.target.value)}
-            style={{
-              ...inputStyle,
-              width: "auto", height: 40, fontSize: 12, borderRadius: radius.md,
-              padding: "0 8px", cursor: "pointer",
-            }}
+            className="w-auto h-10 px-2 rounded-lg border border-white/[0.1] bg-white/[0.05] text-xs text-white outline-none cursor-pointer"
           >
             <option value="active">Activos</option>
             <option value="inactive">Inactivos</option>
@@ -212,14 +186,14 @@ export default function UserManagementScreen({ onBack }) {
         </div>
 
         {/* Results count */}
-        <div style={{ fontSize: 12, color: colors.textLight, marginBottom: 12 }}>
+        <div className="text-xs text-slate-400 mb-3">
           {filtered.length} usuario{filtered.length !== 1 ? "s" : ""}
           {filterRole !== "all" && ` · ${ROLES[filterRole]?.label}`}
           {filterEstab !== "all" && ` · ${filterEstab}`}
         </div>
 
         {/* User list */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+        <div className="flex flex-col gap-1.5">
           {filtered.map(user => (
             <UserCard
               key={user.id}
@@ -230,26 +204,18 @@ export default function UserManagementScreen({ onBack }) {
             />
           ))}
           {filtered.length === 0 && (
-            <div style={{
-              textAlign: "center", padding: 32, color: colors.textLight, fontSize: 14,
-            }}>
+            <div className="text-center p-8 text-slate-400 text-sm">
               No se encontraron usuarios
             </div>
           )}
         </div>
 
         {/* Admin actions */}
-        <div style={{ marginTop: 24, paddingTop: 16, borderTop: `1px solid ${colors.borderLight}` }}>
+        <div className="mt-6 pt-4 border-t border-white/[0.06]">
           <button
             onClick={() => setShowResetConfirm(true)}
             disabled={actionLoading}
-            style={{
-              width: "100%", padding: "12px", borderRadius: radius.lg,
-              border: `1px solid ${colors.primary}30`,
-              background: colors.primary + "08",
-              color: colors.primary,
-              fontSize: 13, fontWeight: 600, fontFamily: font, cursor: "pointer",
-            }}
+            className="w-full p-3 rounded-xl border border-emerald-500/[0.19] bg-emerald-500/[0.05] text-emerald-400 text-[13px] font-semibold cursor-pointer"
           >
             Refrescar lista de usuarios desde servidor
           </button>
@@ -302,65 +268,43 @@ function UserCard({ user, onEdit, onToggleActive, disabled }) {
 
   return (
     <div
-      style={{
-        background: colors.card,
-        borderRadius: radius.lg,
-        padding: "12px 14px",
-        border: `1px solid ${colors.borderLight}`,
-        display: "flex",
-        alignItems: "center",
-        gap: 12,
-        opacity: isActive ? 1 : 0.5,
-        transition: "opacity 0.2s",
-      }}
+      className={`bg-white/[0.03] rounded-xl px-3.5 py-3 border border-white/[0.06] flex items-center gap-3 transition-opacity duration-200 ${isActive ? 'opacity-100' : 'opacity-50'}`}
     >
       {/* Avatar */}
-      <div style={{
-        width: 38, height: 38, borderRadius: radius.md, flexShrink: 0,
-        background: `linear-gradient(135deg, ${role?.color || colors.primary} 0%, ${role?.color || colors.primary}cc 100%)`,
-        display: "flex", alignItems: "center", justifyContent: "center",
-        color: "#fff", fontWeight: 700, fontSize: 13,
-      }}>
+      <div
+        className="w-[38px] h-[38px] rounded-lg flex-shrink-0 flex items-center justify-center text-white font-bold text-[13px]"
+        style={{ background: `linear-gradient(135deg, ${role?.color || '#10b981'} 0%, ${role?.color || '#10b981'}cc 100%)` }}
+      >
         {user.avatar || user.name.charAt(0)}
       </div>
 
       {/* Info */}
-      <div style={{ flex: 1, minWidth: 0, overflow: "hidden" }}>
-        <div style={{
-          fontSize: 14, fontWeight: 600, color: colors.text,
-          whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
-        }}>
+      <div className="flex-1 min-w-0 overflow-hidden">
+        <div className="text-sm font-semibold text-white whitespace-nowrap overflow-hidden text-ellipsis">
           {user.name}
         </div>
-        <div style={{
-          fontSize: 11, color: colors.textLight,
-          whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
-        }}>
+        <div className="text-[11px] text-slate-400 whitespace-nowrap overflow-hidden text-ellipsis">
           @{user.email || user.username} · {user.position || "—"} · {user.establishment}
         </div>
       </div>
 
       {/* Role badge */}
-      <div style={{
-        fontSize: 10, fontWeight: 600, padding: "3px 8px", borderRadius: radius.sm,
-        background: (role?.color || colors.primary) + "15",
-        color: role?.color || colors.primary,
-        whiteSpace: "nowrap", flexShrink: 0,
-      }}>
+      <div
+        className="text-[10px] font-semibold px-2 py-0.5 rounded whitespace-nowrap flex-shrink-0"
+        style={{
+          background: (role?.color || '#10b981') + "15",
+          color: role?.color || '#10b981',
+        }}
+      >
         {role?.label || user.role}
       </div>
 
       {/* Actions */}
-      <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
+      <div className="flex gap-1 flex-shrink-0">
         <button
           onClick={onEdit}
           disabled={disabled}
-          style={{
-            width: 32, height: 32, borderRadius: radius.md, border: "none",
-            background: colors.surface, cursor: disabled ? "default" : "pointer",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 14,
-          }}
+          className="w-8 h-8 rounded-lg border-none bg-white/[0.02] cursor-pointer flex items-center justify-center text-sm"
           title="Editar"
         >
           ✏
@@ -368,13 +312,7 @@ function UserCard({ user, onEdit, onToggleActive, disabled }) {
         <button
           onClick={onToggleActive}
           disabled={disabled}
-          style={{
-            width: 32, height: 32, borderRadius: radius.md, border: "none",
-            background: isActive ? colors.danger + "10" : colors.success + "10",
-            cursor: disabled ? "default" : "pointer",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 14,
-          }}
+          className={`w-8 h-8 rounded-lg border-none cursor-pointer flex items-center justify-center text-sm ${isActive ? 'bg-red-500/[0.06]' : 'bg-green-500/[0.06]'}`}
           title={isActive ? "Desactivar" : "Activar"}
         >
           {isActive ? "🚫" : "✅"}
@@ -401,7 +339,6 @@ function UserFormModal({ user, title, establishments, loading, onSave, onResetPa
     if (!form.name.trim()) { setError("Nombre es obligatorio"); return; }
     if (!isEditing && !form.email.trim()) { setError("Usuario es obligatorio"); return; }
 
-    // Generate avatar if empty
     const parts = form.name.trim().split(/\s+/);
     const avatar = form.avatar || (parts[0]?.charAt(0) + (parts[1]?.charAt(0) || "")).toUpperCase();
 
@@ -413,7 +350,6 @@ function UserFormModal({ user, title, establishments, loading, onSave, onResetPa
       avatar,
     };
 
-    // Only include email for new users
     if (!isEditing) {
       saveData.email = form.email.trim();
     }
@@ -424,36 +360,26 @@ function UserFormModal({ user, title, establishments, loading, onSave, onResetPa
   const set = (key, val) => { setForm(f => ({ ...f, [key]: val })); setError(""); };
 
   return (
-    <div style={{
-      position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)",
-      display: "flex", alignItems: "center", justifyContent: "center",
-      zIndex: 1000, padding: 16,
-    }}
+    <div
+      className="fixed inset-0 bg-black/40 flex items-center justify-center z-[1000] p-4"
       onClick={onClose}
     >
       <div
-        style={{
-          background: colors.card, borderRadius: radius.xl, padding: 24,
-          width: "100%", maxWidth: 440, maxHeight: "90vh", overflow: "auto",
-          boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
-        }}
+        className="bg-[#111218] rounded-2xl p-6 w-full max-w-[440px] max-h-[90vh] overflow-auto shadow-2xl"
         onClick={e => e.stopPropagation()}
       >
-        <h3 style={{
-          fontFamily: fontDisplay, fontSize: 20, fontWeight: 600,
-          color: colors.text, margin: "0 0 20px",
-        }}>
+        <h3 className="text-xl font-semibold text-white mb-5 mt-0">
           {title}
         </h3>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <div className="flex flex-col gap-4">
           {/* Name */}
           <div>
-            <label style={labelStyle}>Nombre completo *</label>
+            <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Nombre completo *</label>
             <input
               value={form.name}
               onChange={e => set("name", e.target.value)}
-              style={{ ...inputStyle, borderRadius: radius.md, height: 42 }}
+              className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50 h-[42px]"
               placeholder="Ej: Juan Rodriguez"
             />
           </div>
@@ -461,16 +387,16 @@ function UserFormModal({ user, title, establishments, loading, onSave, onResetPa
           {/* Username (only for new users) */}
           {!isEditing && (
             <div>
-              <label style={labelStyle}>Usuario (login) *</label>
+              <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Usuario (login) *</label>
               <input
                 value={form.email}
                 onChange={e => set("email", e.target.value)}
-                style={{ ...inputStyle, borderRadius: radius.md, height: 42 }}
+                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50 h-[42px]"
                 placeholder="Ej: juan.rodriguez"
                 autoCapitalize="none"
                 autoCorrect="off"
               />
-              <div style={{ fontSize: 11, color: colors.textLight, marginTop: 4 }}>
+              <div className="text-[11px] text-slate-400 mt-1">
                 La contraseña por defecto será "ypoti2026" — el usuario deberá cambiarla al primer inicio de sesión.
               </div>
             </div>
@@ -478,12 +404,8 @@ function UserFormModal({ user, title, establishments, loading, onSave, onResetPa
 
           {isEditing && (
             <div>
-              <label style={labelStyle}>Usuario (login)</label>
-              <div style={{
-                ...inputStyle, borderRadius: radius.md, height: 42,
-                display: "flex", alignItems: "center", color: colors.textMuted,
-                background: colors.surface,
-              }}>
+              <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Usuario (login)</label>
+              <div className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.02] text-sm text-slate-500 h-[42px] flex items-center">
                 @{user.email || user.username}
               </div>
             </div>
@@ -491,28 +413,28 @@ function UserFormModal({ user, title, establishments, loading, onSave, onResetPa
 
           {/* Role */}
           <div>
-            <label style={labelStyle}>Rol *</label>
+            <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Rol *</label>
             <select
               value={form.role}
               onChange={e => set("role", e.target.value)}
-              style={{ ...inputStyle, borderRadius: radius.md, height: 42, cursor: "pointer" }}
+              className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50 h-[42px] cursor-pointer"
             >
               {Object.entries(ROLES).map(([key, role]) => (
                 <option key={key} value={key}>{role.label} — {role.description}</option>
               ))}
             </select>
-            <div style={{ fontSize: 11, color: colors.textLight, marginTop: 4 }}>
+            <div className="text-[11px] text-slate-400 mt-1">
               {ROLES[form.role]?.description}
             </div>
           </div>
 
           {/* Establishment */}
           <div>
-            <label style={labelStyle}>Establecimiento</label>
+            <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Establecimiento</label>
             <select
               value={form.establishment}
               onChange={e => set("establishment", e.target.value)}
-              style={{ ...inputStyle, borderRadius: radius.md, height: 42, cursor: "pointer" }}
+              className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50 h-[42px] cursor-pointer"
             >
               <option value="">Sin asignar</option>
               {establishments.map(e => <option key={e} value={e}>{e}</option>)}
@@ -521,11 +443,11 @@ function UserFormModal({ user, title, establishments, loading, onSave, onResetPa
 
           {/* Position */}
           <div>
-            <label style={labelStyle}>Cargo / Posicion</label>
+            <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Cargo / Posicion</label>
             <input
               value={form.position}
               onChange={e => set("position", e.target.value)}
-              style={{ ...inputStyle, borderRadius: radius.md, height: 42 }}
+              className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50 h-[42px]"
               placeholder="Ej: Capataz, Tractorista..."
             />
           </div>
@@ -535,14 +457,7 @@ function UserFormModal({ user, title, establishments, loading, onSave, onResetPa
             <button
               onClick={onResetPassword}
               disabled={loading}
-              style={{
-                padding: "10px 14px", borderRadius: radius.md,
-                border: `1px solid ${colors.warning}30`,
-                background: colors.warningLight || "#FFFBEB",
-                color: colors.warning, fontSize: 12, fontWeight: 600,
-                fontFamily: font, cursor: loading ? "default" : "pointer",
-                textAlign: "center",
-              }}
+              className={`px-3.5 py-2.5 rounded-lg border border-amber-500/[0.19] bg-amber-500/[0.05] text-amber-400 text-xs font-semibold text-center ${loading ? 'cursor-default' : 'cursor-pointer'}`}
             >
               {loading ? "Reseteando..." : "Resetear contraseña a valor por defecto"}
             </button>
@@ -550,41 +465,27 @@ function UserFormModal({ user, title, establishments, loading, onSave, onResetPa
 
           {/* Error */}
           {error && (
-            <div style={{
-              background: "#fef2f2", border: "1px solid #fecaca",
-              borderRadius: radius.md, padding: "8px 12px",
-              fontSize: 13, color: colors.danger, fontWeight: 500,
-            }}>
+            <div className="bg-red-500/[0.06] border border-red-300/20 rounded-lg px-3 py-2 text-[13px] text-red-400 font-medium">
               {error}
             </div>
           )}
 
           {/* Actions */}
-          <div style={{ display: "flex", gap: 10, marginTop: 4 }}>
+          <div className="flex gap-2.5 mt-1">
             <button
               onClick={onClose}
-              style={{
-                flex: 1, padding: "12px", borderRadius: radius.lg,
-                border: `1px solid ${colors.border}`,
-                background: "transparent", color: colors.text,
-                fontSize: 14, fontWeight: 500, fontFamily: font, cursor: "pointer",
-              }}
+              className="flex-1 py-3 rounded-xl border border-white/[0.06] bg-transparent text-white text-sm font-medium cursor-pointer"
             >
               Cancelar
             </button>
             <button
               onClick={handleSave}
               disabled={loading}
-              style={{
-                flex: 1, padding: "12px", borderRadius: radius.lg,
-                border: "none",
-                background: loading
-                  ? colors.textMuted
-                  : `linear-gradient(135deg, ${colors.primary} 0%, ${colors.primaryDark} 100%)`,
-                color: "#fff", fontSize: 14, fontWeight: 600, fontFamily: font,
-                cursor: loading ? "default" : "pointer",
-                boxShadow: loading ? "none" : `0 4px 12px ${colors.primary}30`,
-              }}
+              className={`flex-1 py-3 rounded-xl border-none text-sm font-semibold ${
+                loading
+                  ? 'bg-slate-500 text-white cursor-default'
+                  : 'bg-gradient-to-br from-emerald-500 to-emerald-600 text-white cursor-pointer shadow-md shadow-emerald-500/20'
+              }`}
             >
               {loading ? "Guardando..." : "Guardar"}
             </button>
@@ -598,49 +499,30 @@ function UserFormModal({ user, title, establishments, loading, onSave, onResetPa
 // ---- Confirm Modal ----
 function ConfirmModal({ title, message, confirmLabel = "Confirmar", onConfirm, onCancel }) {
   return (
-    <div style={{
-      position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)",
-      display: "flex", alignItems: "center", justifyContent: "center",
-      zIndex: 1000, padding: 16,
-    }}
+    <div
+      className="fixed inset-0 bg-black/40 flex items-center justify-center z-[1000] p-4"
       onClick={onCancel}
     >
       <div
-        style={{
-          background: colors.card, borderRadius: radius.xl, padding: 24,
-          width: "100%", maxWidth: 360,
-          boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
-        }}
+        className="bg-[#111218] rounded-2xl p-6 w-full max-w-[360px] shadow-2xl"
         onClick={e => e.stopPropagation()}
       >
-        <h3 style={{
-          fontSize: 17, fontWeight: 600, color: colors.text, margin: "0 0 8px",
-        }}>
+        <h3 className="text-[17px] font-semibold text-white mb-2 mt-0">
           {title}
         </h3>
-        <p style={{ fontSize: 13, color: colors.textLight, margin: "0 0 20px", lineHeight: 1.5 }}>
+        <p className="text-[13px] text-slate-400 mb-5 mt-0 leading-relaxed">
           {message}
         </p>
-        <div style={{ display: "flex", gap: 10 }}>
+        <div className="flex gap-2.5">
           <button
             onClick={onCancel}
-            style={{
-              flex: 1, padding: "12px", borderRadius: radius.lg,
-              border: `1px solid ${colors.border}`,
-              background: "transparent", color: colors.text,
-              fontSize: 14, fontWeight: 500, fontFamily: font, cursor: "pointer",
-            }}
+            className="flex-1 py-3 rounded-xl border border-white/[0.06] bg-transparent text-white text-sm font-medium cursor-pointer"
           >
             Cancelar
           </button>
           <button
             onClick={onConfirm}
-            style={{
-              flex: 1, padding: "12px", borderRadius: radius.lg,
-              border: "none",
-              background: colors.primary, color: "#fff",
-              fontSize: 14, fontWeight: 600, fontFamily: font, cursor: "pointer",
-            }}
+            className="flex-1 py-3 rounded-xl border-none bg-emerald-500 text-white text-sm font-semibold cursor-pointer"
           >
             {confirmLabel}
           </button>

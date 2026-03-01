@@ -3,7 +3,6 @@
 // Phase 7 — Async CRUD via Supabase-backed budgets.js
 // ============================================================
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { colors, font, fontDisplay, labelStyle, inputStyle, shadows, radius } from "../../styles/theme";
 import { getEstablishments, getSectors } from "../../constants/parameters";
 import {
   getBudgets, addBudget, updateBudget, initBudgets,
@@ -40,7 +39,6 @@ export default function BudgetManagementScreen({ onBack }) {
     ? budgets.filter(b => b.active)
     : budgets.filter(b => b.active && b.establishment === filterEst);
 
-  // Group by establishment
   const grouped = {};
   filtered.forEach(b => {
     if (!grouped[b.establishment]) grouped[b.establishment] = [];
@@ -121,7 +119,7 @@ export default function BudgetManagementScreen({ onBack }) {
   const handleReset = async () => {
     setSaving(true);
     try {
-      await initBudgets(); // Refresh from Supabase
+      await initBudgets();
       refresh();
       setShowConfirmReset(false);
     } catch (err) {
@@ -132,10 +130,10 @@ export default function BudgetManagementScreen({ onBack }) {
     }
   };
 
-  const barColor = (pct) => pct >= 90 ? colors.danger : pct >= 70 ? colors.warning : colors.success;
+  const barColor = (pct) => pct >= 90 ? '#ef4444' : pct >= 70 ? '#f59e0b' : '#22c55e';
 
   return (
-    <div style={{ padding: "0 0 40px", animation: "fadeIn 0.3s ease" }}>
+    <div className="pb-10 animate-fadeIn">
       {/* Header */}
       <BackButton onClick={onBack} />
       <PageHeader
@@ -145,58 +143,40 @@ export default function BudgetManagementScreen({ onBack }) {
 
       {/* Error banner */}
       {actionError && (
-        <div style={{
-          margin: "0 20px 12px", padding: "10px 14px", borderRadius: radius.md,
-          background: colors.danger + "10", border: `1px solid ${colors.danger}30`,
-          display: "flex", justifyContent: "space-between", alignItems: "center",
-        }}>
-          <span style={{ fontSize: 12, color: colors.danger, fontWeight: 500 }}>{actionError}</span>
-          <button onClick={() => setActionError(null)} style={{
-            background: "none", border: "none", cursor: "pointer",
-            fontSize: 14, color: colors.danger, padding: "0 4px",
-          }}>✕</button>
+        <div className="mx-5 mb-3 px-3.5 py-2.5 rounded-lg bg-red-500/[0.06] border border-red-500/[0.19] flex justify-between items-center">
+          <span className="text-xs text-red-400 font-medium">{actionError}</span>
+          <button onClick={() => setActionError(null)} className="bg-none border-none cursor-pointer text-sm text-red-400 px-1">✕</button>
         </div>
       )}
 
       {/* Summary card */}
-      <div style={{ padding: "0 20px", marginBottom: 16 }}>
-        <div style={{
-          background: colors.card, borderRadius: radius.lg, padding: 16,
-          border: `1px solid ${colors.borderLight}`,
-          boxShadow: shadows.card,
-        }}>
-          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
+      <div className="px-5 mb-4">
+        <div className="bg-white/[0.03] rounded-xl p-4 border border-white/[0.06] shadow-sm">
+          <div className="flex justify-between mb-2.5">
             <div>
-              <div style={{ fontSize: 11, fontWeight: 600, color: colors.textLight, textTransform: "uppercase", letterSpacing: 1 }}>
+              <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">
                 Total General
               </div>
-              <div style={{ fontSize: 18, fontWeight: 700, color: colors.text, marginTop: 2 }}>
+              <div className="text-lg font-bold text-white mt-0.5">
                 {formatGuaranies(totalPlanned)}
               </div>
             </div>
-            <div style={{ textAlign: "right" }}>
-              <div style={{ fontSize: 11, fontWeight: 600, color: colors.textLight, textTransform: "uppercase", letterSpacing: 1 }}>
+            <div className="text-right">
+              <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">
                 Consumido
               </div>
-              <div style={{ fontSize: 18, fontWeight: 700, color: barColor(totalPercent), marginTop: 2 }}>
+              <div className="text-lg font-bold mt-0.5" style={{ color: barColor(totalPercent) }}>
                 {totalPercent}%
               </div>
             </div>
           </div>
-          <div style={{
-            background: colors.bg, borderRadius: radius.sm, height: 8,
-            overflow: "hidden", border: `1px solid ${colors.borderLight}`,
-          }}>
-            <div style={{
-              height: "100%", width: `${Math.min(totalPercent, 100)}%`,
-              background: barColor(totalPercent), borderRadius: radius.sm,
-              transition: "width 0.5s",
-            }} />
+          <div className="bg-[#0a0b0f] rounded h-2 overflow-hidden border border-white/[0.06]">
+            <div
+              className="h-full rounded transition-all duration-500"
+              style={{ width: `${Math.min(totalPercent, 100)}%`, background: barColor(totalPercent) }}
+            />
           </div>
-          <div style={{
-            display: "flex", justifyContent: "space-between",
-            fontSize: 11, color: colors.textLight, marginTop: 6,
-          }}>
+          <div className="flex justify-between text-[11px] text-slate-400 mt-1.5">
             <span>{formatGuaranies(totalConsumed)} consumido</span>
             <span>{formatGuaranies(totalPlanned - totalConsumed)} restante</span>
           </div>
@@ -204,12 +184,12 @@ export default function BudgetManagementScreen({ onBack }) {
       </div>
 
       {/* Filter + Actions */}
-      <div style={{ padding: "0 20px", marginBottom: 16 }}>
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+      <div className="px-5 mb-4">
+        <div className="flex gap-2 items-center">
           <select
             value={filterEst}
             onChange={e => setFilterEst(e.target.value)}
-            style={{ ...inputStyle, flex: 1, fontSize: 13 }}
+            className="flex-1 px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-[13px] text-white outline-none"
           >
             <option value="all">Todos los establecimientos</option>
             {establishments.map(e => <option key={e} value={e}>{e}</option>)}
@@ -220,13 +200,7 @@ export default function BudgetManagementScreen({ onBack }) {
               setForm({ name: "", establishment: "", sector: "", period: "2026", startDate: "2026-01-01", endDate: "2026-12-31", planned: 0, consumed: 0 });
               setShowForm(true);
             }}
-            style={{
-              background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.primaryDark} 100%)`,
-              color: "#fff", border: "none", borderRadius: radius.md,
-              padding: "10px 16px", fontSize: 12, fontWeight: 600,
-              fontFamily: font, cursor: "pointer", whiteSpace: "nowrap",
-              boxShadow: `0 2px 8px ${colors.primary}30`,
-            }}
+            className="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white border-none rounded-lg px-4 py-2.5 text-xs font-semibold cursor-pointer whitespace-nowrap shadow-md shadow-emerald-500/20"
           >
             + Nuevo
           </button>
@@ -234,27 +208,18 @@ export default function BudgetManagementScreen({ onBack }) {
       </div>
 
       {/* Budget list by establishment */}
-      <div style={{ padding: "0 20px" }}>
+      <div className="px-5">
         {Object.entries(grouped).map(([est, items]) => {
           const estTotal = items.reduce((s, b) => s + b.planned, 0);
           const estConsumed = items.reduce((s, b) => s + b.consumed, 0);
           const estPct = estTotal > 0 ? Math.round((estConsumed / estTotal) * 100) : 0;
           return (
-            <div key={est} style={{ marginBottom: 20 }}>
-              <div style={{
-                display: "flex", justifyContent: "space-between", alignItems: "center",
-                marginBottom: 8,
-              }}>
-                <div style={{
-                  fontSize: 13, fontWeight: 700, color: colors.text,
-                  textTransform: "uppercase", letterSpacing: 0.5,
-                }}>
+            <div key={est} className="mb-5">
+              <div className="flex justify-between items-center mb-2">
+                <div className="text-[13px] font-bold text-white uppercase tracking-wide">
                   📍 {est}
                 </div>
-                <div style={{
-                  fontSize: 11, fontWeight: 600,
-                  color: barColor(estPct),
-                }}>
+                <div className="text-[11px] font-semibold" style={{ color: barColor(estPct) }}>
                   {formatGuaranies(estConsumed)} / {formatGuaranies(estTotal)} ({estPct}%)
                 </div>
               </div>
@@ -266,50 +231,36 @@ export default function BudgetManagementScreen({ onBack }) {
                   <div
                     key={b.id}
                     onClick={() => handleEdit(b)}
-                    style={{
-                      background: colors.card, borderRadius: radius.lg, padding: 12,
-                      border: `1px solid ${colors.borderLight}`,
-                      marginBottom: 8, cursor: "pointer",
-                      transition: "all 0.2s", boxShadow: shadows.xs,
-                    }}
+                    className="bg-white/[0.03] rounded-xl p-3 border border-white/[0.06] mb-2 cursor-pointer transition-all duration-200 shadow-sm"
                   >
-                    <div style={{
-                      display: "flex", justifyContent: "space-between", alignItems: "flex-start",
-                      marginBottom: 6,
-                    }}>
+                    <div className="flex justify-between items-start mb-1.5">
                       <div>
-                        <div style={{ fontSize: 13, fontWeight: 600, color: colors.text }}>
+                        <div className="text-[13px] font-semibold text-white">
                           {b.name}
                         </div>
-                        <div style={{ fontSize: 11, color: colors.textLight, marginTop: 1 }}>
+                        <div className="text-[11px] text-slate-400 mt-px">
                           {b.sector} · {b.period}
                         </div>
                       </div>
-                      <div style={{ textAlign: "right" }}>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: barColor(pct) }}>
+                      <div className="text-right">
+                        <div className="text-xs font-bold" style={{ color: barColor(pct) }}>
                           {pct}%
                         </div>
-                        <div style={{ fontSize: 10, color: colors.textLight }}>
+                        <div className="text-[10px] text-slate-400">
                           {formatGuaranies(remaining)} libre
                         </div>
                       </div>
                     </div>
 
                     {/* Mini progress bar */}
-                    <div style={{
-                      background: colors.bg, borderRadius: radius.xs, height: 5,
-                      overflow: "hidden",
-                    }}>
-                      <div style={{
-                        height: "100%", width: `${Math.min(pct, 100)}%`,
-                        background: barColor(pct), borderRadius: radius.xs,
-                      }} />
+                    <div className="bg-[#0a0b0f] rounded h-[5px] overflow-hidden">
+                      <div
+                        className="h-full rounded"
+                        style={{ width: `${Math.min(pct, 100)}%`, background: barColor(pct) }}
+                      />
                     </div>
 
-                    <div style={{
-                      display: "flex", justifyContent: "space-between",
-                      fontSize: 10, color: colors.textLight, marginTop: 4,
-                    }}>
+                    <div className="flex justify-between text-[10px] text-slate-400 mt-1">
                       <span>{formatGuaranies(b.consumed)}</span>
                       <span>{formatGuaranies(b.planned)}</span>
                     </div>
@@ -321,10 +272,7 @@ export default function BudgetManagementScreen({ onBack }) {
         })}
 
         {Object.keys(grouped).length === 0 && (
-          <div style={{
-            textAlign: "center", padding: 40, color: colors.textLight,
-            fontSize: 13,
-          }}>
+          <div className="text-center p-10 text-slate-400 text-[13px]">
             No hay presupuestos activos
             {filterEst !== "all" ? ` para ${filterEst}` : ""}
           </div>
@@ -332,16 +280,11 @@ export default function BudgetManagementScreen({ onBack }) {
       </div>
 
       {/* Reset button */}
-      <div style={{ padding: "16px 20px" }}>
+      <div className="px-5 pt-4">
         <button
           onClick={() => setShowConfirmReset(true)}
           disabled={saving}
-          style={{
-            width: "100%", padding: "12px", borderRadius: radius.md,
-            border: `1px solid ${colors.border}`, background: colors.surface,
-            color: colors.textLight, fontSize: 12, fontWeight: 500,
-            fontFamily: font, cursor: saving ? "default" : "pointer",
-          }}
+          className={`w-full p-3 rounded-lg border border-white/[0.06] bg-white/[0.02] text-slate-400 text-xs font-medium ${saving ? 'cursor-default' : 'cursor-pointer'}`}
         >
           Refrescar presupuestos desde servidor
         </button>
@@ -350,37 +293,24 @@ export default function BudgetManagementScreen({ onBack }) {
       {/* Confirm reset modal */}
       {showConfirmReset && (
         <ModalBackdrop onClose={() => setShowConfirmReset(false)} variant="center">
-          <div style={{
-            background: colors.card, borderRadius: radius.xl, padding: 24,
-            maxWidth: 340, width: "100%",
-          }}>
-            <div style={{ fontSize: 16, fontWeight: 700, color: colors.text, marginBottom: 8 }}>
+          <div className="bg-[#111218] rounded-2xl p-6 max-w-[340px] w-full">
+            <div className="text-base font-bold text-white mb-2">
               Refrescar presupuestos
             </div>
-            <div style={{ fontSize: 13, color: colors.textLight, marginBottom: 20, lineHeight: 1.5 }}>
+            <div className="text-[13px] text-slate-400 mb-5 leading-relaxed">
               Se recargarán todos los presupuestos desde el servidor.
             </div>
-            <div style={{ display: "flex", gap: 8 }}>
+            <div className="flex gap-2">
               <button
                 onClick={() => setShowConfirmReset(false)}
-                style={{
-                  flex: 1, padding: "12px", borderRadius: radius.md,
-                  border: `1px solid ${colors.border}`, background: colors.card,
-                  color: colors.text, fontSize: 13, fontWeight: 600,
-                  fontFamily: font, cursor: "pointer",
-                }}
+                className="flex-1 py-3 rounded-lg border border-white/[0.06] bg-white/[0.03] text-white text-[13px] font-semibold cursor-pointer"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleReset}
                 disabled={saving}
-                style={{
-                  flex: 1, padding: "12px", borderRadius: radius.md,
-                  border: "none", background: colors.primary,
-                  color: "#fff", fontSize: 13, fontWeight: 600,
-                  fontFamily: font, cursor: saving ? "default" : "pointer",
-                }}
+                className={`flex-1 py-3 rounded-lg border-none bg-emerald-500 text-white text-[13px] font-semibold ${saving ? 'cursor-default' : 'cursor-pointer'}`}
               >
                 {saving ? "Cargando..." : "Refrescar"}
               </button>
@@ -392,53 +322,42 @@ export default function BudgetManagementScreen({ onBack }) {
       {/* Add/Edit form modal */}
       {showForm && (
         <ModalBackdrop onClose={() => { setShowForm(false); setEditingId(null); }}>
-          <div style={{
-            background: colors.card, borderRadius: `${radius.xl}px ${radius.xl}px 0 0`,
-            padding: "20px 20px 40px", maxWidth: 480, width: "100%",
-            maxHeight: "85vh", overflowY: "auto",
-            animation: "fadeIn 0.3s ease",
-          }}>
-            <div style={{
-              width: 40, height: 4, background: colors.border,
-              borderRadius: 2, margin: "0 auto 16px",
-            }} />
+          <div className="bg-[#111218] rounded-t-2xl px-5 pt-5 pb-10 max-w-[480px] w-full max-h-[85vh] overflow-y-auto animate-fadeIn">
+            <div className="w-10 h-1 bg-white/[0.06] rounded mx-auto mb-4" />
 
-            <h3 style={{
-              fontFamily: fontDisplay, fontSize: 20, fontWeight: 600,
-              color: colors.text, margin: "0 0 16px",
-            }}>
+            <h3 className="text-xl font-semibold text-white mb-4 mt-0">
               {editingId ? "Editar Presupuesto" : "Nuevo Presupuesto"}
             </h3>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div className="flex flex-col gap-3">
               <div>
-                <label style={labelStyle}>Nombre</label>
+                <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Nombre</label>
                 <input
                   value={form.name}
                   onChange={e => update("name", e.target.value)}
                   placeholder="Ej: Taller Ypoti"
-                  style={inputStyle}
+                  className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50"
                 />
               </div>
 
-              <div style={{ display: "flex", gap: 8 }}>
-                <div style={{ flex: 1 }}>
-                  <label style={labelStyle}>Establecimiento</label>
+              <div className="flex gap-2">
+                <div className="flex-1">
+                  <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Establecimiento</label>
                   <select
                     value={form.establishment}
                     onChange={e => update("establishment", e.target.value)}
-                    style={inputStyle}
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50"
                   >
                     <option value="">Seleccionar...</option>
                     {establishments.map(e => <option key={e} value={e}>{e}</option>)}
                   </select>
                 </div>
-                <div style={{ flex: 1 }}>
-                  <label style={labelStyle}>Sector</label>
+                <div className="flex-1">
+                  <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Sector</label>
                   <select
                     value={form.sector}
                     onChange={e => update("sector", e.target.value)}
-                    style={inputStyle}
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50"
                   >
                     <option value="">Seleccionar...</option>
                     {sectors.map(s => <option key={s} value={s}>{s}</option>)}
@@ -446,65 +365,65 @@ export default function BudgetManagementScreen({ onBack }) {
                 </div>
               </div>
 
-              <div style={{ display: "flex", gap: 8 }}>
-                <div style={{ flex: 1 }}>
-                  <label style={labelStyle}>Período</label>
+              <div className="flex gap-2">
+                <div className="flex-1">
+                  <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Período</label>
                   <input
                     value={form.period}
                     onChange={e => update("period", e.target.value)}
                     placeholder="2026"
-                    style={inputStyle}
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50"
                   />
                 </div>
-                <div style={{ flex: 1 }}>
-                  <label style={labelStyle}>Inicio</label>
+                <div className="flex-1">
+                  <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Inicio</label>
                   <input
                     type="date"
                     value={form.startDate}
                     onChange={e => update("startDate", e.target.value)}
-                    style={inputStyle}
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50"
                   />
                 </div>
-                <div style={{ flex: 1 }}>
-                  <label style={labelStyle}>Fin</label>
+                <div className="flex-1">
+                  <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Fin</label>
                   <input
                     type="date"
                     value={form.endDate}
                     onChange={e => update("endDate", e.target.value)}
-                    style={inputStyle}
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50"
                   />
                 </div>
               </div>
 
-              <div style={{ display: "flex", gap: 8 }}>
-                <div style={{ flex: 1 }}>
-                  <label style={labelStyle}>Monto Planificado (₲)</label>
+              <div className="flex gap-2">
+                <div className="flex-1">
+                  <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Monto Planificado (₲)</label>
                   <input
                     type="number"
                     value={form.planned || ""}
                     onChange={e => update("planned", parseInt(e.target.value) || 0)}
                     placeholder="100000000"
-                    style={inputStyle}
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50"
                     min={0}
                   />
                   {form.planned > 0 && (
-                    <div style={{ fontSize: 10, color: colors.textLight, marginTop: 2 }}>
+                    <div className="text-[10px] text-slate-400 mt-0.5">
                       {formatGuaranies(form.planned)}
                     </div>
                   )}
                 </div>
-                <div style={{ flex: 1 }}>
-                  <label style={labelStyle}>Consumido (₲)</label>
+                <div className="flex-1">
+                  <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Consumido (₲)</label>
                   <input
                     type="number"
                     value={form.consumed || ""}
                     onChange={e => update("consumed", parseInt(e.target.value) || 0)}
                     placeholder="0"
-                    style={inputStyle}
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50"
                     min={0}
                   />
                   {form.consumed > 0 && (
-                    <div style={{ fontSize: 10, color: colors.textLight, marginTop: 2 }}>
+                    <div className="text-[10px] text-slate-400 mt-0.5">
                       {formatGuaranies(form.consumed)}
                     </div>
                   )}
@@ -512,7 +431,7 @@ export default function BudgetManagementScreen({ onBack }) {
               </div>
 
               {/* Actions */}
-              <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+              <div className="flex gap-2 mt-2">
                 {editingId && (
                   <button
                     onClick={async () => {
@@ -521,41 +440,25 @@ export default function BudgetManagementScreen({ onBack }) {
                       setEditingId(null);
                     }}
                     disabled={saving}
-                    style={{
-                      padding: "12px 16px", borderRadius: radius.md,
-                      border: `1px solid ${colors.danger}20`, background: colors.dangerLight,
-                      color: colors.danger, fontSize: 12, fontWeight: 600,
-                      fontFamily: font, cursor: saving ? "default" : "pointer",
-                    }}
+                    className={`px-4 py-3 rounded-lg border border-red-500/[0.12] bg-red-500/[0.06] text-red-400 text-xs font-semibold ${saving ? 'cursor-default' : 'cursor-pointer'}`}
                   >
                     Desactivar
                   </button>
                 )}
                 <button
                   onClick={() => { setShowForm(false); setEditingId(null); }}
-                  style={{
-                    flex: 1, padding: "12px", borderRadius: radius.md,
-                    border: `1px solid ${colors.border}`, background: colors.card,
-                    color: colors.text, fontSize: 13, fontWeight: 600,
-                    fontFamily: font, cursor: "pointer",
-                  }}
+                  className="flex-1 py-3 rounded-lg border border-white/[0.06] bg-white/[0.03] text-white text-[13px] font-semibold cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={handleSave}
                   disabled={!form.name || !form.establishment || !form.planned || saving}
-                  style={{
-                    flex: 1, padding: "12px", borderRadius: radius.md, border: "none",
-                    background: form.name && form.establishment && form.planned && !saving
-                      ? `linear-gradient(135deg, ${colors.primary} 0%, ${colors.primaryDark} 100%)`
-                      : colors.border,
-                    color: form.name && form.establishment && form.planned && !saving ? "#fff" : colors.textLight,
-                    fontSize: 13, fontWeight: 600, fontFamily: font,
-                    cursor: form.name && form.establishment && form.planned && !saving ? "pointer" : "default",
-                    boxShadow: form.name && form.establishment && form.planned && !saving
-                      ? `0 2px 8px ${colors.primary}30` : "none",
-                  }}
+                  className={`flex-1 py-3 rounded-lg border-none text-[13px] font-semibold ${
+                    form.name && form.establishment && form.planned && !saving
+                      ? 'bg-gradient-to-br from-emerald-500 to-emerald-600 text-white cursor-pointer shadow-md shadow-emerald-500/20'
+                      : 'bg-white/[0.06] text-slate-500 cursor-default'
+                  }`}
                 >
                   {saving ? "Guardando..." : editingId ? "Guardar" : "Crear"}
                 </button>

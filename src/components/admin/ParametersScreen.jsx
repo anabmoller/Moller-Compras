@@ -1,5 +1,4 @@
 import { useState, useCallback, useMemo } from "react";
-import { colors, font, fontDisplay, inputStyle, labelStyle, shadows, radius } from "../../styles/theme";
 import {
   getParameters, addParameterItem, updateParameterItem,
   toggleParameterItem, initParameters, getCompanies,
@@ -16,7 +15,6 @@ const TABS = [
 
 // ============================================================
 // SENACSA + SMGeo reference data (real, from screenshots)
-// Used to auto-fill when creating/editing establishments
 // ============================================================
 const SENACSA_DATA = {
   "SANTA MARIA":      { code: "0101190045", unidadZonal: "CONCEPCION", departamento: "Concepción", municipio: "" },
@@ -34,7 +32,6 @@ const SENACSA_DATA = {
   "ESTANCIA LUSIPAR": { code: "0210150003", unidadZonal: "SANTA ROSA DEL AGUARAY", departamento: "San Pedro", municipio: "Tacuatí", lat: "-23.4333312", lng: "-56.3069802" },
 };
 
-// Lookup by name (case-insensitive, partial match)
 function lookupSenacsa(name) {
   if (!name) return null;
   const upper = name.toUpperCase().trim();
@@ -45,7 +42,6 @@ function lookupSenacsa(name) {
   return null;
 }
 
-// ---- Helper: format "pedro.moller" → "Pedro Moller" ----
 function formatName(raw) {
   if (!raw) return "—";
   const username = raw.includes("@") ? raw.split("@")[0] : raw;
@@ -55,7 +51,6 @@ function formatName(raw) {
     .join(" ");
 }
 
-// ---- Helper: auto-generate establishment code ----
 function autoGenerateCode(name) {
   if (!name) return "";
   const words = name.trim().split(/\s+/);
@@ -127,7 +122,6 @@ export default function ParametersScreen({ onBack }) {
     }
   };
 
-  // ---- Render subtitle for each item type ----
   const renderSubtitle = (item) => {
     switch (tab) {
       case "establishments": {
@@ -152,106 +146,66 @@ export default function ParametersScreen({ onBack }) {
   };
 
   return (
-    <div style={{ animation: "fadeIn 0.3s ease" }}>
+    <div className="animate-fadeIn">
       {/* Header */}
-      <div style={{ padding: "12px 20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <button onClick={onBack} style={{
-          background: "transparent", border: "none", cursor: "pointer",
-          fontFamily: font, fontSize: 14, color: colors.primary, fontWeight: 500,
-        }}>
+      <div className="px-5 py-3 flex justify-between items-center">
+        <button onClick={onBack} className="bg-transparent border-none cursor-pointer text-sm text-emerald-400 font-medium">
           ← Volver
         </button>
-        <button onClick={handleReset} disabled={saving} style={{
-          background: "transparent", border: "none", cursor: saving ? "default" : "pointer",
-          fontFamily: font, fontSize: 12, color: saving ? colors.textMuted : colors.warning, fontWeight: 500,
-          opacity: saving ? 0.6 : 1,
-        }}>
+        <button onClick={handleReset} disabled={saving} className={`bg-transparent border-none text-xs font-medium ${saving ? 'cursor-default text-slate-500 opacity-60' : 'cursor-pointer text-amber-400'}`}>
           {saving ? "Cargando..." : "Refrescar"}
         </button>
       </div>
 
-      <div style={{ padding: "0 20px" }}>
-        <h2 style={{
-          fontFamily: fontDisplay, fontSize: 22, fontWeight: 600,
-          color: colors.text, margin: "0 0 4px",
-        }}>
+      <div className="px-5">
+        <h2 className="text-[22px] font-semibold text-white mb-1 mt-0">
           Parámetros del Sistema
         </h2>
-        <div style={{ fontSize: 13, color: colors.textLight, marginBottom: 16 }}>
+        <div className="text-[13px] text-slate-400 mb-4">
           Configurar establecimientos, sectores, productos y proveedores
         </div>
       </div>
 
       {/* Error banner */}
       {actionError && (
-        <div style={{
-          margin: "0 20px 12px", padding: "10px 14px", borderRadius: radius.md,
-          background: colors.danger + "10", border: `1px solid ${colors.danger}30`,
-          display: "flex", justifyContent: "space-between", alignItems: "center",
-        }}>
-          <span style={{ fontSize: 12, color: colors.danger, fontWeight: 500 }}>{actionError}</span>
-          <button onClick={() => setActionError(null)} style={{
-            background: "none", border: "none", cursor: "pointer",
-            fontSize: 14, color: colors.danger, padding: "0 4px",
-          }}>✕</button>
+        <div className="mx-5 mb-3 px-3.5 py-2.5 rounded-lg bg-red-500/[0.06] border border-red-500/[0.19] flex justify-between items-center">
+          <span className="text-xs text-red-400 font-medium">{actionError}</span>
+          <button onClick={() => setActionError(null)} className="bg-none border-none cursor-pointer text-sm text-red-400 px-1">✕</button>
         </div>
       )}
 
       {/* Tab Bar */}
-      <div style={{
-        display: "flex", gap: 4, padding: "0 20px 12px",
-        overflowX: "auto", scrollbarWidth: "none",
-      }}>
+      <div className="flex gap-1 px-5 pb-3 overflow-x-auto scrollbar-none">
         {TABS.map(t => (
-          <button key={t.key} onClick={() => { setTab(t.key); setSearch(""); setShowForm(false); setEditingItem(null); }} style={{
-            padding: "8px 14px", borderRadius: radius.lg, border: "none",
-            background: tab === t.key ? colors.primary : colors.card,
-            color: tab === t.key ? "#fff" : colors.textLight,
-            fontSize: 12, fontWeight: 600, fontFamily: font,
-            cursor: "pointer", whiteSpace: "nowrap",
-            boxShadow: tab === t.key ? `0 2px 8px ${colors.primary}30` : `0 1px 3px rgba(0,0,0,0.06)`,
-          }}>
+          <button key={t.key} onClick={() => { setTab(t.key); setSearch(""); setShowForm(false); setEditingItem(null); }} className={`px-3.5 py-2 rounded-xl border-none text-xs font-semibold cursor-pointer whitespace-nowrap ${
+            tab === t.key
+              ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
+              : 'bg-white/[0.03] text-slate-400 shadow-sm'
+          }`}>
             {t.icon} {t.label}
           </button>
         ))}
       </div>
 
-      <div style={{ padding: "0 20px 120px" }}>
+      <div className="px-5 pb-[120px]">
         {/* Search + Add */}
-        <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
-          <div style={{
-            flex: 1, display: "flex", alignItems: "center", gap: 8,
-            background: colors.card, border: `1px solid ${colors.border}`,
-            borderRadius: radius.lg, padding: "8px 12px",
-          }}>
-            <span style={{ fontSize: 14, opacity: 0.4 }}>{"\u{1F50D}"}</span>
+        <div className="flex gap-2 mb-3">
+          <div className="flex-1 flex items-center gap-2 bg-white/[0.03] border border-white/[0.06] rounded-xl px-3 py-2">
+            <span className="text-sm opacity-40">{"\u{1F50D}"}</span>
             <input
               placeholder="Buscar..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              style={{
-                border: "none", background: "transparent", outline: "none",
-                fontFamily: font, fontSize: 13, color: colors.text, width: "100%",
-              }}
+              className="border-none bg-transparent outline-none text-[13px] text-white w-full"
             />
           </div>
-          <button onClick={() => { setEditingItem(null); setShowForm(true); }} disabled={saving} style={{
-            padding: "8px 16px", borderRadius: radius.lg, border: "none",
-            background: saving
-              ? colors.border
-              : `linear-gradient(135deg, ${colors.primary} 0%, ${colors.primaryDark} 100%)`,
-            color: "#fff", fontSize: 12, fontWeight: 600, fontFamily: font,
-            cursor: saving ? "default" : "pointer", whiteSpace: "nowrap",
-            opacity: saving ? 0.6 : 1,
-          }}>
+          <button onClick={() => { setEditingItem(null); setShowForm(true); }} disabled={saving} className={`px-4 py-2 rounded-xl border-none text-xs font-semibold text-white cursor-pointer whitespace-nowrap ${saving ? 'bg-white/[0.06] opacity-60' : 'bg-gradient-to-br from-emerald-500 to-emerald-600'}`}>
             + Nuevo
           </button>
         </div>
 
         {/* Count badge */}
-        <div style={{
-          fontSize: 11, color: colors.textLight, marginBottom: 10, fontWeight: 500,
-        }}>
+        <div className="text-[11px] text-slate-400 mb-2.5 font-medium">
           {activeCount} activos de {items.length} total · Mostrando {filtered.length}
         </div>
 
@@ -268,43 +222,25 @@ export default function ParametersScreen({ onBack }) {
 
         {/* Items List */}
         {filtered.map(item => (
-          <div key={item.id} style={{
-            background: colors.card, borderRadius: radius.lg, padding: "14px 16px",
-            marginBottom: 8, border: `1px solid ${colors.borderLight}`,
-            opacity: (item.active !== false) ? 1 : 0.5,
-            display: "flex", alignItems: "center", gap: 12, boxShadow: shadows.xs,
-          }}>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 14, fontWeight: 600, color: colors.text }}>
+          <div key={item.id} className={`bg-white/[0.03] rounded-xl px-4 py-3.5 mb-2 border border-white/[0.06] flex items-center gap-3 shadow-sm ${(item.active !== false) ? 'opacity-100' : 'opacity-50'}`}>
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-semibold text-white">
                 {item.name}
                 {item.code && (
-                  <span style={{
-                    fontSize: 10, color: colors.textLight, marginLeft: 8,
-                    background: colors.surface, padding: "2px 6px", borderRadius: radius.xs,
-                  }}>
+                  <span className="text-[10px] text-slate-400 ml-2 bg-white/[0.02] px-1.5 py-0.5 rounded">
                     {item.code}
                   </span>
                 )}
               </div>
-              <div style={{ fontSize: 11, color: colors.textLight, marginTop: 2 }}>
+              <div className="text-[11px] text-slate-400 mt-0.5">
                 {renderSubtitle(item)}
               </div>
             </div>
-            <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
-              <button onClick={() => { setEditingItem(item); setShowForm(true); }} disabled={saving} style={{
-                background: colors.primary + "10", border: "none", borderRadius: radius.md,
-                padding: "6px 10px", cursor: saving ? "default" : "pointer", fontSize: 12, color: colors.primary,
-                fontWeight: 500, fontFamily: font, opacity: saving ? 0.5 : 1,
-              }}>
+            <div className="flex gap-1.5 flex-shrink-0">
+              <button onClick={() => { setEditingItem(item); setShowForm(true); }} disabled={saving} className={`bg-emerald-500/[0.06] border-none rounded-lg px-2.5 py-1.5 cursor-pointer text-xs text-emerald-400 font-medium ${saving ? 'opacity-50' : ''}`}>
                 Editar
               </button>
-              <button onClick={() => handleToggle(item.id)} disabled={saving} style={{
-                background: (item.active !== false) ? colors.danger + "10" : colors.success + "10",
-                border: "none", borderRadius: radius.md, padding: "6px 10px",
-                cursor: saving ? "default" : "pointer", fontSize: 12, fontFamily: font, fontWeight: 500,
-                color: (item.active !== false) ? colors.danger : colors.success,
-                opacity: saving ? 0.5 : 1,
-              }}>
+              <button onClick={() => handleToggle(item.id)} disabled={saving} className={`border-none rounded-lg px-2.5 py-1.5 cursor-pointer text-xs font-medium ${saving ? 'opacity-50' : ''} ${(item.active !== false) ? 'bg-red-500/[0.06] text-red-400' : 'bg-green-500/[0.06] text-green-400'}`}>
                 {(item.active !== false) ? "Desact." : "Activar"}
               </button>
             </div>
@@ -312,7 +248,7 @@ export default function ParametersScreen({ onBack }) {
         ))}
 
         {filtered.length === 0 && (
-          <div style={{ textAlign: "center", padding: 40, color: colors.textLight, fontSize: 13 }}>
+          <div className="text-center p-10 text-slate-400 text-[13px]">
             No se encontraron registros
           </div>
         )}
@@ -335,7 +271,6 @@ function ParameterForm({ tab, item, onSave, onCancel, saving }) {
     };
   }, []);
 
-  // FIX #1: Companies list for dropdown
   const companyOptions = useMemo(() => {
     try {
       const companies = getCompanies();
@@ -408,7 +343,6 @@ function ParameterForm({ tab, item, onSave, onCancel, saving }) {
     return [];
   };
 
-  // Auto-fill SENACSA data when name changes
   const handleNameChange = useCallback((val) => {
     const updates = { name: val };
 
@@ -436,35 +370,26 @@ function ParameterForm({ tab, item, onSave, onCancel, saving }) {
   }, [codeManuallyEdited, tab]);
 
   return (
-    <div style={{
-      background: colors.surface, borderRadius: radius.xl, padding: 20,
-      border: `1px solid ${colors.primary}30`, marginBottom: 16,
-    }}>
-      <div style={{
-        fontSize: 14, fontWeight: 600, color: colors.text, marginBottom: 16,
-      }}>
+    <div className="bg-white/[0.02] rounded-2xl p-5 border border-emerald-500/[0.19] mb-4">
+      <div className="text-sm font-semibold text-white mb-4">
         {item ? `Editar: ${item.name}` : "Nuevo Registro"}
       </div>
 
       {/* SENACSA auto-fill indicator */}
       {senacsaAutoFilled && tab === "establishments" && (
-        <div style={{
-          padding: "8px 12px", borderRadius: radius.md, marginBottom: 12,
-          background: colors.success + "10", border: `1px solid ${colors.success}30`,
-          fontSize: 11, color: colors.success, fontWeight: 500,
-        }}>
+        <div className="px-3 py-2 rounded-lg mb-3 bg-green-500/[0.06] border border-green-500/[0.19] text-[11px] text-green-400 font-medium">
           ✓ Datos SENACSA auto-completados desde la base de referencia
         </div>
       )}
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <div className="flex flex-col gap-3">
         {fields.map(f => (
           <div key={f.key}>
-            <label style={{ ...labelStyle, fontSize: 11 }}>
-              {f.label} {f.required && <span style={{ color: colors.danger }}>*</span>}
+            <label className="block text-[11px] font-medium text-slate-400 mb-1.5 tracking-wide">
+              {f.label} {f.required && <span className="text-red-400">*</span>}
             </label>
             {f.hint && (
-              <div style={{ fontSize: 10, color: colors.textMuted || colors.textLight, marginBottom: 2, fontStyle: "italic" }}>
+              <div className="text-[10px] text-slate-500 mb-0.5 italic">
                 {f.hint}
               </div>
             )}
@@ -473,7 +398,7 @@ function ParameterForm({ tab, item, onSave, onCancel, saving }) {
                 value={form[f.key] || ""}
                 onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
                 disabled={saving}
-                style={{ ...inputStyle, padding: "10px 12px", fontSize: 13 }}
+                className="w-full px-3 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-[13px] text-white outline-none transition-colors focus:border-emerald-500/50"
               >
                 <option value="">Seleccionar...</option>
                 {resolveOptions(f).map(o => (
@@ -487,7 +412,7 @@ function ParameterForm({ tab, item, onSave, onCancel, saving }) {
                 value={form[f.key] || ""}
                 onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
                 disabled={saving}
-                style={{ ...inputStyle, padding: "10px 12px", fontSize: 13 }}
+                className="w-full px-3 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-[13px] text-white outline-none transition-colors focus:border-emerald-500/50"
               >
                 <option value="">Seleccionar usuario...</option>
                 {(usersByRole[f.roleFilter] || []).map(u => (
@@ -510,13 +435,11 @@ function ParameterForm({ tab, item, onSave, onCancel, saving }) {
                 }}
                 placeholder={f.label}
                 disabled={saving}
-                style={{
-                  ...inputStyle, padding: "10px 12px", fontSize: 13,
-                  ...(senacsaAutoFilled && ["senacsa_code", "senacsa_unidad_zonal", "latitude", "longitude", "departamento", "municipio"].includes(f.key) && form[f.key]
-                    ? { background: colors.success + "08", borderColor: colors.success + "40" }
-                    : {}
-                  ),
-                }}
+                className={`w-full px-3 py-2.5 rounded-lg border bg-white/[0.05] text-[13px] text-white outline-none transition-colors focus:border-emerald-500/50 ${
+                  senacsaAutoFilled && ["senacsa_code", "senacsa_unidad_zonal", "latitude", "longitude", "departamento", "municipio"].includes(f.key) && form[f.key]
+                    ? 'bg-green-500/[0.05] border-green-500/25'
+                    : 'border-white/[0.1]'
+                }`}
               />
             )}
           </div>
@@ -525,14 +448,11 @@ function ParameterForm({ tab, item, onSave, onCancel, saving }) {
 
       {/* Map preview if coordinates exist */}
       {tab === "establishments" && form.latitude && form.longitude && (
-        <div style={{ marginTop: 12 }}>
-          <label style={{ ...labelStyle, fontSize: 11, marginBottom: 4, display: "block" }}>
+        <div className="mt-3">
+          <label className="block text-[11px] font-medium text-slate-400 mb-1 tracking-wide">
             📍 Vista previa ubicación
           </label>
-          <div style={{
-            borderRadius: radius.lg, overflow: "hidden", border: `1px solid ${colors.border}`,
-            height: 180,
-          }}>
+          <div className="rounded-xl overflow-hidden border border-white/[0.06] h-[180px]">
             <iframe
               title="Ubicación del establecimiento"
               width="100%"
@@ -543,33 +463,24 @@ function ParameterForm({ tab, item, onSave, onCancel, saving }) {
               loading="lazy"
             />
           </div>
-          <div style={{ fontSize: 10, color: colors.textLight, marginTop: 4, textAlign: "center" }}>
+          <div className="text-[10px] text-slate-400 mt-1 text-center">
             Lat: {form.latitude} · Lng: {form.longitude}
           </div>
         </div>
       )}
 
-      <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
-        <button onClick={onCancel} disabled={saving} style={{
-          flex: 1, padding: 12, borderRadius: radius.lg,
-          border: `1px solid ${colors.border}`, background: colors.card,
-          color: colors.text, fontSize: 13, fontWeight: 600, fontFamily: font,
-          cursor: saving ? "default" : "pointer",
-        }}>
+      <div className="flex gap-2 mt-4">
+        <button onClick={onCancel} disabled={saving} className={`flex-1 py-3 rounded-xl border border-white/[0.06] bg-white/[0.03] text-white text-[13px] font-semibold ${saving ? 'cursor-default' : 'cursor-pointer'}`}>
           Cancelar
         </button>
         <button
           onClick={() => canSubmit && onSave(form)}
           disabled={!canSubmit}
-          style={{
-            flex: 1, padding: 12, borderRadius: radius.lg, border: "none",
-            background: canSubmit
-              ? `linear-gradient(135deg, ${colors.primary} 0%, ${colors.primaryDark} 100%)`
-              : colors.border,
-            color: canSubmit ? "#fff" : colors.textLight,
-            fontSize: 13, fontWeight: 600, fontFamily: font,
-            cursor: canSubmit ? "pointer" : "default",
-          }}
+          className={`flex-1 py-3 rounded-xl border-none text-[13px] font-semibold ${
+            canSubmit
+              ? 'bg-gradient-to-br from-emerald-500 to-emerald-600 text-white cursor-pointer'
+              : 'bg-white/[0.06] text-slate-500 cursor-default'
+          }`}
         >
           {saving ? "Guardando..." : (item ? "Guardar Cambios" : "Crear")}
         </button>

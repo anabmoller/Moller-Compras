@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { colors, font, fontDisplay, shadows, radius } from "../../styles/theme";
 import BackButton from "../common/BackButton";
 import PageHeader from "../common/PageHeader";
 import {
@@ -12,17 +11,17 @@ const STEPS_DISPLAY = [
   {
     num: 1, label: "Gerente de Area", type: "manager", icon: "👤",
     description: "Aprueba solicitudes de su establecimiento asignado",
-    color: colors.warning,
+    color: "#f59e0b",
   },
   {
     num: 2, label: "Director / CFO", type: "director", icon: "🏢",
     description: "Aprueba compras mayores a ₲5M segun la empresa",
-    color: colors.primary,
+    color: "#10b981",
   },
   {
     num: 3, label: "Overbudget", type: "overbudget", icon: "⚠",
     description: "Aprueba si el monto supera ₲50M o excede presupuesto",
-    color: colors.danger,
+    color: "#ef4444",
   },
 ];
 
@@ -30,87 +29,69 @@ export default function ApprovalConfigScreen({ onBack }) {
   const [activeStep, setActiveStep] = useState(null);
 
   return (
-    <div style={{ animation: "fadeIn 0.3s ease" }}>
+    <div className="animate-fadeIn">
       {/* Header */}
       <BackButton onClick={onBack} />
-      <div style={{ marginBottom: 20 }}>
+      <div className="mb-5">
         <PageHeader
           title="Flujo de Autorización y Aprobación"
           subtitle="Configuración del workflow de autorización y aprobación de compras"
         />
       </div>
 
-      <div style={{ padding: "0 20px 120px" }}>
+      <div className="px-5 pb-[120px]">
         {/* Visual Pipeline */}
-        <div style={{
-          display: "flex", alignItems: "center", justifyContent: "center",
-          gap: 0, marginBottom: 24, padding: "16px 0",
-        }}>
+        <div className="flex items-center justify-center gap-0 mb-6 py-4">
           {STEPS_DISPLAY.map((step, i) => (
-            <div key={step.num} style={{ display: "flex", alignItems: "center" }}>
+            <div key={step.num} className="flex items-center">
               <div
                 onClick={() => setActiveStep(activeStep === step.num ? null : step.num)}
+                className="w-14 h-14 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition-all duration-200"
                 style={{
-                  width: 56, height: 56, borderRadius: radius.xl,
                   background: activeStep === step.num
                     ? `linear-gradient(135deg, ${step.color} 0%, ${step.color}cc 100%)`
-                    : colors.card,
-                  border: `2px solid ${activeStep === step.num ? step.color : colors.border}`,
-                  display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-                  cursor: "pointer", transition: "all 0.2s",
-                  boxShadow: activeStep === step.num ? `0 4px 12px ${step.color}30` : "none",
+                    : 'rgba(255,255,255,0.03)',
+                  border: `2px solid ${activeStep === step.num ? step.color : 'rgba(255,255,255,0.06)'}`,
+                  boxShadow: activeStep === step.num ? `0 4px 12px ${step.color}30` : 'none',
                 }}
               >
-                <span style={{
-                  fontSize: 10, fontWeight: 700,
-                  color: activeStep === step.num ? "#fff" : step.color,
-                }}>
+                <span className="text-[10px] font-bold" style={{ color: activeStep === step.num ? '#fff' : step.color }}>
                   {step.num}
                 </span>
-                <span style={{
-                  fontSize: 16,
-                  filter: activeStep === step.num ? "brightness(0) invert(1)" : "none",
-                }}>
+                <span className="text-base" style={{ filter: activeStep === step.num ? 'brightness(0) invert(1)' : 'none' }}>
                   {step.icon}
                 </span>
               </div>
               {i < STEPS_DISPLAY.length - 1 && (
-                <div style={{
-                  width: 32, height: 2, background: colors.border, margin: "0 -1px",
-                }} />
+                <div className="w-8 h-0.5 bg-white/[0.06] -mx-px" />
               )}
             </div>
           ))}
           {/* Special step: Vet */}
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <div style={{ width: 32, height: 2, background: colors.border, margin: "0 -1px" }} />
+          <div className="flex items-center">
+            <div className="w-8 h-0.5 bg-white/[0.06] -mx-px" />
             <div
               onClick={() => setActiveStep(activeStep === 4 ? null : 4)}
+              className="w-14 h-14 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition-all duration-200"
               style={{
-                width: 56, height: 56, borderRadius: radius.xl,
                 background: activeStep === 4
-                  ? `linear-gradient(135deg, #7c6bb5 0%, #6b5aaa 100%)`
-                  : colors.card,
-                border: `2px dashed ${activeStep === 4 ? "#7c6bb5" : colors.border}`,
-                display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-                cursor: "pointer", transition: "all 0.2s",
+                  ? 'linear-gradient(135deg, #7c6bb5 0%, #6b5aaa 100%)'
+                  : 'rgba(255,255,255,0.03)',
+                border: `2px dashed ${activeStep === 4 ? '#7c6bb5' : 'rgba(255,255,255,0.06)'}`,
               }}
             >
-              <span style={{ fontSize: 10, fontWeight: 700, color: activeStep === 4 ? "#fff" : "#7c6bb5" }}>VET</span>
-              <span style={{ fontSize: 16 }}>💉</span>
+              <span className="text-[10px] font-bold" style={{ color: activeStep === 4 ? '#fff' : '#7c6bb5' }}>VET</span>
+              <span className="text-base">💉</span>
             </div>
           </div>
         </div>
 
         {/* Step labels */}
-        <div style={{
-          display: "flex", justifyContent: "space-around", marginBottom: 20,
-          fontSize: 10, color: colors.textLight, fontWeight: 500, textAlign: "center",
-        }}>
-          <span style={{ width: 70 }}>Gerente</span>
-          <span style={{ width: 70 }}>Director</span>
-          <span style={{ width: 70 }}>Overbudget</span>
-          <span style={{ width: 70 }}>Vet (cond.)</span>
+        <div className="flex justify-around mb-5 text-[10px] text-slate-400 font-medium text-center">
+          <span className="w-[70px]">Gerente</span>
+          <span className="w-[70px]">Director</span>
+          <span className="w-[70px]">Overbudget</span>
+          <span className="w-[70px]">Vet (cond.)</span>
         </div>
 
         {/* Thresholds Card */}
@@ -131,15 +112,9 @@ export default function ApprovalConfigScreen({ onBack }) {
         {/* Manager Assignments */}
         <Card title="Gerentes por Establecimiento" icon="👤">
           {Object.entries(MANAGER_BY_ESTABLISHMENT).map(([est, mgr]) => (
-            <div key={est} style={{
-              display: "flex", justifyContent: "space-between", alignItems: "center",
-              padding: "8px 0", borderBottom: `1px solid ${colors.borderLight}`,
-            }}>
-              <span style={{ fontSize: 13, color: colors.text }}>📍 {est}</span>
-              <span style={{
-                fontSize: 12, fontWeight: 600, color: colors.primary,
-                background: colors.primary + "10", padding: "3px 10px", borderRadius: radius.md,
-              }}>
+            <div key={est} className="flex justify-between items-center py-2 border-b border-white/[0.06]">
+              <span className="text-[13px] text-white">📍 {est}</span>
+              <span className="text-xs font-semibold text-emerald-400 bg-emerald-500/[0.06] px-2.5 py-0.5 rounded-lg">
                 {mgr}
               </span>
             </div>
@@ -151,20 +126,14 @@ export default function ApprovalConfigScreen({ onBack }) {
           {COMPANIES.map(c => {
             const dirUsername = DIRECTOR_BY_COMPANY[c.id] || "—";
             return (
-              <div key={c.id} style={{
-                display: "flex", justifyContent: "space-between", alignItems: "center",
-                padding: "8px 0", borderBottom: `1px solid ${colors.borderLight}`,
-              }}>
+              <div key={c.id} className="flex justify-between items-center py-2 border-b border-white/[0.06]">
                 <div>
-                  <div style={{ fontSize: 13, color: colors.text }}>{c.name}</div>
-                  <div style={{ fontSize: 10, color: colors.textLight }}>
+                  <div className="text-[13px] text-white">{c.name}</div>
+                  <div className="text-[10px] text-slate-400">
                     {c.type === "empresa" ? "Empresa" : "Persona Física"}
                   </div>
                 </div>
-                <span style={{
-                  fontSize: 12, fontWeight: 600, color: colors.accent,
-                  background: colors.accent + "10", padding: "3px 10px", borderRadius: radius.md,
-                }}>
+                <span className="text-xs font-semibold text-blue-400 bg-blue-500/[0.06] px-2.5 py-0.5 rounded-lg">
                   {dirUsername}
                 </span>
               </div>
@@ -177,12 +146,9 @@ export default function ApprovalConfigScreen({ onBack }) {
           {Object.entries(ESTABLISHMENT_COMPANY).filter(([k]) => k !== "General").map(([est, compId]) => {
             const comp = COMPANIES.find(c => c.id === compId);
             return (
-              <div key={est} style={{
-                display: "flex", justifyContent: "space-between", alignItems: "center",
-                padding: "6px 0", borderBottom: `1px solid ${colors.borderLight}`,
-              }}>
-                <span style={{ fontSize: 12, color: colors.text }}>{est}</span>
-                <span style={{ fontSize: 12, color: colors.textLight }}>{comp?.name || compId}</span>
+              <div key={est} className="flex justify-between items-center py-1.5 border-b border-white/[0.06]">
+                <span className="text-xs text-white">{est}</span>
+                <span className="text-xs text-slate-400">{comp?.name || compId}</span>
               </div>
             );
           })}
@@ -190,34 +156,29 @@ export default function ApprovalConfigScreen({ onBack }) {
 
         {/* Special Rules */}
         <Card title="Reglas Especiales" icon="⚡">
-          <div style={{
-            background: colors.surface, borderRadius: radius.lg, padding: 14,
-            marginBottom: 8,
-          }}>
-            <div style={{ fontSize: 12, fontWeight: 600, color: "#7c6bb5", marginBottom: 4 }}>
+          <div className="bg-white/[0.02] rounded-xl p-3.5 mb-2">
+            <div className="text-xs font-semibold text-[#7c6bb5] mb-1">
               💉 Regla Veterinaria (R5)
             </div>
-            <div style={{ fontSize: 12, color: colors.text, marginBottom: 4 }}>
+            <div className="text-xs text-white mb-1">
               Solicitudes de sectores veterinarios requieren autorización previa del especialista.
             </div>
-            <div style={{ fontSize: 11, color: colors.textLight }}>
+            <div className="text-[11px] text-slate-400">
               Aprobador: <strong>{VET_APPROVER}</strong>
             </div>
-            <div style={{ fontSize: 11, color: colors.textLight }}>
+            <div className="text-[11px] text-slate-400">
               Sectores: {VET_SECTORS.join(", ")}
             </div>
           </div>
 
-          <div style={{
-            background: colors.surface, borderRadius: radius.lg, padding: 14,
-          }}>
-            <div style={{ fontSize: 12, fontWeight: 600, color: colors.danger, marginBottom: 4 }}>
+          <div className="bg-white/[0.02] rounded-xl p-3.5">
+            <div className="text-xs font-semibold text-red-400 mb-1">
               ⚠ Regla Overbudget (R6)
             </div>
-            <div style={{ fontSize: 12, color: colors.text, marginBottom: 4 }}>
+            <div className="text-xs text-white mb-1">
               Cuando una solicitud excede el presupuesto del sector, se activa un paso adicional de aprobación.
             </div>
-            <div style={{ fontSize: 11, color: colors.textLight }}>
+            <div className="text-[11px] text-slate-400">
               Aprobador: <strong>{OVERBUDGET_APPROVER}</strong>
             </div>
           </div>
@@ -226,25 +187,21 @@ export default function ApprovalConfigScreen({ onBack }) {
         {/* Rules Summary */}
         <Card title="Resumen de Reglas" icon="📜">
           {[
-            { id: "R1", desc: "Toda SC requiere autorización del Gerente de Área asignado al establecimiento", color: colors.warning },
-            { id: "R2", desc: `SC >= ${formatGuaranies(THRESHOLDS.DIRECTOR_REQUIRED)} requiere aprobación del Director de la empresa`, color: colors.primary },
-            { id: "R3", desc: `SC >= ${formatGuaranies(THRESHOLDS.OVERBUDGET_DIRECTOR)} requiere aprobación de ${OVERBUDGET_APPROVER}`, color: colors.danger },
-            { id: "R4", desc: "Emergencias: SLA reducido (Gerente 4h, Director 8h)", color: colors.accent },
+            { id: "R1", desc: "Toda SC requiere autorización del Gerente de Área asignado al establecimiento", color: "#f59e0b" },
+            { id: "R2", desc: `SC >= ${formatGuaranies(THRESHOLDS.DIRECTOR_REQUIRED)} requiere aprobación del Director de la empresa`, color: "#10b981" },
+            { id: "R3", desc: `SC >= ${formatGuaranies(THRESHOLDS.OVERBUDGET_DIRECTOR)} requiere aprobación de ${OVERBUDGET_APPROVER}`, color: "#ef4444" },
+            { id: "R4", desc: "Emergencias: SLA reducido (Gerente 4h, Director 8h)", color: "#6366f1" },
             { id: "R5", desc: "Sectores Vet/Farmacia requieren autorización de especialista", color: "#7c6bb5" },
-            { id: "R6", desc: "Exceso de presupuesto activa paso de aprobación overbudget", color: colors.danger },
+            { id: "R6", desc: "Exceso de presupuesto activa paso de aprobación overbudget", color: "#ef4444" },
           ].map(rule => (
-            <div key={rule.id} style={{
-              display: "flex", gap: 10, padding: "10px 0",
-              borderBottom: `1px solid ${colors.borderLight}`,
-            }}>
-              <span style={{
-                fontSize: 11, fontWeight: 700, color: rule.color,
-                background: rule.color + "15", padding: "2px 8px",
-                borderRadius: radius.sm, flexShrink: 0, height: "fit-content",
-              }}>
+            <div key={rule.id} className="flex gap-2.5 py-2.5 border-b border-white/[0.06]">
+              <span
+                className="text-[11px] font-bold px-2 py-0.5 rounded flex-shrink-0 h-fit"
+                style={{ color: rule.color, background: rule.color + "15" }}
+              >
                 {rule.id}
               </span>
-              <span style={{ fontSize: 12, color: colors.text, lineHeight: 1.4 }}>{rule.desc}</span>
+              <span className="text-xs text-white leading-relaxed">{rule.desc}</span>
             </div>
           ))}
         </Card>
@@ -255,17 +212,9 @@ export default function ApprovalConfigScreen({ onBack }) {
 
 function Card({ title, icon, children }) {
   return (
-    <div style={{
-      background: colors.card, borderRadius: radius.xl, padding: 16,
-      border: `1px solid ${colors.borderLight}`, marginBottom: 12,
-      boxShadow: shadows.card,
-    }}>
-      <div style={{
-        fontSize: 12, fontWeight: 600, color: colors.textLight,
-        marginBottom: 12, textTransform: "uppercase", letterSpacing: 1,
-        display: "flex", alignItems: "center", gap: 6,
-      }}>
-        {icon && <span style={{ fontSize: 14 }}>{icon}</span>}
+    <div className="bg-white/[0.03] rounded-2xl p-4 border border-white/[0.06] mb-3 shadow-sm">
+      <div className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wide flex items-center gap-1.5">
+        {icon && <span className="text-sm">{icon}</span>}
         {title}
       </div>
       {children}
@@ -275,18 +224,12 @@ function Card({ title, icon, children }) {
 
 function ThresholdRow({ label, value, desc }) {
   return (
-    <div style={{
-      display: "flex", justifyContent: "space-between", alignItems: "center",
-      padding: "8px 0", borderBottom: `1px solid ${colors.borderLight}`,
-    }}>
+    <div className="flex justify-between items-center py-2 border-b border-white/[0.06]">
       <div>
-        <div style={{ fontSize: 13, color: colors.text, fontWeight: 500 }}>{label}</div>
-        <div style={{ fontSize: 10, color: colors.textLight }}>{desc}</div>
+        <div className="text-[13px] text-white font-medium">{label}</div>
+        <div className="text-[10px] text-slate-400">{desc}</div>
       </div>
-      <span style={{
-        fontSize: 14, fontWeight: 700, color: colors.primary,
-        fontFamily: font,
-      }}>
+      <span className="text-sm font-bold text-emerald-400">
         {value}
       </span>
     </div>
