@@ -94,6 +94,7 @@ export default function NewRequestForm({ onSubmit, onCancel, usdRate = 7800, usd
   });
 
   const [items, setItems] = useState([]);
+  const [photos, setPhotos] = useState([]); // File[] for Step 2 photo upload
   const [errors, setErrors] = useState({});
 
   const totalAmount = items.reduce((sum, it) => sum + (it.estimatedAmount || 0), 0);
@@ -156,6 +157,7 @@ export default function NewRequestForm({ onSubmit, onCancel, usdRate = 7800, usd
         totalPrice: it.estimatedAmount,
         notes: "",
       })),
+      _photos: photos, // File[] to upload after request creation
     };
     onSubmit(formToSubmit);
   };
@@ -219,6 +221,8 @@ export default function NewRequestForm({ onSubmit, onCancel, usdRate = 7800, usd
             errors={errors}
             onUpdateForm={update}
             FieldError={FieldError}
+            photos={photos}
+            onSetPhotos={setPhotos}
           />
         )}
 

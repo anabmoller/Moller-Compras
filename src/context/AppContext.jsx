@@ -152,8 +152,29 @@ export function AppProvider({ children }) {
         totalAmount: sanitizeNumber(newReq.totalAmount, { min: 0 }),
       };
 
+      // Extract photos before sending to DB
+      const photos = sanitized._photos || [];
+      delete sanitized._photos;
+
       // Edge Function derives created_by from JWT — no need to pass currentUser
       const uuid = await insertRequest(sanitized);
+
+      // Upload photos to Supabase storage (non-blocking)
+      if (photos.length > 0 && uuid) {
+        for (const file of photos) {
+          const ext = file.name?.split(".").pop() || "jpg";
+          const path = `${uuid}/${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`;
+          try {
+            await supabase.storage.from("attachments").upload(path, file, {
+              contentType: file.type,
+              upsert: false,
+            });
+          } catch (uploadErr) {
+            console.warn("[App] Photo upload failed:", uploadErr);
+          }
+        }
+      }
+
       const req = await fetchSingleRequest(uuid);
       if (req) {
         setRequests(prev => [req, ...prev]);

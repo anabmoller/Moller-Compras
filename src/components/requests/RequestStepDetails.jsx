@@ -1,6 +1,28 @@
+import { useRef } from "react";
 import { PRIORITY_LEVELS } from "../../constants";
 
-export default function RequestStepDetails({ form, errors, onUpdateForm, FieldError }) {
+const MAX_PHOTOS = 5;
+const MAX_SIZE_MB = 25;
+
+export default function RequestStepDetails({ form, errors, onUpdateForm, FieldError, photos = [], onSetPhotos }) {
+  const fileRef = useRef(null);
+
+  const handlePhotoSelect = (e) => {
+    const files = Array.from(e.target.files || []);
+    const valid = files.filter(f => {
+      if (!f.type.startsWith("image/")) return false;
+      if (f.size > MAX_SIZE_MB * 1024 * 1024) return false;
+      return true;
+    });
+    onSetPhotos(prev => [...prev, ...valid].slice(0, MAX_PHOTOS));
+    // Reset input so same file can be selected again
+    if (fileRef.current) fileRef.current.value = "";
+  };
+
+  const removePhoto = (idx) => {
+    onSetPhotos(prev => prev.filter((_, i) => i !== idx));
+  };
+
   return (
     <div className="flex flex-col gap-3.5">
       <div>
@@ -27,7 +49,7 @@ export default function RequestStepDetails({ form, errors, onUpdateForm, FieldEr
       </div>
 
       <div>
-        <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">{"¿"}Por qu{"é"} necesitas estos productos? *</label>
+        <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">¿Por qué necesitas estos productos? *</label>
         <textarea
           value={form.reason}
           onChange={e => onUpdateForm("reason", e.target.value)}
@@ -47,6 +69,52 @@ export default function RequestStepDetails({ form, errors, onUpdateForm, FieldEr
           rows={2}
           className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50 resize-y"
         />
+      </div>
+
+      {/* Photo upload */}
+      <div>
+        <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">
+          Fotos <span className="text-slate-500 font-normal">(opcional, máx {MAX_PHOTOS})</span>
+        </label>
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/*"
+          multiple
+          capture="environment"
+          onChange={handlePhotoSelect}
+          className="hidden"
+        />
+
+        {/* Thumbnail previews */}
+        {photos.length > 0 && (
+          <div className="flex gap-2 flex-wrap mb-2">
+            {photos.map((file, idx) => (
+              <div key={idx} className="relative w-16 h-16 rounded-lg overflow-hidden border border-white/[0.1]">
+                <img
+                  src={URL.createObjectURL(file)}
+                  alt={`Foto ${idx + 1}`}
+                  className="w-full h-full object-cover"
+                />
+                <button
+                  onClick={() => removePhoto(idx)}
+                  className="absolute top-0 right-0 w-5 h-5 bg-red-500 text-white text-[10px] font-bold flex items-center justify-center border-none cursor-pointer rounded-bl-md"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {photos.length < MAX_PHOTOS && (
+          <button
+            onClick={() => fileRef.current?.click()}
+            className="w-full py-2.5 rounded-lg border border-dashed border-white/[0.12] bg-white/[0.02] text-xs text-slate-400 cursor-pointer"
+          >
+            📷 {photos.length === 0 ? "Agregar fotos" : `Agregar más (${photos.length}/${MAX_PHOTOS})`}
+          </button>
+        )}
       </div>
     </div>
   );
