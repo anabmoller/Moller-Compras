@@ -10,7 +10,7 @@ export default function BottomNav({ screen, onNavigate, onNewRequest }) {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 max-w-[480px] w-full bg-[rgba(10,11,15,0.97)] backdrop-blur-xl border-t border-white/[0.06] flex justify-around items-center px-0 pb-[env(safe-area-inset-bottom,16px)] pt-1.5 z-[100]">
+    <nav className="fixed bottom-0 left-0 right-0 w-full bg-[rgba(10,11,15,0.97)] backdrop-blur-xl border-t border-white/[0.06] flex justify-around items-center px-0 pb-[env(safe-area-inset-bottom,16px)] pt-1.5 z-[100]">
       {items.slice(0, 2).map(item => (
         <NavBtn key={item.key} item={item} active={screen === item.key} onClick={() => onNavigate(item.key)} />
       ))}

@@ -34,7 +34,7 @@ export default function AddItemModal({ onClose, onAdd }) {
 
   return (
     <ModalBackdrop onClose={onClose} variant="center">
-      <div className="bg-[#0a0b0f] rounded-2xl max-w-[480px] w-full max-h-[70vh] overflow-hidden flex flex-col animate-slideUp">
+      <div className="bg-[#0a0b0f] rounded-2xl w-full max-w-lg max-h-[80vh] overflow-hidden flex flex-col animate-slideUp">
         {/* Header */}
         <div className="px-5 pt-5 pb-3 flex justify-between items-center">
           <h3 className="text-lg font-semibold text-white m-0">

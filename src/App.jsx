@@ -318,7 +318,7 @@ function AppContent() {
         onRefreshRate={fetchUsdRate}
       />
 
-      <div className="app-main-content max-w-[480px] mx-auto relative min-h-screen">
+      <div className="app-main-content w-full mx-auto relative min-h-screen px-0 sm:px-0">
         <Notification notification={notification} />
 
         <div className="mobile-header">

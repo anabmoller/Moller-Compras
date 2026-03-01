@@ -106,8 +106,8 @@ export default function ApprovalActions({ request, currentUser, onApprove, onRej
 
 function ReasonModal({ title, placeholder, confirmLabel, confirmColor, reason, setReason, onConfirm, onCancel }) {
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-end justify-center z-[1000]">
-      <div className="bg-white/[0.03] w-full max-w-[480px] rounded-t-2xl px-5 pt-6 pb-8 animate-slideUp shadow-2xl"
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-end md:items-center justify-center z-[1000] p-0 md:p-4">
+      <div className="w-full max-w-md rounded-t-2xl md:rounded-2xl px-5 pt-6 pb-8 animate-slideUp shadow-2xl"
         style={{ background: '#111218' }}
       >
         <div className="text-base font-semibold text-white mb-4">

@@ -208,9 +208,13 @@ export default function RequestDetail({
     if (onUpdateRequest) onUpdateRequest(r.id, { adjuntos: updated });
   };
 
+  // ---- Approval chain helper ----
+  const approvalChain = displayTotal > 0 && !isRejected ? getApprovalChain(displayTotal, r.establishment) : [];
+  const approvedCount = r.approvalHistory?.filter(h => h.action === "approved").length || 0;
+
   // ---- RENDER ----
   return (
-    <div className="animate-fadeIn pb-[100px]">
+    <div className="animate-fadeIn pb-[100px] xl:pb-8">
 
       {/* ===== HEADER (nav, title, priority, rejected banner) ===== */}
       <RequestHeader
@@ -236,219 +240,230 @@ export default function RequestDetail({
         </div>
       )}
 
-      {/* ===== PROGRESS BAR ===== */}
-      {!isRejected && !isCancelado && statusIdx >= 0 && (
-        <div className="px-5 pb-1">
-          <div className="flex gap-0.5 mb-1.5 px-0.5">
-            {STATUS_FLOW.map((s, i) => (
-              <div
-                key={s.key}
-                className="flex-1 h-[5px] rounded-sm transition-colors duration-300"
-                style={{ background: i <= statusIdx ? status.color : 'rgba(255,255,255,0.06)' }}
+      {/* ===== DESKTOP ACTION BAR (hidden on mobile) ===== */}
+      <div className="hidden md:flex px-5 py-2 gap-2 items-center">
+        {isBorrador && onConfirm && (
+          <button onClick={() => onConfirm(r.id)} className="px-4 py-2 rounded-lg border-none text-white text-xs font-semibold cursor-pointer shadow-sm" style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}>
+            Confirmar ✓
+          </button>
+        )}
+        {!isBorrador && !isInApproval && !isLast && !isRejected && !isCancelado && onAdvance && (
+          <button onClick={() => onAdvance(r.id)} className="px-4 py-2 rounded-lg border-none text-white text-xs font-semibold cursor-pointer shadow-sm" style={{ background: STATUS_FLOW[statusIdx + 1]?.color || '#10b981' }}>
+            → {STATUS_FLOW[statusIdx + 1]?.label || "Avanzar"}
+          </button>
+        )}
+        {canCancel && (
+          <button onClick={() => setShowCancelModal(true)} className="px-4 py-2 rounded-lg border border-red-500/30 bg-transparent text-red-400 text-xs font-semibold cursor-pointer">
+            🚫 Cancelar Solicitud
+          </button>
+        )}
+        {isRejected && <span className="text-xs text-red-400 font-medium">❌ Solicitud rechazada</span>}
+        {isCancelado && <span className="text-xs text-red-400 font-medium">🚫 Solicitud cancelada</span>}
+        {isLast && <span className="text-xs text-green-400 font-medium">✅ Proceso completado</span>}
+      </div>
+
+      {/* ===== RESPONSIVE GRID: main + sidebar ===== */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-0 xl:gap-6 px-0 xl:px-5">
+
+        {/* ---- MAIN COLUMN ---- */}
+        <div className="xl:col-span-8">
+          {/* Progress bar */}
+          {!isRejected && !isCancelado && statusIdx >= 0 && (
+            <div className="px-5 xl:px-0 pb-1">
+              <div className="flex gap-0.5 mb-1.5 px-0.5">
+                {STATUS_FLOW.map((s, i) => (
+                  <div
+                    key={s.key}
+                    className="flex-1 h-[5px] rounded-sm transition-colors duration-300"
+                    style={{ background: i <= statusIdx ? status.color : 'rgba(255,255,255,0.06)' }}
+                  />
+                ))}
+              </div>
+              <div className="flex justify-between items-center px-0.5">
+                <span className="text-xs font-medium" style={{ color: status.color }}>
+                  Paso {statusIdx + 1} de {STATUS_FLOW.length}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Info grid */}
+          <div className="px-5 xl:px-0 py-2">
+            <InfoGrid>
+              <InfoCell label="Solicitante" value={r.requester} icon="👤" />
+              <InfoCell label="Fecha de Creación" value={fmtDate(r.date)} />
+              <InfoCell label="Establecimiento" value={r.establishment} />
+              <InfoCell
+                label="Urgencia"
+                value={priority?.label || r.priority || r.urgency || "—"}
+                color={urgency?.color}
+                icon={urgency?.icon}
               />
-            ))}
+              <InfoCell
+                label="Sector"
+                value={r.sector || r.type}
+                icon={getSectors().find(s => s.name === (r.sector || r.type))?.icon}
+              />
+              <InfoCell
+                label="Tipo de Producto"
+                value={r.type}
+                icon={getProductTypes().find(t => t.name === r.type)?.icon}
+              />
+              <InfoCell label="Cantidad" value={r.quantity} />
+              <InfoCell label="Asignado a" value={r.assignee || "Sin asignar"} />
+              {r.equipment && <InfoCell label="Equipo" value={r.equipment} span2 />}
+              {displayTotal > 0 && (
+                <InfoCell
+                  label="Total Estimado"
+                  value={`${formatGuaranies(displayTotal)} / USD ${Math.round(displayTotal / rate).toLocaleString("es-PY")}`}
+                  color="#10b981"
+                  span2
+                />
+              )}
+            </InfoGrid>
           </div>
-          <div className="flex justify-between items-center px-0.5">
-            <span className="text-xs font-medium" style={{ color: status.color }}>
-              Paso {statusIdx + 1} de {STATUS_FLOW.length}
-            </span>
-            <div className="flex gap-1.5">
-              {isBorrador && onConfirm && (
-                <button
-                  onClick={() => onConfirm(r.id)}
-                  className="bg-emerald-500 text-white border-none rounded px-3.5 py-1.5 text-[11px] font-semibold cursor-pointer shadow-sm"
-                >
-                  Confirmar ✓
-                </button>
-              )}
-              {!isBorrador && !isInApproval && !isLast && !isRejected && onAdvance && (
-                <button
-                  onClick={() => onAdvance(r.id)}
-                  className="text-white border-none rounded px-3.5 py-1.5 text-[11px] font-semibold cursor-pointer shadow-sm"
-                  style={{ background: STATUS_FLOW[statusIdx + 1]?.color || '#10b981' }}
-                >
-                  → {STATUS_FLOW[statusIdx + 1]?.label}
-                </button>
-              )}
+
+          {/* Note (editable) */}
+          <div className="px-5 xl:px-0 py-2">
+            <div className="bg-white/[0.03] rounded-xl px-4 py-3 border border-white/[0.06]">
+              <div className="text-[11px] text-slate-400 font-medium mb-1.5">
+                Nota / Motivo
+              </div>
+              <textarea
+                value={note}
+                onChange={(e) => { setNote(e.target.value); saveNote(e.target.value); }}
+                placeholder="+ Agregar nota..."
+                rows={2}
+                className="w-full border-none bg-transparent text-[13px] text-white resize-none outline-none p-0 leading-relaxed"
+              />
             </div>
           </div>
-        </div>
-      )}
 
-      {/* ===== APPROVAL FLOW (dots) ===== */}
-      {r.approvalSteps?.length > 0 && (
-        <div className="px-5 py-2">
-          <ApprovalFlow steps={r.approvalSteps} />
-        </div>
-      )}
+          {/* Items table */}
+          <RequestItemsTable
+            items={items}
+            itemsTotal={itemsTotal}
+            displayTotal={displayTotal}
+            rate={rate}
+            isBorrador={isBorrador}
+            onRemoveItem={handleRemoveItem}
+            onShowAddItem={() => setShowAddItem(true)}
+          />
 
-      {/* ===== APPROVAL CHAIN VISUAL STEPPER ===== */}
-      {displayTotal > 0 && !isRejected && (() => {
-        const chain = getApprovalChain(displayTotal, r.establishment);
-        const approvedCount = r.approvalHistory?.filter(h => h.action === "approved").length || 0;
-        return (
-          <div className="px-5 py-2">
-            <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-2">
-              Flujo de Aprobación
+          {/* Quotations + Comparison */}
+          <QuotationComparison
+            request={r}
+            normalizedStatus={normalizedStatus}
+            quotationCount={quotationCount}
+            showQuotationBtn={showQuotationBtn}
+            canManageQuotations={canManageQuotations}
+            rate={rate}
+            onShowQuotations={() => setShowQuotations(true)}
+          />
+
+          {/* Comments */}
+          <RequestComments
+            comments={comments}
+            commentText={commentText}
+            commentInternal={commentInternal}
+            onCommentTextChange={setCommentText}
+            onCommentInternalChange={setCommentInternal}
+            onAddComment={handleAddComment}
+          />
+        </div>
+
+        {/* ---- SIDEBAR COLUMN ---- */}
+        <div className="xl:col-span-4">
+          {/* Approval flow (dots) */}
+          {r.approvalSteps?.length > 0 && (
+            <div className="px-5 xl:px-0 py-2">
+              <ApprovalFlow steps={r.approvalSteps} />
             </div>
-            <div className="bg-white/[0.03] rounded-xl px-4 py-3.5 border border-white/[0.06]">
-              <div className="flex items-center gap-0">
-                {chain.map((step, i) => {
-                  const isApproved = i < approvedCount;
-                  const isPending = i === approvedCount && isInApproval;
-                  const textColor = isApproved ? "#22c55e" : isPending ? "#eab308" : "#64748b";
-                  return (
-                    <div key={i} className="flex items-center" style={{ flex: i < chain.length - 1 ? 1 : "none" }}>
-                      <div className="flex flex-col items-center" style={{ minWidth: 56 }}>
-                        <div
-                          className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all"
-                          style={{
-                            background: isApproved ? "#22c55e" : isPending ? "rgba(234,179,8,0.15)" : "rgba(255,255,255,0.06)",
-                            color: isApproved ? "#fff" : isPending ? "#eab308" : "#475569",
-                            border: isPending ? "2px solid #eab308" : isApproved ? "2px solid #22c55e" : "2px solid rgba(255,255,255,0.08)",
-                            boxShadow: isPending ? "0 0 0 3px rgba(234,179,8,0.12)" : isApproved ? "0 0 0 3px rgba(34,197,94,0.12)" : "none",
-                          }}
-                        >
-                          {isApproved ? "✓" : step.icon}
+          )}
+
+          {/* Approval chain visual stepper */}
+          {approvalChain.length > 0 && (
+            <div className="px-5 xl:px-0 py-2">
+              <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-2">
+                Flujo de Aprobación
+              </div>
+              <div className="bg-white/[0.03] rounded-xl px-4 py-3.5 border border-white/[0.06]">
+                <div className="flex xl:flex-col items-center xl:items-stretch gap-0">
+                  {approvalChain.map((step, i) => {
+                    const isApprovedStep = i < approvedCount;
+                    const isPendingStep = i === approvedCount && isInApproval;
+                    const textColor = isApprovedStep ? "#22c55e" : isPendingStep ? "#eab308" : "#64748b";
+                    return (
+                      <div key={i} className="flex xl:flex-row items-center" style={{ flex: i < approvalChain.length - 1 ? 1 : "none" }}>
+                        <div className="flex flex-col xl:flex-row items-center xl:gap-3" style={{ minWidth: 56 }}>
+                          <div
+                            className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all shrink-0"
+                            style={{
+                              background: isApprovedStep ? "#22c55e" : isPendingStep ? "rgba(234,179,8,0.15)" : "rgba(255,255,255,0.06)",
+                              color: isApprovedStep ? "#fff" : isPendingStep ? "#eab308" : "#475569",
+                              border: isPendingStep ? "2px solid #eab308" : isApprovedStep ? "2px solid #22c55e" : "2px solid rgba(255,255,255,0.08)",
+                              boxShadow: isPendingStep ? "0 0 0 3px rgba(234,179,8,0.12)" : isApprovedStep ? "0 0 0 3px rgba(34,197,94,0.12)" : "none",
+                            }}
+                          >
+                            {isApprovedStep ? "✓" : step.icon}
+                          </div>
+                          <div className="xl:flex-1">
+                            <div className="text-[10px] font-semibold mt-1.5 xl:mt-0 text-center xl:text-left leading-tight" style={{ color: textColor }}>
+                              {step.person}
+                            </div>
+                            <div className="text-[9px] text-slate-500 text-center xl:text-left mt-0.5">
+                              {step.label}
+                            </div>
+                          </div>
                         </div>
-                        <div className="text-[10px] font-semibold mt-1.5 text-center leading-tight" style={{ color: textColor }}>
-                          {step.person}
-                        </div>
-                        <div className="text-[9px] text-slate-500 text-center mt-0.5">
-                          {step.label}
-                        </div>
+                        {i < approvalChain.length - 1 && (
+                          <div
+                            className="h-0.5 xl:h-6 flex-1 xl:w-0.5 xl:flex-none mx-1 xl:mx-0 xl:ml-4 rounded-full"
+                            style={{ background: isApprovedStep ? "#22c55e" : "rgba(255,255,255,0.08)" }}
+                          />
+                        )}
                       </div>
-                      {i < chain.length - 1 && (
-                        <div
-                          className="h-0.5 flex-1 mx-1 rounded-full"
-                          style={{ background: isApproved ? "#22c55e" : "rgba(255,255,255,0.08)" }}
-                        />
-                      )}
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Budget widget */}
+          <div className="px-5 xl:px-0 py-2">
+            <BudgetWidget
+              establishment={r.establishment}
+              sector={r.sector || r.type}
+              requestAmount={displayTotal}
+            />
+          </div>
+
+          {/* Legal notice */}
+          <div className="px-5 xl:px-0 py-1">
+            <div className="bg-amber-500/[0.04] rounded-lg px-3 py-2 border border-amber-500/[0.1]">
+              <div className="text-[10px] text-amber-400 font-medium text-center">
+                Toda compra debe contar con factura legal vigente
               </div>
             </div>
           </div>
-        );
-      })()}
 
-      {/* ===== INFO GRID ===== */}
-      <div className="px-5 py-2">
-        <InfoGrid>
-          <InfoCell label="Solicitante" value={r.requester} icon="👤" />
-          <InfoCell label="Fecha de Creación" value={fmtDate(r.date)} />
-          <InfoCell label="Establecimiento" value={r.establishment} />
-          <InfoCell
-            label="Urgencia"
-            value={priority?.label || r.priority || r.urgency || "—"}
-            color={urgency?.color}
-            icon={urgency?.icon}
-          />
-          <InfoCell
-            label="Sector"
-            value={r.sector || r.type}
-            icon={getSectors().find(s => s.name === (r.sector || r.type))?.icon}
-          />
-          <InfoCell
-            label="Tipo de Producto"
-            value={r.type}
-            icon={getProductTypes().find(t => t.name === r.type)?.icon}
-          />
-          <InfoCell label="Cantidad" value={r.quantity} />
-          <InfoCell label="Asignado a" value={r.assignee || "Sin asignar"} />
-          {r.equipment && <InfoCell label="Equipo" value={r.equipment} span2 />}
-          {displayTotal > 0 && (
-            <InfoCell
-              label="Total Estimado"
-              value={`${formatGuaranies(displayTotal)} / USD ${Math.round(displayTotal / rate).toLocaleString("es-PY")}`}
-              color="#10b981"
-              span2
-            />
-          )}
-        </InfoGrid>
-      </div>
-
-      {/* ===== NOTE (editable) ===== */}
-      <div className="px-5 py-2">
-        <div className="bg-white/[0.03] rounded-xl px-4 py-3 border border-white/[0.06]">
-          <div className="text-[11px] text-slate-400 font-medium mb-1.5">
-            Nota / Motivo
-          </div>
-          <textarea
-            value={note}
-            onChange={(e) => { setNote(e.target.value); saveNote(e.target.value); }}
-            placeholder="+ Agregar nota..."
-            rows={2}
-            className="w-full border-none bg-transparent text-[13px] text-white resize-none outline-none p-0 leading-relaxed"
+          {/* Trazabilidad + Attachments */}
+          <RequestTimeline
+            request={r}
+            statusIdx={statusIdx}
+            showTrazabilidad={showTrazabilidad}
+            onToggleTrazabilidad={() => setShowTrazabilidad(!showTrazabilidad)}
+            showAttachments={showAttachments}
+            onToggleAttachments={() => setShowAttachments(!showAttachments)}
+            attachments={attachments}
+            onAttachmentsChange={handleAttachmentsChange}
           />
         </div>
       </div>
 
-      {/* ===== ITEMS TABLE ===== */}
-      <RequestItemsTable
-        items={items}
-        itemsTotal={itemsTotal}
-        displayTotal={displayTotal}
-        rate={rate}
-        isBorrador={isBorrador}
-        onRemoveItem={handleRemoveItem}
-        onShowAddItem={() => setShowAddItem(true)}
-      />
-
-      {/* ===== BUDGET WIDGET ===== */}
-      <div className="px-5 py-2">
-        <BudgetWidget
-          establishment={r.establishment}
-          sector={r.sector || r.type}
-          requestAmount={displayTotal}
-        />
-      </div>
-
-      {/* ===== LEGAL NOTICE ===== */}
-      <div className="px-5 py-1">
-        <div className="bg-amber-500/[0.04] rounded-lg px-3 py-2 border border-amber-500/[0.1]">
-          <div className="text-[10px] text-amber-400 font-medium text-center">
-            Toda compra debe contar con factura legal vigente
-          </div>
-        </div>
-      </div>
-
-      {/* ===== QUOTATIONS + COMPARISON ===== */}
-      <QuotationComparison
-        request={r}
-        normalizedStatus={normalizedStatus}
-        quotationCount={quotationCount}
-        showQuotationBtn={showQuotationBtn}
-        canManageQuotations={canManageQuotations}
-        rate={rate}
-        onShowQuotations={() => setShowQuotations(true)}
-      />
-
-      {/* ===== COMMENTS ===== */}
-      <RequestComments
-        comments={comments}
-        commentText={commentText}
-        commentInternal={commentInternal}
-        onCommentTextChange={setCommentText}
-        onCommentInternalChange={setCommentInternal}
-        onAddComment={handleAddComment}
-      />
-
-      {/* ===== TRAZABILIDAD + ATTACHMENTS ===== */}
-      <RequestTimeline
-        request={r}
-        statusIdx={statusIdx}
-        showTrazabilidad={showTrazabilidad}
-        onToggleTrazabilidad={() => setShowTrazabilidad(!showTrazabilidad)}
-        showAttachments={showAttachments}
-        onToggleAttachments={() => setShowAttachments(!showAttachments)}
-        attachments={attachments}
-        onAttachmentsChange={handleAttachmentsChange}
-      />
-
-      {/* ===== MOBILE BOTTOM ACTION BAR ===== */}
-      <div className="mobile-bottom-action-bar fixed bottom-16 left-0 right-0 px-5 py-2.5 bg-white/[0.03] border-t border-white/[0.06] flex gap-2 z-30 max-w-[480px] mx-auto">
+      {/* ===== MOBILE BOTTOM ACTION BAR (hidden on md+) ===== */}
+      <div className="mobile-bottom-action-bar fixed bottom-16 left-0 right-0 px-5 py-2.5 bg-[rgba(10,11,15,0.95)] backdrop-blur-xl border-t border-white/[0.06] flex gap-2 z-30">
         {isBorrador && onConfirm && (
           <ActionBtn label="Confirmar ✓" color="#10b981" bg="linear-gradient(135deg, #10b981, #059669)" onClick={() => onConfirm(r.id)} flex={2} />
         )}
@@ -495,8 +510,8 @@ export default function RequestDetail({
         <AddItemModal onClose={() => setShowAddItem(false)} onAdd={handleAddItem} />
       )}
       {showCancelModal && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-5" onClick={() => setShowCancelModal(false)}>
-          <div className="bg-[#1a1b23] rounded-2xl w-full max-w-sm border border-white/[0.08] p-5" onClick={e => e.stopPropagation()}>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowCancelModal(false)}>
+          <div className="bg-[#1a1b23] rounded-2xl w-full max-w-md border border-white/[0.08] p-5" onClick={e => e.stopPropagation()}>
             <div className="text-base font-semibold text-white mb-1">Cancelar Solicitud</div>
             <div className="text-xs text-slate-400 mb-4">Esta acción no se puede deshacer. La solicitud quedará en estado cancelado.</div>
             <textarea
@@ -532,9 +547,9 @@ export default function RequestDetail({
         </div>
       )}
 
-      {/* InfoGrid responsive style */}
+      {/* Responsive styles */}
       <style>{`
-        @media (max-width: 480px) {
+        @media (max-width: 640px) {
           .info-grid { grid-template-columns: 1fr !important; }
         }
         @media (min-width: 768px) {

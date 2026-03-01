@@ -63,8 +63,8 @@ export default function QuotationPanel({ request, onClose, onSave }) {
   }, [quotations, items]);
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-[1000] flex items-end justify-center">
-      <div className="bg-[#0a0b0f] rounded-t-[20px] max-w-[480px] w-full max-h-[90vh] overflow-hidden flex flex-col">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[1000] flex items-end md:items-center justify-center p-0 md:p-4">
+      <div className="bg-[#0a0b0f] rounded-t-[20px] md:rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="px-5 pt-5 pb-3">
           <div className="flex justify-between items-center mb-2">
