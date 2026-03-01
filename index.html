@@ -14,7 +14,24 @@
     <title>Ypoti Compras</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div id="app-fallback" style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#0a0b0f;color:#94a3b8;font-family:Inter,sans-serif;text-align:center;padding:20px;">
+        <div>
+          <div style="width:48px;height:48px;border-radius:12px;background:#10b981;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px;">
+            <span style="color:white;font-size:20px;font-weight:bold;">Y</span>
+          </div>
+          <p style="margin:0;font-size:14px;">Cargando Ypoti Compras...</p>
+        </div>
+      </div>
+    </div>
+    <script>
+      window.addEventListener('error', function(e) {
+        var fb = document.getElementById('app-fallback');
+        if (fb) {
+          fb.innerHTML = '<div><p style="color:#ef4444;font-size:16px;font-weight:600;">Error al cargar la aplicación</p><p style="color:#94a3b8;font-size:13px;max-width:400px;margin:8px auto;">' + (e.message || 'Error desconocido') + '</p><button onclick="location.reload()" style="margin-top:12px;padding:8px 24px;border-radius:8px;border:none;background:#10b981;color:white;cursor:pointer;font-size:14px;">Recargar</button></div>';
+        }
+      });
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
