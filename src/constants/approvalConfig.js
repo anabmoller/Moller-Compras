@@ -68,7 +68,7 @@ export const USER_DISPLAY_NAMES = {
   "paulo": "Paulo Becker",
   "fabiano": "Fabiano Ferreira",
   "pedro": "Pedro Moller",
-  "ronei": "Ronei Ferreira",
+  "ronei": "Ronei Barrios",
   "mauricio": "Mauricio Moller",
   "ana.karina": "Ana Karina",
   "ana": "Ana Moller",

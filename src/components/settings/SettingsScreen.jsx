@@ -6,7 +6,7 @@ const DEV_USERS = [
   { name: "Ramón Sosa", username: "ramon.sosa", role: "solicitante", label: "Solicitante" },
   { name: "Paulo Becker", username: "paulo", role: "gerente", label: "Autoriza / Aprueba hasta ₲5M" },
   { name: "Laura Rivas", username: "laura.rivas", role: "compras", label: "Presupuesta (Compras)" },
-  { name: "Ronei Ferreira", username: "ronei", role: "director", label: "Autoriza todo / Aprueba hasta ₲50M" },
+  { name: "Ronei Barrios", username: "ronei", role: "director", label: "Autoriza todo / Aprueba hasta ₲50M" },
   { name: "Mauricio Moller", username: "mauricio", role: "super_approver", label: "Autoriza y aprueba cualquier monto" },
 ];
 
