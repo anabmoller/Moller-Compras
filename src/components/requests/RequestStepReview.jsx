@@ -70,9 +70,16 @@ export default function RequestStepReview({
       {budgetInfo?.exceeds && (
         <div className="bg-amber-500/[0.06] rounded-lg px-3 py-2.5 border border-amber-500/[0.19]">
           <div className="text-[11px] font-semibold text-amber-400">{"⚠"} Esta solicitud excede el presupuesto asignado</div>
-          <div className="text-[10px] text-slate-400 mt-0.5">Se requerir{"á"} aprobaci{"ó"}n adicional del Director</div>
+          <div className="text-[10px] text-slate-400 mt-0.5">Se requerirá aprobación adicional del Director</div>
         </div>
       )}
+
+      {/* Legal notice */}
+      <div className="bg-amber-500/[0.04] rounded-lg px-3 py-2.5 border border-amber-500/[0.12]">
+        <div className="text-[11px] text-amber-400 font-medium text-center">
+          Toda compra debe contar con factura legal vigente
+        </div>
+      </div>
     </div>
   );
 }

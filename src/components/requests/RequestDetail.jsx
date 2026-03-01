@@ -400,6 +400,15 @@ export default function RequestDetail({
         />
       </div>
 
+      {/* ===== LEGAL NOTICE ===== */}
+      <div className="px-5 py-1">
+        <div className="bg-amber-500/[0.04] rounded-lg px-3 py-2 border border-amber-500/[0.1]">
+          <div className="text-[10px] text-amber-400 font-medium text-center">
+            Toda compra debe contar con factura legal vigente
+          </div>
+        </div>
+      </div>
+
       {/* ===== QUOTATIONS + COMPARISON ===== */}
       <QuotationComparison
         request={r}

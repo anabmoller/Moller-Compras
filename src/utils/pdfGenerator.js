@@ -13,6 +13,8 @@ const STYLES = `
   .header { border-bottom: 3px solid #059669; padding-bottom: 12px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: flex-start; }
   .header-left h1 { font-size: 18px; font-weight: 700; color: #059669; margin-bottom: 2px; }
   .header-left p { font-size: 10px; color: #666; }
+  .company-data { font-size: 9px; color: #888; margin-top: 2px; }
+  .legal-notice { background: #fffbeb; border: 1px solid #fde68a; border-radius: 4px; padding: 6px 10px; font-size: 10px; color: #92400e; margin-top: 12px; text-align: center; font-weight: 600; }
   .header-right { text-align: right; font-size: 11px; color: #666; }
   .header-right .sc-number { font-size: 16px; font-weight: 700; color: #1a1a1a; }
   .section { margin-bottom: 16px; }
@@ -112,6 +114,7 @@ function generateSolicitudHTML(request, usdRate) {
       <div class="header-left">
         <h1>GESTION DE COMPRAS</h1>
         <p>GRUPO RURAL BIOENERGIA — YPOTI AGROPECUARIA</p>
+        <div class="company-data">RUC: 80050418-6 · Ruta 5 Km 350, Horqueta, Concepción · Tel: (0332) 272-200</div>
       </div>
       <div class="header-right">
         <div class="sc-number">${r.id}</div>
@@ -160,7 +163,8 @@ function generateSolicitudHTML(request, usdRate) {
       <div class="justification">${r.reason || r.notes || ""}</div>
     </div>` : ""}
 
-    <div class="footer">Documento generado por YPOTI Compras — ${fmtNow()}</div>
+    <div class="legal-notice">Toda compra debe contar con factura legal vigente</div>
+    <div class="footer">Documento generado por YPOTI Compras — ${fmtNow()} · RUC: 80050418-6</div>
   </body></html>`;
 }
 
@@ -196,6 +200,7 @@ function generateOrdenCompraHTML(request, usdRate) {
       <div class="header-left">
         <h1>ORDEN DE COMPRA</h1>
         <p>GRUPO RURAL BIOENERGIA — YPOTI AGROPECUARIA</p>
+        <div class="company-data">RUC: 80050418-6 · Ruta 5 Km 350, Horqueta, Concepción · Tel: (0332) 272-200</div>
       </div>
       <div class="header-right">
         <div class="sc-number">${ocNumber}</div>
@@ -245,7 +250,8 @@ function generateOrdenCompraHTML(request, usdRate) {
       <div class="signature-line">Aprobado por</div>
     </div>
 
-    <div class="footer">Documento generado por YPOTI Compras — ${fmtNow()}</div>
+    <div class="legal-notice">Toda compra debe contar con factura legal vigente</div>
+    <div class="footer">Documento generado por YPOTI Compras — ${fmtNow()} · RUC: 80050418-6</div>
   </body></html>`;
 }
 
