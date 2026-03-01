@@ -1,6 +1,16 @@
 import { useState, useMemo } from "react";
 import { getEstablishments, getSectors } from "../../constants/parameters";
 
+const SECTOR_CATEGORY_MAP = {
+  "Agricultura": "Agrícola",
+  "Veterinaria": "Veterinaria",
+  "Nutrición": "Nutrición",
+  "Feedlot": "Nutrición",
+  "Mantenimiento": "Operacional",
+  "Transporte": "Operacional",
+  "Administración": "Mercadería",
+};
+
 function autoUnit(code) {
   if (!code) return "unidad";
   if (code.startsWith("AGRO-")) return "tonelada";
@@ -26,13 +36,24 @@ export default function RequestStepItems({
   const [itemUnitPrice, setItemUnitPrice] = useState(0);
   const [showDropdown, setShowDropdown] = useState(false);
 
+  const sectorCategory = SECTOR_CATEGORY_MAP[form.sector] || null;
+
   const filteredProducts = useMemo(() => {
     if (!productSearch || productSearch.length < 2) return [];
     const q = productSearch.toLowerCase();
-    return productCatalog.filter(p =>
+    const matches = productCatalog.filter(p =>
       p.n.toLowerCase().includes(q) || p.c.toLowerCase().includes(q)
-    ).slice(0, 12);
-  }, [productSearch, productCatalog]);
+    );
+    // Sort: matching-sector products first
+    if (sectorCategory) {
+      matches.sort((a, b) => {
+        const aMatch = a.g === sectorCategory ? 0 : 1;
+        const bMatch = b.g === sectorCategory ? 0 : 1;
+        return aMatch - bMatch;
+      });
+    }
+    return matches.slice(0, 12);
+  }, [productSearch, productCatalog, sectorCategory]);
 
   const priceDeviation = useMemo(() => {
     if (!selectedProduct || !itemUnitPrice || !selectedProduct.up) return null;
@@ -126,6 +147,9 @@ export default function RequestStepItems({
               >
                 <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/[0.08] px-1.5 py-0.5 rounded">{p.c}</span>
                 <span className="text-sm text-white flex-1 truncate">{p.n}</span>
+                {sectorCategory && p.g === sectorCategory && (
+                  <span className="text-[9px] text-emerald-400 bg-emerald-500/[0.1] px-1.5 py-0.5 rounded-full font-medium">{form.sector}</span>
+                )}
                 <span className="text-[10px] text-slate-500">{p.g}</span>
               </button>
             ))}
@@ -133,26 +157,17 @@ export default function RequestStepItems({
         )}
       </div>
 
-      {/* Reference pricing (C3) */}
+      {/* Product selected: compact reference + inputs */}
       {selectedProduct && (
-        <div className="bg-blue-500/[0.04] rounded-xl px-3.5 py-3 border border-blue-500/[0.12]">
-          <div className="text-xs font-semibold text-blue-400 mb-2 flex items-center gap-1.5">
-            {"📊"} Referencia de Precios
-          </div>
-          <div className="text-[11px] text-slate-300 leading-relaxed">
-            <div>Precio unitario ref.: <span className="font-semibold text-white">{fmtGs(selectedProduct.up)}</span> / {selectedProduct.u}
-              {selectedProduct.ld && <span className="text-slate-500"> ({selectedProduct.ld} - {selectedProduct.ls})</span>}
-            </div>
-            <div className="mt-0.5">En USD: <span className="font-semibold text-white">$ {usdRate > 0 ? Math.round(selectedProduct.up / usdRate).toLocaleString("en-US") : "—"}</span> / {selectedProduct.u}
-              <span className="text-slate-500"> (TC: 1 USD = ₲ {usdRate.toLocaleString("es-PY")} {usdLive ? "(live)" : "(offline)"})</span>
-            </div>
-            {itemQty > 1 && selectedProduct.up > 0 && (
-              <div className="mt-0.5">Monto Est: <span className="font-semibold text-white">{fmtGs(itemQty * selectedProduct.up)}</span> ({itemQty} × {fmtGs(selectedProduct.up)})</div>
-            )}
+        <div className="bg-white/[0.03] rounded-xl px-3.5 py-3 border border-white/[0.08]">
+          {/* Compact reference line */}
+          <div className="text-[11px] text-slate-400 mb-2.5">
+            Ref: <span className="text-white font-medium">{fmtGs(selectedProduct.up)}</span>/{selectedProduct.u}
+            {selectedProduct.ld && <span className="text-slate-500"> · {selectedProduct.ls} ({selectedProduct.ld})</span>}
           </div>
 
-          {/* Qty + Amount + Add */}
-          <div className="mt-3 flex gap-2 items-end">
+          {/* Qty + Price side-by-side + Add */}
+          <div className="flex gap-2 items-end">
             <div className="flex-1">
               <label className="block text-[10px] text-slate-400 mb-1">Cantidad ({autoUnit(selectedProduct.c)})</label>
               <input
@@ -188,8 +203,10 @@ export default function RequestStepItems({
               + Agregar
             </button>
           </div>
+
+          {/* Single total line */}
           {itemAmount > 0 && (
-            <div className="text-[10px] text-emerald-400 mt-1">Total: {fmtGs(itemAmount)} ({itemQty} × {fmtGs(itemUnitPrice)})</div>
+            <div className="text-[11px] text-emerald-400 mt-1.5 font-medium">Total: {fmtGs(itemAmount)}</div>
           )}
 
           {/* Price deviation warning */}

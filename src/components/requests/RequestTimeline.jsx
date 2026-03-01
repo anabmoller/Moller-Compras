@@ -86,45 +86,82 @@ export default function RequestTimeline({
         )}
 
         {/* Pipeline timeline (shown when expanded) */}
-        {showTrazabilidad && (
-          <div className="bg-white/[0.03] rounded-xl px-4 py-3.5 border border-white/[0.06]">
-            {STATUS_FLOW.map((s, i) => {
-              const reached = i <= statusIdx;
-              return (
-                <div key={s.key} className="flex gap-3">
-                  <div className="flex flex-col items-center w-6">
-                    <div
-                      className="w-[18px] h-[18px] rounded-full flex items-center justify-center text-[9px] text-white transition-all duration-300"
-                      style={{
-                        background: reached ? s.color : 'rgba(255,255,255,0.06)',
-                        border: i === statusIdx ? `2px solid ${s.color}` : 'none',
-                        boxShadow: i === statusIdx ? `0 0 0 3px ${s.color}20` : 'none',
-                      }}
-                    >
-                      {reached ? "✓" : ""}
-                    </div>
-                    {i < STATUS_FLOW.length - 1 && (
+        {showTrazabilidad && (() => {
+          // Build lookup: status key → who performed the action
+          const statusPerformers = {};
+          if (r.approvalHistory) {
+            for (const entry of r.approvalHistory) {
+              const actionToStatus = {
+                confirmed: "confirmado",
+                approved: r.approvalHistory.filter(e => e.action === "approved").length > 1 ? null : "aprobado",
+                advanced: entry.step?.toLowerCase().includes("presup") ? "presupuestado" : null,
+              };
+              // Map by step name or action
+              if (entry.step) {
+                const stepLower = entry.step.toLowerCase();
+                for (const s of STATUS_FLOW) {
+                  if (s.label.toLowerCase().includes(stepLower.split(":")[0].trim().slice(0, 6)) ||
+                      stepLower.includes(s.key.slice(0, 5))) {
+                    statusPerformers[s.key] = entry.by;
+                  }
+                }
+              }
+              // Direct action mapping
+              if (entry.action === "confirmed") statusPerformers["confirmado"] = entry.by;
+              if (entry.action === "approved") statusPerformers["aprobado"] = entry.by;
+              if (entry.action === "advanced") statusPerformers[entry.step?.toLowerCase()?.includes("presup") ? "presupuestado" : "en_proceso"] = entry.by;
+            }
+            // Also set borrador performer from the request creator
+            if (r.createdBy) statusPerformers["borrador"] = r.createdBy;
+          }
+
+          return (
+            <div className="bg-white/[0.03] rounded-xl px-4 py-3.5 border border-white/[0.06]">
+              {STATUS_FLOW.map((s, i) => {
+                const reached = i <= statusIdx;
+                const performer = statusPerformers[s.key];
+                return (
+                  <div key={s.key} className="flex gap-3">
+                    <div className="flex flex-col items-center w-6">
                       <div
-                        className="w-0.5 h-[22px]"
-                        style={{ background: i < statusIdx ? s.color : 'rgba(255,255,255,0.06)' }}
-                      />
-                    )}
-                  </div>
-                  <div className="pb-2 min-w-0">
-                    <div
-                      className={`text-xs ${reached ? 'font-semibold text-white' : 'font-normal text-slate-400'}`}
-                    >
-                      {s.icon} {s.label}
+                        className="w-[18px] h-[18px] rounded-full flex items-center justify-center text-[9px] text-white transition-all duration-300"
+                        style={{
+                          background: reached ? s.color : 'rgba(255,255,255,0.06)',
+                          border: i === statusIdx ? `2px solid ${s.color}` : 'none',
+                          boxShadow: i === statusIdx ? `0 0 0 3px ${s.color}20` : 'none',
+                        }}
+                      >
+                        {reached ? "✓" : ""}
+                      </div>
+                      {i < STATUS_FLOW.length - 1 && (
+                        <div
+                          className="w-0.5 h-[22px]"
+                          style={{ background: i < statusIdx ? s.color : 'rgba(255,255,255,0.06)' }}
+                        />
+                      )}
                     </div>
-                    {reached && i === 0 && (
-                      <div className="text-[10px] text-slate-400">{fmtDate(r.date)}</div>
-                    )}
+                    <div className="pb-2 min-w-0">
+                      <div
+                        className={`text-xs ${reached ? 'font-semibold text-white' : 'font-normal text-slate-400'}`}
+                      >
+                        {s.icon} {s.label}
+                      </div>
+                      {reached && performer && (
+                        <div className="text-[10px] text-slate-500">por {performer}</div>
+                      )}
+                      {reached && i === 0 && !performer && (
+                        <div className="text-[10px] text-slate-400">{fmtDate(r.date)}</div>
+                      )}
+                      {reached && i === 0 && performer && (
+                        <div className="text-[10px] text-slate-400">{fmtDate(r.date)}</div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
+                );
+              })}
+            </div>
+          );
+        })()}
 
         {!showTrazabilidad && (r.approvalHistory?.length || 0) === 0 && (
           <div className="text-xs text-slate-400 py-1.5">

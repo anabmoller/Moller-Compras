@@ -202,7 +202,7 @@ export default function UserFormModal({ user, title, establishments, existingNam
       onClick={onClose}
     >
       <div
-        className="bg-[#111218] rounded-2xl p-6 w-full max-w-[440px] max-h-[90vh] overflow-auto shadow-2xl"
+        className="bg-[#1a1b23] rounded-2xl p-6 w-full max-w-[440px] max-h-[90vh] overflow-auto shadow-2xl border border-white/[0.08]"
         onClick={e => e.stopPropagation()}
       >
         <h3 className="text-xl font-semibold text-white mb-5 mt-0">
