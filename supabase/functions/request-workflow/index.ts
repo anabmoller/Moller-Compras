@@ -408,6 +408,63 @@ Deno.serve(async (req) => {
       }
 
       // ─────────────────────────────────────────────────
+      // CANCEL — Requester or super-approver cancels request
+      // ─────────────────────────────────────────────────
+      case "cancel": {
+        const { requestUuid, reason } = payload;
+        if (!requestUuid) throw new Error("requestUuid is required");
+        if (!reason?.trim()) throw new Error("Reason is required for cancellation");
+
+        // Load request
+        const { data: request, error: reqErr } = await supabaseAdmin
+          .from("requests")
+          .select("*")
+          .eq("id", requestUuid)
+          .single();
+        if (reqErr) throw reqErr;
+
+        // Block cancellation from terminal statuses
+        const BLOCKED_STATUSES = ["recibido", "sap", "cancelado"];
+        if (BLOCKED_STATUSES.includes(request.status)) {
+          throw new Error(`No se puede cancelar una solicitud en estado: ${request.status}`);
+        }
+
+        // Authorization: creator or super-approver
+        const isCreator = request.created_by === caller.id;
+        const totalAmount = Number(request.total_amount) || 0;
+        const isSuperApprover = canUserApproveStep(
+          caller.username,
+          { approverUsername: "__nobody__" },
+          totalAmount,
+        );
+        if (!isCreator && !isSuperApprover) {
+          throw new Error("Solo el creador o un super-aprobador puede cancelar");
+        }
+
+        const now = new Date().toISOString();
+
+        // Update request status to cancelado
+        const { error: updateErr } = await supabaseAdmin
+          .from("requests")
+          .update({ status: "cancelado", rejected_at: now })
+          .eq("id", requestUuid);
+        if (updateErr) throw updateErr;
+
+        // Insert history entry
+        await supabaseAdmin.from("approval_history").insert({
+          request_id: requestUuid,
+          action: "cancelled",
+          performed_by: caller.id,
+          performed_by_name: caller.name,
+          note: sanitizeMultiline(reason, 1000) || `Cancelado por ${caller.name}`,
+        });
+
+        return new Response(JSON.stringify({ ok: true }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      // ─────────────────────────────────────────────────
       // ADVANCE — Move to next status in STATUS_FLOW
       // ─────────────────────────────────────────────────
       case "advance": {

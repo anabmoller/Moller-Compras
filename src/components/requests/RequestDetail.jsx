@@ -97,12 +97,14 @@ function getApprovalChain(amount, establishment) {
 // ============================================================
 export default function RequestDetail({
   request: r, onBack, onAdvance, onUpdateRequest, canManageQuotations,
-  onConfirm, onApprove, onReject, onRevision,
+  onConfirm, onApprove, onReject, onRevision, onCancel,
   onPrev, onNext, hasPrev, hasNext, usdRate,
 }) {
   const { currentUser } = useAuth();
   const [showQuotations, setShowQuotations] = useState(false);
   const [showAddItem, setShowAddItem] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [cancelReason, setCancelReason] = useState("");
 
   // Comments state
   const [comments, setComments] = useState(r.comments || []);
@@ -143,7 +145,10 @@ export default function RequestDetail({
   const isLast = statusIdx === STATUS_FLOW.length - 1;
   const isRejected = r.status === "rechazado";
   const isBorrador = normalizedStatus === "borrador";
+  const isCancelado = r.status === "cancelado";
   const isInApproval = normalizedStatus === "pend_autorizacion" || normalizedStatus === "pend_aprobacion";
+  const canCancel = onCancel && !isCancelado && normalizedStatus !== "recibido" && normalizedStatus !== "sap"
+    && (r.createdBy === currentUser?.name || currentUser?.role === "diretoria");
 
   const urgency = URGENCY_LEVELS.find(u => u.value === (r.priority || r.urgency));
   const priority = getPriorityDisplay(r.priority || r.urgency);
@@ -232,7 +237,7 @@ export default function RequestDetail({
       )}
 
       {/* ===== PROGRESS BAR ===== */}
-      {!isRejected && statusIdx >= 0 && (
+      {!isRejected && !isCancelado && statusIdx >= 0 && (
         <div className="px-5 pb-1">
           <div className="flex gap-0.5 mb-1.5 px-0.5">
             {STATUS_FLOW.map((s, i) => (
@@ -447,7 +452,7 @@ export default function RequestDetail({
         {isBorrador && onConfirm && (
           <ActionBtn label="Confirmar ✓" color="#10b981" bg="linear-gradient(135deg, #10b981, #059669)" onClick={() => onConfirm(r.id)} flex={2} />
         )}
-        {!isBorrador && !isInApproval && !isLast && !isRejected && onAdvance && (
+        {!isBorrador && !isInApproval && !isLast && !isRejected && !isCancelado && onAdvance && (
           <ActionBtn
             label={`→ ${STATUS_FLOW[statusIdx + 1]?.label || "Avanzar"}`}
             color={STATUS_FLOW[statusIdx + 1]?.color || "#10b981"}
@@ -455,12 +460,20 @@ export default function RequestDetail({
             flex={2}
           />
         )}
-        {(isBorrador || (!isBorrador && !isInApproval && !isLast && !isRejected)) && (
+        {(isBorrador || (!isBorrador && !isInApproval && !isLast && !isRejected && !isCancelado)) && (
           <ActionBtn label="✕" color="#ef4444" outline onClick={onBack} />
+        )}
+        {canCancel && (
+          <ActionBtn label="Cancelar" icon="🚫" color="#ef4444" outline onClick={() => setShowCancelModal(true)} />
         )}
         {isRejected && (
           <div className="flex-1 text-xs text-red-400 flex items-center justify-center font-medium">
             ❌ Solicitud rechazada
+          </div>
+        )}
+        {isCancelado && (
+          <div className="flex-1 text-xs text-red-400 flex items-center justify-center font-medium">
+            🚫 Solicitud cancelada
           </div>
         )}
         {isLast && (
@@ -480,6 +493,43 @@ export default function RequestDetail({
       )}
       {showAddItem && (
         <AddItemModal onClose={() => setShowAddItem(false)} onAdd={handleAddItem} />
+      )}
+      {showCancelModal && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-5" onClick={() => setShowCancelModal(false)}>
+          <div className="bg-[#1a1b23] rounded-2xl w-full max-w-sm border border-white/[0.08] p-5" onClick={e => e.stopPropagation()}>
+            <div className="text-base font-semibold text-white mb-1">Cancelar Solicitud</div>
+            <div className="text-xs text-slate-400 mb-4">Esta acción no se puede deshacer. La solicitud quedará en estado cancelado.</div>
+            <textarea
+              value={cancelReason}
+              onChange={e => setCancelReason(e.target.value)}
+              placeholder="Motivo de cancelación (requerido)..."
+              rows={3}
+              className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none mb-3 resize-none focus:border-red-500/50"
+              autoFocus
+            />
+            <div className="flex gap-2">
+              <button
+                onClick={() => { setShowCancelModal(false); setCancelReason(""); }}
+                className="flex-1 py-2.5 rounded-lg border border-white/[0.06] bg-transparent text-white text-sm font-medium cursor-pointer"
+              >
+                Volver
+              </button>
+              <button
+                onClick={() => {
+                  if (!cancelReason.trim()) return;
+                  onCancel(r.id, cancelReason.trim());
+                  setShowCancelModal(false);
+                  setCancelReason("");
+                }}
+                disabled={!cancelReason.trim()}
+                className="flex-1 py-2.5 rounded-lg border-none text-white text-sm font-semibold cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                style={{ background: cancelReason.trim() ? '#ef4444' : '#ef444466' }}
+              >
+                Confirmar Cancelación
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* InfoGrid responsive style */}

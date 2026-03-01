@@ -26,6 +26,7 @@ import {
   updateRequestInDb,
   addCommentInDb,
   addQuotationInDb,
+  cancelRequestInDb,
 } from "../lib/queries";
 
 const AppContext = createContext(null);
@@ -316,6 +317,31 @@ export function AppProvider({ children }) {
     }
   }, [showNotif, currentUser, requests, refreshRequest, notifyStatusChange]);
 
+  // ---- Cancel request (requester or super-approver) ----
+  const cancelRequest = useCallback(async (reqId, reason = "") => {
+    if (!currentUser) return;
+
+    const req = requests.find(r => r.id === reqId);
+    if (!req) return;
+
+    // Block from terminal statuses
+    const blocked = ["recibido", "sap", "cancelado"];
+    if (blocked.includes(normalizeStatus(req.status))) {
+      showNotif("No se puede cancelar en este estado", "error");
+      return;
+    }
+
+    try {
+      await cancelRequestInDb(req._uuid, reason);
+      await refreshRequest(req._uuid);
+      notifyStatusChange(req, "cancelado", { reason });
+      showNotif("Solicitud cancelada");
+    } catch (err) {
+      console.error("[App] cancelRequest failed:", err);
+      showNotif(err?.message || "Error al cancelar", "error");
+    }
+  }, [currentUser, requests, showNotif, refreshRequest, notifyStatusChange]);
+
   // ---- Update request (general edits) ----
   const updateRequest = useCallback(async (reqId, updates) => {
     if (!currentUser) return;
@@ -418,6 +444,7 @@ export function AppProvider({ children }) {
       rejectRequest,
       sendForRevision,
       advanceStatus,
+      cancelRequest,
       updateRequest,
     }}>
       {children}

@@ -51,7 +51,7 @@ function AppContent() {
   const {
     requests, notification, statusCounts, pendingApprovals, showNotif,
     addRequest, confirmRequest, approveStep, rejectRequest, sendForRevision,
-    advanceStatus, updateRequest, dataLoading,
+    advanceStatus, cancelRequest, updateRequest, dataLoading,
   } = useApp();
 
   const [screen, setScreen] = useState("dashboard");
@@ -208,6 +208,7 @@ function AppContent() {
           onApprove={approveStep}
           onReject={rejectRequest}
           onRevision={sendForRevision}
+          onCancel={cancelRequest}
           onPrev={hasPrev ? () => setSelectedRequestId(filtered[currentIdx - 1].id) : null}
           onNext={hasNext ? () => setSelectedRequestId(filtered[currentIdx + 1].id) : null}
           hasPrev={hasPrev}

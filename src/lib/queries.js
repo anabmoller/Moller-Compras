@@ -363,3 +363,9 @@ export async function addQuotationInDb(requestUuid, quotation) {
     action: "add-quotation", requestUuid, quotation,
   });
 }
+
+export async function cancelRequestInDb(requestUuid, reason) {
+  await invokeEdgeFunction("request-workflow", {
+    action: "cancel", requestUuid, reason,
+  });
+}
