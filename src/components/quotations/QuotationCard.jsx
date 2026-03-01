@@ -4,8 +4,10 @@ export default function QuotationCard({
   const q = quotation;
   return (
     <div
-      onClick={() => onSelect(q.id)}
-      className={`rounded-xl px-4 py-3.5 mb-2 cursor-pointer relative ${
+      onClick={() => onSelect && onSelect(q.id)}
+      className={`rounded-xl px-4 py-3.5 mb-2 relative ${
+        onSelect ? 'cursor-pointer' : ''
+      } ${
         q.selected ? 'bg-green-500/[0.05] border-2 border-green-500' : 'bg-white/[0.03] border border-white/[0.06]'
       }`}
     >

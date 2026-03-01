@@ -51,7 +51,7 @@ function AppContent() {
   const {
     requests, notification, statusCounts, pendingApprovals, showNotif,
     addRequest, confirmRequest, approveStep, rejectRequest, sendForRevision,
-    advanceStatus, cancelRequest, updateRequest, dataLoading,
+    advanceStatus, cancelRequest, updateRequest, dataLoading, setDevOverride,
   } = useApp();
 
   const [screen, setScreen] = useState("dashboard");
@@ -78,6 +78,20 @@ function AppContent() {
       avatar: devMode.name.split(/\s+/).map(w => w[0]).join("").slice(0, 2).toUpperCase(),
     };
   }, [currentUser, devMode]);
+
+  // Sync dev mode override to AppContext for permission checks in mutations
+  useEffect(() => {
+    if (devMode) {
+      setDevOverride({
+        ...currentUser,
+        name: devMode.name,
+        role: devMode.role,
+        email: devMode.username || currentUser?.email,
+      });
+    } else {
+      setDevOverride(null);
+    }
+  }, [devMode, currentUser, setDevOverride]);
 
   const effectiveCan = useCallback((permission) => {
     if (!devMode) return can(permission);

@@ -39,6 +39,10 @@ export function AppProvider({ children }) {
   const [notification, setNotification] = useState(null);
   const [dataLoading, setDataLoading] = useState(true);
 
+  // Dev mode override: when active, permission checks use this instead of currentUser
+  const [devOverride, setDevOverride] = useState(null);
+  const effectiveUser = useMemo(() => devOverride || currentUser, [devOverride, currentUser]);
+
   const showNotif = useCallback((msg, type = "success") => {
     setNotification({ msg, type });
     setTimeout(() => setNotification(null), 3000);
@@ -135,7 +139,7 @@ export function AppProvider({ children }) {
 
   // ---- Create new request (status: borrador) ----
   const addRequest = useCallback(async (newReq) => {
-    if (!hasPermission(currentUser, "create_request")) {
+    if (!hasPermission(effectiveUser, "create_request")) {
       showNotif("Sin permiso para crear solicitudes", "error");
       return;
     }
@@ -185,15 +189,15 @@ export function AppProvider({ children }) {
       console.error("[App] addRequest failed:", err);
       showNotif("Error al crear solicitud", "error");
     }
-  }, [showNotif, currentUser]);
+  }, [showNotif, effectiveUser]);
 
   // ---- Confirm request → Edge Function calculates steps server-side ----
   const confirmRequest = useCallback(async (reqId) => {
-    if (!currentUser) return;
+    if (!effectiveUser) return;
 
     const req = requests.find(r => r.id === reqId);
     if (!req) return;
-    if (req.createdBy !== currentUser.name && !hasPermission(currentUser, "view_all_requests")) return;
+    if (req.createdBy !== effectiveUser.name && !hasPermission(effectiveUser, "view_all_requests")) return;
     if (req.status !== "borrador") return;
 
     try {
@@ -215,7 +219,7 @@ export function AppProvider({ children }) {
         showNotif("Error al confirmar solicitud", "error");
       }
     }
-  }, [currentUser, requests, showNotif, refreshRequest, notifyStatusChange]);
+  }, [effectiveUser, requests, showNotif, refreshRequest, notifyStatusChange]);
 
   // ---- Approve current step ----
   const approveStep = useCallback(async (reqId, comment = "") => {
@@ -224,7 +228,13 @@ export function AppProvider({ children }) {
 
     const currentStep = getCurrentStep(req.approvalSteps);
     if (!currentStep) return;
-    if (!canUserApproveStep(currentUser, currentStep, req.totalAmount)) return;
+    if (!canUserApproveStep(effectiveUser, currentStep, req.totalAmount)) return;
+
+    // Block approval if quotations exist but no winner selected
+    if (req.quotations?.length > 0 && !req.quotations.some(q => q.selected)) {
+      showNotif("Debe seleccionar una cotización ganadora antes de aprobar", "error");
+      return;
+    }
 
     try {
       // Edge Function verifies approver, updates step, handles budget
@@ -242,11 +252,11 @@ export function AppProvider({ children }) {
       console.error("[App] approveStep failed:", err);
       showNotif("Error al aprobar", "error");
     }
-  }, [currentUser, requests, showNotif, refreshRequest, notifyStatusChange]);
+  }, [effectiveUser, requests, showNotif, refreshRequest, notifyStatusChange]);
 
   // ---- Reject request ----
   const rejectRequest = useCallback(async (reqId, reason = "") => {
-    if (!hasPermission(currentUser, "approve_manager") && !hasPermission(currentUser, "approve_purchase")) {
+    if (!hasPermission(effectiveUser, "approve_manager") && !hasPermission(effectiveUser, "approve_purchase")) {
       showNotif("Sin permiso para rechazar solicitudes", "error");
       return;
     }
@@ -256,7 +266,7 @@ export function AppProvider({ children }) {
 
     const currentStep = getCurrentStep(req.approvalSteps);
     if (!currentStep) return;
-    if (currentUser?.email !== currentStep.approverUsername) return;
+    if (!canUserApproveStep(effectiveUser, currentStep, req.totalAmount)) return;
 
     try {
       // Edge Function verifies approver and handles rejection
@@ -268,11 +278,11 @@ export function AppProvider({ children }) {
       console.error("[App] rejectRequest failed:", err);
       showNotif("Error al rechazar", "error");
     }
-  }, [currentUser, requests, showNotif, refreshRequest, notifyStatusChange]);
+  }, [effectiveUser, requests, showNotif, refreshRequest, notifyStatusChange]);
 
   // ---- Send for revision (back to borrador) ----
   const sendForRevision = useCallback(async (reqId, reason = "") => {
-    if (!hasPermission(currentUser, "approve_manager") && !hasPermission(currentUser, "approve_purchase")) {
+    if (!hasPermission(effectiveUser, "approve_manager") && !hasPermission(effectiveUser, "approve_purchase")) {
       showNotif("Sin permiso para devolver solicitudes", "error");
       return;
     }
@@ -289,11 +299,11 @@ export function AppProvider({ children }) {
       console.error("[App] sendForRevision failed:", err);
       showNotif("Error al devolver", "error");
     }
-  }, [currentUser, requests, showNotif, refreshRequest]);
+  }, [effectiveUser, requests, showNotif, refreshRequest]);
 
   // ---- Advance status (post-approval flow) ----
   const advanceStatus = useCallback(async (reqId) => {
-    if (!hasPermission(currentUser, "advance_status")) {
+    if (!hasPermission(effectiveUser, "advance_status")) {
       showNotif("Sin permiso para avanzar el status", "error");
       return;
     }
@@ -315,11 +325,11 @@ export function AppProvider({ children }) {
       console.error("[App] advanceStatus failed:", err);
       showNotif("Error al avanzar status", "error");
     }
-  }, [showNotif, currentUser, requests, refreshRequest, notifyStatusChange]);
+  }, [showNotif, effectiveUser, requests, refreshRequest, notifyStatusChange]);
 
   // ---- Cancel request (requester or super-approver) ----
   const cancelRequest = useCallback(async (reqId, reason = "") => {
-    if (!currentUser) return;
+    if (!effectiveUser) return;
 
     const req = requests.find(r => r.id === reqId);
     if (!req) return;
@@ -340,16 +350,16 @@ export function AppProvider({ children }) {
       console.error("[App] cancelRequest failed:", err);
       showNotif(err?.message || "Error al cancelar", "error");
     }
-  }, [currentUser, requests, showNotif, refreshRequest, notifyStatusChange]);
+  }, [effectiveUser, requests, showNotif, refreshRequest, notifyStatusChange]);
 
   // ---- Update request (general edits) ----
   const updateRequest = useCallback(async (reqId, updates) => {
-    if (!currentUser) return;
+    if (!effectiveUser) return;
 
     const target = requests.find(r => r.id === reqId);
     if (!target) return;
 
-    if (target.createdBy !== currentUser.name && !hasPermission(currentUser, "view_all_requests")) {
+    if (target.createdBy !== effectiveUser.name && !hasPermission(effectiveUser, "view_all_requests")) {
       showNotif("Sin permiso para editar esta solicitud", "error");
       return;
     }
@@ -405,7 +415,7 @@ export function AppProvider({ children }) {
       console.error("[App] updateRequest failed:", err);
       showNotif("Error al actualizar", "error");
     }
-  }, [currentUser, requests, showNotif, refreshRequest]);
+  }, [effectiveUser, requests, showNotif, refreshRequest]);
 
   // ---- Computed values (memoized) ----
   const statusCounts = useMemo(() => {
@@ -426,9 +436,9 @@ export function AppProvider({ children }) {
     return requests.filter(r => {
       if (!r.approvalSteps || r.status === "rechazado") return false;
       const step = getCurrentStep(r.approvalSteps);
-      return step && currentUser && canUserApproveStep(currentUser, step, r.totalAmount);
+      return step && effectiveUser && canUserApproveStep(effectiveUser, step, r.totalAmount);
     });
-  }, [requests, currentUser]);
+  }, [requests, effectiveUser]);
 
   return (
     <AppContext.Provider value={{
@@ -446,6 +456,8 @@ export function AppProvider({ children }) {
       advanceStatus,
       cancelRequest,
       updateRequest,
+      effectiveUser,
+      setDevOverride,
     }}>
       {children}
     </AppContext.Provider>

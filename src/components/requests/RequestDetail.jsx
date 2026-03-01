@@ -12,6 +12,7 @@ import ApprovalFlow from "../approval/ApprovalFlow";
 import ApprovalActions from "../approval/ApprovalActions";
 import BudgetWidget from "../approval/BudgetWidget";
 import { useAuth } from "../../context/AuthContext";
+import { useApp } from "../../context/AppContext";
 import { formatGuaranies } from "../../constants/budgets";
 import { getStatusDisplay, getPriorityDisplay, normalizeStatus } from "../../utils/statusHelpers";
 import { fmtDate } from "../../utils/dateFormatters";
@@ -101,6 +102,8 @@ export default function RequestDetail({
   onPrev, onNext, hasPrev, hasNext, usdRate,
 }) {
   const { currentUser } = useAuth();
+  const { effectiveUser: ctxEffectiveUser } = useApp();
+  const activeUser = ctxEffectiveUser || currentUser;
   const [showQuotations, setShowQuotations] = useState(false);
   const [showAddItem, setShowAddItem] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -148,7 +151,7 @@ export default function RequestDetail({
   const isCancelado = r.status === "cancelado";
   const isInApproval = normalizedStatus === "pend_autorizacion" || normalizedStatus === "pend_aprobacion";
   const canCancel = onCancel && !isCancelado && normalizedStatus !== "recibido" && normalizedStatus !== "sap"
-    && (r.createdBy === currentUser?.name || currentUser?.role === "diretoria");
+    && (r.createdBy === activeUser?.name || activeUser?.role === "diretoria");
 
   const urgency = URGENCY_LEVELS.find(u => u.value === (r.priority || r.urgency));
   const priority = getPriorityDisplay(r.priority || r.urgency);
@@ -169,9 +172,9 @@ export default function RequestDetail({
     if (!commentText.trim()) return;
     const newComment = {
       id: generateCommentId(),
-      author: currentUser.name,
-      autor: currentUser.name,
-      avatar: currentUser.avatar,
+      author: activeUser.name,
+      autor: activeUser.name,
+      avatar: activeUser.avatar,
       createdAt: new Date().toISOString(),
       fecha: new Date().toISOString(),
       texto: commentText.trim(),
@@ -234,7 +237,7 @@ export default function RequestDetail({
       {isInApproval && r.approvalSteps && (
         <div className="px-5 mb-3">
           <ApprovalActions
-            request={r} currentUser={currentUser}
+            request={r} currentUser={activeUser}
             onApprove={onApprove} onReject={onReject} onRevision={onRevision}
           />
         </div>
@@ -502,6 +505,7 @@ export default function RequestDetail({
       {showQuotations && (
         <QuotationPanel
           request={r}
+          currentUser={activeUser}
           onClose={() => setShowQuotations(false)}
           onSave={(reqId, updates) => { onUpdateRequest(reqId, updates); setShowQuotations(false); }}
         />

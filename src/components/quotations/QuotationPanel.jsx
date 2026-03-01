@@ -1,17 +1,34 @@
 import { useState, useMemo } from "react";
 import { generateQuotationId } from "../../utils/ids";
+import { SUPER_APPROVERS, getCurrentStep, canUserApproveStep } from "../../constants/approvalConfig";
 import QuotationComparisonTable from "./QuotationComparisonTable";
 import QuotationCard from "./QuotationCard";
 import QuotationAddForm from "./QuotationAddForm";
 
-export default function QuotationPanel({ request, onClose, onSave }) {
+export default function QuotationPanel({ request, currentUser, onClose, onSave }) {
   const [quotations, setQuotations] = useState(request.quotations || []);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showComparison, setShowComparison] = useState(false);
 
   const items = request.items || [];
 
+  // Only approvers/super-approvers can select winner — not comprador
+  const canSelectWinner = useMemo(() => {
+    if (!currentUser) return false;
+    // Super-approver can always select
+    if (SUPER_APPROVERS[currentUser.email] !== undefined) return true;
+    // Current step approver can select
+    if (request.approvalSteps) {
+      const step = getCurrentStep(request.approvalSteps);
+      if (step && canUserApproveStep(currentUser, step, request.totalAmount)) return true;
+    }
+    // Diretoria role can select
+    if (currentUser.role === "diretoria" || currentUser.role === "gerente") return true;
+    return false;
+  }, [currentUser, request]);
+
   const selectQuotation = (qId) => {
+    if (!canSelectWinner) return;
     const updated = quotations.map(q => ({ ...q, selected: q.id === qId }));
     setQuotations(updated);
   };
@@ -101,6 +118,15 @@ export default function QuotationPanel({ request, onClose, onSave }) {
             </div>
           )}
 
+          {/* Winner selection info */}
+          {quotations.length > 0 && !canSelectWinner && (
+            <div className="bg-amber-500/[0.06] border border-amber-500/[0.15] rounded-lg px-3 py-2 mb-3">
+              <div className="text-[11px] text-amber-400 font-medium">
+                Solo un aprobador o director puede seleccionar la cotización ganadora.
+              </div>
+            </div>
+          )}
+
           {/* Toggle: Cards vs Comparison Table */}
           {quotations.length >= 2 && (
             <div className="flex mb-3 bg-white/[0.03] rounded-lg border border-white/[0.06] overflow-hidden">
@@ -146,7 +172,7 @@ export default function QuotationPanel({ request, onClose, onSave }) {
                     quotation={q}
                     cheapest={cheapest}
                     bestItemPrices={bestItemPrices}
-                    onSelect={selectQuotation}
+                    onSelect={canSelectWinner ? selectQuotation : null}
                     onRemove={removeQuotation}
                   />
                 ))
