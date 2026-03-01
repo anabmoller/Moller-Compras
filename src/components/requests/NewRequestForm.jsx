@@ -38,7 +38,8 @@ function getApprovalPreview(amount, establishment) {
 
 export default function NewRequestForm({ onSubmit, onCancel, usdRate = 7800, usdLive = false }) {
   const { currentUser } = useAuth();
-  const { showNotif } = useApp();
+  const { showNotif, effectiveUser } = useApp();
+  const activeUser = effectiveUser || currentUser;
   const [step, setStep] = useState(1);
 
   // ---- Merge DB products with static catalog pricing (5-min cache) ----
@@ -80,15 +81,15 @@ export default function NewRequestForm({ onSubmit, onCancel, usdRate = 7800, usd
 
   // Form state
   const [form, setForm] = useState({
-    requester: currentUser?.name || "",
-    establishment: currentUser?.establishment !== "General" ? currentUser?.establishment || "" : "",
+    requester: activeUser?.name || "",
+    establishment: activeUser?.establishment !== "General" ? activeUser?.establishment || "" : "",
     sector: "",
     urgency: "media",
     reason: "",
     purpose: "",
     notes: "",
     assignee: (() => {
-      const est = currentUser?.establishment !== "General" ? currentUser?.establishment || "" : "";
+      const est = activeUser?.establishment !== "General" ? activeUser?.establishment || "" : "";
       return (est && !OFICINA_ESTABLISHMENTS.includes(est)) ? DEFAULT_FARM_ASSIGNEE : "";
     })(),
   });
