@@ -1,10 +1,13 @@
-import { useState } from "react";
-import { colors, font, radius, shadows } from "../../styles/theme";
+import { useState, useCallback } from "react";
 import { getEstablishments } from "../../constants/parameters";
+import { getStatusDisplay, formatGuaranies } from "../../utils/statusHelpers";
 import RequestCard from "./RequestCard";
 import RequestsTable from "./RequestsTable";
-import { formatGuaranies } from "../../utils/statusHelpers";
+import EmptyState from "../shared/EmptyState";
 
+/**
+ * Dashboard principal — dark mode Tailwind
+ */
 export default function Dashboard({
   requests,
   filtered,
@@ -16,54 +19,48 @@ export default function Dashboard({
   searchQuery,
   setSearchQuery,
   onSelectRequest,
+  usdRate,
 }) {
   const [viewMode, setViewMode] = useState("cards");
 
-  // Action counters for top bar
-  const pendingCount = requests.filter(r => r.status === "pendiente_aprobacion").length;
+  const pendingCount = requests.filter(r => {
+    const s = r.status;
+    return s === "pend_autorizacion" || s === "pend_aprobacion" || s === "pendiente_aprobacion" || s === "aprobacion_gerente" || s === "pendiente";
+  }).length;
   const draftCount = requests.filter(r => r.status === "borrador").length;
-  const inProcessCount = requests.filter(r => r.status === "en_proceso" || r.status === "cotizacion").length;
+  const inProcessCount = requests.filter(r => {
+    const s = r.status;
+    return s === "en_cotizacion" || s === "orden_compra" || s === "en_proceso" || s === "cotizacion";
+  }).length;
   const totalAmount = requests.reduce((sum, r) => sum + (r.totalAmount || 0), 0);
 
   return (
-    <div style={{ animation: "fadeIn 0.25s ease" }}>
+    <div className="animate-fade-in">
       {/* Page title */}
-      <div style={{ padding: "20px 20px 0" }}>
-        <h2 style={{
-          fontSize: 22, fontWeight: 700, color: colors.text,
-          fontFamily: font, margin: "0 0 4px", letterSpacing: "-0.02em",
-        }}>
+      <div className="px-5 pt-5">
+        <h2 className="text-[22px] font-bold text-white tracking-tight mb-1">
           Solicitudes de Compra
         </h2>
-        <p style={{ fontSize: 13, color: colors.textLight, margin: 0 }}>
+        <p className="text-sm text-slate-500 m-0">
           {requests.length} solicitudes · {filtered.length} mostradas
         </p>
       </div>
 
-      {/* Action counters (Module 1) */}
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(4, 1fr)",
-        gap: 10,
-        padding: "16px 20px",
-      }}>
-        <CounterCard label="Por aprobar" value={pendingCount} color={colors.warning} icon="⏳" />
-        <CounterCard label="Borradores" value={draftCount} color="#6B7280" icon="📝" />
-        <CounterCard label="En proceso" value={inProcessCount} color={colors.info} icon="🔄" />
-        <CounterCard label="Total ₲" value={formatGuaranies(totalAmount)} color={colors.primary} icon="💰" small />
+      {/* KPI counters */}
+      <div className="grid grid-cols-4 gap-2.5 px-5 py-4">
+        <CounterCard label="Por aprobar" value={pendingCount} color="text-amber-400" icon="⏳" />
+        <CounterCard label="Borradores" value={draftCount} color="text-slate-400" icon="📝" />
+        <CounterCard label="En proceso" value={inProcessCount} color="text-blue-400" icon="🔄" />
+        <CounterCard label="Total ₲" value={formatGuaranies(totalAmount)} color="text-emerald-400" icon="💰" small />
       </div>
 
       {/* Status filter pills */}
-      <div style={{ padding: "4px 20px 12px" }}>
-        <div style={{
-          display: "flex", gap: 6, overflowX: "auto", paddingBottom: 4,
-          scrollbarWidth: "none",
-        }}>
+      <div className="px-5 pb-3">
+        <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
           <FilterPill
             active={filterStatus === "all"}
             onClick={() => setFilterStatus("all")}
             label={`Todos (${requests.length})`}
-            color={colors.text}
           />
           {statusCounts.filter(s => s.count > 0).map(s => (
             <FilterPill
@@ -71,89 +68,74 @@ export default function Dashboard({
               active={filterStatus === s.key}
               onClick={() => setFilterStatus(s.key)}
               label={`${s.icon} ${s.label} (${s.count})`}
-              color={s.color}
+              activeColor={s.color}
             />
           ))}
         </div>
       </div>
 
       {/* Search & Filters */}
-      <div style={{ padding: "0 20px 12px" }}>
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <div style={{
-            flex: 1, display: "flex", alignItems: "center", gap: 8,
-            background: colors.card, border: `1px solid ${colors.border}`,
-            borderRadius: radius.md, padding: "9px 14px",
-          }}>
-            <svg width="16" height="16" viewBox="0 0 20 20" fill={colors.textMuted}>
+      <div className="px-5 pb-3">
+        <div className="flex gap-2 items-center">
+          <div className="flex-1 flex items-center gap-2 bg-white/[0.03] border border-white/[0.06] rounded-lg px-3.5 py-2.5">
+            <svg width="16" height="16" viewBox="0 0 20 20" className="fill-slate-500 shrink-0">
               <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"/>
             </svg>
             <input
               placeholder="Buscar solicitud..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              style={{
-                border: "none", background: "transparent", outline: "none",
-                fontFamily: font, fontSize: 14, color: colors.text, width: "100%",
-              }}
+              className="border-none bg-transparent outline-none text-sm text-white w-full placeholder:text-slate-600"
             />
             {searchQuery && (
-              <button onClick={() => setSearchQuery("")} style={{
-                background: "none", border: "none", cursor: "pointer",
-                fontSize: 12, color: colors.textMuted, padding: "2px 4px",
-              }}>✕</button>
+              <button
+                onClick={() => setSearchQuery("")}
+                className="bg-none border-none cursor-pointer text-xs text-slate-500 px-1 hover:text-slate-300"
+                aria-label="Limpiar búsqueda"
+              >
+                ✕
+              </button>
             )}
           </div>
           <select
             value={filterEstablishment}
             onChange={e => setFilterEstablishment(e.target.value)}
-            style={{
-              background: colors.card, border: `1px solid ${colors.border}`,
-              borderRadius: radius.md, padding: "9px 12px",
-              fontFamily: font, fontSize: 13, color: colors.text,
-              cursor: "pointer", minWidth: 110,
-            }}
+            className="bg-white/[0.03] border border-white/[0.06] rounded-lg px-3 py-2.5 text-sm text-white cursor-pointer min-w-[110px]"
           >
             <option value="all">Todos estab.</option>
             {getEstablishments().map(e => <option key={e.name} value={e.name}>{e.name}</option>)}
           </select>
           {/* View Toggle (desktop) */}
-          <div className="desktop-view-toggle" style={{
-            display: "flex", gap: 1, background: colors.surface,
-            borderRadius: radius.sm, padding: 3, border: `1px solid ${colors.border}`,
-          }}>
-            <button onClick={() => setViewMode("cards")} style={{
-              padding: "6px 10px", borderRadius: radius.xs, border: "none",
-              background: viewMode === "cards" ? colors.card : "transparent",
-              color: viewMode === "cards" ? colors.text : colors.textMuted,
-              fontSize: 13, cursor: "pointer",
-              boxShadow: viewMode === "cards" ? shadows.xs : "none",
-            }}>☰</button>
-            <button onClick={() => setViewMode("table")} style={{
-              padding: "6px 10px", borderRadius: radius.xs, border: "none",
-              background: viewMode === "table" ? colors.card : "transparent",
-              color: viewMode === "table" ? colors.text : colors.textMuted,
-              fontSize: 13, cursor: "pointer",
-              boxShadow: viewMode === "table" ? shadows.xs : "none",
-            }}>▤</button>
+          <div className="desktop-view-toggle gap-0.5 bg-white/[0.03] rounded-md p-0.5 border border-white/[0.06]">
+            <button
+              onClick={() => setViewMode("cards")}
+              className={`px-2.5 py-1.5 rounded text-sm border-none cursor-pointer transition-colors ${
+                viewMode === "cards" ? "bg-white/[0.08] text-white" : "bg-transparent text-slate-500"
+              }`}
+            >☰</button>
+            <button
+              onClick={() => setViewMode("table")}
+              className={`px-2.5 py-1.5 rounded text-sm border-none cursor-pointer transition-colors ${
+                viewMode === "table" ? "bg-white/[0.08] text-white" : "bg-transparent text-slate-500"
+              }`}
+            >▤</button>
           </div>
         </div>
       </div>
 
       {/* Requests List / Table */}
-      <div style={{ padding: "0 20px 120px" }}>
+      <div className="px-5 pb-[120px]">
         {viewMode === "table" ? (
           <RequestsTable requests={filtered} onSelectRequest={onSelectRequest} />
         ) : filtered.length === 0 ? (
-          <div style={{
-            textAlign: "center", padding: 48, color: colors.textMuted, fontSize: 14,
-          }}>
-            <div style={{ fontSize: 32, marginBottom: 8, opacity: 0.4 }}>📋</div>
-            No se encontraron solicitudes
-          </div>
+          <EmptyState
+            icon="📋"
+            title="No se encontraron solicitudes"
+            description="Intenta cambiar los filtros o crea una nueva solicitud"
+          />
         ) : (
           filtered.map(r => (
-            <RequestCard key={r.id} request={r} onClick={() => onSelectRequest(r)} />
+            <RequestCard key={r.id} request={r} onClick={() => onSelectRequest(r)} usdRate={usdRate} />
           ))
         )}
       </div>
@@ -163,50 +145,26 @@ export default function Dashboard({
 
 function CounterCard({ label, value, color, icon, small }) {
   return (
-    <div style={{
-      background: colors.card,
-      border: `1px solid ${colors.border}`,
-      borderRadius: radius.lg,
-      padding: "12px 10px",
-      textAlign: "center",
-    }}>
-      <div style={{ fontSize: 14, marginBottom: 4 }}>{icon}</div>
-      <div style={{
-        fontSize: small ? 11 : 20,
-        fontWeight: 700,
-        color: color,
-        fontFamily: font,
-        lineHeight: 1.2,
-      }}>
+    <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-3 text-center">
+      <div className="text-sm mb-1">{icon}</div>
+      <div className={`${small ? 'text-[11px]' : 'text-xl'} font-bold ${color} leading-tight`}>
         {value}
       </div>
-      <div style={{
-        fontSize: 10,
-        color: colors.textMuted,
-        fontWeight: 500,
-        marginTop: 2,
-      }}>
-        {label}
-      </div>
+      <div className="text-[10px] text-slate-500 font-medium mt-0.5">{label}</div>
     </div>
   );
 }
 
-function FilterPill({ active, onClick, label, color }) {
+function FilterPill({ active, onClick, label, activeColor }) {
   return (
-    <button onClick={onClick} style={{
-      padding: "6px 12px",
-      borderRadius: radius.full,
-      border: active ? "none" : `1px solid ${colors.border}`,
-      background: active ? color + "12" : colors.card,
-      color: active ? color : colors.textLight,
-      fontSize: 12,
-      fontWeight: active ? 600 : 450,
-      fontFamily: font,
-      cursor: "pointer",
-      whiteSpace: "nowrap",
-      transition: "all 0.15s",
-    }}>
+    <button
+      onClick={onClick}
+      className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all border cursor-pointer shrink-0 ${
+        active
+          ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+          : 'bg-white/[0.03] text-slate-400 border-white/[0.06] hover:bg-white/[0.06]'
+      }`}
+    >
       {label}
     </button>
   );

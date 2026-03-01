@@ -4,66 +4,35 @@
 // Trazabilidad, Approval, Budget, Quotations, Attachments
 // ============================================================
 import { useState, useEffect, useCallback, useRef } from "react";
-import { colors, font, fontDisplay, inputStyle, shadows, radius } from "../../styles/theme";
-import { STATUS_FLOW, URGENCY_LEVELS, PRIORITY_LEVELS } from "../../constants";
+import { STATUS_FLOW, URGENCY_LEVELS } from "../../constants";
 import { generateCommentId } from "../../utils/ids";
 import AddItemModal from "./AddItemModal";
-import AttachmentUpload from "./AttachmentUpload";
 import QuotationPanel from "../quotations/QuotationPanel";
 import ApprovalFlow from "../approval/ApprovalFlow";
 import ApprovalActions from "../approval/ApprovalActions";
 import BudgetWidget from "../approval/BudgetWidget";
 import { useAuth } from "../../context/AuthContext";
+import { useApp } from "../../context/AppContext";
 import { formatGuaranies } from "../../constants/budgets";
-import { getStatusDisplay, getPriorityDisplay } from "../../utils/statusHelpers";
-import { fmtDate, fmtDateTime } from "../../utils/dateFormatters";
+import { getStatusDisplay, getPriorityDisplay, normalizeStatus } from "../../utils/statusHelpers";
+import { fmtDate } from "../../utils/dateFormatters";
 import { getSectors, getProductTypes } from "../../constants/parameters";
+import { MANAGER_MAP, COMPANY_MAP, PRESIDENT_MAP, ESTABLISHMENT_COMPANY, USER_DISPLAY_NAMES, SUPER_APPROVERS } from "../../constants/approvalConfig";
+import { supabase } from "../../lib/supabase";
 
-// ---- Sub-components ----
+// ---- Extracted sub-components ----
+import RequestHeader from "./RequestHeader";
+import RequestItemsTable from "./RequestItemsTable";
+import QuotationComparison from "./QuotationComparison";
+import RequestComments from "./RequestComments";
+import RequestTimeline from "./RequestTimeline";
+import AttachmentUpload from "./AttachmentUpload";
 
-function SectionTitle({ children, count, collapsed, onToggle }) {
-  return (
-    <div
-      onClick={onToggle}
-      style={{
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        marginBottom: collapsed ? 0 : 12,
-        cursor: onToggle ? "pointer" : "default",
-        userSelect: "none",
-      }}
-    >
-      <div style={{
-        fontSize: 12, fontWeight: 600, color: colors.textLight,
-        textTransform: "uppercase", letterSpacing: 1,
-        display: "flex", alignItems: "center", gap: 6,
-      }}>
-        {children}
-        {count != null && (
-          <span style={{
-            background: colors.primary + "15", color: colors.primary,
-            fontSize: 10, fontWeight: 700, padding: "1px 7px",
-            borderRadius: radius.md, minWidth: 18, textAlign: "center",
-          }}>{count}</span>
-        )}
-      </div>
-      {onToggle && (
-        <span style={{ fontSize: 14, color: colors.textLight, transition: "transform 0.2s",
-          transform: collapsed ? "rotate(-90deg)" : "rotate(0)" }}>▾</span>
-      )}
-    </div>
-  );
-}
+// ---- Shared sub-components (kept inline — small & used only here) ----
 
 function InfoGrid({ children }) {
   return (
-    <div className="info-grid" style={{
-      display: "grid",
-      gridTemplateColumns: "1fr 1fr",
-      gap: 0,
-      background: colors.card, borderRadius: radius.lg,
-      border: `1px solid ${colors.borderLight}`, overflow: "hidden",
-      boxShadow: shadows.card,
-    }}>
+    <div className="info-grid grid grid-cols-2 gap-0 bg-white/[0.03] rounded-xl border border-white/[0.06] overflow-hidden shadow-sm">
       {children}
     </div>
   );
@@ -71,17 +40,15 @@ function InfoGrid({ children }) {
 
 function InfoCell({ label, value, color, icon, span2 }) {
   return (
-    <div style={{
-      padding: "12px 16px",
-      borderBottom: `1px solid ${colors.borderLight}`,
-      gridColumn: span2 ? "1 / -1" : undefined,
-    }}>
-      <div style={{ fontSize: 11, color: colors.textLight, fontWeight: 500, marginBottom: 3 }}>{label}</div>
-      <div style={{
-        fontSize: 13, fontWeight: 500, color: color || colors.text,
-        display: "flex", alignItems: "center", gap: 4,
-      }}>
-        {icon && <span style={{ fontSize: 12 }}>{icon}</span>}
+    <div
+      className={`px-4 py-3 border-b border-white/[0.06] ${span2 ? 'col-span-full' : ''}`}
+    >
+      <div className="text-[11px] text-slate-400 font-medium mb-0.5">{label}</div>
+      <div
+        className="text-[13px] font-medium text-white flex items-center gap-1"
+        style={color ? { color } : undefined}
+      >
+        {icon && <span className="text-xs">{icon}</span>}
         {value || "—"}
       </div>
     </div>
@@ -90,32 +57,42 @@ function InfoCell({ label, value, color, icon, span2 }) {
 
 function ActionBtn({ label, icon, color, bg, outline, onClick, flex }) {
   return (
-    <button onClick={onClick} style={{
-      flex: flex || 1, padding: "11px 12px", borderRadius: radius.md,
-      border: outline ? `1.5px solid ${color || colors.border}` : "none",
-      background: outline ? "transparent" : (bg || color || colors.primary),
-      color: outline ? (color || colors.text) : "#fff",
-      fontSize: 12, fontWeight: 600, fontFamily: font, cursor: "pointer",
-      display: "flex", alignItems: "center", justifyContent: "center", gap: 5,
-      boxShadow: outline ? "none" : shadows.sm,
-      transition: "all 0.15s",
-    }}>
+    <button
+      onClick={onClick}
+      className={`py-2.5 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all duration-150 ${
+        outline
+          ? 'bg-transparent border-[1.5px]'
+          : 'border-none text-white shadow-sm'
+      }`}
+      style={{
+        flex: flex || 1,
+        ...(outline
+          ? { borderColor: color || 'rgba(255,255,255,0.06)', color: color || '#fff' }
+          : { background: bg || color || '#10b981' }),
+      }}
+    >
       {icon && <span>{icon}</span>}{label}
     </button>
   );
 }
 
-function NavBtn({ icon, label, onClick, disabled }) {
-  return (
-    <button onClick={onClick} disabled={disabled} style={{
-      background: "transparent", border: "none", cursor: disabled ? "default" : "pointer",
-      fontFamily: font, fontSize: 13, color: disabled ? colors.border : colors.primary,
-      fontWeight: 500, padding: "6px 8px", display: "flex", alignItems: "center", gap: 3,
-      opacity: disabled ? 0.4 : 1,
-    }}>
-      {icon} {label}
-    </button>
-  );
+function getApprovalChain(amount, establishment) {
+  const dn = (u) => USER_DISPLAY_NAMES[u] || u;
+  const managerUsername = MANAGER_MAP[establishment] || "ronei";
+  const steps = [{ label: "Autorización Gerente", person: dn(managerUsername), icon: "①" }];
+  if (amount >= 5_000_000) {
+    const company = ESTABLISHMENT_COMPANY[establishment] || "Rural Bioenergia S.A.";
+    const directorUsername = COMPANY_MAP[company] || "ronei";
+    steps.push({ label: "Aprobación Director", person: dn(directorUsername), icon: "②" });
+  }
+  if (amount >= 50_000_000) {
+    const company = ESTABLISHMENT_COMPANY[establishment] || "Rural Bioenergia S.A.";
+    const presidentUsername = PRESIDENT_MAP[company];
+    if (presidentUsername) {
+      steps.push({ label: "Aprobación Presidente", person: dn(presidentUsername), icon: "③" });
+    }
+  }
+  return steps;
 }
 
 // ============================================================
@@ -123,12 +100,16 @@ function NavBtn({ icon, label, onClick, disabled }) {
 // ============================================================
 export default function RequestDetail({
   request: r, onBack, onAdvance, onUpdateRequest, canManageQuotations,
-  onConfirm, onApprove, onReject, onRevision,
-  onPrev, onNext, hasPrev, hasNext,
+  onConfirm, onApprove, onReject, onRevision, onCancel,
+  onPrev, onNext, hasPrev, hasNext, usdRate,
 }) {
   const { currentUser } = useAuth();
+  const { effectiveUser: ctxEffectiveUser } = useApp();
+  const activeUser = ctxEffectiveUser || currentUser;
   const [showQuotations, setShowQuotations] = useState(false);
   const [showAddItem, setShowAddItem] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [cancelReason, setCancelReason] = useState("");
 
   // Comments state
   const [comments, setComments] = useState(r.comments || []);
@@ -147,7 +128,7 @@ export default function RequestDetail({
 
   // Collapsible sections
   const [showTrazabilidad, setShowTrazabilidad] = useState(false);
-  const [showAttachments, setShowAttachments] = useState(false);
+  const [showAttachments, setShowAttachments] = useState(true);
 
   // Items state (editable in borrador)
   const [items, setItems] = useState(r.items || []);
@@ -163,12 +144,18 @@ export default function RequestDetail({
     setAttachments(r.adjuntos || []);
   }, [r.id, r.comments, r.notes, r.reason, r.items, r.adjuntos]);
 
+  const normalizedStatus = normalizeStatus(r.status);
   const status = getStatusDisplay(r.status);
-  const statusIdx = STATUS_FLOW.findIndex(s => s.key === r.status);
+  const statusIdx = STATUS_FLOW.findIndex(s => s.key === normalizedStatus);
   const isLast = statusIdx === STATUS_FLOW.length - 1;
   const isRejected = r.status === "rechazado";
-  const isBorrador = r.status === "borrador";
-  const isInApproval = r.status === "pendiente_aprobacion";
+  const isBorrador = normalizedStatus === "borrador";
+  const isCancelado = r.status === "cancelado";
+  const isInApproval = normalizedStatus === "pend_autorizacion" || normalizedStatus === "pend_aprobacion";
+  const canCancel = onCancel && !isCancelado && normalizedStatus !== "recibido" && normalizedStatus !== "sap"
+    && (r.createdBy === activeUser?.name
+      || ["diretoria", "director", "super_approver", "admin"].includes(activeUser?.role)
+      || SUPER_APPROVERS[activeUser?.email] !== undefined);
 
   const urgency = URGENCY_LEVELS.find(u => u.value === (r.priority || r.urgency));
   const priority = getPriorityDisplay(r.priority || r.urgency);
@@ -182,17 +169,18 @@ export default function RequestDetail({
     return sum + (price * qty);
   }, 0);
   const displayTotal = itemsTotal > 0 ? itemsTotal : (r.totalAmount || 0);
+  const rate = usdRate || 7800;
 
   // ---- Handlers ----
   const handleAddComment = () => {
     if (!commentText.trim()) return;
     const newComment = {
       id: generateCommentId(),
-      author: currentUser.name,
-      autor: currentUser.name,       // backward compat
-      avatar: currentUser.avatar,
+      author: activeUser.name,
+      autor: activeUser.name,
+      avatar: activeUser.avatar,
       createdAt: new Date().toISOString(),
-      fecha: new Date().toISOString(), // backward compat
+      fecha: new Date().toISOString(),
       texto: commentText.trim(),
       interno: commentInternal,
     };
@@ -227,620 +215,351 @@ export default function RequestDetail({
     if (onUpdateRequest) onUpdateRequest(r.id, { adjuntos: updated });
   };
 
+  // ---- Approval chain helper ----
+  const approvalChain = displayTotal > 0 && !isRejected ? getApprovalChain(displayTotal, r.establishment) : [];
+  const approvedCount = r.approvalHistory?.filter(h => h.action === "approved").length || 0;
+
   // ---- RENDER ----
   return (
-    <div style={{ animation: "fadeIn 0.3s ease", paddingBottom: 100 }}>
+    <div className="animate-fadeIn pb-[100px] xl:pb-8">
 
-      {/* ===== HEADER ===== */}
-      <div style={{
-        padding: "10px 16px", display: "flex", alignItems: "center",
-        justifyContent: "space-between", borderBottom: `1px solid ${colors.borderLight}`,
-        background: colors.card, position: "sticky", top: 0, zIndex: 20,
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <NavBtn icon="✕" onClick={onBack} />
-          <div style={{ width: 1, height: 18, background: colors.border, margin: "0 2px" }} />
-          <NavBtn icon="←" label="" onClick={onPrev} disabled={!hasPrev} />
-          <NavBtn icon="→" label="" onClick={onNext} disabled={!hasNext} />
-        </div>
-
-        <div style={{
-          fontSize: 12, fontWeight: 600, color: colors.text,
-          textAlign: "center", flex: 1, overflow: "hidden",
-          textOverflow: "ellipsis", whiteSpace: "nowrap", padding: "0 8px",
-        }}>
-          {r.id}
-        </div>
-
-        {/* Status badge */}
-        <div style={{
-          fontSize: 11, fontWeight: 700, letterSpacing: 0.3,
-          color: status.color,
-          background: status.colorLight || (status.color + "14"),
-          padding: "4px 10px", borderRadius: radius.sm,
-          border: `1px solid ${status.color}20`,
-          whiteSpace: "nowrap",
-        }}>
-          {status.icon} {status.label}
-        </div>
-      </div>
-
-      {/* ===== TITLE + PRIORITY ===== */}
-      <div style={{ padding: "16px 20px 8px" }}>
-        <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 4 }}>
-          <h2 style={{
-            fontFamily: fontDisplay, fontSize: 20, fontWeight: 600,
-            color: colors.text, margin: 0, lineHeight: 1.3, flex: 1,
-          }}>
-            {r.name}
-          </h2>
-          {priority && (
-            <span style={{
-              fontSize: 10, fontWeight: 700, padding: "3px 8px",
-              borderRadius: radius.xs,
-              color: priority.color,
-              background: priority.colorLight || (priority.color + "12"),
-              whiteSpace: "nowrap", flexShrink: 0,
-            }}>
-              {priority.icon} {priority.label}
-            </span>
-          )}
-        </div>
-        {r.supplier && (
-          <div style={{ fontSize: 12, color: colors.textMuted, marginTop: 2 }}>
-            Proveedor: {r.supplier}
-          </div>
-        )}
-      </div>
-
-      {/* ===== REJECTED BANNER ===== */}
-      {isRejected && (
-        <div style={{ padding: "0 20px 8px" }}>
-          <div style={{
-            background: colors.dangerLight, border: `1px solid ${colors.danger}20`,
-            borderRadius: radius.lg, padding: "12px 16px",
-            display: "flex", alignItems: "center", gap: 10,
-          }}>
-            <span style={{ fontSize: 20 }}>❌</span>
-            <div>
-              <div style={{ fontSize: 13, fontWeight: 600, color: colors.danger }}>Solicitud Rechazada</div>
-              {r.approvalHistory?.length > 0 && (
-                <div style={{ fontSize: 12, color: colors.danger, opacity: 0.8, marginTop: 2 }}>
-                  {r.approvalHistory[r.approvalHistory.length - 1].note}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+      {/* ===== HEADER (nav, title, priority, rejected banner) ===== */}
+      <RequestHeader
+        request={r}
+        status={status}
+        priority={priority}
+        urgency={urgency}
+        rate={rate}
+        onBack={onBack}
+        onPrev={onPrev}
+        onNext={onNext}
+        hasPrev={hasPrev}
+        hasNext={hasNext}
+      />
 
       {/* ===== APPROVAL ACTIONS (for current approver) ===== */}
       {isInApproval && r.approvalSteps && (
-        <div style={{ padding: "0 20px", marginBottom: 12 }}>
+        <div className="px-5 mb-3">
           <ApprovalActions
-            request={r} currentUser={currentUser}
+            request={r} currentUser={activeUser}
             onApprove={onApprove} onReject={onReject} onRevision={onRevision}
           />
         </div>
       )}
 
-      {/* ===== PROGRESS BAR ===== */}
-      {!isRejected && statusIdx >= 0 && (
-        <div style={{ padding: "0 20px 4px" }}>
-          <div style={{
-            display: "flex", gap: 3, marginBottom: 6,
-            padding: "0 2px",
-          }}>
-            {STATUS_FLOW.map((s, i) => (
-              <div key={s.key} style={{
-                flex: 1, height: 5, borderRadius: 3,
-                background: i <= statusIdx ? status.color : colors.border,
-                transition: "background 0.3s",
-              }} />
-            ))}
-          </div>
-          <div style={{
-            display: "flex", justifyContent: "space-between", alignItems: "center",
-            padding: "0 2px",
-          }}>
-            <span style={{ fontSize: 12, fontWeight: 500, color: status.color }}>
-              Paso {statusIdx + 1} de {STATUS_FLOW.length}
-            </span>
-            {/* Contextual action buttons inline */}
-            <div style={{ display: "flex", gap: 6 }}>
-              {isBorrador && onConfirm && (
-                <button onClick={() => onConfirm(r.id)} style={{
-                  background: colors.primary,
-                  color: "#fff", border: "none", borderRadius: radius.sm,
-                  padding: "6px 14px", fontSize: 11, fontWeight: 600,
-                  fontFamily: font, cursor: "pointer",
-                  boxShadow: shadows.xs,
-                }}>Confirmar ✓</button>
-              )}
-              {!isBorrador && !isInApproval && !isLast && !isRejected && onAdvance && (
-                <button onClick={() => onAdvance(r.id)} style={{
-                  background: STATUS_FLOW[statusIdx + 1]?.color || colors.primary,
-                  color: "#fff", border: "none", borderRadius: radius.sm,
-                  padding: "6px 14px", fontSize: 11, fontWeight: 600,
-                  fontFamily: font, cursor: "pointer",
-                  boxShadow: shadows.xs,
-                }}>→ {STATUS_FLOW[statusIdx + 1]?.label}</button>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ===== APPROVAL FLOW (dots) ===== */}
-      {r.approvalSteps?.length > 0 && (
-        <div style={{ padding: "8px 20px" }}>
-          <ApprovalFlow steps={r.approvalSteps} />
-        </div>
-      )}
-
-      {/* ===== INFO GRID ===== */}
-      <div style={{ padding: "8px 20px" }}>
-        <InfoGrid>
-          <InfoCell label="Solicitante" value={r.requester} icon="👤" />
-          <InfoCell label="Fecha de Creación" value={fmtDate(r.date)} />
-          <InfoCell label="Establecimiento" value={r.establishment} />
-          <InfoCell
-            label="Urgencia"
-            value={priority?.label || r.priority || r.urgency || "—"}
-            color={urgency?.color}
-            icon={urgency?.icon}
-          />
-          <InfoCell
-            label="Sector"
-            value={r.sector || r.type}
-            icon={getSectors().find(s => s.name === (r.sector || r.type))?.icon}
-          />
-          <InfoCell
-            label="Tipo de Producto"
-            value={r.type}
-            icon={getProductTypes().find(t => t.name === r.type)?.icon}
-          />
-          <InfoCell label="Cantidad" value={r.quantity} />
-          <InfoCell label="Asignado a" value={r.assignee || "Sin asignar"} />
-          {r.equipment && <InfoCell label="Equipo" value={r.equipment} span2 />}
-          {displayTotal > 0 && (
-            <InfoCell label="Total Estimado" value={formatGuaranies(displayTotal)} color={colors.primary} span2 />
-          )}
-        </InfoGrid>
-      </div>
-
-      {/* ===== NOTE (editable) ===== */}
-      <div style={{ padding: "8px 20px" }}>
-        <div style={{
-          background: colors.card, borderRadius: radius.lg, padding: "12px 16px",
-          border: `1px solid ${colors.borderLight}`,
-        }}>
-          <div style={{ fontSize: 11, color: colors.textLight, fontWeight: 500, marginBottom: 6 }}>
-            Nota / Motivo
-          </div>
-          <textarea
-            value={note}
-            onChange={(e) => { setNote(e.target.value); saveNote(e.target.value); }}
-            placeholder="+ Agregar nota..."
-            rows={2}
-            style={{
-              width: "100%", border: "none", background: "transparent",
-              fontFamily: font, fontSize: 13, color: colors.text,
-              resize: "none", outline: "none", padding: 0,
-              lineHeight: 1.5,
-            }}
-          />
-        </div>
-      </div>
-
-      {/* ===== ITEMS TABLE ===== */}
-      <div style={{ padding: "8px 20px" }}>
-        <SectionTitle count={items.length}>Items</SectionTitle>
-        {items.length > 0 ? (
-          <div style={{
-            background: colors.card, borderRadius: radius.lg,
-            border: `1px solid ${colors.borderLight}`, overflow: "hidden",
-            boxShadow: shadows.card,
-          }}>
-            {items.map((it, idx) => (
-              <div key={idx} style={{
-                padding: "12px 16px",
-                borderBottom: idx < items.length - 1 ? `1px solid ${colors.borderLight}` : "none",
-                display: "flex", justifyContent: "space-between", alignItems: "flex-start",
-              }}>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                    <span style={{
-                      fontSize: 10, fontWeight: 700, color: colors.textLight,
-                      background: colors.bg, padding: "2px 6px", borderRadius: radius.xs,
-                    }}>{idx + 1}</span>
-                    {(it.codigo || it.code) && (
-                      <span style={{ fontSize: 10, color: colors.primary, fontWeight: 600 }}>{it.codigo || it.code}</span>
-                    )}
-                  </div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: colors.text, marginTop: 3 }}>
-                    {it.name || it.nombre || "Item"}
-                  </div>
-                  <div style={{ fontSize: 11, color: colors.textLight, marginTop: 2 }}>
-                    {it.quantity || it.cantidad || 0} {it.unit || it.unidad || "un"} × {formatGuaranies(it.unitPrice || it.precioUnitario || 0)}
-                  </div>
-                  {(it.proveedor || it.supplier) && (
-                    <div style={{ fontSize: 10, color: colors.textLight, marginTop: 1 }}>
-                      Prov: {it.proveedor || it.supplier}
-                    </div>
-                  )}
-                </div>
-                <div style={{ textAlign: "right", flexShrink: 0 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: colors.text }}>
-                    {formatGuaranies((it.unitPrice || it.precioUnitario || 0) * (it.quantity || it.cantidad || 0))}
-                  </div>
-                  {isBorrador && (
-                    <button onClick={() => handleRemoveItem(idx)} style={{
-                      background: "transparent", border: "none",
-                      fontSize: 14, cursor: "pointer", padding: "4px",
-                      color: colors.danger, marginTop: 2,
-                    }}>🗑</button>
-                  )}
-                </div>
-              </div>
-            ))}
-            {/* Total footer */}
-            <div style={{
-              padding: "10px 16px", background: colors.surface,
-              borderTop: `1px solid ${colors.borderLight}`,
-              display: "flex", justifyContent: "space-between", alignItems: "center",
-            }}>
-              <span style={{ fontSize: 12, fontWeight: 600, color: colors.textLight }}>
-                TOTAL ({items.length} item{items.length !== 1 ? "s" : ""})
-              </span>
-              <span style={{ fontSize: 15, fontWeight: 700, color: colors.primary }}>
-                {formatGuaranies(itemsTotal || displayTotal)}
-              </span>
-            </div>
-          </div>
-        ) : (
-          <div style={{
-            background: colors.card, borderRadius: radius.lg, padding: 20,
-            border: `1px solid ${colors.borderLight}`, textAlign: "center",
-          }}>
-            <div style={{ fontSize: 13, color: colors.textLight }}>Sin items registrados</div>
-            {displayTotal > 0 && (
-              <div style={{ fontSize: 14, fontWeight: 600, color: colors.primary, marginTop: 6 }}>
-                Monto estimado: {formatGuaranies(displayTotal)}
-              </div>
-            )}
-          </div>
-        )}
-        {/* Add item button (borrador only) */}
-        {isBorrador && (
-          <button onClick={() => setShowAddItem(true)} style={{
-            width: "100%", padding: 12, borderRadius: radius.lg, marginTop: 8,
-            border: `1px dashed ${colors.primary}40`, background: colors.primary + "06",
-            color: colors.primary, fontSize: 12, fontWeight: 600,
-            fontFamily: font, cursor: "pointer",
-          }}>
-            + Agregar Item
+      {/* ===== DESKTOP ACTION BAR (hidden on mobile) ===== */}
+      <div className="hidden md:flex px-5 py-2 gap-2 items-center">
+        {isBorrador && onConfirm && (
+          <button onClick={() => onConfirm(r.id)} className="px-4 py-2 rounded-lg border-none text-white text-xs font-semibold cursor-pointer shadow-sm" style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}>
+            Confirmar ✓
           </button>
         )}
+        {!isBorrador && !isInApproval && !isLast && !isRejected && !isCancelado && onAdvance && (
+          <button onClick={() => onAdvance(r.id)} className="px-4 py-2 rounded-lg border-none text-white text-xs font-semibold cursor-pointer shadow-sm" style={{ background: STATUS_FLOW[statusIdx + 1]?.color || '#10b981' }}>
+            → {STATUS_FLOW[statusIdx + 1]?.label || "Avanzar"}
+          </button>
+        )}
+        {canCancel && (
+          <button onClick={() => setShowCancelModal(true)} className="px-4 py-2 rounded-lg border border-red-500/30 bg-transparent text-red-400 text-xs font-semibold cursor-pointer">
+            🚫 Cancelar Solicitud
+          </button>
+        )}
+        {isRejected && <span className="text-xs text-red-400 font-medium">❌ Solicitud rechazada</span>}
+        {isCancelado && <span className="text-xs text-red-400 font-medium">🚫 Solicitud cancelada</span>}
+        {isLast && <span className="text-xs text-green-400 font-medium">✅ Proceso completado</span>}
       </div>
 
-      {/* ===== BUDGET WIDGET ===== */}
-      <div style={{ padding: "8px 20px" }}>
-        <BudgetWidget
-          establishment={r.establishment}
-          sector={r.sector || r.type}
-          requestAmount={displayTotal}
-        />
-      </div>
+      {/* ===== RESPONSIVE GRID: main + sidebar ===== */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-0 xl:gap-6 px-0 xl:px-5">
 
-      {/* ===== QUOTATIONS ===== */}
-      {(showQuotationBtn || quotationCount > 0) && (
-        <div style={{ padding: "8px 20px" }}>
-          <div style={{
-            background: r.status === "cotizacion" ? colors.primary + "06" : colors.card,
-            borderRadius: radius.lg, padding: 16,
-            border: `1px solid ${r.status === "cotizacion" ? colors.primary + "30" : colors.borderLight}`,
-          }}>
-            <div style={{
-              display: "flex", justifyContent: "space-between", alignItems: "center",
-              marginBottom: quotationCount > 0 ? 10 : 0,
-            }}>
-              <SectionTitle count={quotationCount}>Cotizaciones</SectionTitle>
-              {canManageQuotations && (
-                <button onClick={() => setShowQuotations(true)} style={{
-                  background: `linear-gradient(135deg, ${colors.primary}, ${colors.primaryDark})`,
-                  color: "#fff", border: "none", borderRadius: radius.md,
-                  padding: "7px 14px", fontSize: 11, fontWeight: 600,
-                  fontFamily: font, cursor: "pointer",
-                }}>
-                  {quotationCount > 0 ? "Ver / Editar" : "+ Agregar"}
-                </button>
-              )}
-            </div>
-            {quotationCount > 0 && (
-              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                {r.quotations.slice(0, 3).map(q => (
-                  <div key={q.id} style={{
-                    display: "flex", justifyContent: "space-between",
-                    background: q.selected ? colors.success + "10" : colors.bg,
-                    borderRadius: radius.md, padding: "8px 10px",
-                    border: q.selected ? `1px solid ${colors.success}30` : `1px solid ${colors.borderLight}`,
-                  }}>
-                    <span style={{ fontSize: 12, fontWeight: q.selected ? 600 : 400, color: colors.text }}>
-                      {q.selected && "✓ "}{q.supplier}
-                    </span>
-                    <span style={{ fontSize: 12, fontWeight: 600, color: q.selected ? colors.success : colors.text }}>
-                      {q.currency} {q.price?.toLocaleString()}
-                    </span>
-                  </div>
+        {/* ---- MAIN COLUMN ---- */}
+        <div className="xl:col-span-8">
+          {/* Progress bar */}
+          {!isRejected && !isCancelado && statusIdx >= 0 && (
+            <div className="px-5 xl:px-0 pb-1">
+              <div className="flex gap-0.5 mb-1.5 px-0.5">
+                {STATUS_FLOW.map((s, i) => (
+                  <div
+                    key={s.key}
+                    className="flex-1 h-[5px] rounded-sm transition-colors duration-300"
+                    style={{ background: i <= statusIdx ? status.color : 'rgba(255,255,255,0.06)' }}
+                  />
                 ))}
-                {quotationCount > 3 && (
-                  <div style={{ fontSize: 11, color: colors.textLight, textAlign: "center" }}>
-                    +{quotationCount - 3} mas...
-                  </div>
+              </div>
+              <div className="flex justify-between items-center px-0.5">
+                <span className="text-xs font-medium" style={{ color: status.color }}>
+                  Paso {statusIdx + 1} de {STATUS_FLOW.length}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Info grid */}
+          <div className="px-5 xl:px-0 py-2">
+            <InfoGrid>
+              <InfoCell label="Solicitante" value={r.requester} icon="👤" />
+              <InfoCell label="Fecha de Creación" value={fmtDate(r.date)} />
+              <InfoCell label="Establecimiento" value={r.establishment} />
+              <InfoCell
+                label="Urgencia"
+                value={priority?.label || r.priority || r.urgency || "—"}
+                color={urgency?.color}
+                icon={urgency?.icon}
+              />
+              <InfoCell
+                label="Sector"
+                value={r.sector || r.type}
+                icon={getSectors().find(s => s.name === (r.sector || r.type))?.icon}
+              />
+              <InfoCell
+                label="Tipo de Producto"
+                value={r.type}
+                icon={getProductTypes().find(t => t.name === r.type)?.icon}
+              />
+              <InfoCell label="Cantidad" value={r.quantity} />
+              <InfoCell label="Asignado a" value={r.assignee || "Sin asignar"} />
+              {r.equipment && <InfoCell label="Equipo" value={r.equipment} span2 />}
+              {displayTotal > 0 && (
+                <InfoCell
+                  label="Total Estimado"
+                  value={`${formatGuaranies(displayTotal)} / USD ${Math.round(displayTotal / rate).toLocaleString("es-PY")}`}
+                  color="#10b981"
+                  span2
+                />
+              )}
+            </InfoGrid>
+          </div>
+
+          {/* Note (editable) */}
+          <div className="px-5 xl:px-0 py-2">
+            <div className="bg-white/[0.03] rounded-xl px-4 py-3 border border-white/[0.06]">
+              <div className="text-[11px] text-slate-400 font-medium mb-1.5">
+                Nota / Motivo
+              </div>
+              <textarea
+                value={note}
+                onChange={(e) => { setNote(e.target.value); saveNote(e.target.value); }}
+                placeholder="+ Agregar nota..."
+                rows={2}
+                className="w-full border-none bg-transparent text-[13px] text-white resize-none outline-none p-0 leading-relaxed"
+              />
+            </div>
+          </div>
+
+          {/* Items table */}
+          <RequestItemsTable
+            items={items}
+            itemsTotal={itemsTotal}
+            displayTotal={displayTotal}
+            rate={rate}
+            isBorrador={isBorrador}
+            onRemoveItem={handleRemoveItem}
+            onShowAddItem={() => setShowAddItem(true)}
+          />
+
+          {/* Quotations + Comparison */}
+          <QuotationComparison
+            request={r}
+            normalizedStatus={normalizedStatus}
+            quotationCount={quotationCount}
+            showQuotationBtn={showQuotationBtn}
+            canManageQuotations={canManageQuotations}
+            rate={rate}
+            onShowQuotations={() => setShowQuotations(true)}
+          />
+
+          {/* Comments */}
+          <RequestComments
+            comments={comments}
+            commentText={commentText}
+            commentInternal={commentInternal}
+            onCommentTextChange={setCommentText}
+            onCommentInternalChange={setCommentInternal}
+            onAddComment={handleAddComment}
+          />
+
+          {/* Global Attachments — any involved role, any active phase */}
+          <div className="px-5 xl:px-0 py-2">
+            <div className="flex items-center justify-between mb-2 cursor-pointer" onClick={() => setShowAttachments(!showAttachments)}>
+              <div className="text-xs font-semibold text-slate-400 uppercase tracking-wide flex items-center gap-1.5">
+                📎 Adjuntos
+                {attachments.length > 0 && (
+                  <span className="bg-emerald-500/[0.08] text-emerald-400 text-[10px] font-bold px-1.5 py-px rounded-md">
+                    {attachments.length}
+                  </span>
+                )}
+              </div>
+              <span className="text-sm text-slate-400 transition-transform duration-200" style={{ transform: showAttachments ? "rotate(0)" : "rotate(-90deg)" }}>
+                ▾
+              </span>
+            </div>
+            {showAttachments && (
+              <div className="bg-white/[0.03] rounded-xl p-4 border border-white/[0.06]">
+                {isRejected || isCancelado ? (
+                  <>
+                    {/* Read-only view of existing attachments */}
+                    {attachments.length > 0 ? (
+                      <div className="flex flex-col gap-1.5">
+                        {attachments.map(att => (
+                          <div key={att.id} className="flex items-center gap-2.5 bg-white/[0.02] rounded-lg px-3 py-2 border border-white/[0.06]">
+                            <div className="w-11 h-11 rounded bg-emerald-500/[0.06] flex items-center justify-center text-lg flex-shrink-0">
+                              {att.type?.startsWith("image/") ? "🖼" : "📄"}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="text-xs font-medium text-white truncate">{att.name}</div>
+                            </div>
+                            {(att.path || att.url) && (
+                              <button
+                                onClick={async () => {
+                                  if (att.path) {
+                                    try {
+                                      const { data } = await supabase.storage.from("attachments").createSignedUrl(att.path, 3600);
+                                      if (data?.signedUrl) { window.open(data.signedUrl, "_blank"); return; }
+                                    } catch { /* fall through */ }
+                                  }
+                                  if (att.url) window.open(att.url, "_blank");
+                                }}
+                                className="bg-emerald-500/[0.06] border-none rounded px-2 py-1 text-[10px] text-emerald-400 font-semibold cursor-pointer">
+                                Ver
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    ) : null}
+                    <div className="text-xs text-slate-500 text-center py-2 mt-1">
+                      No se pueden adjuntar archivos en solicitudes {isRejected ? "rechazadas" : "canceladas"}.
+                    </div>
+                  </>
+                ) : (
+                  <AttachmentUpload
+                    requestUuid={r._uuid}
+                    attachments={attachments}
+                    onAttachmentsChange={handleAttachmentsChange}
+                  />
                 )}
               </div>
             )}
           </div>
         </div>
-      )}
 
-      {/* ===== COMMENTS ===== */}
-      <div style={{ padding: "8px 20px" }}>
-        <SectionTitle count={comments.length}>Comentarios</SectionTitle>
-        <div style={{
-          background: colors.card, borderRadius: radius.lg,
-          border: `1px solid ${colors.borderLight}`, overflow: "hidden",
-        }}>
-          {/* Comment list */}
-          {comments.length > 0 ? (
-            <div>
-              {comments.map((c, i) => (
-                <div key={c.id || i} style={{
-                  padding: "12px 16px",
-                  borderBottom: i < comments.length - 1 ? `1px solid ${colors.borderLight}` : "none",
-                }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-                    <div style={{
-                      width: 26, height: 26, borderRadius: radius.md,
-                      background: `linear-gradient(135deg, ${colors.primary}, ${colors.primaryDark})`,
-                      color: "#fff", fontSize: 11, fontWeight: 700,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                    }}>
-                      {(c.avatar || (c.author || c.autor || "?")?.[0] || "?").toUpperCase()}
-                    </div>
-                    <span style={{ fontSize: 12, fontWeight: 600, color: colors.text }}>{c.author || c.autor}</span>
-                    {c.interno && (
-                      <span style={{
-                        fontSize: 9, fontWeight: 700, color: colors.warning,
-                        background: colors.warning + "15", padding: "1px 6px",
-                        borderRadius: radius.xs, textTransform: "uppercase", letterSpacing: 0.5,
-                      }}>Interno</span>
-                    )}
-                    <span style={{ fontSize: 10, color: colors.textLight, marginLeft: "auto" }}>
-                      {fmtDateTime(c.createdAt || c.fecha)}
-                    </span>
-                  </div>
-                  <div style={{ fontSize: 13, color: colors.text, lineHeight: 1.5, paddingLeft: 34 }}>
-                    {c.texto}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div style={{ padding: 16, textAlign: "center", fontSize: 12, color: colors.textLight }}>
-              Sin comentarios aún
+        {/* ---- SIDEBAR COLUMN ---- */}
+        <div className="xl:col-span-4">
+          {/* Approval flow (dots) */}
+          {r.approvalSteps?.length > 0 && (
+            <div className="px-5 xl:px-0 py-2">
+              <ApprovalFlow steps={r.approvalSteps} />
             </div>
           )}
 
-          {/* Comment input */}
-          <div style={{
-            padding: "10px 16px", borderTop: `1px solid ${colors.borderLight}`,
-            background: colors.surface,
-          }}>
-            <div style={{ display: "flex", gap: 8 }}>
-              <textarea
-                value={commentText}
-                onChange={e => setCommentText(e.target.value)}
-                placeholder="Agregar comentario..."
-                rows={1}
-                style={{
-                  flex: 1, border: `1px solid ${colors.border}`, borderRadius: radius.md,
-                  padding: "8px 12px", fontFamily: font, fontSize: 13,
-                  color: colors.text, background: colors.card, resize: "none",
-                  outline: "none",
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleAddComment(); }
-                }}
-              />
-              <button onClick={handleAddComment} disabled={!commentText.trim()} style={{
-                background: commentText.trim()
-                  ? `linear-gradient(135deg, ${colors.primary}, ${colors.primaryDark})`
-                  : colors.border,
-                color: commentText.trim() ? "#fff" : colors.textLight,
-                border: "none", borderRadius: radius.md, padding: "0 14px",
-                fontSize: 12, fontWeight: 600, fontFamily: font,
-                cursor: commentText.trim() ? "pointer" : "default",
-              }}>
-                →
-              </button>
+          {/* Approval chain visual stepper */}
+          {approvalChain.length > 0 && (
+            <div className="px-5 xl:px-0 py-2">
+              <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-2">
+                Flujo de Aprobación
+              </div>
+              <div className="bg-white/[0.03] rounded-xl px-4 py-3.5 border border-white/[0.06]">
+                <div className="flex xl:flex-col items-center xl:items-stretch gap-0">
+                  {approvalChain.map((step, i) => {
+                    const isApprovedStep = i < approvedCount;
+                    const isPendingStep = i === approvedCount && isInApproval;
+                    const textColor = isApprovedStep ? "#22c55e" : isPendingStep ? "#eab308" : "#64748b";
+                    return (
+                      <div key={i} className="flex xl:flex-row items-center" style={{ flex: i < approvalChain.length - 1 ? 1 : "none" }}>
+                        <div className="flex flex-col xl:flex-row items-center xl:gap-3" style={{ minWidth: 56 }}>
+                          <div
+                            className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all shrink-0"
+                            style={{
+                              background: isApprovedStep ? "#22c55e" : isPendingStep ? "rgba(234,179,8,0.15)" : "rgba(255,255,255,0.06)",
+                              color: isApprovedStep ? "#fff" : isPendingStep ? "#eab308" : "#475569",
+                              border: isPendingStep ? "2px solid #eab308" : isApprovedStep ? "2px solid #22c55e" : "2px solid rgba(255,255,255,0.08)",
+                              boxShadow: isPendingStep ? "0 0 0 3px rgba(234,179,8,0.12)" : isApprovedStep ? "0 0 0 3px rgba(34,197,94,0.12)" : "none",
+                            }}
+                          >
+                            {isApprovedStep ? "✓" : step.icon}
+                          </div>
+                          <div className="xl:flex-1">
+                            <div className="text-[10px] font-semibold mt-1.5 xl:mt-0 text-center xl:text-left leading-tight" style={{ color: textColor }}>
+                              {step.person}
+                            </div>
+                            <div className="text-[9px] text-slate-500 text-center xl:text-left mt-0.5">
+                              {step.label}
+                            </div>
+                          </div>
+                        </div>
+                        {i < approvalChain.length - 1 && (
+                          <div
+                            className="h-0.5 xl:h-6 flex-1 xl:w-0.5 xl:flex-none mx-1 xl:mx-0 xl:ml-4 rounded-full"
+                            style={{ background: isApprovedStep ? "#22c55e" : "rgba(255,255,255,0.08)" }}
+                          />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
-            <label style={{
-              display: "flex", alignItems: "center", gap: 6,
-              fontSize: 11, color: colors.textLight, marginTop: 6,
-              cursor: "pointer", userSelect: "none",
-            }}>
-              <input
-                type="checkbox"
-                checked={commentInternal}
-                onChange={(e) => setCommentInternal(e.target.checked)}
-                style={{ width: 14, height: 14, accentColor: colors.warning }}
-              />
-              Solo empresa (interno)
-            </label>
+          )}
+
+          {/* Budget widget */}
+          <div className="px-5 xl:px-0 py-2">
+            <BudgetWidget
+              establishment={r.establishment}
+              sector={r.sector || r.type}
+              requestAmount={displayTotal}
+            />
           </div>
+
+          {/* Legal notice */}
+          <div className="px-5 xl:px-0 py-1">
+            <div className="bg-amber-500/[0.04] rounded-lg px-3 py-2 border border-amber-500/[0.1]">
+              <div className="text-[10px] text-amber-400 font-medium text-center">
+                Toda compra debe contar con factura legal vigente
+              </div>
+            </div>
+          </div>
+
+          {/* Trazabilidad */}
+          <RequestTimeline
+            request={r}
+            statusIdx={statusIdx}
+            showTrazabilidad={showTrazabilidad}
+            onToggleTrazabilidad={() => setShowTrazabilidad(!showTrazabilidad)}
+          />
         </div>
       </div>
 
-      {/* ===== TRAZABILIDAD (collapsible) ===== */}
-      <div style={{ padding: "8px 20px" }}>
-        <SectionTitle
-          count={(r.approvalHistory?.length || 0) + STATUS_FLOW.length}
-          collapsed={!showTrazabilidad}
-          onToggle={() => setShowTrazabilidad(!showTrazabilidad)}
-        >
-          Trazabilidad
-        </SectionTitle>
-
-        {/* Always show last 3 approval history entries */}
-        {r.approvalHistory?.length > 0 && (
-          <div style={{ marginBottom: showTrazabilidad ? 8 : 0 }}>
-            {(showTrazabilidad ? r.approvalHistory : r.approvalHistory.slice(-3)).map((entry, i) => {
-              const actionStyles = {
-                confirmed: { icon: "📤", color: colors.info, label: "Confirmada" },
-                approved: { icon: "✅", color: colors.success, label: "Aprobada" },
-                rejected: { icon: "❌", color: colors.danger, label: "Rechazada" },
-                revision: { icon: "↩", color: colors.warning, label: "Devuelta" },
-                advanced: { icon: "→", color: colors.primary, label: "Avanzada" },
-              };
-              const a = actionStyles[entry.action] || { icon: "•", color: colors.textLight, label: entry.action };
-              return (
-                <div key={i} style={{
-                  display: "flex", gap: 10, marginBottom: 6,
-                  padding: "8px 12px", borderRadius: radius.md,
-                  background: colors.surface, border: `1px solid ${colors.borderLight}`,
-                }}>
-                  <span style={{ fontSize: 14 }}>{a.icon}</span>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 12, fontWeight: 600, color: a.color }}>
-                      {entry.step ? `${entry.step}: ` : ""}{a.label}
-                      {entry.note ? ` — ${entry.note}` : ""}
-                    </div>
-                    <div style={{ fontSize: 10, color: colors.textLight, marginTop: 1 }}>
-                      {entry.by} · {fmtDateTime(entry.at)}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        {/* Pipeline timeline (shown when expanded) */}
-        {showTrazabilidad && (
-          <div style={{
-            background: colors.card, borderRadius: radius.lg, padding: "14px 16px",
-            border: `1px solid ${colors.borderLight}`,
-          }}>
-            {STATUS_FLOW.map((s, i) => {
-              const reached = i <= statusIdx;
-              return (
-                <div key={s.key} style={{ display: "flex", gap: 12 }}>
-                  <div style={{
-                    display: "flex", flexDirection: "column", alignItems: "center", width: 24,
-                  }}>
-                    <div style={{
-                      width: 18, height: 18, borderRadius: "50%",
-                      background: reached ? s.color : colors.border,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: 9, color: "#fff", transition: "all 0.3s",
-                      border: i === statusIdx ? `2px solid ${s.color}` : "none",
-                      boxShadow: i === statusIdx ? `0 0 0 3px ${s.color}20` : "none",
-                    }}>
-                      {reached ? "✓" : ""}
-                    </div>
-                    {i < STATUS_FLOW.length - 1 && (
-                      <div style={{
-                        width: 2, height: 22,
-                        background: i < statusIdx ? s.color : colors.border,
-                      }} />
-                    )}
-                  </div>
-                  <div style={{ paddingBottom: 8, minWidth: 0 }}>
-                    <div style={{
-                      fontSize: 12, fontWeight: reached ? 600 : 400,
-                      color: reached ? colors.text : colors.textLight,
-                    }}>
-                      {s.icon} {s.label}
-                    </div>
-                    {reached && i === 0 && (
-                      <div style={{ fontSize: 10, color: colors.textLight }}>{fmtDate(r.date)}</div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        {!showTrazabilidad && (r.approvalHistory?.length || 0) === 0 && (
-          <div style={{
-            fontSize: 12, color: colors.textLight, padding: "6px 0",
-          }}>
-            Sin historial de acciones todavía
-          </div>
-        )}
-      </div>
-
-      {/* ===== ATTACHMENTS ===== */}
-      <div style={{ padding: "8px 20px" }}>
-        <SectionTitle
-          count={attachments.length}
-          collapsed={!showAttachments}
-          onToggle={() => setShowAttachments(!showAttachments)}
-        >
-          Adjuntos
-        </SectionTitle>
-        {showAttachments && (
-          <div style={{
-            background: colors.card, borderRadius: radius.lg, padding: 16,
-            border: `1px solid ${colors.borderLight}`,
-          }}>
-            <AttachmentUpload
-              requestUuid={r._uuid}
-              attachments={attachments}
-              onAttachmentsChange={handleAttachmentsChange}
-            />
-          </div>
-        )}
-      </div>
-
-      {/* ===== MOBILE BOTTOM ACTION BAR ===== */}
-      <div className="mobile-bottom-action-bar" style={{
-        position: "fixed", bottom: 64, left: 0, right: 0,
-        padding: "10px 20px", background: colors.card,
-        borderTop: `1px solid ${colors.borderLight}`,
-        display: "flex", gap: 8, zIndex: 30,
-        maxWidth: 480, margin: "0 auto",
-      }}>
+      {/* ===== MOBILE BOTTOM ACTION BAR (hidden on md+) ===== */}
+      <div className="mobile-bottom-action-bar fixed bottom-16 left-0 right-0 px-5 py-2.5 bg-[rgba(10,11,15,0.95)] backdrop-blur-xl border-t border-white/[0.06] flex gap-2 z-30">
         {isBorrador && onConfirm && (
-          <ActionBtn label="Confirmar ✓" color={colors.primary} bg={`linear-gradient(135deg, ${colors.primary}, ${colors.primaryDark})`} onClick={() => onConfirm(r.id)} flex={2} />
+          <ActionBtn label="Confirmar ✓" color="#10b981" bg="linear-gradient(135deg, #10b981, #059669)" onClick={() => onConfirm(r.id)} flex={2} />
         )}
-        {!isBorrador && !isInApproval && !isLast && !isRejected && onAdvance && (
+        {!isBorrador && !isInApproval && !isLast && !isRejected && !isCancelado && onAdvance && (
           <ActionBtn
             label={`→ ${STATUS_FLOW[statusIdx + 1]?.label || "Avanzar"}`}
-            color={STATUS_FLOW[statusIdx + 1]?.color || colors.primary}
+            color={STATUS_FLOW[statusIdx + 1]?.color || "#10b981"}
             onClick={() => onAdvance(r.id)}
             flex={2}
           />
         )}
-        {(isBorrador || (!isBorrador && !isInApproval && !isLast && !isRejected)) && (
-          <ActionBtn label="✕" color={colors.danger} outline onClick={onBack} />
+        {(isBorrador || (!isBorrador && !isInApproval && !isLast && !isRejected && !isCancelado)) && (
+          <ActionBtn label="✕" color="#ef4444" outline onClick={onBack} />
         )}
-        {/* If in approval, ApprovalActions component handles buttons */}
-        {isInApproval && (
-          <div style={{ flex: 1, fontSize: 12, color: colors.textLight, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            ⏳ Acciones de aprobación arriba
-          </div>
+        {canCancel && (
+          <ActionBtn label="Cancelar" icon="🚫" color="#ef4444" outline onClick={() => setShowCancelModal(true)} />
         )}
         {isRejected && (
-          <div style={{ flex: 1, fontSize: 12, color: colors.danger, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 500 }}>
+          <div className="flex-1 text-xs text-red-400 flex items-center justify-center font-medium">
             ❌ Solicitud rechazada
           </div>
         )}
+        {isCancelado && (
+          <div className="flex-1 text-xs text-red-400 flex items-center justify-center font-medium">
+            🚫 Solicitud cancelada
+          </div>
+        )}
         {isLast && (
-          <div style={{ flex: 1, fontSize: 12, color: colors.success, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 500 }}>
+          <div className="flex-1 text-xs text-green-400 flex items-center justify-center font-medium">
             ✅ Proceso completado
           </div>
         )}
@@ -850,6 +569,7 @@ export default function RequestDetail({
       {showQuotations && (
         <QuotationPanel
           request={r}
+          currentUser={activeUser}
           onClose={() => setShowQuotations(false)}
           onSave={(reqId, updates) => { onUpdateRequest(reqId, updates); setShowQuotations(false); }}
         />
@@ -857,10 +577,47 @@ export default function RequestDetail({
       {showAddItem && (
         <AddItemModal onClose={() => setShowAddItem(false)} onAdd={handleAddItem} />
       )}
+      {showCancelModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowCancelModal(false)}>
+          <div className="bg-[#1a1b23] rounded-2xl w-full max-w-md border border-white/[0.08] p-5" onClick={e => e.stopPropagation()}>
+            <div className="text-base font-semibold text-white mb-1">Cancelar Solicitud</div>
+            <div className="text-xs text-slate-400 mb-4">Esta acción no se puede deshacer. La solicitud quedará en estado cancelado.</div>
+            <textarea
+              value={cancelReason}
+              onChange={e => setCancelReason(e.target.value)}
+              placeholder="Motivo de cancelación (requerido)..."
+              rows={3}
+              className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none mb-3 resize-none focus:border-red-500/50"
+              autoFocus
+            />
+            <div className="flex gap-2">
+              <button
+                onClick={() => { setShowCancelModal(false); setCancelReason(""); }}
+                className="flex-1 py-2.5 rounded-lg border border-white/[0.06] bg-transparent text-white text-sm font-medium cursor-pointer"
+              >
+                Volver
+              </button>
+              <button
+                onClick={() => {
+                  if (!cancelReason.trim()) return;
+                  onCancel(r.id, cancelReason.trim());
+                  setShowCancelModal(false);
+                  setCancelReason("");
+                }}
+                disabled={!cancelReason.trim()}
+                className="flex-1 py-2.5 rounded-lg border-none text-white text-sm font-semibold cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                style={{ background: cancelReason.trim() ? '#ef4444' : '#ef444466' }}
+              >
+                Confirmar Cancelación
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
-      {/* InfoGrid responsive style */}
+      {/* Responsive styles */}
       <style>{`
-        @media (max-width: 480px) {
+        @media (max-width: 640px) {
           .info-grid { grid-template-columns: 1fr !important; }
         }
         @media (min-width: 768px) {
@@ -870,4 +627,3 @@ export default function RequestDetail({
     </div>
   );
 }
-

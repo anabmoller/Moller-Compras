@@ -1,27 +1,13 @@
-import { colors, font } from "../../styles/theme";
-
 /**
  * Shared back-navigation button.
  * Replaces 7+ duplicate inline back buttons across screens.
  */
 export default function BackButton({ onClick, label = "Volver" }) {
   return (
-    <div style={{ padding: "12px 20px" }}>
+    <div className="py-3 px-5">
       <button
         onClick={onClick}
-        style={{
-          background: "transparent",
-          border: "none",
-          cursor: "pointer",
-          fontFamily: font,
-          fontSize: 14,
-          color: colors.primary,
-          fontWeight: 500,
-          padding: 0,
-          display: "flex",
-          alignItems: "center",
-          gap: 4,
-        }}
+        className="bg-transparent border-none cursor-pointer text-sm text-emerald-500 font-medium p-0 flex items-center gap-1"
       >
         ← {label}
       </button>

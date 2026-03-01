@@ -34,10 +34,14 @@ Deno.serve(async (req) => {
           : `${username}@ypoti.local`;
 
         // Create Supabase auth user
+        const defaultPassword = Deno.env.get("DEFAULT_USER_PASSWORD");
+        if (!defaultPassword) {
+          throw new Error("DEFAULT_USER_PASSWORD not configured");
+        }
         const { data: authData, error: authErr } =
           await supabaseAdmin.auth.admin.createUser({
             email: authEmail,
-            password: "ypoti2026",
+            password: defaultPassword,
             email_confirm: true,
           });
         if (authErr) throw authErr;
@@ -114,9 +118,13 @@ Deno.serve(async (req) => {
         const { userId: uid } = payload;
         if (!uid) throw new Error("userId is required");
 
+        const resetPassword = Deno.env.get("DEFAULT_USER_PASSWORD");
+        if (!resetPassword) {
+          throw new Error("DEFAULT_USER_PASSWORD not configured");
+        }
         const { error: pwErr } =
           await supabaseAdmin.auth.admin.updateUserById(uid, {
-            password: "ypoti2026",
+            password: resetPassword,
           });
         if (pwErr) throw pwErr;
 

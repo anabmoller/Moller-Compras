@@ -1,33 +1,16 @@
-import { colors, font, shadows, radius } from "../../styles/theme";
-
 export default function KPICard({ label, value, color, icon }) {
   return (
-    <div style={{
-      background: colors.card,
-      borderRadius: radius.lg,
-      padding: "14px 16px",
-      border: `1px solid ${colors.borderLight}`,
-      boxShadow: shadows.card,
-    }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        {icon && <span style={{ fontSize: 18 }}>{icon}</span>}
-        <div style={{
-          fontSize: 26,
-          fontWeight: 700,
-          color,
-          fontFamily: font,
-          lineHeight: 1,
-        }}>
+    <div className="bg-white/[0.03] rounded-xl px-4 py-3.5 border border-white/[0.06] shadow-sm">
+      <div className="flex items-center gap-2">
+        {icon && <span className="text-lg">{icon}</span>}
+        <div
+          className="text-[26px] font-bold leading-none"
+          style={color ? { color } : undefined}
+        >
           {value}
         </div>
       </div>
-      <div style={{
-        fontSize: 11,
-        color: colors.textLight,
-        marginTop: 6,
-        fontWeight: 500,
-        letterSpacing: "0.01em",
-      }}>
+      <div className="text-[11px] text-slate-400 mt-1.5 font-medium tracking-wide">
         {label}
       </div>
     </div>

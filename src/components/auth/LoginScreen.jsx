@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { colors, font, inputStyle, shadows, radius } from "../../styles/theme";
 import { useAuth } from "../../context/AuthContext";
 
 export default function LoginScreen() {
@@ -22,7 +21,6 @@ export default function LoginScreen() {
         setError(result.error);
         setLoading(false);
       }
-      // On success, AuthContext updates state and App.jsx re-renders automatically
     } catch (err) {
       setError("Error de conexión. Intenta de nuevo.");
       setLoading(false);
@@ -30,54 +28,33 @@ export default function LoginScreen() {
   };
 
   return (
-    <div style={{
-      fontFamily: font,
-      background: colors.bg,
-      minHeight: "100vh",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: 20,
-    }}>
-      <div style={{ width: "100%", maxWidth: 440 }}>
+    <div className="bg-[#0a0b0f] min-h-screen flex items-center justify-center p-5">
+      <div className="w-full max-w-[440px]">
         {/* Brand header */}
-        <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <div style={{
-            width: 56, height: 56, borderRadius: radius.lg,
-            background: colors.primary,
-            display: "inline-flex", alignItems: "center", justifyContent: "center",
-            marginBottom: 16,
-            boxShadow: `0 4px 16px ${colors.primary}30`,
-          }}>
-            <span style={{ color: "#fff", fontSize: 24, fontWeight: 700, fontFamily: font, letterSpacing: -1 }}>Y</span>
+        <div className="text-center mb-10">
+          <div className="w-14 h-14 rounded-xl bg-emerald-500 inline-flex items-center justify-center mb-4 shadow-lg shadow-emerald-500/20">
+            <span className="text-white text-2xl font-bold tracking-tight">Y</span>
           </div>
-          <h1 style={{
-            fontFamily: font, fontSize: 28, fontWeight: 700,
-            color: colors.text, margin: "0 0 4px", letterSpacing: "-0.02em",
-          }}>
+          <h1 className="text-[28px] font-bold text-white mb-1 tracking-tight">
             YPOTI Compras
           </h1>
-          <p style={{ fontSize: 14, color: colors.textLight, margin: 0 }}>
+          <p className="text-sm text-slate-400 m-0">
             Sistema de Gesti&oacute;n de Compras
           </p>
         </div>
 
         {/* Login card */}
-        <div style={{
-          background: colors.card, borderRadius: radius.xl,
-          border: `1px solid ${colors.border}`,
-          boxShadow: shadows.lg, padding: "36px 32px",
-        }}>
-          <h2 style={{ fontSize: 18, fontWeight: 600, color: colors.text, margin: "0 0 4px" }}>
+        <div className="bg-white/[0.03] rounded-2xl border border-white/[0.06] shadow-xl px-8 py-9">
+          <h2 className="text-lg font-semibold text-white mb-1">
             Iniciar sesi&oacute;n
           </h2>
-          <p style={{ fontSize: 13, color: colors.textLight, margin: "0 0 28px" }}>
+          <p className="text-[13px] text-slate-400 mb-7 mt-0">
             Ingresa tus credenciales para acceder
           </p>
 
-          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div>
-              <label style={{ display: "block", fontSize: 13, fontWeight: 500, color: colors.textSecondary, marginBottom: 6 }}>
+              <label className="block text-[13px] font-medium text-slate-300 mb-1.5">
                 Usuario
               </label>
               <input
@@ -85,24 +62,24 @@ export default function LoginScreen() {
                 onChange={(e) => { setUsername(e.target.value); setError(""); }}
                 placeholder="ej: ana.moller"
                 autoComplete="username" autoCapitalize="none"
-                style={{ ...inputStyle, height: 44, border: `1px solid ${error && !username.trim() ? colors.danger : colors.border}` }}
+                className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50 h-11 ${error && !username.trim() ? 'border-red-500' : 'border-white/[0.1]'}`}
               />
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 13, fontWeight: 500, color: colors.textSecondary, marginBottom: 6 }}>
+              <label className="block text-[13px] font-medium text-slate-300 mb-1.5">
                 Contrase&ntilde;a
               </label>
-              <div style={{ position: "relative" }}>
+              <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"} value={password}
                   onChange={(e) => { setPassword(e.target.value); setError(""); }}
                   placeholder="Ingresa tu contraseña"
                   autoComplete="current-password"
-                  style={{ ...inputStyle, height: 44, paddingRight: 44, border: `1px solid ${error && !password ? colors.danger : colors.border}` }}
+                  className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50 h-11 pr-11 ${error && !password ? 'border-red-500' : 'border-white/[0.1]'}`}
                 />
                 <button type="button" onClick={() => setShowPassword(!showPassword)}
-                  style={{ position: "absolute", right: 2, top: "50%", transform: "translateY(-50%)", background: "transparent", border: "none", cursor: "pointer", padding: "8px 10px", fontSize: 14, color: colors.textMuted }}
+                  className="absolute right-0.5 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer px-2.5 py-2 text-sm text-slate-500"
                   tabIndex={-1}
                 >
                   {showPassword ? "🙈" : "👁"}
@@ -111,32 +88,18 @@ export default function LoginScreen() {
             </div>
 
             {error && (
-              <div style={{
-                background: colors.dangerLight, border: "1px solid #FECACA",
-                borderRadius: radius.md, padding: "10px 14px",
-                fontSize: 13, color: colors.danger, fontWeight: 500,
-                display: "flex", alignItems: "center", gap: 8,
-              }}>
-                <svg width="16" height="16" viewBox="0 0 20 20" fill={colors.danger}>
+              <div className="bg-red-500/[0.06] border border-red-300/20 rounded-lg px-3.5 py-2.5 text-[13px] text-red-400 font-medium flex items-center gap-2">
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="#ef4444">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
                 </svg>
                 {error}
               </div>
             )}
 
-            <button type="submit" disabled={loading} style={{
-              width: "100%", height: 44, borderRadius: radius.md,
-              border: "none",
-              background: loading ? colors.textMuted : colors.primary,
-              color: "#fff", fontSize: 14, fontWeight: 600, fontFamily: font,
-              cursor: loading ? "default" : "pointer",
-              transition: "all 0.15s",
-              display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-              marginTop: 4,
-            }}>
+            <button type="submit" disabled={loading} className={`w-full h-11 rounded-lg border-none text-white text-sm font-semibold transition-all duration-150 flex items-center justify-center gap-2 mt-1 ${loading ? 'bg-slate-500 cursor-default' : 'bg-emerald-500 cursor-pointer'}`}>
               {loading ? (
                 <>
-                  <span style={{ width: 16, height: 16, border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff", borderRadius: "50%", display: "inline-block", animation: "spin 0.7s linear infinite" }} />
+                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full inline-block animate-spin" />
                   Verificando...
                 </>
               ) : "Ingresar"}
@@ -144,7 +107,7 @@ export default function LoginScreen() {
           </form>
         </div>
 
-        <div style={{ textAlign: "center", marginTop: 32, fontSize: 12, color: colors.textMuted, lineHeight: 1.5 }}>
+        <div className="text-center mt-8 text-xs text-slate-500 leading-relaxed">
           Grupo Rural Bioenergia &middot; YPOTI Compras v3.0
         </div>
       </div>

@@ -150,6 +150,6 @@ export function getBudgetPercent(budget) {
 
 /** Format guaranies */
 export function formatGuaranies(amount) {
-  if (amount == null) return "\u2014";
-  return "\u20B2 " + Math.round(amount).toLocaleString("es-PY");
+  if (amount == null) return "—";
+  return "₲ " + Math.round(amount).toLocaleString("es-PY");
 }

@@ -6,70 +6,101 @@
 import { getParameters } from "./parameters";
 
 // ---- Empresas del Grupo (approval workflow) ----
-// NOTE: The full company list with RUC/activity is in constants/index.js.
-// This shorter list uses IDs referenced by ESTABLISHMENT_COMPANY and
-// DIRECTOR_BY_COMPANY throughout the approval engine.
 export const COMPANIES = [
   { id: "rb", name: "Rural Bioenergia S.A.", type: "empresa" },
   { id: "ch", name: "Chacobras S.A.", type: "empresa" },
-  { id: "lc", name: "La Constancia S.A.", type: "empresa" },
+  { id: "lc", name: "La Constancia", type: "empresa" },
   { id: "cp", name: "Control Pasto S.A.", type: "empresa" },
   { id: "am", name: "Ana Moller", type: "persona_fisica" },
   { id: "gm", name: "Gabriel Moller", type: "persona_fisica" },
   { id: "pm", name: "Pedro Moller", type: "persona_fisica" },
 ];
 
-// ---- Establecimiento → Empresa default mapping ----
+// ---- Establecimiento → Empresa mapping ----
 export const ESTABLISHMENT_COMPANY = {
-  "Ypoti": "rb",
-  "Cerro Memby": "rb",
-  "Cielo Azul": "rb",
-  "Lusipar": "rb",
-  "Santa Maria": "rb",
-  "Ybypora": "rb",
-  "Santa Clara": "lc",
-  "Yby Pyta": "rb",
-  "Oro Verde": "rb",
-  "General": "rb",
+  "Ypoti": "Rural Bioenergia S.A.",
+  "Cerro Memby": "Chacobras S.A.",
+  "Ybypora": "Rural Bioenergia S.A.",
+  "Cielo Azul": "Rural Bioenergia S.A.",
+  "Santa Clara": "Rural Bioenergia S.A.",
+  "Yby Pyta": "Rural Bioenergia S.A.",
+  "Lusipar": "Rural Bioenergia S.A.",
+  "Santa Maria da Serra": "Rural Bioenergia S.A.",
+  "Oro Verde": "Rural Bioenergia S.A.",
+  "General": "Rural Bioenergia S.A.",
 };
 
-// ---- Gerente de Área por Establecimiento (Step ①) ----
-// username → matches user.username in profiles table
-export const MANAGER_BY_ESTABLISHMENT = {
-  "Ypoti":        "paulo",
-  "Cerro Memby":  "fabiano",
-  "Ybypora":      "fabiano",
-  "Cielo Azul":   "mauricio",
-  "Santa Clara":  "mauricio",
-  "Yby Pyta":     "mauricio",
-  "Lusipar":      "ronei",
-  "Santa Maria":  "ronei",
-  "Oro Verde":    "ronei",
-  "General":      "fabiano",  // default: Fabiano as general manager
+// ---- Gerente de Área por Establecimiento (Step ① — Autorización) ----
+export const MANAGER_MAP = {
+  "Ypoti": "paulo",
+  "Cerro Memby": "fabiano",
+  "Ybypora": "fabiano",
+  "Cielo Azul": "pedro",
+  "Santa Clara": "fabiano",
+  "Yby Pyta": "fabiano",
+  "Lusipar": "fabiano",
+  "Santa Maria da Serra": "pedro",
+  "Oro Verde": "paulo",
+  "General": "ronei",
 };
 
-// ---- Director por Empresa (Step ②) ----
-export const DIRECTOR_BY_COMPANY = {
-  "rb": "paulo",           // Paulo → Rural Bioenergia
-  "ch": "gabriel",         // Gabriel → Chacobras
-  "lc": "pedro.moller",   // Pedro Moller → La Constancia
-  "cp": "gabriel",         // Gabriel → Control Pasto
-  "am": "ana.moller",     // Ana Moller → PF Ana Moller
-  "gm": "gabriel",         // Gabriel → PF Gabriel
-  "pm": "pedro.moller",   // Pedro → PF Pedro
+// ---- Director por Empresa (Step ② — Aprobación Director, ≥ ₲5M) ----
+export const COMPANY_MAP = {
+  "Rural Bioenergia S.A.": "ronei",
+  "Chacobras S.A.": "ronei",
+  "La Constancia": "ana.karina",
+  "Control Pasto S.A.": "ana",
+  "Ana Moller": "ana.moller",
+  "Gabriel Moller": "gabriel",
+  "Pedro Moller": "pedro.moller",
 };
 
-// ---- Overbudget Approver (Step ③ condicional) ----
-export const OVERBUDGET_APPROVER = "ana.moller";
+// ---- Presidente por Empresa (Step ③ — Aprobación Presidente, ≥ ₲50M) ----
+export const PRESIDENT_MAP = {
+  "Rural Bioenergia S.A.": "mauricio",
+  "Chacobras S.A.": "ana.karina",
+  "La Constancia": "ana.karina",
+  "Control Pasto S.A.": "ronei",
+};
+
+// ---- Username → Display Name mapping ----
+export const USER_DISPLAY_NAMES = {
+  "paulo": "Paulo Becker",
+  "fabiano": "Fabiano Ferreira",
+  "pedro": "Pedro Moller",
+  "ronei": "Ronei Barrios",
+  "mauricio": "Mauricio Moller",
+  "ana.karina": "Ana Karina",
+  "ana": "Ana Moller",
+  "ana.moller": "Ana Moller",
+  "gabriel": "Gabriel Moller",
+  "pedro.moller": "Pedro Moller",
+};
+
+// Legacy alias for code that imports MANAGER_BY_ESTABLISHMENT
+export const MANAGER_BY_ESTABLISHMENT = MANAGER_MAP;
+
+// Legacy alias for code that imports DIRECTOR_BY_COMPANY
+export const DIRECTOR_BY_COMPANY = COMPANY_MAP;
+
+// ---- Overbudget Approver (condicional — R6) ----
+export const OVERBUDGET_APPROVER = "mauricio";
 
 // ---- Veterinaria/Farmacia special approver (R5) ----
 export const VET_APPROVER = "rodrigo.ferreira";
+export const VET_APPROVER_2 = "paulo";
 export const VET_SECTORS = ["Veterinária", "Farmacia", "Veterinaria"];
+
+// ---- Super-Approvers: can approve any step up to their limit ----
+export const SUPER_APPROVERS = {
+  "mauricio": Infinity,            // Can approve any amount
+  "ronei": 100_000_000_000,       // ₲100B (effectively unlimited)
+};
 
 // ---- Thresholds (en Guaraníes ₲) ----
 export const THRESHOLDS = {
   DIRECTOR_REQUIRED: 5_000_000,       // ≥ ₲5M → requiere Director
-  OVERBUDGET_DIRECTOR: 50_000_000,    // ≥ ₲50M → requiere Ana Moller
+  PRESIDENT_REQUIRED: 50_000_000,    // ≥ ₲50M → requiere Presidente
 };
 
 // ---- SLA (en horas) ----
@@ -119,18 +150,14 @@ export const STEP_STATUS = {
 export function calculateApprovalSteps(pr, users = []) {
   const steps = [];
   const resolveUser = (username) => users.find(u => u.email === username);
-
-  // Dynamic resolution from admin parameters (with hardcoded fallback)
-  const params = getParameters();
-  const paramEstab = params.establishments?.find(e => e.name === pr.establishment);
-  const paramCompany = params.companies?.find(c => c.name === paramEstab?.company);
+  const displayName = (username) => USER_DISPLAY_NAMES[username] || username;
 
   const isEmergency = pr.urgency === "emergencia";
   const amount = pr.totalAmount || 0;
-  const companyId = pr.company || ESTABLISHMENT_COMPANY[pr.establishment] || "rb";
+  const company = ESTABLISHMENT_COMPANY[pr.establishment] || "Rural Bioenergia S.A.";
   const isVetSector = VET_SECTORS.includes(pr.sector);
 
-  // ---- R5: Veterinaria/Farmacia → Rodrigo first ----
+  // ---- R5: Veterinaria/Farmacia → Rodrigo first, then Paulo confirmation ----
   if (isVetSector) {
     const vetUser = resolveUser(VET_APPROVER);
     steps.push({
@@ -144,18 +171,28 @@ export function calculateApprovalSteps(pr, users = []) {
       approvedAt: null,
       approvedBy: null,
     });
+    const vet2User = resolveUser(VET_APPROVER_2);
+    steps.push({
+      type: STEP_TYPES.VET,
+      label: "Confirmación Vet — Gerente",
+      approverUsername: VET_APPROVER_2,
+      approverName: vet2User?.name || displayName(VET_APPROVER_2),
+      sla: isEmergency ? SLA.MANAGER_EMERGENCY : SLA.MANAGER_NORMAL,
+      conditional: false,
+      status: STEP_STATUS.PENDING,
+      approvedAt: null,
+      approvedBy: null,
+    });
   }
 
   // ---- R1/R4: Gerente de Área — AUTORIZACIÓN (siempre presente) ----
-  // Try dynamic lookup from admin parameters, fall back to hardcoded map
-  const dynamicManager = paramEstab?.manager?.toLowerCase();
-  const managerUsername = dynamicManager || MANAGER_BY_ESTABLISHMENT[pr.establishment] || "fabiano";
+  const managerUsername = MANAGER_MAP[pr.establishment] || "ronei";
   const managerUser = resolveUser(managerUsername);
   steps.push({
     type: STEP_TYPES.MANAGER,
     label: "Autorización — Gerente de Área",
     approverUsername: managerUsername,
-    approverName: managerUser?.name || managerUsername,
+    approverName: managerUser?.name || displayName(managerUsername),
     sla: isEmergency ? SLA.MANAGER_EMERGENCY : SLA.MANAGER_NORMAL,
     conditional: false,
     status: STEP_STATUS.PENDING,
@@ -165,15 +202,13 @@ export function calculateApprovalSteps(pr, users = []) {
 
   // ---- R2: Director si valor ≥ ₲5M ----
   if (amount >= THRESHOLDS.DIRECTOR_REQUIRED) {
-    // Try dynamic lookup from admin parameters, fall back to hardcoded map
-    const dynamicDirector = paramCompany?.director?.toLowerCase();
-    const directorUsername = dynamicDirector || DIRECTOR_BY_COMPANY[companyId] || "paulo";
+    const directorUsername = COMPANY_MAP[company] || "ronei";
     const directorUser = resolveUser(directorUsername);
     steps.push({
       type: STEP_TYPES.DIRECTOR,
-      label: "Aprobación — Director / CFO",
+      label: "Aprobación — Director",
       approverUsername: directorUsername,
-      approverName: directorUser?.name || directorUsername,
+      approverName: directorUser?.name || displayName(directorUsername),
       sla: isEmergency ? SLA.DIRECTOR_EMERGENCY : SLA.DIRECTOR_NORMAL,
       conditional: false,
       status: STEP_STATUS.PENDING,
@@ -182,16 +217,35 @@ export function calculateApprovalSteps(pr, users = []) {
     });
   }
 
-  // ---- R3: Overbudget (≥₲50M) OR R6: budget excedido ----
-  if (amount >= THRESHOLDS.OVERBUDGET_DIRECTOR || pr.budgetExceeded) {
+  // ---- R3: Presidente si valor ≥ ₲50M ----
+  if (amount >= THRESHOLDS.PRESIDENT_REQUIRED) {
+    const presidentUsername = PRESIDENT_MAP[company];
+    if (presidentUsername) {
+      const presUser = resolveUser(presidentUsername);
+      steps.push({
+        type: STEP_TYPES.OVERBUDGET,
+        label: "Aprobación — Presidente",
+        approverUsername: presidentUsername,
+        approverName: presUser?.name || displayName(presidentUsername),
+        sla: SLA.OVERBUDGET,
+        conditional: false,
+        status: STEP_STATUS.PENDING,
+        approvedAt: null,
+        approvedBy: null,
+      });
+    }
+  }
+
+  // ---- R6: Budget exceeded → extra overbudget step ----
+  if (pr.budgetExceeded && amount < THRESHOLDS.PRESIDENT_REQUIRED) {
     const obUser = resolveUser(OVERBUDGET_APPROVER);
     steps.push({
       type: STEP_TYPES.OVERBUDGET,
       label: "Aprobación Overbudget",
       approverUsername: OVERBUDGET_APPROVER,
-      approverName: obUser?.name || "Ana Moller",
+      approverName: obUser?.name || displayName(OVERBUDGET_APPROVER),
       sla: SLA.OVERBUDGET,
-      conditional: true,  // only shows when triggered
+      conditional: true,
       status: STEP_STATUS.PENDING,
       approvedAt: null,
       approvedBy: null,
@@ -203,10 +257,15 @@ export function calculateApprovalSteps(pr, users = []) {
 
 /**
  * Check if a user can approve a specific step
+ * Super-approvers can approve any step within their amount limit
  */
-export function canUserApproveStep(user, step) {
+export function canUserApproveStep(user, step, requestAmount = 0) {
   if (!user || !step) return false;
-  return user.email === step.approverUsername;
+  if (user.email === step.approverUsername) return true;
+  // Super-approver check
+  const superLimit = SUPER_APPROVERS[user.email];
+  if (superLimit !== undefined && requestAmount <= superLimit) return true;
+  return false;
 }
 
 /**

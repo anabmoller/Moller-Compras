@@ -33,3 +33,18 @@ export function fmtDateTime(d) {
     dt.toLocaleTimeString("es-PY", { hour: "2-digit", minute: "2-digit" })
   );
 }
+
+/**
+ * Relative time string from a timestamp (ms).
+ * Returns "ahora", "hace Xm", "hace Xh", "hace Xd".
+ */
+export function relativeTime(ts) {
+  const diff = Date.now() - ts;
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return "ahora";
+  if (mins < 60) return `hace ${mins}m`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `hace ${hours}h`;
+  const days = Math.floor(hours / 24);
+  return `hace ${days}d`;
+}

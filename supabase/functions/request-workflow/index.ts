@@ -15,6 +15,7 @@ import {
 import {
   calculateApprovalSteps,
   isFullyApproved,
+  canUserApproveStep,
   STEP_STATUS,
 } from "../_shared/approvalEngine.ts";
 import { sanitizeText, sanitizeMultiline } from "../_shared/sanitize.ts";
@@ -200,8 +201,9 @@ Deno.serve(async (req) => {
         );
         if (!currentStep) throw new Error("No pending step found");
 
-        // Authorization: caller must be the designated approver
-        if (caller.username !== currentStep.approver_username) {
+        // Authorization: caller must be the designated approver or a super-approver
+        const totalAmount = Number(request.total_amount) || 0;
+        if (!canUserApproveStep(caller.username, { approverUsername: currentStep.approver_username }, totalAmount)) {
           throw new Error(
             `Not authorized: expected ${currentStep.approver_username}, got ${caller.username}`,
           );
@@ -239,30 +241,33 @@ Deno.serve(async (req) => {
             .eq("id", requestUuid);
           if (reqUpdateErr) throw reqUpdateErr;
 
-          // Atomic budget consumption
+          // Atomic budget consumption (RPC primary, CAS fallback with retry)
           if (request.budget_id && Number(request.total_amount) > 0) {
             const amount = Number(request.total_amount);
             const { error: budgetErr } = await supabaseAdmin.rpc(
               "increment_budget_consumed",
               { budget_uuid: request.budget_id, amount },
             );
-            // Fallback if RPC doesn't exist: read-update
+            // Fallback if RPC doesn't exist: compare-and-swap with retry
             if (budgetErr) {
               console.warn(
                 "[request-workflow] RPC fallback for budget consumption",
               );
-              const { data: bData } = await supabaseAdmin
-                .from("budgets")
-                .select("consumed")
-                .eq("id", request.budget_id)
-                .single();
-              if (bData) {
-                await supabaseAdmin
+              let retries = 3;
+              while (retries-- > 0) {
+                const { data: bData } = await supabaseAdmin
                   .from("budgets")
-                  .update({
-                    consumed: (Number(bData.consumed) || 0) + amount,
-                  })
-                  .eq("id", request.budget_id);
+                  .select("consumed")
+                  .eq("id", request.budget_id)
+                  .single();
+                if (!bData) break;
+                const currentConsumed = Number(bData.consumed) || 0;
+                const { error: casErr } = await supabaseAdmin
+                  .from("budgets")
+                  .update({ consumed: currentConsumed + amount })
+                  .eq("id", request.budget_id)
+                  .eq("consumed", currentConsumed);
+                if (!casErr) break;
               }
             }
           }
@@ -305,8 +310,11 @@ Deno.serve(async (req) => {
         );
         if (!currentStep) throw new Error("No pending step found");
 
-        // Authorization
-        if (caller.username !== currentStep.approver_username) {
+        // Authorization (includes super-approvers)
+        const { data: reqForReject } = await supabaseAdmin
+          .from("requests").select("total_amount").eq("id", requestUuid).single();
+        const rejectAmount = Number(reqForReject?.total_amount) || 0;
+        if (!canUserApproveStep(caller.username, { approverUsername: currentStep.approver_username }, rejectAmount)) {
           throw new Error("Not authorized to reject this step");
         }
 
@@ -400,6 +408,63 @@ Deno.serve(async (req) => {
       }
 
       // ─────────────────────────────────────────────────
+      // CANCEL — Requester or super-approver cancels request
+      // ─────────────────────────────────────────────────
+      case "cancel": {
+        const { requestUuid, reason } = payload;
+        if (!requestUuid) throw new Error("requestUuid is required");
+        if (!reason?.trim()) throw new Error("Reason is required for cancellation");
+
+        // Load request
+        const { data: request, error: reqErr } = await supabaseAdmin
+          .from("requests")
+          .select("*")
+          .eq("id", requestUuid)
+          .single();
+        if (reqErr) throw reqErr;
+
+        // Block cancellation from terminal statuses
+        const BLOCKED_STATUSES = ["recibido", "sap", "cancelado"];
+        if (BLOCKED_STATUSES.includes(request.status)) {
+          throw new Error(`No se puede cancelar una solicitud en estado: ${request.status}`);
+        }
+
+        // Authorization: creator or super-approver
+        const isCreator = request.created_by === caller.id;
+        const totalAmount = Number(request.total_amount) || 0;
+        const isSuperApprover = canUserApproveStep(
+          caller.username,
+          { approverUsername: "__nobody__" },
+          totalAmount,
+        );
+        if (!isCreator && !isSuperApprover) {
+          throw new Error("Solo el creador o un super-aprobador puede cancelar");
+        }
+
+        const now = new Date().toISOString();
+
+        // Update request status to cancelado
+        const { error: updateErr } = await supabaseAdmin
+          .from("requests")
+          .update({ status: "cancelado", rejected_at: now })
+          .eq("id", requestUuid);
+        if (updateErr) throw updateErr;
+
+        // Insert history entry
+        await supabaseAdmin.from("approval_history").insert({
+          request_id: requestUuid,
+          action: "cancelled",
+          performed_by: caller.id,
+          performed_by_name: caller.name,
+          note: sanitizeMultiline(reason, 1000) || `Cancelado por ${caller.name}`,
+        });
+
+        return new Response(JSON.stringify({ ok: true }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      // ─────────────────────────────────────────────────
       // ADVANCE — Move to next status in STATUS_FLOW
       // ─────────────────────────────────────────────────
       case "advance": {
@@ -412,19 +477,40 @@ Deno.serve(async (req) => {
           throw new Error("No permission to advance status");
         }
 
-        // Validate status is a known value
-        const VALID_STATUSES = [
+        // Sequential status flow (must match client STATUS_FLOW)
+        const STATUS_ORDER = [
           "borrador",
-          "pendiente_aprobacion",
+          "pend_autorizacion",
+          "autorizado",
+          "en_cotizacion",
+          "pend_aprobacion",
           "aprobado",
-          "en_proceso_compra",
-          "orden_emitida",
-          "en_transito",
+          "orden_compra",
           "recibido",
-          "entregado",
+          "sap",
         ];
-        if (!VALID_STATUSES.includes(newStatus)) {
+
+        if (!STATUS_ORDER.includes(newStatus)) {
           throw new Error(`Invalid status: ${newStatus}`);
+        }
+
+        // Fetch current status from DB
+        const { data: reqData, error: fetchErr } = await supabaseAdmin
+          .from("requests")
+          .select("status")
+          .eq("id", requestUuid)
+          .single();
+        if (fetchErr || !reqData) throw new Error("Request not found");
+
+        const currentIdx = STATUS_ORDER.indexOf(reqData.status);
+        const newIdx = STATUS_ORDER.indexOf(newStatus);
+
+        // Allow: next sequential step only (or reject from any state, handled by reject action)
+        if (currentIdx < 0 || newIdx !== currentIdx + 1) {
+          throw new Error(
+            `Invalid transition: ${reqData.status} → ${newStatus}. ` +
+            `Only sequential advances are allowed.`
+          );
         }
 
         const { error } = await supabaseAdmin

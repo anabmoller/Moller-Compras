@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { colors, font, inputStyle, shadows, radius } from "../../styles/theme";
 import { useAuth } from "../../context/AuthContext";
 
 // ============================================================
@@ -18,7 +17,6 @@ export default function ChangePasswordScreen() {
     e.preventDefault();
     setError("");
 
-    // Validations
     if (!newPassword) {
       setError("Ingresa tu nueva contraseña");
       return;
@@ -43,8 +41,6 @@ export default function ChangePasswordScreen() {
         setError(result.error || "Error al cambiar contraseña");
         setLoading(false);
       }
-      // On success, AuthContext updates profile.force_password_change = false
-      // and App.jsx will re-render showing the main app
     } catch (err) {
       setError("Error de conexión. Intenta de nuevo.");
       setLoading(false);
@@ -52,74 +48,45 @@ export default function ChangePasswordScreen() {
   };
 
   return (
-    <div style={{
-      fontFamily: font,
-      background: colors.bg,
-      minHeight: "100vh",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: 20,
-    }}>
-      <div style={{ width: "100%", maxWidth: 440 }}>
+    <div className="bg-[#0a0b0f] min-h-screen flex items-center justify-center p-5">
+      <div className="w-full max-w-[440px]">
         {/* Brand header */}
-        <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <div style={{
-            width: 56, height: 56, borderRadius: radius.lg,
-            background: colors.primary,
-            display: "inline-flex", alignItems: "center", justifyContent: "center",
-            marginBottom: 16,
-            boxShadow: `0 4px 16px ${colors.primary}30`,
-          }}>
-            <span style={{ color: "#fff", fontSize: 24, fontWeight: 700, fontFamily: font, letterSpacing: -1 }}>Y</span>
+        <div className="text-center mb-10">
+          <div className="w-14 h-14 rounded-xl bg-emerald-500 inline-flex items-center justify-center mb-4 shadow-lg shadow-emerald-500/20">
+            <span className="text-white text-2xl font-bold tracking-tight">Y</span>
           </div>
-          <h1 style={{
-            fontFamily: font, fontSize: 28, fontWeight: 700,
-            color: colors.text, margin: "0 0 4px", letterSpacing: "-0.02em",
-          }}>
+          <h1 className="text-[28px] font-bold text-white mb-1 tracking-tight">
             YPOTI Compras
           </h1>
-          <p style={{ fontSize: 14, color: colors.textLight, margin: 0 }}>
+          <p className="text-sm text-slate-400 m-0">
             Sistema de Gesti&oacute;n de Compras
           </p>
         </div>
 
         {/* Change password card */}
-        <div style={{
-          background: colors.card, borderRadius: radius.xl,
-          border: `1px solid ${colors.border}`,
-          boxShadow: shadows.lg, padding: "36px 32px",
-        }}>
+        <div className="bg-white/[0.03] rounded-2xl border border-white/[0.06] shadow-xl px-8 py-9">
           {/* Security icon */}
-          <div style={{
-            width: 44, height: 44, borderRadius: radius.md,
-            background: colors.warningLight,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            marginBottom: 16,
-          }}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={colors.warning} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <div className="w-11 h-11 rounded-lg bg-amber-500/[0.08] flex items-center justify-center mb-4">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
               <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
             </svg>
           </div>
 
-          <h2 style={{ fontSize: 18, fontWeight: 600, color: colors.text, margin: "0 0 4px" }}>
+          <h2 className="text-lg font-semibold text-white mb-1">
             Cambiar contrase&ntilde;a
           </h2>
-          <p style={{ fontSize: 13, color: colors.textLight, margin: "0 0 6px" }}>
+          <p className="text-[13px] text-slate-400 mb-1.5 mt-0">
             {currentUser?.name ? `Hola, ${currentUser.name.split(" ")[0]}. ` : ""}
             Por seguridad, debes cambiar tu contrase&ntilde;a antes de continuar.
           </p>
-          <p style={{
-            fontSize: 12, color: colors.textMuted, margin: "0 0 24px",
-            padding: "8px 12px", background: colors.surface, borderRadius: radius.sm,
-          }}>
+          <p className="text-xs text-slate-500 mb-6 mt-0 px-3 py-2 bg-white/[0.02] rounded">
             La contrase&ntilde;a debe tener al menos 8 caracteres y no puede ser la contrase&ntilde;a por defecto.
           </p>
 
-          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div>
-              <label style={{ display: "block", fontSize: 13, fontWeight: 500, color: colors.textSecondary, marginBottom: 6 }}>
+              <label className="block text-[13px] font-medium text-slate-300 mb-1.5">
                 Nueva contrase&ntilde;a
               </label>
               <input
@@ -128,12 +95,12 @@ export default function ChangePasswordScreen() {
                 placeholder="Mínimo 8 caracteres"
                 autoComplete="new-password"
                 autoFocus
-                style={{ ...inputStyle, height: 44, border: `1px solid ${error && !newPassword ? colors.danger : colors.border}` }}
+                className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50 h-11 ${error && !newPassword ? 'border-red-500' : 'border-white/[0.1]'}`}
               />
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 13, fontWeight: 500, color: colors.textSecondary, marginBottom: 6 }}>
+              <label className="block text-[13px] font-medium text-slate-300 mb-1.5">
                 Confirmar contrase&ntilde;a
               </label>
               <input
@@ -141,37 +108,23 @@ export default function ChangePasswordScreen() {
                 onChange={(e) => { setConfirmPassword(e.target.value); setError(""); }}
                 placeholder="Repite la nueva contraseña"
                 autoComplete="new-password"
-                style={{ ...inputStyle, height: 44, border: `1px solid ${error && newPassword && !confirmPassword ? colors.danger : colors.border}` }}
+                className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50 h-11 ${error && newPassword && !confirmPassword ? 'border-red-500' : 'border-white/[0.1]'}`}
               />
             </div>
 
             {error && (
-              <div style={{
-                background: colors.dangerLight, border: "1px solid #FECACA",
-                borderRadius: radius.md, padding: "10px 14px",
-                fontSize: 13, color: colors.danger, fontWeight: 500,
-                display: "flex", alignItems: "center", gap: 8,
-              }}>
-                <svg width="16" height="16" viewBox="0 0 20 20" fill={colors.danger}>
+              <div className="bg-red-500/[0.06] border border-red-300/20 rounded-lg px-3.5 py-2.5 text-[13px] text-red-400 font-medium flex items-center gap-2">
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="#ef4444">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
                 </svg>
                 {error}
               </div>
             )}
 
-            <button type="submit" disabled={loading} style={{
-              width: "100%", height: 44, borderRadius: radius.md,
-              border: "none",
-              background: loading ? colors.textMuted : colors.primary,
-              color: "#fff", fontSize: 14, fontWeight: 600, fontFamily: font,
-              cursor: loading ? "default" : "pointer",
-              transition: "all 0.15s",
-              display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-              marginTop: 4,
-            }}>
+            <button type="submit" disabled={loading} className={`w-full h-11 rounded-lg border-none text-white text-sm font-semibold transition-all duration-150 flex items-center justify-center gap-2 mt-1 ${loading ? 'bg-slate-500 cursor-default' : 'bg-emerald-500 cursor-pointer'}`}>
               {loading ? (
                 <>
-                  <span style={{ width: 16, height: 16, border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff", borderRadius: "50%", display: "inline-block", animation: "spin 0.7s linear infinite" }} />
+                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full inline-block animate-spin" />
                   Guardando...
                 </>
               ) : "Cambiar contraseña y continuar"}
@@ -180,19 +133,14 @@ export default function ChangePasswordScreen() {
             <button
               type="button"
               onClick={logout}
-              style={{
-                background: "transparent", border: "none", cursor: "pointer",
-                color: colors.textMuted, fontSize: 13, fontFamily: font,
-                padding: "8px 0", textDecoration: "underline",
-                textAlign: "center",
-              }}
+              className="bg-transparent border-none cursor-pointer text-slate-500 text-[13px] py-2 underline text-center"
             >
               Cerrar sesi&oacute;n
             </button>
           </form>
         </div>
 
-        <div style={{ textAlign: "center", marginTop: 32, fontSize: 12, color: colors.textMuted, lineHeight: 1.5 }}>
+        <div className="text-center mt-8 text-xs text-slate-500 leading-relaxed">
           Grupo Rural Bioenergia &middot; YPOTI Compras v3.0
         </div>
       </div>

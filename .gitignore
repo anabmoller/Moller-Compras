@@ -28,5 +28,18 @@ yarn-error.log*
 # Old monolith file (app is now modular in src/)
 ypoti-compras-app.jsx
 
+# Backup files
+.env.backup
+backup-jwt-fix/
+
+# Scratch / work files
+MEGA_PROMPT.md
+OVERNIGHT_PROMPT.md
+WORK_LOG_*.txt
+_build_app.py
+_catalog.json
+_suppliers.json
+run_mega_correction.sh
+
 # Claude Code config
 .claude/

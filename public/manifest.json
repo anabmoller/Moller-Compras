@@ -1,0 +1,16 @@
+{
+  "name": "Ypoti Compras",
+  "short_name": "Ypoti",
+  "description": "Sistema de Gestión de Compras — Rural Bioenergia S.A.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0b0f",
+  "theme_color": "#10b981",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

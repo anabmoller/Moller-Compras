@@ -3,7 +3,6 @@
 // Botones de acción para el aprobador actual
 // ============================================================
 import { useState } from "react";
-import { colors, font, shadows, radius } from "../../styles/theme";
 import { getCurrentStep, canUserApproveStep, STEP_STATUS } from "../../constants/approvalConfig";
 
 export default function ApprovalActions({ request, currentUser, onApprove, onReject, onRevision }) {
@@ -16,20 +15,16 @@ export default function ApprovalActions({ request, currentUser, onApprove, onRej
   const currentStep = getCurrentStep(request.approvalSteps);
   if (!currentStep) return null;
 
-  const canApprove = canUserApproveStep(currentUser, currentStep);
+  const canApprove = canUserApproveStep(currentUser, currentStep, request.totalAmount || 0);
   if (!canApprove) {
     return (
-      <div style={{
-        background: colors.warningLight, borderRadius: radius.lg, padding: "14px 16px",
-        border: `1px solid ${colors.warning}30`,
-        display: "flex", alignItems: "center", gap: 10,
-      }}>
-        <span style={{ fontSize: 20 }}>⏳</span>
+      <div className="bg-amber-500/[0.06] rounded-xl px-4 py-3.5 border border-amber-500/[0.19] flex items-center gap-2.5">
+        <span className="text-xl">⏳</span>
         <div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: colors.warning }}>
+          <div className="text-[13px] font-semibold text-amber-400">
             Pendiente de autorización/aprobación
           </div>
-          <div style={{ fontSize: 12, color: colors.warning }}>
+          <div className="text-xs text-amber-400">
             Esperando: {currentStep.approverName} ({currentStep.label})
           </div>
         </div>
@@ -39,60 +34,33 @@ export default function ApprovalActions({ request, currentUser, onApprove, onRej
 
   return (
     <>
-      <div style={{
-        background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.primaryDark} 100%)`,
-        borderRadius: radius.xl, padding: 16,
-        border: "1px solid rgba(255,255,255,0.1)",
-        boxShadow: shadows.md,
-      }}>
-        <div style={{
-          fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.7)",
-          marginBottom: 4, textTransform: "uppercase", letterSpacing: 1,
-        }}>
+      <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl p-4 border border-white/10 shadow-md">
+        <div className="text-xs font-semibold text-white/70 mb-1 uppercase tracking-wide">
           Tu autorización requerida
         </div>
-        <div style={{ fontSize: 14, color: "#fff", fontWeight: 500, marginBottom: 14 }}>
+        <div className="text-sm text-white font-medium mb-3.5">
           {currentStep.label} — Paso {request.approvalSteps.indexOf(currentStep) + 1} de {request.approvalSteps.length}
         </div>
 
-        <div style={{ display: "flex", gap: 8 }}>
+        <div className="flex gap-2">
           <button
             onClick={() => setShowRevisionModal(true)}
-            style={{
-              flex: 1, padding: "12px 8px", borderRadius: radius.lg,
-              border: "1px solid rgba(255,255,255,0.25)",
-              background: "rgba(255,255,255,0.08)",
-              color: "#fff", fontSize: 12, fontWeight: 600,
-              fontFamily: font, cursor: "pointer",
-            }}
+            className="flex-1 py-3 px-2 rounded-xl border border-white/25 bg-white/[0.08] text-white text-xs font-semibold cursor-pointer"
           >
             ↩ Devolver
           </button>
 
           <button
             onClick={() => setShowRejectModal(true)}
-            style={{
-              flex: 1, padding: "12px 8px", borderRadius: radius.lg,
-              border: "none",
-              background: colors.danger,
-              color: "#fff", fontSize: 12, fontWeight: 600,
-              fontFamily: font, cursor: "pointer",
-              boxShadow: `0 2px 8px ${colors.danger}40`,
-            }}
+            className="flex-1 py-3 px-2 rounded-xl border-none bg-red-500 text-white text-xs font-semibold cursor-pointer shadow-md shadow-red-500/30"
           >
             ✕ Rechazar
           </button>
 
           <button
             onClick={() => onApprove(request.id)}
-            style={{
-              flex: 1.5, padding: "12px 8px", borderRadius: radius.lg,
-              border: "none",
-              background: `linear-gradient(135deg, ${colors.success} 0%, ${colors.success}cc 100%)`,
-              color: "#fff", fontSize: 13, fontWeight: 700,
-              fontFamily: font, cursor: "pointer",
-              boxShadow: `0 2px 12px ${colors.success}40`,
-            }}
+            className="rounded-xl border-none bg-gradient-to-br from-green-500 to-green-500/80 text-white text-[13px] font-bold cursor-pointer shadow-md shadow-green-500/30"
+            style={{ flex: 1.5, padding: "12px 8px" }}
           >
             ✓ Aprobar
           </button>
@@ -104,7 +72,7 @@ export default function ApprovalActions({ request, currentUser, onApprove, onRej
           title="Rechazar Solicitud"
           placeholder="Motivo del rechazo..."
           confirmLabel="Rechazar"
-          confirmColor={colors.danger}
+          confirmColor="#ef4444"
           reason={reason}
           setReason={setReason}
           onConfirm={() => {
@@ -121,7 +89,7 @@ export default function ApprovalActions({ request, currentUser, onApprove, onRej
           title="Devolver para Revisión"
           placeholder="Observaciones para el solicitante..."
           confirmLabel="Devolver"
-          confirmColor={colors.warning}
+          confirmColor="#f59e0b"
           reason={reason}
           setReason={setReason}
           onConfirm={() => {
@@ -138,20 +106,11 @@ export default function ApprovalActions({ request, currentUser, onApprove, onRej
 
 function ReasonModal({ title, placeholder, confirmLabel, confirmColor, reason, setReason, onConfirm, onCancel }) {
   return (
-    <div style={{
-      position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
-      display: "flex", alignItems: "flex-end", justifyContent: "center",
-      zIndex: 1000, padding: 0,
-    }}>
-      <div style={{
-        background: colors.card, width: "100%", maxWidth: 480,
-        borderRadius: `${radius.xl}px ${radius.xl}px 0 0`, padding: "24px 20px 32px",
-        animation: "slideUp 0.25s ease",
-        boxShadow: shadows.modal,
-      }}>
-        <div style={{
-          fontSize: 16, fontWeight: 600, color: colors.text, marginBottom: 16,
-        }}>
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-end md:items-center justify-center z-[1000] p-0 md:p-4">
+      <div className="w-full max-w-md rounded-t-2xl md:rounded-2xl px-5 pt-6 pb-8 animate-slideUp shadow-2xl"
+        style={{ background: '#1a1b23', border: '1px solid rgba(255,255,255,0.08)' }}
+      >
+        <div className="text-base font-semibold text-white mb-4">
           {title}
         </div>
         <textarea
@@ -159,35 +118,20 @@ function ReasonModal({ title, placeholder, confirmLabel, confirmColor, reason, s
           onChange={e => setReason(e.target.value)}
           placeholder={placeholder}
           rows={3}
-          style={{
-            width: "100%", borderRadius: radius.lg, border: `1.5px solid ${colors.border}`,
-            padding: "12px 14px", fontSize: 14, fontFamily: font,
-            background: colors.bg, color: colors.text, resize: "none",
-            boxSizing: "border-box",
-          }}
+          className="w-full rounded-xl border-[1.5px] border-white/[0.06] px-3.5 py-3 text-sm bg-[#0a0b0f] text-white resize-none box-border outline-none"
           autoFocus
         />
-        <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
+        <div className="flex gap-2.5 mt-4">
           <button
             onClick={onCancel}
-            style={{
-              flex: 1, padding: 14, borderRadius: radius.lg,
-              border: `1px solid ${colors.border}`, background: colors.bg,
-              color: colors.text, fontSize: 14, fontWeight: 500,
-              fontFamily: font, cursor: "pointer",
-            }}
+            className="flex-1 py-3.5 rounded-xl border border-white/[0.06] bg-[#0a0b0f] text-white text-sm font-medium cursor-pointer"
           >
             Cancelar
           </button>
           <button
             onClick={onConfirm}
-            style={{
-              flex: 1, padding: 14, borderRadius: radius.lg,
-              border: "none", background: confirmColor,
-              color: "#fff", fontSize: 14, fontWeight: 600,
-              fontFamily: font, cursor: "pointer",
-              boxShadow: `0 2px 8px ${confirmColor}40`,
-            }}
+            className="flex-1 py-3.5 rounded-xl border-none text-white text-sm font-semibold cursor-pointer"
+            style={{ background: confirmColor, boxShadow: `0 2px 8px ${confirmColor}40` }}
           >
             {confirmLabel}
           </button>

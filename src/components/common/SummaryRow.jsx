@@ -1,22 +1,9 @@
-import { colors } from "../../styles/theme";
-
 export default function SummaryRow({ label, value }) {
   return (
-    <div style={{
-      display: "flex",
-      justifyContent: "space-between",
-      padding: "6px 0",
-      borderBottom: `1px solid ${colors.borderLight}`,
-    }}>
-      <span style={{ fontSize: 12, color: colors.textLight }}>{label}</span>
-      <span style={{
-        fontSize: 12,
-        fontWeight: 500,
-        color: colors.text,
-        textAlign: "right",
-        maxWidth: "60%",
-      }}>
-        {value || "\u2014"}
+    <div className="flex justify-between py-1.5 border-b border-white/[0.06]">
+      <span className="text-xs text-slate-400">{label}</span>
+      <span className="text-xs font-medium text-white text-right max-w-[60%]">
+        {value || "—"}
       </span>
     </div>
   );

@@ -14,16 +14,10 @@ export default function ModalBackdrop({
       onClick={(e) => {
         if (e.target === e.currentTarget && onClose) onClose();
       }}
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(0,0,0,0.5)",
-        zIndex,
-        display: "flex",
-        alignItems: variant === "center" ? "center" : "flex-end",
-        justifyContent: "center",
-        padding: variant === "center" ? 16 : 0,
-      }}
+      className={`fixed inset-0 bg-black/50 flex justify-center ${
+        variant === "center" ? "items-center p-4" : "items-end p-0"
+      }`}
+      style={{ zIndex }}
     >
       {children}
     </div>

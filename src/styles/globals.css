@@ -1,0 +1,241 @@
+@import "tailwindcss";
+
+/* ============================================================
+   YPOTI COMPRAS — Global Styles + Tailwind v4 Theme
+   Dark mode, Inter font, custom animations
+   ============================================================ */
+
+@theme {
+  --font-sans: 'Inter', 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Consolas', monospace;
+
+  --color-brand: #10b981;
+  --color-brand-dark: #059669;
+  --color-brand-light: #34d399;
+
+  --color-surface: rgba(255, 255, 255, 0.03);
+  --color-surface-hover: rgba(255, 255, 255, 0.06);
+  --color-surface-active: rgba(255, 255, 255, 0.09);
+  --color-border: rgba(255, 255, 255, 0.06);
+  --color-border-hover: rgba(255, 255, 255, 0.12);
+
+  --animate-fade-in: fade-in 0.4s ease-out forwards;
+  --animate-slide-up: slide-up 0.5s ease-out forwards;
+  --animate-slide-right: slide-right 0.4s ease-out forwards;
+  --animate-count-up: count-up 0.6s ease-out forwards;
+  --animate-pulse-dot: pulse-dot 2s ease-in-out infinite;
+}
+
+/* Custom keyframes */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-right {
+  from { opacity: 0; transform: translateX(-16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes count-up {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes slideDown {
+  from { transform: translate(-50%, -100%); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Stagger delays for list animations */
+.stagger-1 { animation-delay: 0.05s; opacity: 0; }
+.stagger-2 { animation-delay: 0.1s; opacity: 0; }
+.stagger-3 { animation-delay: 0.15s; opacity: 0; }
+.stagger-4 { animation-delay: 0.2s; opacity: 0; }
+.stagger-5 { animation-delay: 0.25s; opacity: 0; }
+.stagger-6 { animation-delay: 0.3s; opacity: 0; }
+
+/* Base styles */
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg, #0a0b0f);
+  font-family: 'Inter', 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--color-text, #fff);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Scrollbar dark */
+:root.dark ::-webkit-scrollbar { width: 6px; height: 6px; }
+:root.dark ::-webkit-scrollbar-track { background: transparent; }
+:root.dark ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+:root.dark ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+/* Scrollbar light */
+:root.light ::-webkit-scrollbar { width: 6px; height: 6px; }
+:root.light ::-webkit-scrollbar-track { background: transparent; }
+:root.light ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
+:root.light ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
+
+/* ---- Light mode overrides ---- */
+:root.light body {
+  background: #f8f9fa;
+  color: #111827;
+}
+
+:root.light .bg-\[\#0a0b0f\],
+:root.light .bg-\[\#0d0e14\] {
+  background: #ffffff !important;
+}
+
+:root.light .min-h-screen.bg-\[\#0a0b0f\] {
+  background: #f8f9fa !important;
+}
+
+:root.light .text-white {
+  color: #111827 !important;
+}
+
+:root.light .text-slate-400 {
+  color: #6b7280 !important;
+}
+
+:root.light .text-slate-500 {
+  color: #9ca3af !important;
+}
+
+:root.light .text-slate-600 {
+  color: #9ca3af !important;
+}
+
+:root.light .text-slate-300 {
+  color: #374151 !important;
+}
+
+:root.light .border-white\/\[0\.06\] {
+  border-color: #e5e7eb !important;
+}
+
+:root.light .bg-white\/\[0\.03\],
+:root.light .bg-white\/\[0\.02\],
+:root.light .bg-white\/\[0\.04\] {
+  background: #ffffff !important;
+}
+
+:root.light .bg-white\/\[0\.05\] {
+  background: #f9fafb !important;
+}
+
+:root.light .bg-white\/\[0\.06\] {
+  background: #f3f4f6 !important;
+}
+
+:root.light select,
+:root.light input,
+:root.light textarea {
+  color: #111827 !important;
+  background: #ffffff !important;
+  border-color: #d1d5db !important;
+  color-scheme: light !important;
+}
+
+:root.light select option {
+  background: #ffffff;
+  color: #111827;
+}
+
+:root.light .desktop-sidebar {
+  background: #ffffff !important;
+  border-right-color: #e5e7eb !important;
+}
+
+:root.light .bg-\[\#1a1b22\] {
+  background: #ffffff !important;
+}
+
+/* Custom focus */
+*:focus-visible {
+  outline: 2px solid rgba(16, 185, 129, 0.5);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Form elements — force dark color-scheme for native controls */
+select, input, textarea { color-scheme: dark; }
+select { -webkit-appearance: none; appearance: none; }
+
+input:focus, select:focus, textarea:focus {
+  border-color: rgba(16, 185, 129, 0.5) !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
+  outline: none;
+}
+
+/* Recharts custom dark */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: rgba(255,255,255,0.05) !important;
+}
+
+/* Responsive Layout */
+.desktop-sidebar { display: none; }
+.mobile-header { display: block; }
+.mobile-bottom-nav { display: flex; }
+.desktop-view-toggle { display: none; }
+
+@media (min-width: 768px) {
+  .desktop-sidebar {
+    display: flex !important;
+    flex-direction: column;
+    width: 260px;
+    min-width: 260px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: var(--color-sidebar-bg, #0d0e14);
+    border-right: 1px solid var(--color-border, rgba(255,255,255,0.06));
+    z-index: 50;
+  }
+  .mobile-header { display: none !important; }
+  .mobile-bottom-nav { display: none !important; }
+  .desktop-view-toggle { display: flex !important; }
+  .app-main-content {
+    margin-left: 260px !important;
+    max-width: none !important;
+    padding: 0 24px !important;
+    min-height: 100vh;
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-main-content {
+    padding: 0 32px !important;
+  }
+}
+
+@media (min-width: 1440px) {
+  .app-main-content {
+    max-width: 1280px !important;
+  }
+}

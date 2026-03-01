@@ -4,7 +4,6 @@
 // Uses Supabase Storage bucket "attachments"
 // ============================================================
 import { useState, useRef } from "react";
-import { colors, font, radius, shadows } from "../../styles/theme";
 import { supabase } from "../../lib/supabase";
 
 const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25 MB
@@ -25,13 +24,11 @@ export default function AttachmentUpload({ requestUuid, attachments = [], onAtta
   const uploadFile = async (file) => {
     if (!file) return;
 
-    // Validate size
     if (file.size > MAX_FILE_SIZE) {
       setError(`Archivo muy grande (${formatFileSize(file.size)}). Máximo: 25 MB`);
       return;
     }
 
-    // Validate type
     if (!ALLOWED_TYPES.includes(file.type) && !file.type.startsWith("image/")) {
       setError("Tipo de archivo no soportado. Use: JPG, PNG, PDF");
       return;
@@ -41,12 +38,10 @@ export default function AttachmentUpload({ requestUuid, attachments = [], onAtta
     setUploading(true);
 
     try {
-      // Generate unique file path
       const ext = file.name.split(".").pop() || "jpg";
       const timestamp = Date.now();
       const filePath = `${requestUuid}/${timestamp}_${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
 
-      // Upload to Supabase Storage
       const { data, error: uploadError } = await supabase.storage
         .from("attachments")
         .upload(filePath, file, {
@@ -56,16 +51,16 @@ export default function AttachmentUpload({ requestUuid, attachments = [], onAtta
 
       if (uploadError) throw uploadError;
 
-      // Get public URL
-      const { data: urlData } = supabase.storage
+      // Use signed URL (works for both public and private buckets)
+      const { data: urlData } = await supabase.storage
         .from("attachments")
-        .getPublicUrl(filePath);
+        .createSignedUrl(filePath, 3600);
 
       const newAttachment = {
         id: `att_${timestamp}`,
         name: file.name,
         path: filePath,
-        url: urlData?.publicUrl || "",
+        url: urlData?.signedUrl || "",
         size: file.size,
         type: file.type,
         uploadedAt: new Date().toISOString(),
@@ -84,13 +79,11 @@ export default function AttachmentUpload({ requestUuid, attachments = [], onAtta
   const handleFileSelect = (e) => {
     const file = e.target.files?.[0];
     if (file) uploadFile(file);
-    // Reset input so same file can be selected again
     e.target.value = "";
   };
 
   const handleRemove = async (attachment) => {
     try {
-      // Remove from storage
       await supabase.storage.from("attachments").remove([attachment.path]);
     } catch (err) {
       console.error("[AttachmentUpload] Remove failed:", err);
@@ -101,77 +94,65 @@ export default function AttachmentUpload({ requestUuid, attachments = [], onAtta
 
   const isImage = (type) => type?.startsWith("image/");
 
+  // Generate a fresh signed URL on demand (handles expired stored URLs)
+  const openAttachment = async (att) => {
+    if (att.path) {
+      try {
+        const { data } = await supabase.storage
+          .from("attachments")
+          .createSignedUrl(att.path, 3600);
+        if (data?.signedUrl) {
+          window.open(data.signedUrl, "_blank");
+          return;
+        }
+      } catch { /* fall through to stored URL */ }
+    }
+    if (att.url) window.open(att.url, "_blank");
+  };
+
   return (
     <div>
       {/* Uploaded files preview */}
       {attachments.length > 0 && (
-        <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 12 }}>
+        <div className="flex flex-col gap-1.5 mb-3">
           {attachments.map((att) => (
-            <div key={att.id} style={{
-              display: "flex", alignItems: "center", gap: 10,
-              background: colors.surface, borderRadius: radius.md,
-              padding: "8px 12px", border: `1px solid ${colors.borderLight}`,
-            }}>
+            <div key={att.id} className="flex items-center gap-2.5 bg-white/[0.02] rounded-lg px-3 py-2 border border-white/[0.06]">
               {/* Thumbnail or icon */}
               {isImage(att.type) && att.url ? (
                 <img
                   src={att.url}
                   alt={att.name}
-                  style={{
-                    width: 44, height: 44, borderRadius: radius.sm,
-                    objectFit: "cover", flexShrink: 0,
-                    border: `1px solid ${colors.border}`,
-                  }}
+                  className="w-11 h-11 rounded object-cover flex-shrink-0 border border-white/[0.06]"
                 />
               ) : (
-                <div style={{
-                  width: 44, height: 44, borderRadius: radius.sm,
-                  background: colors.primary + "10",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 18, flexShrink: 0,
-                }}>
+                <div className="w-11 h-11 rounded bg-emerald-500/[0.06] flex items-center justify-center text-lg flex-shrink-0">
                   📄
                 </div>
               )}
 
               {/* File info */}
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{
-                  fontSize: 12, fontWeight: 500, color: colors.text,
-                  overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                }}>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-medium text-white overflow-hidden text-ellipsis whitespace-nowrap">
                   {att.name}
                 </div>
-                <div style={{ fontSize: 10, color: colors.textLight, marginTop: 1 }}>
+                <div className="text-[10px] text-slate-400 mt-px">
                   {formatFileSize(att.size)}
                 </div>
               </div>
 
               {/* View / Remove buttons */}
-              <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
-                {att.url && (
-                  <a
-                    href={att.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      background: colors.primary + "10", border: "none",
-                      borderRadius: radius.sm, padding: "4px 8px",
-                      fontSize: 10, color: colors.primary, fontWeight: 600,
-                      textDecoration: "none", cursor: "pointer",
-                    }}
+              <div className="flex gap-1 flex-shrink-0">
+                {(att.path || att.url) && (
+                  <button
+                    onClick={() => openAttachment(att)}
+                    className="bg-emerald-500/[0.06] border-none rounded px-2 py-1 text-[10px] text-emerald-400 font-semibold cursor-pointer"
                   >
                     Ver
-                  </a>
+                  </button>
                 )}
                 <button
                   onClick={() => handleRemove(att)}
-                  style={{
-                    background: colors.danger + "10", border: "none",
-                    borderRadius: radius.sm, padding: "4px 8px",
-                    fontSize: 10, color: colors.danger, fontWeight: 600,
-                    cursor: "pointer",
-                  }}
+                  className="bg-red-500/[0.06] border-none rounded px-2 py-1 text-[10px] text-red-400 font-semibold cursor-pointer"
                 >
                   ✕
                 </button>
@@ -182,41 +163,23 @@ export default function AttachmentUpload({ requestUuid, attachments = [], onAtta
       )}
 
       {/* Upload area */}
-      <div style={{
-        border: `2px dashed ${uploading ? colors.primary : colors.border}`,
-        borderRadius: radius.lg,
-        padding: "16px",
-        transition: "border-color 0.2s",
-      }}>
+      <div className={`border-2 border-dashed rounded-xl p-4 transition-colors duration-200 ${uploading ? 'border-emerald-500' : 'border-white/[0.06]'}`}>
         {uploading ? (
-          <div style={{ textAlign: "center", padding: "8px 0" }}>
-            <div style={{
-              width: 24, height: 24, border: `3px solid ${colors.border}`,
-              borderTopColor: colors.primary, borderRadius: "50%",
-              animation: "spin 0.8s linear infinite",
-              margin: "0 auto 8px",
-            }} />
-            <div style={{ fontSize: 12, color: colors.primary, fontWeight: 500 }}>
+          <div className="text-center py-2">
+            <div className="w-6 h-6 border-[3px] border-white/[0.06] border-t-emerald-500 rounded-full animate-spin mx-auto mb-2" />
+            <div className="text-xs text-emerald-400 font-medium">
               Subiendo...
             </div>
           </div>
         ) : (
-          <div style={{
-            display: "flex", gap: 8, justifyContent: "center",
-          }}>
-            {/* Camera button (mobile: opens camera) */}
+          <div className="flex gap-2 justify-center">
+            {/* Camera button */}
             <button
               onClick={() => cameraInputRef.current?.click()}
-              style={{
-                flex: 1, padding: "12px 10px", borderRadius: radius.md,
-                border: `1px solid ${colors.primary}30`,
-                background: colors.primary + "06",
-                cursor: "pointer", textAlign: "center",
-                fontFamily: font,
-              }}
+              className="flex-1 py-3 px-2.5 rounded-lg border border-emerald-500/[0.19] bg-emerald-500/[0.04] cursor-pointer text-center"
             >
-              <div style={{ fontSize: 20, marginBottom: 4 }}>📸</div>
-              <div style={{ fontSize: 11, fontWeight: 600, color: colors.primary }}>
+              <div className="text-xl mb-1">📸</div>
+              <div className="text-[11px] font-semibold text-emerald-400">
                 Tomar Foto
               </div>
             </button>
@@ -224,37 +187,24 @@ export default function AttachmentUpload({ requestUuid, attachments = [], onAtta
             {/* File upload button */}
             <button
               onClick={() => fileInputRef.current?.click()}
-              style={{
-                flex: 1, padding: "12px 10px", borderRadius: radius.md,
-                border: `1px solid ${colors.accent}30`,
-                background: colors.accent + "06",
-                cursor: "pointer", textAlign: "center",
-                fontFamily: font,
-              }}
+              className="flex-1 py-3 px-2.5 rounded-lg border border-blue-400/[0.19] bg-blue-400/[0.04] cursor-pointer text-center"
             >
-              <div style={{ fontSize: 20, marginBottom: 4 }}>📎</div>
-              <div style={{ fontSize: 11, fontWeight: 600, color: colors.accent }}>
+              <div className="text-xl mb-1">📎</div>
+              <div className="text-[11px] font-semibold text-blue-400">
                 Subir Archivo
               </div>
             </button>
           </div>
         )}
 
-        <div style={{
-          fontSize: 10, color: colors.textMuted, textAlign: "center",
-          marginTop: 8,
-        }}>
+        <div className="text-[10px] text-slate-500 text-center mt-2">
           JPG, PNG, PDF — Máximo 25 MB
         </div>
       </div>
 
       {/* Error message */}
       {error && (
-        <div style={{
-          fontSize: 11, color: colors.danger, marginTop: 6,
-          padding: "6px 10px", background: colors.danger + "08",
-          borderRadius: radius.sm, fontWeight: 500,
-        }}>
+        <div className="text-[11px] text-red-400 mt-1.5 px-2.5 py-1.5 bg-red-500/[0.05] rounded font-medium">
           {error}
         </div>
       )}
@@ -266,14 +216,14 @@ export default function AttachmentUpload({ requestUuid, attachments = [], onAtta
         accept="image/*"
         capture="environment"
         onChange={handleFileSelect}
-        style={{ display: "none" }}
+        className="hidden"
       />
       <input
         ref={fileInputRef}
         type="file"
         accept="image/*,application/pdf"
         onChange={handleFileSelect}
-        style={{ display: "none" }}
+        className="hidden"
       />
     </div>
   );
