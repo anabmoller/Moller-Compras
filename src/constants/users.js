@@ -18,9 +18,61 @@ export const ROLES = {
       "view_analytics", "view_inventory", "manage_settings", "manage_users",
     ],
   },
+  presidente: {
+    key: "presidente",
+    label: "Presidente",
+    description: "Aprobación presidencial y visión completa",
+    color: "#7c3aed",
+    permissions: [
+      "create_request", "view_all_requests", "approve_manager",
+      "approve_purchase", "view_analytics", "view_inventory", "advance_status",
+    ],
+  },
+  conselho: {
+    key: "conselho",
+    label: "Consejo",
+    description: "Miembro del consejo con poder de aprobación",
+    color: "#6d28d9",
+    permissions: [
+      "create_request", "view_all_requests", "approve_manager",
+      "approve_purchase", "view_analytics", "view_inventory",
+    ],
+  },
+  socio: {
+    key: "socio",
+    label: "Socio",
+    description: "Socio con poder de aprobación",
+    color: "#4c1d95",
+    permissions: [
+      "create_request", "view_all_requests", "approve_manager",
+      "approve_purchase", "view_analytics", "view_inventory",
+    ],
+  },
+  super_approver: {
+    key: "super_approver",
+    label: "Super Aprobador",
+    description: "Puede aprobar cualquier solicitud sin límite",
+    color: "#dc2626",
+    permissions: [
+      "create_request", "view_all_requests", "approve_manager",
+      "approve_purchase", "manage_quotations", "advance_status",
+      "view_analytics", "view_inventory", "manage_settings",
+    ],
+  },
+  // Legacy alias — maps to director
   diretoria: {
     key: "diretoria",
     label: "Diretoria",
+    description: "Visión completa del sistema, aprobación de alto nivel",
+    color: "#1a4731",
+    permissions: [
+      "create_request", "view_all_requests", "approve_manager",
+      "approve_purchase", "view_analytics", "view_inventory", "advance_status",
+    ],
+  },
+  director: {
+    key: "director",
+    label: "Director",
     description: "Visión completa del sistema, aprobación de alto nivel",
     color: "#1a4731",
     permissions: [
@@ -48,14 +100,34 @@ export const ROLES = {
       "advance_status", "view_inventory",
     ],
   },
+  // Legacy alias — maps to compras
   comprador: {
     key: "comprador",
     label: "Compras / Administrativo",
-    description: "Gestion de cotizaciones y ordenes de compra",
+    description: "Gestión de cotizaciones y órdenes de compra",
     color: "#8e44ad",
     permissions: [
       "create_request", "view_all_requests", "manage_quotations",
       "advance_status", "view_inventory",
+    ],
+  },
+  compras: {
+    key: "compras",
+    label: "Compras",
+    description: "Gestión de cotizaciones y órdenes de compra",
+    color: "#8e44ad",
+    permissions: [
+      "create_request", "view_all_requests", "manage_quotations",
+      "advance_status", "view_inventory",
+    ],
+  },
+  administrativo: {
+    key: "administrativo",
+    label: "Administrativo",
+    description: "Soporte administrativo y seguimiento",
+    color: "#64748b",
+    permissions: [
+      "create_request", "view_all_requests", "view_inventory",
     ],
   },
   solicitante: {
@@ -65,6 +137,15 @@ export const ROLES = {
     color: "#6b7280",
     permissions: [
       "create_request", "view_own_requests", "view_inventory",
+    ],
+  },
+  operacional: {
+    key: "operacional",
+    label: "Operacional",
+    description: "Personal operativo con acceso básico",
+    color: "#78716c",
+    permissions: [
+      "create_request", "view_own_requests",
     ],
   },
 };
