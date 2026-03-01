@@ -31,7 +31,7 @@ function NameComboBox({ value, onChange, existingNames = [] }) {
         placeholder="Buscar o escribir nombre..."
       />
       {open && filtered.length > 0 && (
-        <div className="absolute z-50 left-0 right-0 mt-1 bg-[#1a1b23] border border-white/[0.1] rounded-lg shadow-xl max-h-[200px] overflow-y-auto">
+        <div className="absolute z-50 left-0 right-0 mt-1 bg-white dark:bg-[#1a1b23] border border-gray-200 dark:border-white/[0.1] rounded-lg shadow-xl max-h-[200px] overflow-y-auto">
           {filtered.map(n => (
             <button
               key={n}
@@ -133,7 +133,7 @@ function PositionSelect({ value, onChange }) {
         placeholder="Buscar o escribir cargo..."
       />
       {open && filtered.length > 0 && (
-        <div className="absolute z-50 left-0 right-0 mt-1 bg-[#1a1b23] border border-white/[0.1] rounded-lg shadow-xl max-h-[200px] overflow-y-auto">
+        <div className="absolute z-50 left-0 right-0 mt-1 bg-white dark:bg-[#1a1b23] border border-gray-200 dark:border-white/[0.1] rounded-lg shadow-xl max-h-[200px] overflow-y-auto">
           {filtered.map(o => (
             <button
               key={o}
@@ -202,7 +202,7 @@ export default function UserFormModal({ user, title, establishments, existingNam
       onClick={onClose}
     >
       <div
-        className="bg-[#1a1b23] rounded-2xl p-6 w-full max-w-[440px] max-h-[90vh] overflow-auto shadow-2xl border border-white/[0.08]"
+        className="bg-white dark:bg-[#1a1b23] rounded-2xl p-6 w-full max-w-[440px] max-h-[90vh] overflow-auto shadow-2xl border border-gray-200 dark:border-white/[0.08]"
         onClick={e => e.stopPropagation()}
       >
         <h3 className="text-xl font-semibold text-white mb-5 mt-0">
