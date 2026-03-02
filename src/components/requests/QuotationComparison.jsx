@@ -64,7 +64,7 @@ export default function QuotationComparison({
                     <span className={`text-xs text-white ${q.selected ? 'font-semibold' : 'font-normal'}`}>
                       {q.selected && "✓ "}{q.supplier}
                     </span>
-                    <span className={`text-xs font-semibold ${q.selected ? 'text-green-400' : 'text-white'}`}>
+                    <span className={`text-xs font-semibold ${q.selected ? 'text-[#C8A03A]' : 'text-white'}`}>
                       {q.currency} {q.price?.toLocaleString()}
                     </span>
                   </div>

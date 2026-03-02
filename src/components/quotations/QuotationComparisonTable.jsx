@@ -27,7 +27,7 @@ export default function QuotationComparisonTable({
                 const price = itemData?.unitPrice || 0;
                 const isBest = price > 0 && bestItemPrices[idx] === price;
                 return (
-                  <td key={q.id} className={`px-3 py-2 text-center font-semibold ${isBest ? 'text-green-400 bg-green-500/[0.04]' : 'text-white'}`}>
+                  <td key={q.id} className={`px-3 py-2 text-center font-semibold ${isBest ? 'text-[#C8A03A] bg-[#C8A03A]/[0.04]' : 'text-white'}`}>
                     {price > 0 ? price.toLocaleString() : "—"}
                     {price > 0 && (
                       <div className="text-[10px] text-slate-400 font-normal">
@@ -45,7 +45,7 @@ export default function QuotationComparisonTable({
             {quotations.map(q => {
               const isCheapest = q.id === cheapest?.id;
               return (
-                <td key={q.id} className={`px-3 py-2.5 text-center font-bold text-sm ${isCheapest ? 'text-green-400' : 'text-white'}`}>
+                <td key={q.id} className={`px-3 py-2.5 text-center font-bold text-sm ${isCheapest ? 'text-[#C8A03A]' : 'text-white'}`}>
                   {q.price?.toLocaleString()}
                 </td>
               );

@@ -34,7 +34,7 @@ export default function ApprovalFlow({ steps, style }) {
             const pct = steps.length > 1 ? (approvedCount / (steps.length - 1)) * 100 : 0;
             return (
               <div
-                className="h-full bg-green-500 rounded-sm transition-all duration-500"
+                className="h-full bg-[#C8A03A] rounded-sm transition-all duration-500"
                 style={{ width: `${Math.min(pct, 100)}%` }}
               />
             );

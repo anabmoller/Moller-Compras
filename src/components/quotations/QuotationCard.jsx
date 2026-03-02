@@ -8,11 +8,11 @@ export default function QuotationCard({
       className={`rounded-xl px-4 py-3.5 mb-2 relative ${
         onSelect ? 'cursor-pointer' : ''
       } ${
-        q.selected ? 'bg-green-500/[0.05] border-2 border-green-500' : 'bg-white/[0.03] border border-white/[0.06]'
+        q.selected ? 'bg-[#C8A03A]/[0.05] border-2 border-[#C8A03A]' : 'bg-white/[0.03] border border-white/[0.06]'
       }`}
     >
       {q.selected && (
-        <div className="absolute top-2.5 right-2.5 bg-green-500 text-white w-[22px] h-[22px] rounded-full flex items-center justify-center text-xs font-bold">
+        <div className="absolute top-2.5 right-2.5 bg-[#C8A03A] text-white w-[22px] h-[22px] rounded-full flex items-center justify-center text-xs font-bold">
           &#10003;
         </div>
       )}
@@ -34,7 +34,7 @@ export default function QuotationCard({
           </div>
         </div>
         <div className="text-right">
-          <div className={`text-base font-bold ${q.id === cheapest?.id ? 'text-green-400' : 'text-white'}`}>
+          <div className={`text-base font-bold ${q.id === cheapest?.id ? 'text-[#C8A03A]' : 'text-white'}`}>
             {q.currency} {q.price?.toLocaleString()}
           </div>
         </div>
@@ -50,7 +50,7 @@ export default function QuotationCard({
                 <span className="text-[11px] text-slate-400 truncate flex-1 mr-2">
                   {qi.name}
                 </span>
-                <span className={`text-[11px] font-semibold flex-shrink-0 ${isBest ? 'text-green-400' : 'text-white'}`}>
+                <span className={`text-[11px] font-semibold flex-shrink-0 ${isBest ? 'text-[#C8A03A]' : 'text-white'}`}>
                   {qi.unitPrice.toLocaleString()} × {qi.quantity} = {qi.subtotal.toLocaleString()}
                 </span>
               </div>

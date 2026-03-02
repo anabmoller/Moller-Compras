@@ -49,7 +49,7 @@ export default function SettingsScreen({ onBack, onNavigate, devMode, onSetDevMo
           </div>
           <div className="flex flex-wrap gap-1.5">
             {role.permissions.map(p => (
-              <span key={p} className="text-[10px] font-medium text-green-400 bg-green-500/[0.06] px-2 py-0.5 rounded">
+              <span key={p} className="text-[10px] font-medium text-[#C8A03A] bg-[#C8A03A]/[0.06] px-2 py-0.5 rounded">
                 {p.replace(/_/g, " ")}
               </span>
             ))}

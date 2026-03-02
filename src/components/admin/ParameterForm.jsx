@@ -155,7 +155,7 @@ export default function ParameterForm({ tab, item, onSave, onCancel, saving }) {
 
       {/* SENACSA auto-fill indicator */}
       {senacsaAutoFilled && tab === "establishments" && (
-        <div className="px-3 py-2 rounded-lg mb-3 bg-green-500/[0.06] border border-green-500/[0.19] text-[11px] text-green-400 font-medium">
+        <div className="px-3 py-2 rounded-lg mb-3 bg-sky-500/[0.06] border border-sky-500/[0.19] text-[11px] text-sky-400 font-medium">
           {"✓"} Datos SENACSA auto-completados desde la base de referencia
         </div>
       )}
@@ -215,7 +215,7 @@ export default function ParameterForm({ tab, item, onSave, onCancel, saving }) {
                 disabled={saving}
                 className={`w-full px-3 py-2.5 rounded-lg border bg-white/[0.05] text-[13px] text-white outline-none transition-colors focus:border-emerald-500/50 ${
                   senacsaAutoFilled && ["senacsa_code", "senacsa_unidad_zonal", "latitude", "longitude", "departamento", "municipio"].includes(f.key) && form[f.key]
-                    ? 'bg-green-500/[0.05] border-green-500/25'
+                    ? 'bg-sky-500/[0.05] border-sky-500/25'
                     : 'border-white/[0.1]'
                 }`}
               />
