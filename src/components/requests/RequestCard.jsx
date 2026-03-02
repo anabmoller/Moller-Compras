@@ -1,6 +1,7 @@
 import { getStatusDisplay, getStatusProgress, getPriorityDisplay, formatGuaranies } from "../../utils/statusHelpers";
 import { getSectors } from "../../constants/parameters";
 import { STEP_STATUS } from "../../constants/approvalConfig";
+import getUserInitials from "../../lib/getUserInitials";
 
 function getItemNames(r) {
   const items = r.items || [];
@@ -81,8 +82,8 @@ export default function RequestCard({ request: r, onClick, usdRate }) {
       <div className="mt-2 text-[11px] text-slate-500 flex flex-col gap-1 pt-2 border-t border-white/[0.06]">
         {r.requester && (
           <div className="flex items-center gap-1.5">
-            <span className="w-[18px] h-[18px] rounded-full bg-emerald-500/10 text-emerald-500 text-[9px] font-semibold inline-flex items-center justify-center">
-              {r.requester.charAt(0)}
+            <span className="w-[18px] h-[18px] rounded-full bg-[#C8A03A]/10 text-[#C8A03A] text-[9px] font-semibold inline-flex items-center justify-center">
+              {getUserInitials(r.requester)}
             </span>
             <span className="font-medium text-slate-300">{r.requester}</span>
           </div>

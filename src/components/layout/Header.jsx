@@ -3,9 +3,9 @@
  */
 import BrandMark from "../../brand/BrandMark";
 import { SYSTEM_NAME } from "../../brand/brand";
+import getUserInitials from "../../lib/getUserInitials";
 
 export default function Header({ currentUser, onToggleDrawer, onNavigate }) {
-  const initial = currentUser?.charAt(0)?.toUpperCase() || 'U';
   return (
     <header className="bg-[#0d0e14] border-b border-white/[0.06] px-4 py-3 flex justify-between items-center sticky top-0 z-40">
       {/* Hamburger */}
@@ -34,7 +34,7 @@ export default function Header({ currentUser, onToggleDrawer, onNavigate }) {
         className="w-8 h-8 rounded-full bg-[#C8A03A]/10 flex items-center justify-center text-xs font-semibold text-[#C8A03A] border-none cursor-pointer"
         aria-label="Perfil"
       >
-        {initial}
+        {getUserInitials(currentUser)}
       </button>
     </header>
   );

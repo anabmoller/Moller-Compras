@@ -5,6 +5,7 @@ import { useNotifications } from "../../context/NotificationContext";
 import { useAuth } from "../../context/AuthContext";
 import BrandMark from "../../brand/BrandMark";
 import { SYSTEM_NAME, TAGLINE } from "../../brand/brand";
+import getUserInitials from "../../lib/getUserInitials";
 
 export default function MobileDrawer({ open, onClose, screen, onNavigate, onNewRequest, currentUser, canViewAnalytics, canManageUsers }) {
   const { getVisibleNotifications } = useNotifications();
@@ -72,7 +73,7 @@ export default function MobileDrawer({ open, onClose, screen, onNavigate, onNewR
           className="mx-3 mt-3 mb-1 px-3 py-2.5 bg-[rgba(255,255,255,0.04)] rounded-lg border border-white/[0.06] flex items-center gap-2.5 cursor-pointer hover:bg-[rgba(255,255,255,0.07)] transition-colors"
         >
           <div className="w-8 h-8 rounded-full bg-[#C8A03A]/10 flex items-center justify-center text-[#C8A03A] font-semibold text-xs">
-            {currentUser?.charAt(0)?.toUpperCase() || 'U'}
+            {getUserInitials(currentUser)}
           </div>
           <div className="text-sm font-medium text-white truncate flex-1">
             {currentUser}

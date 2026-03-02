@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo, lazy, Suspense } from "react";
 import { normalizeStatus } from "./utils/statusHelpers";
 import { hasPermission } from "./constants/users";
+import getUserInitials from "./lib/getUserInitials";
 
 import ErrorBoundary from "./components/common/ErrorBoundary";
 import { AuthProvider, useAuth } from "./context/AuthContext";
@@ -75,7 +76,7 @@ function AppContent() {
       name: devMode.name,
       role: devMode.role,
       email: devMode.username || currentUser.email,
-      avatar: devMode.name.split(/\s+/).map(w => w[0]).join("").slice(0, 2).toUpperCase(),
+      avatar: getUserInitials(devMode.name),
     };
   }, [currentUser, devMode]);
 
@@ -87,7 +88,7 @@ function AppContent() {
         name: devMode.name,
         role: devMode.role,
         email: devMode.username || currentUser?.email,
-        avatar: devMode.name.split(/\s+/).map(w => w[0]).join("").slice(0, 2).toUpperCase(),
+        avatar: getUserInitials(devMode.name),
       });
     } else {
       setDevOverride(null);

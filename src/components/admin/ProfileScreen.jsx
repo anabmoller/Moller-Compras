@@ -1,12 +1,13 @@
 import { useAuth } from "../../context/AuthContext";
 import { useApp } from "../../context/AppContext";
+import getUserInitials from "../../lib/getUserInitials";
 
 export default function ProfileScreen({ onBack, currentUser }) {
   const { logout } = useAuth();
   const { showNotif } = useApp();
 
   const name = currentUser?.name || "Ana Beatriz Moller";
-  const initials = name.split(" ").map(n => n[0]).join("").substring(0, 2).toUpperCase();
+  const initials = getUserInitials(name);
   const role = currentUser?.role || "admin";
   const roleLabel = role === "admin" ? "Administrador" : role === "gerente" ? "Gerente" : "Usuario";
 

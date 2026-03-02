@@ -1,4 +1,5 @@
 import { ROLES } from "../../constants/users";
+import getUserInitials from "../../lib/getUserInitials";
 
 export default function UserCard({ user, onEdit, onToggleActive, disabled }) {
   const role = ROLES[user.role];
@@ -13,7 +14,7 @@ export default function UserCard({ user, onEdit, onToggleActive, disabled }) {
         className="w-[38px] h-[38px] rounded-lg flex-shrink-0 flex items-center justify-center text-white font-bold text-[13px]"
         style={{ background: `linear-gradient(135deg, ${role?.color || '#10b981'} 0%, ${role?.color || '#10b981'}cc 100%)` }}
       >
-        {user.avatar || user.name.charAt(0)}
+        {user.avatar || getUserInitials(user.name)}
       </div>
 
       {/* Info */}
