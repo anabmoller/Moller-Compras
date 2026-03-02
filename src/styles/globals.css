@@ -57,11 +57,6 @@
   to { transform: translate(-50%, 0); opacity: 1; }
 }
 
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
 /* Stagger delays for list animations */
 .stagger-1 { animation-delay: 0.05s; opacity: 0; }
 .stagger-2 { animation-delay: 0.1s; opacity: 0; }
