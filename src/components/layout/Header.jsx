@@ -1,6 +1,9 @@
 /**
  * Mobile header — hamburger (left), logo→home (center), avatar→profile (right)
  */
+import BrandMark from "../../brand/BrandMark";
+import { SYSTEM_NAME } from "../../brand/brand";
+
 export default function Header({ currentUser, onToggleDrawer, onNavigate }) {
   const initial = currentUser?.charAt(0)?.toUpperCase() || 'U';
   return (
@@ -21,10 +24,8 @@ export default function Header({ currentUser, onToggleDrawer, onNavigate }) {
         onClick={() => onNavigate && onNavigate('dashboard')}
         className="flex items-center gap-2 cursor-pointer"
       >
-        <div className="w-7 h-7 rounded-md bg-[#1F2A44] flex items-center justify-center text-white font-bold text-xs">
-          Y
-        </div>
-        <div className="text-sm font-bold text-white tracking-tight">YPOTI</div>
+        <BrandMark size="xs" />
+        <div className="text-sm font-bold text-white tracking-tight">{SYSTEM_NAME}</div>
       </div>
 
       {/* Avatar → profile */}

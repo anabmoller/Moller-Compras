@@ -18,7 +18,7 @@ export default function BottomNav({ screen, onNavigate, onNewRequest }) {
       {/* Center FAB */}
       <button
         onClick={onNewRequest}
-        className="w-12 h-12 rounded-xl bg-emerald-600 flex items-center justify-center border-none cursor-pointer -mt-4 shadow-lg shadow-emerald-600/30 active:scale-95 transition-transform"
+        className="w-12 h-12 rounded-xl bg-[#C8A03A] flex items-center justify-center border-none cursor-pointer -mt-4 shadow-lg shadow-[#C8A03A]/30 active:scale-95 transition-transform"
         aria-label="Nueva Solicitud"
       >
         <svg width="22" height="22" viewBox="0 0 20 20" fill="#fff">
@@ -40,7 +40,7 @@ function NavBtn({ item, active, onClick }) {
       className="bg-transparent border-none flex flex-col items-center gap-0.5 cursor-pointer px-3 py-1"
     >
       <span className={`text-lg ${active ? 'opacity-100' : 'opacity-40'}`}>{item.icon}</span>
-      <span className={`text-[10px] ${active ? 'font-semibold text-emerald-400' : 'font-normal text-slate-500'}`}>
+      <span className={`text-[10px] ${active ? 'font-semibold text-[#C8A03A]' : 'font-normal text-slate-500'}`}>
         {item.label}
       </span>
     </button>
