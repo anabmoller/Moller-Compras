@@ -11,6 +11,7 @@
   --am-navy-800: #111827;
   --am-navy-700: #1F2A44;
   --am-burgundy: #6B1E2F;
+  --am-burgundy-light: #8A2A3F;
   --am-gold: #C8A03A;
   --am-gold-dim: #A6842F;
 }
@@ -26,7 +27,7 @@
   --color-surface: rgba(255, 255, 255, 0.03);
   --color-surface-hover: rgba(255, 255, 255, 0.06);
   --color-surface-active: rgba(255, 255, 255, 0.09);
-  --color-border: rgba(255, 255, 255, 0.06);
+  --color-border: rgba(255, 255, 255, 0.08);
   --color-border-hover: rgba(255, 255, 255, 0.12);
 
   --animate-fade-in: fade-in 0.4s ease-out forwards;
@@ -109,12 +110,12 @@ body {
   color: #111827;
 }
 
-:root.light .bg-\[\#0a0b0f\],
-:root.light .bg-\[\#0d0e14\] {
+:root.light .bg-\[\#0B1120\],
+:root.light .bg-\[\#111827\] {
   background: #ffffff !important;
 }
 
-:root.light .min-h-screen.bg-\[\#0a0b0f\] {
+:root.light .min-h-screen.bg-\[\#0B1120\] {
   background: #f8f9fa !important;
 }
 
@@ -181,7 +182,7 @@ body {
 
 /* Custom focus */
 *:focus-visible {
-  outline: 2px solid rgba(200, 160, 58, 0.5);
+  outline: 2px solid rgba(107, 30, 47, 0.5);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -191,8 +192,8 @@ select, input, textarea { color-scheme: dark; }
 select { -webkit-appearance: none; appearance: none; }
 
 input:focus, select:focus, textarea:focus {
-  border-color: rgba(200, 160, 58, 0.5) !important;
-  box-shadow: 0 0 0 3px rgba(200, 160, 58, 0.1) !important;
+  border-color: rgba(107, 30, 47, 0.5) !important;
+  box-shadow: 0 0 0 3px rgba(107, 30, 47, 0.15) !important;
   outline: none;
 }
 

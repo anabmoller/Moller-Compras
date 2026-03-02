@@ -40,7 +40,7 @@ export default function RequestItemsTable({
             >
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[10px] font-bold text-slate-400 bg-[#0a0b0f] px-1.5 py-0.5 rounded">
+                  <span className="text-[10px] font-bold text-slate-400 bg-[#0B1120] px-1.5 py-0.5 rounded">
                     {idx + 1}
                   </span>
                   {(it.codigo || it.code) && (

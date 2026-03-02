@@ -30,7 +30,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <div className="bg-[#0a0b0f] min-h-screen flex items-center justify-center p-5">
+    <div className="bg-[#0B1120] min-h-screen flex items-center justify-center p-5">
       <div className="w-full max-w-[440px]">
         {/* Brand header */}
         <div className="text-center mb-10">
@@ -62,7 +62,7 @@ export default function LoginScreen() {
                 onChange={(e) => { setUsername(e.target.value); setError(""); }}
                 placeholder="ej: ana.moller"
                 autoComplete="username" autoCapitalize="none"
-                className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/50 h-11 ${error && !username.trim() ? 'border-red-500' : 'border-white/[0.1]'}`}
+                className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50 h-11 ${error && !username.trim() ? 'border-red-500' : 'border-white/[0.1]'}`}
               />
             </div>
 
@@ -76,7 +76,7 @@ export default function LoginScreen() {
                   onChange={(e) => { setPassword(e.target.value); setError(""); }}
                   placeholder="Ingresa tu contraseña"
                   autoComplete="current-password"
-                  className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/50 h-11 pr-11 ${error && !password ? 'border-red-500' : 'border-white/[0.1]'}`}
+                  className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50 h-11 pr-11 ${error && !password ? 'border-red-500' : 'border-white/[0.1]'}`}
                 />
                 <button type="button" onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-0.5 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer px-2.5 py-2 text-sm text-slate-500"
@@ -96,7 +96,7 @@ export default function LoginScreen() {
               </div>
             )}
 
-            <button type="submit" disabled={loading} className={`w-full h-11 rounded-lg border-none text-white text-sm font-semibold transition-all duration-150 flex items-center justify-center gap-2 mt-1 ${loading ? 'bg-slate-500 cursor-default' : 'bg-[#C8A03A] cursor-pointer'}`}>
+            <button type="submit" disabled={loading} className={`w-full h-11 rounded-lg border-none text-white text-sm font-semibold transition-all duration-150 flex items-center justify-center gap-2 mt-1 ${loading ? 'bg-slate-500 cursor-default' : 'bg-[#6B1E2F] cursor-pointer'}`}>
               {loading ? (
                 <>
                   <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full inline-block animate-spin" />

@@ -38,7 +38,7 @@ export default function AnalysisScreen({ onBack, embedded = false }) {
   }), [customAnalyses]);
 
   return (
-    <div className={embedded ? "pb-24" : "min-h-screen bg-[#0a0b0f] pb-24"}>
+    <div className={embedded ? "pb-24" : "min-h-screen bg-[#0B1120] pb-24"}>
       {/* Header — hidden when embedded in unified AnalyticsScreen */}
       {!embedded && (
         <div className="px-5 pt-4 pb-2">

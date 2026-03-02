@@ -50,7 +50,7 @@ export default function ChangePasswordScreen() {
   };
 
   return (
-    <div className="bg-[#0a0b0f] min-h-screen flex items-center justify-center p-5">
+    <div className="bg-[#0B1120] min-h-screen flex items-center justify-center p-5">
       <div className="w-full max-w-[440px]">
         {/* Brand header */}
         <div className="text-center mb-10">
@@ -95,7 +95,7 @@ export default function ChangePasswordScreen() {
                 placeholder="Mínimo 8 caracteres"
                 autoComplete="new-password"
                 autoFocus
-                className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/50 h-11 ${error && !newPassword ? 'border-red-500' : 'border-white/[0.1]'}`}
+                className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50 h-11 ${error && !newPassword ? 'border-red-500' : 'border-white/[0.1]'}`}
               />
             </div>
 
@@ -108,7 +108,7 @@ export default function ChangePasswordScreen() {
                 onChange={(e) => { setConfirmPassword(e.target.value); setError(""); }}
                 placeholder="Repite la nueva contraseña"
                 autoComplete="new-password"
-                className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/50 h-11 ${error && newPassword && !confirmPassword ? 'border-red-500' : 'border-white/[0.1]'}`}
+                className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50 h-11 ${error && newPassword && !confirmPassword ? 'border-red-500' : 'border-white/[0.1]'}`}
               />
             </div>
 
@@ -121,7 +121,7 @@ export default function ChangePasswordScreen() {
               </div>
             )}
 
-            <button type="submit" disabled={loading} className={`w-full h-11 rounded-lg border-none text-white text-sm font-semibold transition-all duration-150 flex items-center justify-center gap-2 mt-1 ${loading ? 'bg-slate-500 cursor-default' : 'bg-[#C8A03A] cursor-pointer'}`}>
+            <button type="submit" disabled={loading} className={`w-full h-11 rounded-lg border-none text-white text-sm font-semibold transition-all duration-150 flex items-center justify-center gap-2 mt-1 ${loading ? 'bg-slate-500 cursor-default' : 'bg-[#6B1E2F] cursor-pointer'}`}>
               {loading ? (
                 <>
                   <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full inline-block animate-spin" />

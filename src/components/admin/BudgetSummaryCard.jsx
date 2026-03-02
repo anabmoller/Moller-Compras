@@ -24,7 +24,7 @@ export default function BudgetSummaryCard({ totalPlanned, totalConsumed, totalPe
             </div>
           </div>
         </div>
-        <div className="bg-[#0a0b0f] rounded h-2 overflow-hidden border border-white/[0.06]">
+        <div className="bg-[#0B1120] rounded h-2 overflow-hidden border border-white/[0.08]">
           <div
             className="h-full rounded transition-all duration-500"
             style={{ width: `${Math.min(totalPercent, 100)}%`, background: barColor(totalPercent) }}

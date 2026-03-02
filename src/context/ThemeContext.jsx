@@ -4,13 +4,13 @@ const ThemeContext = createContext(null);
 
 const THEMES = {
   dark: {
-    bg: "#0a0b0f",
+    bg: "#0B1120",
     card: "rgba(255,255,255,0.03)",
-    border: "rgba(255,255,255,0.06)",
+    border: "rgba(255,255,255,0.08)",
     text: "#ffffff",
     textMuted: "#94a3b8",
-    accent: "#10b981",
-    sidebarBg: "#0d0e14",
+    accent: "#6B1E2F",
+    sidebarBg: "#111827",
   },
   light: {
     bg: "#f8f9fa",

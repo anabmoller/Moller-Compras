@@ -44,7 +44,7 @@ export default function MobileDrawer({ open, onClose, screen, onNavigate, onNewR
 
       {/* Drawer */}
       <div
-        className="fixed top-0 left-0 bottom-0 w-[280px] bg-[#0d0e14] z-[101] shadow-2xl transition-transform duration-300 flex flex-col"
+        className="fixed top-0 left-0 bottom-0 w-[280px] bg-[#111827] z-[101] shadow-2xl transition-transform duration-300 flex flex-col"
         style={{ transform: open ? 'translateX(0)' : 'translateX(-100%)' }}
       >
         {/* Header */}
@@ -141,7 +141,7 @@ export default function MobileDrawer({ open, onClose, screen, onNavigate, onNewR
         <div className="px-4 pb-4 pt-2">
           <button
             onClick={() => { onNewRequest(); onClose(); }}
-            className="w-full py-2.5 rounded-lg bg-[#C8A03A] hover:bg-[#A6842F] text-white text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors border-none cursor-pointer"
+            className="w-full py-2.5 rounded-lg bg-[#6B1E2F] hover:bg-[#8A2A3F] text-white text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors border-none cursor-pointer"
           >
             + Nueva Solicitud
           </button>

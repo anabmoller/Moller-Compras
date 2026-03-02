@@ -55,7 +55,7 @@ export default function BudgetWidget({ establishment, sector, requestAmount, sty
       </div>
 
       {/* Progress bar */}
-      <div className="bg-[#0a0b0f] rounded h-2.5 overflow-hidden mb-2 border border-white/[0.06]">
+      <div className="bg-[#0B1120] rounded h-2.5 overflow-hidden mb-2 border border-white/[0.08]">
         <div
           className="h-full rounded transition-all duration-500 relative"
           style={{ width: `${Math.min(percent, 100)}%`, background: barColor }}

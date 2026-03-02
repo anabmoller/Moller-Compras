@@ -10,7 +10,7 @@ export default function BottomNav({ screen, onNavigate, onNewRequest }) {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 w-full bg-[rgba(10,11,15,0.97)] backdrop-blur-xl border-t border-white/[0.06] flex justify-around items-center px-0 pb-[env(safe-area-inset-bottom,16px)] pt-1.5 z-[100]">
+    <nav className="fixed bottom-0 left-0 right-0 w-full bg-[rgba(11,17,32,0.97)] backdrop-blur-xl border-t border-white/[0.06] flex justify-around items-center px-0 pb-[env(safe-area-inset-bottom,16px)] pt-1.5 z-[100]">
       {items.slice(0, 2).map(item => (
         <NavBtn key={item.key} item={item} active={screen === item.key} onClick={() => onNavigate(item.key)} />
       ))}
@@ -18,7 +18,7 @@ export default function BottomNav({ screen, onNavigate, onNewRequest }) {
       {/* Center FAB */}
       <button
         onClick={onNewRequest}
-        className="w-12 h-12 rounded-xl bg-[#C8A03A] flex items-center justify-center border-none cursor-pointer -mt-4 shadow-lg shadow-[#C8A03A]/30 active:scale-95 transition-transform"
+        className="w-12 h-12 rounded-xl bg-[#6B1E2F] flex items-center justify-center border-none cursor-pointer -mt-4 shadow-lg shadow-[#6B1E2F]/30 active:scale-95 transition-transform"
         aria-label="Nueva Solicitud"
       >
         <svg width="22" height="22" viewBox="0 0 20 20" fill="#fff">

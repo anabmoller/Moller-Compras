@@ -311,7 +311,7 @@ function AppContent() {
   const newRequestHandler = effectiveCan("create_request") ? handleNewRequest : () => showNotif("Sin permiso", "error");
 
   return (
-    <div className="min-h-screen bg-[#0a0b0f]">
+    <div className="min-h-screen bg-[#0B1120]">
       {devMode && (
         <div className="bg-red-600 text-white text-sm font-medium text-center py-2 px-4 flex items-center justify-center gap-3 sticky top-0 z-50">
           <span>🔧 Modo Dev: Viendo como {devMode.name} ({devMode.label})</span>

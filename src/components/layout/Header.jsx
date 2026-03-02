@@ -7,7 +7,7 @@ import getUserInitials from "../../lib/getUserInitials";
 
 export default function Header({ currentUser, onToggleDrawer, onNavigate }) {
   return (
-    <header className="bg-[#0d0e14] border-b border-white/[0.06] px-4 py-3 flex justify-between items-center sticky top-0 z-40">
+    <header className="bg-[#111827] border-b border-white/[0.08] px-4 py-3 flex justify-between items-center sticky top-0 z-40">
       {/* Hamburger */}
       <button
         onClick={onToggleDrawer}

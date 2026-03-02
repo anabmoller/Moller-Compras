@@ -59,7 +59,7 @@ export default function ApprovalActions({ request, currentUser, onApprove, onRej
 
           <button
             onClick={() => onApprove(request.id)}
-            className="rounded-xl border-none bg-gradient-to-br from-[#C8A03A] to-[#C8A03A]/80 text-white text-[13px] font-bold cursor-pointer shadow-md shadow-[#C8A03A]/30"
+            className="rounded-xl border-none bg-gradient-to-br from-[#6B1E2F] to-[#8A2A3F] text-white text-[13px] font-bold cursor-pointer shadow-md shadow-[#6B1E2F]/30"
             style={{ flex: 1.5, padding: "12px 8px" }}
           >
             ✓ Aprobar
@@ -118,13 +118,13 @@ function ReasonModal({ title, placeholder, confirmLabel, confirmColor, reason, s
           onChange={e => setReason(e.target.value)}
           placeholder={placeholder}
           rows={3}
-          className="w-full rounded-xl border-[1.5px] border-white/[0.06] px-3.5 py-3 text-sm bg-[#0a0b0f] text-white resize-none box-border outline-none"
+          className="w-full rounded-xl border-[1.5px] border-white/[0.08] px-3.5 py-3 text-sm bg-[#0B1120] text-white resize-none box-border outline-none"
           autoFocus
         />
         <div className="flex gap-2.5 mt-4">
           <button
             onClick={onCancel}
-            className="flex-1 py-3.5 rounded-xl border border-white/[0.06] bg-[#0a0b0f] text-white text-sm font-medium cursor-pointer"
+            className="flex-1 py-3.5 rounded-xl border border-white/[0.08] bg-[#0B1120] text-white text-sm font-medium cursor-pointer"
           >
             Cancelar
           </button>

@@ -33,7 +33,7 @@ export default function DesktopSidebar({ screen, onNavigate, onNewRequest, curre
   const initials = getUserInitials(currentUser);
 
   return (
-    <aside className="desktop-sidebar bg-[#0d0e14]">
+    <aside className="desktop-sidebar bg-[#111827]">
       {/* Brand — clickable to go to Solicitudes */}
       <div
         onClick={() => onNavigate('dashboard')}
@@ -104,7 +104,7 @@ export default function DesktopSidebar({ screen, onNavigate, onNewRequest, curre
       <div className="px-4 pb-3 pt-3">
         <button
           onClick={onNewRequest}
-          className="w-full py-2.5 rounded-lg bg-[#C8A03A] hover:bg-[#A6842F] text-white text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors border-none cursor-pointer"
+          className="w-full py-2.5 rounded-lg bg-[#6B1E2F] hover:bg-[#8A2A3F] text-white text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors border-none cursor-pointer"
           aria-label="Nueva Solicitud"
         >
           <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor">
