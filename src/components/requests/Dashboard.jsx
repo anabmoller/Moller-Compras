@@ -124,7 +124,7 @@ export default function Dashboard({
       </div>
 
       {/* Requests List / Table */}
-      <div className="px-5 pb-[120px]">
+      <div className="px-5 pb-[120px] md:pb-8">
         {viewMode === "table" ? (
           <RequestsTable requests={filtered} onSelectRequest={onSelectRequest} />
         ) : filtered.length === 0 ? (

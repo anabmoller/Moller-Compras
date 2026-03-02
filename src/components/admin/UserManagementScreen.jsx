@@ -129,7 +129,7 @@ export default function UserManagementScreen({ onBack }) {
       {/* Header */}
       <BackButton onClick={onBack} />
 
-      <div className="px-5 pb-[120px]">
+      <div className="px-5 pb-[120px] md:pb-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-[22px] font-semibold text-white m-0">
             Gestion de Usuarios

@@ -9,7 +9,7 @@ const ALL_GROUP_COLORS = {
 
 export default function InventoryProductList({ groupedItems, onSelectProduct }) {
   return (
-    <div className="px-5 pt-1 pb-[120px]">
+    <div className="px-5 pt-1 pb-[120px] md:pb-8">
       {Object.keys(groupedItems).length === 0 ? (
         <div className="text-center py-10 text-slate-400 text-sm">
           No se encontraron productos

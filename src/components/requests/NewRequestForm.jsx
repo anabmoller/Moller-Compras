@@ -193,7 +193,7 @@ export default function NewRequestForm({ onSubmit, onCancel, usdRate = 7800, usd
             <div
               key={s}
               className="flex-1 h-1 rounded-sm transition-colors duration-300"
-              style={{ background: s <= step ? (s < step ? '#22c55e' : '#C8A03A') : 'rgba(255,255,255,0.06)' }}
+              style={{ background: s <= step ? '#C8A03A' : 'rgba(255,255,255,0.06)' }}
             />
           ))}
         </div>

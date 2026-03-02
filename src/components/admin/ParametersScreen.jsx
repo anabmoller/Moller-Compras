@@ -198,7 +198,7 @@ export default function ParametersScreen({ onBack }) {
         ))}
       </div>
 
-      <div className="px-5 pb-[120px]">
+      <div className="px-5 pb-[120px] md:pb-8">
         {/* Search + Add */}
         <div className="flex gap-2 mb-3">
           <div className="flex-1 flex items-center gap-2 bg-white/[0.03] border border-white/[0.06] rounded-xl px-3 py-2">

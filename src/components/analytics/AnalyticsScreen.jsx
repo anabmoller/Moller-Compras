@@ -138,7 +138,7 @@ export default function AnalyticsScreen({ requests, statusCounts, onBack, defaul
             ))}
           </div>
 
-          <div className="px-5 pb-[120px]">
+          <div className="px-5 pb-[120px] md:pb-8">
             {tab === "overview" && <OverviewTab stats={stats} requests={requests} statusCounts={statusCounts} />}
             {tab === "purchases" && <PurchasesTab stats={stats} />}
             {tab === "budgets" && <BudgetsTab />}

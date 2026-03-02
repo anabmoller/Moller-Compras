@@ -221,7 +221,7 @@ export default function RequestDetail({
 
   // ---- RENDER ----
   return (
-    <div className="animate-fadeIn pb-[100px] xl:pb-8">
+    <div className="animate-fadeIn pb-[120px] md:pb-8">
 
       {/* ===== HEADER (nav, title, priority, rejected banner) ===== */}
       <RequestHeader
