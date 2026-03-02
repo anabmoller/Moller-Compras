@@ -53,8 +53,8 @@ export default function ProveedoresTab() {
               <PolarGrid stroke="rgba(255,255,255,0.1)" />
               <PolarAngleAxis dataKey="axis" tick={TICK} />
               <PolarRadiusAxis angle={30} domain={[0, 100]} tick={TICK_DIM} />
-              <Radar name="Agrofertil" dataKey="Agrofertil" stroke={C.emerald}
-                fill={C.emerald} fillOpacity={0.12} strokeWidth={2} />
+              <Radar name="Agrofertil" dataKey="Agrofertil" stroke={C.gold}
+                fill={C.gold} fillOpacity={0.12} strokeWidth={2} />
               <Radar name="Dekalpar" dataKey="Dekalpar" stroke={C.blue}
                 fill={C.blue} fillOpacity={0.12} strokeWidth={2} />
               <Radar name="Ciabay" dataKey="Ciabay" stroke={C.amber}
@@ -74,7 +74,7 @@ export default function ProveedoresTab() {
               <Tooltip content={<DarkTooltip />} />
               <Bar dataKey="volumen" name="Volumen (Gs M)" radius={[0, 4, 4, 0]}>
                 {topSuppliers.map((_, i) => (
-                  <Cell key={i} fill={i === 0 ? C.emerald : i < 3 ? C.blue : C.slate} fillOpacity={i === 0 ? 1 : 0.7} />
+                  <Cell key={i} fill={i === 0 ? C.gold : i < 3 ? C.blue : C.slate} fillOpacity={i === 0 ? 1 : 0.7} />
                 ))}
               </Bar>
             </BarChart>
@@ -102,7 +102,7 @@ export default function ProveedoresTab() {
                       <div className="w-16 h-1.5 rounded-full bg-white/[0.08]">
                         <div className="h-full rounded-full" style={{
                           width: `${r.pct}%`,
-                          background: r.pct > 75 ? C.red : r.pct > 50 ? C.amber : C.emerald,
+                          background: r.pct > 75 ? C.red : r.pct > 50 ? C.amber : C.green,
                         }} />
                       </div>
                       <span className="text-slate-300 text-xs">{r.pct}%</span>

@@ -13,8 +13,8 @@ import { DarkTooltip, ChartCard, TreemapContent, legendFmt } from './ChartCompon
 
 export default function OportunidadesTab() {
   const savingsTree = useMemo(() => [
-    { name: 'Maiz forward', ahorro: 850, fill: C.emerald },
-    { name: 'Diesel contrato', ahorro: 620, fill: C.emeraldDim },
+    { name: 'Maiz forward', ahorro: 850, fill: C.gold },
+    { name: 'Diesel contrato', ahorro: 620, fill: C.goldDim },
     { name: 'Burlanda alt.', ahorro: 480, fill: C.blue },
     { name: 'Vacunas consol.', ahorro: 350, fill: C.blueDim },
     { name: 'Sal importacion', ahorro: 280, fill: C.amber },
@@ -66,7 +66,7 @@ export default function OportunidadesTab() {
             <Tooltip content={<DarkTooltip />} />
             <Legend iconType="circle" iconSize={8} formatter={legendFmt} />
             <Bar dataKey="presupuesto" name="Presupuesto" fill={C.blue} radius={[4, 4, 0, 0]} barSize={28} fillOpacity={0.7} />
-            <Bar dataKey="real" name="Real" fill={C.emerald} radius={[4, 4, 0, 0]} barSize={28} />
+            <Bar dataKey="real" name="Real" fill={C.gold} radius={[4, 4, 0, 0]} barSize={28} />
           </BarChart>
         </ResponsiveContainer>
       </ChartCard>
@@ -85,7 +85,7 @@ export default function OportunidadesTab() {
               {q1Actions.map((a, i) => (
                 <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.03] transition-colors">
                   <td className="py-2.5 px-3 text-white text-xs font-medium">{a.accion}</td>
-                  <td className="py-2.5 px-3 text-emerald-400 text-xs font-semibold">{a.ahorro}</td>
+                  <td className="py-2.5 px-3 text-[#C8A03A] text-xs font-semibold">{a.ahorro}</td>
                   <td className="py-2.5 px-3">
                     <Badge variant={a.prioridad === 'ALTA' ? 'danger' : 'warning'} size="xs">{a.prioridad}</Badge>
                   </td>

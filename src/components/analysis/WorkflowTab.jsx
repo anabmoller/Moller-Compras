@@ -69,8 +69,8 @@ export default function WorkflowTab() {
               <XAxis dataKey="mes" tick={TICK} />
               <YAxis tick={TICK_DIM} domain={[0, 28]} />
               <Tooltip content={<DarkTooltip />} />
-              <Area type="monotone" dataKey="dias" name="Dias" stroke={C.emerald}
-                fill={C.emerald} fillOpacity={0.1} strokeWidth={2.5} dot={{ r: 3, fill: C.emerald }} />
+              <Area type="monotone" dataKey="dias" name="Dias" stroke={C.gold}
+                fill={C.gold} fillOpacity={0.1} strokeWidth={2.5} dot={{ r: 3, fill: C.gold }} />
             </AreaChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -83,7 +83,7 @@ export default function WorkflowTab() {
               <YAxis tick={TICK_DIM} />
               <Tooltip content={<DarkTooltip />} />
               <Legend iconType="circle" iconSize={8} formatter={legendFmt} />
-              <Bar dataKey="aprobada" name="Aprobada" stackId="a" fill={C.emerald} />
+              <Bar dataKey="aprobada" name="Aprobada" stackId="a" fill={C.green} />
               <Bar dataKey="pendiente" name="Pendiente" stackId="a" fill={C.amber} />
               <Bar dataKey="rechazada" name="Rechazada" stackId="a" fill={C.red} radius={[4, 4, 0, 0]} />
             </BarChart>
@@ -106,7 +106,7 @@ export default function WorkflowTab() {
             <Legend iconType="circle" iconSize={8} formatter={legendFmt} />
             <Bar yAxisId="left" dataKey="total" name="Solicitudes" fill={C.blue} fillOpacity={0.6} radius={[4, 4, 0, 0]} />
             <Line yAxisId="right" type="monotone" dataKey="dias" name="Dias promedio"
-              stroke={C.emerald} strokeWidth={2.5} dot={{ r: 3, fill: C.emerald }} />
+              stroke={C.gold} strokeWidth={2.5} dot={{ r: 3, fill: C.gold }} />
           </ComposedChart>
         </ResponsiveContainer>
       </ChartCard>
@@ -115,11 +115,11 @@ export default function WorkflowTab() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {roadmap.map((q) => (
             <Card key={q.q} hover={false} className="p-4">
-              <h4 className="text-sm font-bold text-emerald-400 mb-3">{q.q}</h4>
+              <h4 className="text-sm font-bold text-[#C8A03A] mb-3">{q.q}</h4>
               <ul className="space-y-2">
                 {q.items.map((item, i) => (
                   <li key={i} className="flex items-start gap-2 text-xs text-slate-400">
-                    <span className="text-emerald-500 mt-0.5 shrink-0">●</span>
+                    <span className="text-[#C8A03A] mt-0.5 shrink-0">●</span>
                     {item}
                   </li>
                 ))}

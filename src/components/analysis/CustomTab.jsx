@@ -39,7 +39,7 @@ export function CreateAnalysisModal({ onClose, onCreate }) {
     onClose();
   };
 
-  const inputCls = "w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none focus:border-emerald-500/50";
+  const inputCls = "w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none focus:border-[#6B1E2F]/50";
   const labelCls = "block text-xs font-medium text-slate-400 mb-1.5 tracking-wide";
 
   return (
@@ -65,7 +65,7 @@ export function CreateAnalysisModal({ onClose, onCreate }) {
                   onClick={() => setChartType(ct.key)}
                   className={`flex-1 py-2.5 rounded-lg text-xs font-semibold border cursor-pointer transition-all ${
                     chartType === ct.key
-                      ? 'bg-emerald-500/[0.12] text-emerald-400 border-emerald-500/30'
+                      ? 'bg-[#C8A03A]/[0.12] text-[#C8A03A] border-[#C8A03A]/30'
                       : 'bg-white/[0.03] text-slate-400 border-white/[0.06]'
                   }`}
                 >
@@ -104,7 +104,7 @@ export function CreateAnalysisModal({ onClose, onCreate }) {
             disabled={!title.trim()}
             className={`flex-1 py-3 rounded-xl border-none text-[13px] font-semibold ${
               title.trim()
-                ? 'bg-gradient-to-br from-emerald-500 to-emerald-600 text-white cursor-pointer'
+                ? 'bg-[#6B1E2F] hover:bg-[#8A2A3F] text-white cursor-pointer shadow-md shadow-[#6B1E2F]/35'
                 : 'bg-white/[0.06] text-slate-500 cursor-default'
             }`}
           >
@@ -121,7 +121,7 @@ export function CreateAnalysisModal({ onClose, onCreate }) {
 /* ------------------------------------------------------------------ */
 function CustomChart({ analysis, onRemove }) {
   const metricLabel = METRICS.find(m => m.key === analysis.metric)?.label || analysis.metric;
-  const PIE_COLORS = [C.emerald, C.blue, C.amber, C.purple, C.orange, C.cyan, C.pink, C.red, C.slate, C.emeraldDim, C.blueDim, C.amberDim];
+  const PIE_COLORS = [C.gold, C.blue, C.amber, C.purple, C.orange, C.cyan, C.pink, C.red, C.slate, C.goldDim, C.blueDim, C.amberDim];
 
   return (
     <ChartCard title={analysis.title} subtitle={`${metricLabel} · ${analysis.period}`}>
@@ -144,8 +144,8 @@ function CustomChart({ analysis, onRemove }) {
             <XAxis dataKey="name" tick={TICK} />
             <YAxis tick={TICK_DIM} />
             <Tooltip content={<DarkTooltip />} />
-            <Line type="monotone" dataKey="value" name={metricLabel} stroke={C.emerald}
-              strokeWidth={2.5} dot={{ r: 3, fill: C.emerald }} activeDot={{ r: 5 }} />
+            <Line type="monotone" dataKey="value" name={metricLabel} stroke={C.gold}
+              strokeWidth={2.5} dot={{ r: 3, fill: C.gold }} activeDot={{ r: 5 }} />
           </LineChart>
         ) : analysis.chartType === 'area' ? (
           <AreaChart data={analysis.data}>
@@ -190,7 +190,7 @@ export default function CustomTab({ analyses, onRemove, onAdd }) {
           <div className="text-xs text-slate-500 mt-1 mb-4">Crea tu primer analisis con el boton de arriba</div>
           <button
             onClick={onAdd}
-            className="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white border-none rounded-lg px-5 py-2.5 text-xs font-semibold cursor-pointer"
+            className="bg-[#6B1E2F] hover:bg-[#8A2A3F] text-white border-none rounded-lg px-5 py-2.5 text-xs font-semibold cursor-pointer shadow-md shadow-[#6B1E2F]/35 transition-colors"
           >
             + Nuevo Analisis
           </button>
@@ -202,7 +202,7 @@ export default function CustomTab({ analyses, onRemove, onAdd }) {
           ))}
           <button
             onClick={onAdd}
-            className="w-full py-3.5 rounded-xl border border-dashed border-emerald-500/25 bg-emerald-500/[0.04] text-emerald-400 text-[13px] font-semibold cursor-pointer"
+            className="w-full py-3.5 rounded-xl border border-dashed border-[#C8A03A]/25 bg-[#C8A03A]/[0.04] text-[#C8A03A] text-[13px] font-semibold cursor-pointer"
           >
             + Nuevo Analisis
           </button>
