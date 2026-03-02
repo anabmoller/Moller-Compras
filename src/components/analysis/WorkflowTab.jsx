@@ -119,7 +119,7 @@ export default function WorkflowTab() {
               <ul className="space-y-2">
                 {q.items.map((item, i) => (
                   <li key={i} className="flex items-start gap-2 text-xs text-slate-400">
-                    <span className="text-emerald-500 mt-0.5 shrink-0">●</span>
+                    <span className="text-[#C8A03A] mt-0.5 shrink-0">●</span>
                     {item}
                   </li>
                 ))}

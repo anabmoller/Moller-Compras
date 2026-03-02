@@ -111,7 +111,7 @@ export default function BudgetFormModal({
                 type="checkbox"
                 checked={form.splitEnabled}
                 onChange={e => onUpdate("splitEnabled", e.target.checked)}
-                className="w-3.5 h-3.5 accent-emerald-500"
+                className="w-3.5 h-3.5 accent-[#C8A03A]"
               />
               Dividir entre establecimientos
             </label>
@@ -128,7 +128,7 @@ export default function BudgetFormModal({
                         else delete newSplits[est];
                         onUpdate("splits", newSplits);
                       }}
-                      className="w-3.5 h-3.5 accent-emerald-500"
+                      className="w-3.5 h-3.5 accent-[#C8A03A]"
                     />
                     <span className="text-xs text-slate-300 flex-1">{est}</span>
                     {form.splits[est] !== undefined && (
@@ -217,7 +217,7 @@ export default function BudgetFormModal({
               disabled={!form.name || !form.establishment || !form.planned || saving}
               className={`flex-1 py-3 rounded-lg border-none text-[13px] font-semibold ${
                 form.name && form.establishment && form.planned && !saving
-                  ? 'bg-gradient-to-br from-emerald-500 to-[#C8A03A] text-white cursor-pointer shadow-md shadow-emerald-500/20'
+                  ? 'bg-gradient-to-br from-[#1F2A44] to-[#C8A03A] text-white cursor-pointer shadow-md shadow-black/20'
                   : 'bg-[#F8F9FB]/[0.06] text-slate-500 cursor-default'
               }`}
             >

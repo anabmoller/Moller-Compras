@@ -32,7 +32,7 @@ export default function ResumenTab() {
   ], []);
 
   const kpis = useMemo(() => [
-    { label: 'Total Compras YTD', value: 'Gs 12.847M', color: C.emerald, accent: 'border-l-emerald-500' },
+    { label: 'Total Compras YTD', value: 'Gs 12.847M', color: C.emerald, accent: 'border-l-[#C8A03A]' },
     { label: 'Ahorro Negociado', value: 'Gs 2.340M', sub: '18.2%', color: C.blue, accent: 'border-l-blue-500' },
     { label: 'Proveedores Activos', value: '29', color: C.purple, accent: 'border-l-purple-500' },
     { label: 'Lead Time Promedio', value: '14 dias', color: C.amber, accent: 'border-l-amber-500' },

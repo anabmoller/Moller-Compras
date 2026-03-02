@@ -18,7 +18,7 @@ export default function BottomNav({ screen, onNavigate, onNewRequest }) {
       {/* Center FAB */}
       <button
         onClick={onNewRequest}
-        className="w-12 h-12 rounded-xl bg-[#1F2A44] flex items-center justify-center border-none cursor-pointer -mt-4 shadow-lg shadow-emerald-600/30 active:scale-95 transition-transform"
+        className="w-12 h-12 rounded-xl bg-[#1F2A44] flex items-center justify-center border-none cursor-pointer -mt-4 shadow-lg shadow-black/20 active:scale-95 transition-transform"
         aria-label="Nueva Solicitud"
       >
         <svg width="22" height="22" viewBox="0 0 20 20" fill="#fff">

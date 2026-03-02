@@ -80,7 +80,7 @@ function RoleCheckboxes({ selectedRoles, onChange }) {
                 type="checkbox"
                 checked={checked}
                 onChange={() => toggle(key)}
-                className="w-3.5 h-3.5 accent-emerald-500 cursor-pointer"
+                className="w-3.5 h-3.5 accent-[#C8A03A] cursor-pointer"
               />
               <div className="flex-1 min-w-0">
                 <div className="text-xs font-semibold" style={{ color: checked ? role.color : '#94a3b8' }}>

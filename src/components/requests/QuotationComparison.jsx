@@ -44,7 +44,7 @@ export default function QuotationComparison({
               {canManageQuotations && (
                 <button
                   onClick={onShowQuotations}
-                  className="bg-gradient-to-br from-emerald-500 to-[#C8A03A] text-white border-none rounded-lg px-3.5 py-1.5 text-[11px] font-semibold cursor-pointer"
+                  className="bg-gradient-to-br from-[#1F2A44] to-[#C8A03A] text-white border-none rounded-lg px-3.5 py-1.5 text-[11px] font-semibold cursor-pointer"
                 >
                   {quotationCount > 0 ? "Ver / Editar" : "+ Agregar"}
                 </button>

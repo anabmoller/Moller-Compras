@@ -158,7 +158,7 @@ export default function ParametersScreen({ onBack }) {
         {TABS.map(t => (
           <button key={t.key} onClick={() => { setTab(t.key); setSearch(""); setShowForm(false); setEditingItem(null); }} className={`px-3.5 py-2 rounded-xl border-none text-xs font-semibold cursor-pointer whitespace-nowrap ${
             tab === t.key
-              ? 'bg-[#1F2A44] text-white shadow-md shadow-emerald-500/20'
+              ? 'bg-[#1F2A44] text-white shadow-md shadow-black/20'
               : 'bg-[#F8F9FB]/[0.03] text-slate-400 shadow-sm'
           }`}>
             {t.icon} {t.label}
@@ -178,7 +178,7 @@ export default function ParametersScreen({ onBack }) {
               className="border-none bg-transparent outline-none text-[13px] text-white w-full"
             />
           </div>
-          <button onClick={() => { setEditingItem(null); setShowForm(true); }} disabled={saving} className={`px-4 py-2 rounded-xl border-none text-xs font-semibold text-white cursor-pointer whitespace-nowrap ${saving ? 'bg-[#F8F9FB]/[0.06] opacity-60' : 'bg-gradient-to-br from-emerald-500 to-[#C8A03A]'}`}>
+          <button onClick={() => { setEditingItem(null); setShowForm(true); }} disabled={saving} className={`px-4 py-2 rounded-xl border-none text-xs font-semibold text-white cursor-pointer whitespace-nowrap ${saving ? 'bg-[#F8F9FB]/[0.06] opacity-60' : 'bg-gradient-to-br from-[#1F2A44] to-[#C8A03A]'}`}>
             + Nuevo
           </button>
         </div>

@@ -53,7 +53,7 @@ export default function AnalysisScreen({ onBack, embedded = false }) {
             <h1 className="text-2xl font-bold text-white tracking-tight">Analisis Estrategico</h1>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="bg-gradient-to-br from-emerald-500 to-[#C8A03A] text-white border-none rounded-lg px-3.5 py-2 text-[11px] font-semibold cursor-pointer flex items-center gap-1 shadow-sm"
+              className="bg-gradient-to-br from-[#1F2A44] to-[#C8A03A] text-white border-none rounded-lg px-3.5 py-2 text-[11px] font-semibold cursor-pointer flex items-center gap-1 shadow-sm"
             >
               + Nuevo
             </button>
@@ -67,7 +67,7 @@ export default function AnalysisScreen({ onBack, embedded = false }) {
           <p className="text-xs text-slate-500">Dashboard ejecutivo — Bloomberg-style analytics</p>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="bg-gradient-to-br from-emerald-500 to-[#C8A03A] text-white border-none rounded-lg px-3 py-1.5 text-[11px] font-semibold cursor-pointer"
+            className="bg-gradient-to-br from-[#1F2A44] to-[#C8A03A] text-white border-none rounded-lg px-3 py-1.5 text-[11px] font-semibold cursor-pointer"
           >
             + Nuevo
           </button>

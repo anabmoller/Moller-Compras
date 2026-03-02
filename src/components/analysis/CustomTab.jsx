@@ -104,7 +104,7 @@ export function CreateAnalysisModal({ onClose, onCreate }) {
             disabled={!title.trim()}
             className={`flex-1 py-3 rounded-xl border-none text-[13px] font-semibold ${
               title.trim()
-                ? 'bg-gradient-to-br from-emerald-500 to-[#C8A03A] text-white cursor-pointer'
+                ? 'bg-gradient-to-br from-[#1F2A44] to-[#C8A03A] text-white cursor-pointer'
                 : 'bg-[#F8F9FB]/[0.06] text-slate-500 cursor-default'
             }`}
           >
@@ -190,7 +190,7 @@ export default function CustomTab({ analyses, onRemove, onAdd }) {
           <div className="text-xs text-slate-500 mt-1 mb-4">Crea tu primer analisis con el boton de arriba</div>
           <button
             onClick={onAdd}
-            className="bg-gradient-to-br from-emerald-500 to-[#C8A03A] text-white border-none rounded-lg px-5 py-2.5 text-xs font-semibold cursor-pointer"
+            className="bg-gradient-to-br from-[#1F2A44] to-[#C8A03A] text-white border-none rounded-lg px-5 py-2.5 text-xs font-semibold cursor-pointer"
           >
             + Nuevo Analisis
           </button>

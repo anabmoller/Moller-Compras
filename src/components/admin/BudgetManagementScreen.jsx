@@ -161,7 +161,7 @@ export default function BudgetManagementScreen({ onBack }) {
               setForm({ ...DEFAULT_FORM });
               setShowForm(true);
             }}
-            className="bg-gradient-to-br from-emerald-500 to-[#C8A03A] text-white border-none rounded-lg px-4 py-2.5 text-xs font-semibold cursor-pointer whitespace-nowrap shadow-md shadow-emerald-500/20"
+            className="bg-gradient-to-br from-[#1F2A44] to-[#C8A03A] text-white border-none rounded-lg px-4 py-2.5 text-xs font-semibold cursor-pointer whitespace-nowrap shadow-md shadow-black/20"
           >
             + Nuevo
           </button>

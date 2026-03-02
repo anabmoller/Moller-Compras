@@ -34,7 +34,7 @@ export default function ApprovalActions({ request, currentUser, onApprove, onRej
 
   return (
     <>
-      <div className="bg-gradient-to-br from-emerald-500 to-[#C8A03A] rounded-2xl p-4 border border-white/10 shadow-md">
+      <div className="bg-gradient-to-br from-[#1F2A44] to-[#C8A03A] rounded-2xl p-4 border border-white/10 shadow-md">
         <div className="text-xs font-semibold text-white/70 mb-1 uppercase tracking-wide">
           Tu autorización requerida
         </div>

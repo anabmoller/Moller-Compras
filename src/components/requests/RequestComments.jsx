@@ -40,7 +40,7 @@ export default function RequestComments({
                 className={`px-4 py-3 ${i < comments.length - 1 ? 'border-b border-white/[0.06]' : ''}`}
               >
                 <div className="flex items-center gap-2 mb-1">
-                  <div className="w-[26px] h-[26px] rounded-lg bg-gradient-to-br from-emerald-500 to-[#C8A03A] text-white text-[11px] font-bold flex items-center justify-center">
+                  <div className="w-[26px] h-[26px] rounded-lg bg-gradient-to-br from-[#1F2A44] to-[#C8A03A] text-white text-[11px] font-bold flex items-center justify-center">
                     {(c.avatar || (c.author || c.autor || "?")?.[0] || "?").toUpperCase()}
                   </div>
                   <span className="text-xs font-semibold text-white">{c.author || c.autor}</span>
@@ -83,7 +83,7 @@ export default function RequestComments({
               disabled={!commentText.trim()}
               className={`border-none rounded-lg px-3.5 text-xs font-semibold ${
                 commentText.trim()
-                  ? 'bg-gradient-to-br from-emerald-500 to-[#C8A03A] text-white cursor-pointer'
+                  ? 'bg-gradient-to-br from-[#1F2A44] to-[#C8A03A] text-white cursor-pointer'
                   : 'bg-[#F8F9FB]/[0.06] text-slate-500 cursor-default'
               }`}
             >

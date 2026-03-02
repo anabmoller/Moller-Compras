@@ -36,7 +36,7 @@ export default function RequestsTable({ requests, onSelectRequest }) {
 
   const SortIcon = ({ col }) => {
     if (sortKey !== col) return <span className="opacity-30 text-[10px]">↕</span>;
-    return <span className="text-[10px] text-emerald-500">{sortDir === "asc" ? "↑" : "↓"}</span>;
+    return <span className="text-[10px] text-[#C8A03A]">{sortDir === "asc" ? "↑" : "↓"}</span>;
   };
 
   return (
@@ -69,7 +69,7 @@ export default function RequestsTable({ requests, onSelectRequest }) {
                     i % 2 === 0 ? "bg-transparent" : "bg-[#F8F9FB]/[0.05]"
                   } hover:bg-[#1F2A44]/[0.04]`}
                 >
-                  <td className="px-3.5 py-2.5 font-semibold text-emerald-500 text-xs">
+                  <td className="px-3.5 py-2.5 font-semibold text-[#C8A03A] text-xs">
                     {r.id}
                   </td>
                   <td className="px-3.5 py-2.5 font-medium text-white max-w-[250px]">
@@ -104,7 +104,7 @@ export default function RequestsTable({ requests, onSelectRequest }) {
                       </span>
                     )}
                   </td>
-                  <td className="px-3.5 py-2.5 font-semibold text-emerald-500 text-xs text-right">
+                  <td className="px-3.5 py-2.5 font-semibold text-[#C8A03A] text-xs text-right">
                     {r.totalAmount > 0 ? formatGuaranies(r.totalAmount) : "—"}
                   </td>
                   <td className="px-3.5 py-2.5 text-slate-400 text-xs">

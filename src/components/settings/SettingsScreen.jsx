@@ -25,7 +25,7 @@ export default function SettingsScreen({ onBack, onNavigate, devMode, onSetDevMo
 
         {/* User Profile Card */}
         <div className="bg-[#F8F9FB]/[0.03] rounded-2xl p-5 border border-white/[0.06] mb-4 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-[#C8A03A] flex items-center justify-center text-white font-bold text-[22px] mx-auto mb-3">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#1F2A44] to-[#C8A03A] flex items-center justify-center text-white font-bold text-[22px] mx-auto mb-3">
             {currentUser.avatar}
           </div>
           <div className="text-lg font-semibold text-white">

@@ -202,7 +202,7 @@ export default function ProductDetailPanel({ product, onClose }) {
                     <div className="mt-2 flex items-center gap-2 text-[10px] text-slate-400">
                       <span>{fmt(s.minPrice, s.currency)}</span>
                       <div className="flex-1 h-[3px] bg-[#F8F9FB]/[0.08] rounded-full relative">
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-500/25 to-emerald-500" />
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#1F2A44]/25 to-[#162033]" />
                       </div>
                       <span>{fmt(s.maxPrice, s.currency)}</span>
                     </div>

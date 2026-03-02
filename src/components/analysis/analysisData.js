@@ -7,7 +7,7 @@
 /*  PALETTE                                                            */
 /* ------------------------------------------------------------------ */
 export const C = {
-  emerald: '#10b981', emeraldDim: '#059669',
+  emerald: '#C8A03A', emeraldDim: '#A8862F',
   blue: '#3b82f6', blueDim: '#2563eb',
   amber: '#f59e0b', amberDim: '#d97706',
   red: '#ef4444', redDim: '#dc2626',

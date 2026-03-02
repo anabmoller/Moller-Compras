@@ -256,7 +256,7 @@ export default function ParameterForm({ tab, item, onSave, onCancel, saving }) {
           disabled={!canSubmit}
           className={`flex-1 py-3 rounded-xl border-none text-[13px] font-semibold ${
             canSubmit
-              ? 'bg-gradient-to-br from-emerald-500 to-[#C8A03A] text-white cursor-pointer'
+              ? 'bg-gradient-to-br from-[#1F2A44] to-[#C8A03A] text-white cursor-pointer'
               : 'bg-[#F8F9FB]/[0.06] text-slate-500 cursor-default'
           }`}
         >

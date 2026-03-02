@@ -123,7 +123,7 @@ export default function AddItemModal({ onClose, onAdd }) {
                 disabled={!manual.nombre}
                 className={`w-full py-3.5 rounded-xl border-none text-[13px] font-semibold mt-1 ${
                   manual.nombre
-                    ? 'bg-gradient-to-br from-emerald-500 to-[#C8A03A] text-white cursor-pointer'
+                    ? 'bg-gradient-to-br from-[#1F2A44] to-[#C8A03A] text-white cursor-pointer'
                     : 'bg-[#F8F9FB]/[0.06] text-slate-500 cursor-default'
                 }`}
               >

@@ -36,7 +36,7 @@ function LazyFallback() {
   return (
     <div className="flex items-center justify-center py-20">
       <div className="w-8 h-8 rounded-lg bg-[#1F2A44] inline-flex items-center justify-center shadow-lg shadow-black/20 animate-pulse">
-        <span className="text-white text-sm font-bold">Y</span>
+        <span className="text-white text-sm font-bold">AMs</span>
       </div>
     </div>
   );
@@ -137,7 +137,7 @@ function AppContent() {
       <div className="min-h-screen bg-[#0a0b0f] flex items-center justify-center">
         <div className="text-center">
           <div className="w-12 h-12 rounded-xl bg-[#1F2A44] inline-flex items-center justify-center mb-4 shadow-lg shadow-black/20">
-            <span className="text-white text-xl font-bold">Y</span>
+            <span className="text-white text-xl font-bold">AMs</span>
           </div>
           <p className="text-slate-500 text-sm">Cargando...</p>
         </div>
@@ -154,7 +154,7 @@ function AppContent() {
       <div className="min-h-screen bg-[#0a0b0f] flex items-center justify-center">
         <div className="text-center">
           <div className="w-12 h-12 rounded-xl bg-[#1F2A44] inline-flex items-center justify-center mb-4 shadow-lg shadow-black/20">
-            <span className="text-white text-xl font-bold">Y</span>
+            <span className="text-white text-xl font-bold">AMs</span>
           </div>
           <p className="text-slate-400 text-sm mb-1">Cargando datos...</p>
           <p className="text-slate-600 text-xs">Conectando con el servidor</p>
