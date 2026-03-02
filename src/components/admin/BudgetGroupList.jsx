@@ -27,7 +27,7 @@ export default function BudgetGroupList({ grouped, filterEst, onEdit }) {
                 <div
                   key={b.id}
                   onClick={() => onEdit(b)}
-                  className="bg-white/[0.03] rounded-xl p-3 border border-white/[0.06] mb-2 cursor-pointer transition-all duration-200 shadow-sm"
+                  className="bg-[#F8F9FB]/[0.03] rounded-xl p-3 border border-white/[0.06] mb-2 cursor-pointer transition-all duration-200 shadow-sm"
                 >
                   <div className="flex justify-between items-start mb-1.5">
                     <div>

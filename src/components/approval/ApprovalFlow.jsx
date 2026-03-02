@@ -18,7 +18,7 @@ export default function ApprovalFlow({ steps, style }) {
 
   return (
     <div
-      className="bg-white/[0.03] rounded-2xl p-4 border border-white/[0.06] shadow-sm"
+      className="bg-[#F8F9FB]/[0.03] rounded-2xl p-4 border border-white/[0.06] shadow-sm"
       style={style}
     >
       <div className="text-xs font-semibold text-slate-400 mb-3.5 uppercase tracking-wide">
@@ -28,7 +28,7 @@ export default function ApprovalFlow({ steps, style }) {
       {/* Horizontal dots flow */}
       <div className="flex items-start justify-between relative px-1">
         {/* Connecting line behind dots */}
-        <div className="absolute top-[15px] left-6 right-6 h-[3px] bg-white/[0.06] z-0">
+        <div className="absolute top-[15px] left-6 right-6 h-[3px] bg-[#F8F9FB]/[0.06] z-0">
           {(() => {
             const approvedCount = steps.filter(s => s.status === STEP_STATUS.APPROVED).length;
             const pct = steps.length > 1 ? (approvedCount / (steps.length - 1)) * 100 : 0;

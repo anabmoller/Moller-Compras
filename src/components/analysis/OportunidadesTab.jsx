@@ -83,9 +83,9 @@ export default function OportunidadesTab() {
             </thead>
             <tbody>
               {q1Actions.map((a, i) => (
-                <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.03] transition-colors">
+                <tr key={i} className="border-b border-white/[0.04] hover:bg-[#F8F9FB]/[0.03] transition-colors">
                   <td className="py-2.5 px-3 text-white text-xs font-medium">{a.accion}</td>
-                  <td className="py-2.5 px-3 text-emerald-400 text-xs font-semibold">{a.ahorro}</td>
+                  <td className="py-2.5 px-3 text-[#C8A03A] text-xs font-semibold">{a.ahorro}</td>
                   <td className="py-2.5 px-3">
                     <Badge variant={a.prioridad === 'ALTA' ? 'danger' : 'warning'} size="xs">{a.prioridad}</Badge>
                   </td>

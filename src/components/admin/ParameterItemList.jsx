@@ -13,7 +13,7 @@ function SortHeader({ label, sortKey, active, dir, onClick, flex = "flex-1" }) {
     <button
       onClick={() => onClick(sortKey)}
       className={`${flex} flex items-center gap-1 px-1 py-1 text-[10px] font-semibold uppercase tracking-wider border-none bg-transparent cursor-pointer transition-colors ${
-        isActive ? 'text-emerald-400' : 'text-slate-500 hover:text-slate-300'
+        isActive ? 'text-[#C8A03A]' : 'text-slate-500 hover:text-slate-300'
       }`}
     >
       {label}
@@ -41,12 +41,12 @@ export default function ParameterItemList({
 
       {/* Items List */}
       {sorted.map(item => (
-        <div key={item.id} className={`bg-white/[0.03] rounded-xl px-4 py-3.5 mb-2 border border-white/[0.06] flex items-center gap-3 shadow-sm ${(item.active !== false) ? 'opacity-100' : 'opacity-50'}`}>
+        <div key={item.id} className={`bg-[#F8F9FB]/[0.03] rounded-xl px-4 py-3.5 mb-2 border border-white/[0.06] flex items-center gap-3 shadow-sm ${(item.active !== false) ? 'opacity-100' : 'opacity-50'}`}>
           <div className="flex-1 min-w-0">
             <div className="text-sm font-semibold text-white">
               {item.name}
               {item.code && (
-                <span className="text-[10px] text-slate-400 ml-2 bg-white/[0.02] px-1.5 py-0.5 rounded">
+                <span className="text-[10px] text-slate-400 ml-2 bg-[#F8F9FB]/[0.02] px-1.5 py-0.5 rounded">
                   {item.code}
                 </span>
               )}
@@ -56,7 +56,7 @@ export default function ParameterItemList({
             </div>
           </div>
           <div className="flex gap-1.5 flex-shrink-0">
-            <button onClick={() => onEdit(item)} disabled={saving} className={`bg-[#1F2A44]/[0.06] border-none rounded-lg px-2.5 py-1.5 cursor-pointer text-xs text-emerald-400 font-medium ${saving ? 'opacity-50' : ''}`}>
+            <button onClick={() => onEdit(item)} disabled={saving} className={`bg-[#1F2A44]/[0.06] border-none rounded-lg px-2.5 py-1.5 cursor-pointer text-xs text-[#C8A03A] font-medium ${saving ? 'opacity-50' : ''}`}>
               Editar
             </button>
             <button onClick={() => onToggle(item.id)} disabled={saving} className={`border-none rounded-lg px-2.5 py-1.5 cursor-pointer text-xs font-medium ${saving ? 'opacity-50' : ''} ${(item.active !== false) ? 'bg-red-500/[0.06] text-red-400' : 'bg-green-500/[0.06] text-green-400'}`}>

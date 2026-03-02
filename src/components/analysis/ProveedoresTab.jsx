@@ -94,12 +94,12 @@ export default function ProveedoresTab() {
             </thead>
             <tbody>
               {riskTable.map((r, i) => (
-                <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.03] transition-colors">
+                <tr key={i} className="border-b border-white/[0.04] hover:bg-[#F8F9FB]/[0.03] transition-colors">
                   <td className="py-2.5 px-3 text-white font-medium text-xs">{r.producto}</td>
                   <td className="py-2.5 px-3 text-slate-400 text-xs">{r.proveedor}</td>
                   <td className="py-2.5 px-3">
                     <div className="flex items-center gap-2">
-                      <div className="w-16 h-1.5 rounded-full bg-white/[0.08]">
+                      <div className="w-16 h-1.5 rounded-full bg-[#F8F9FB]/[0.08]">
                         <div className="h-full rounded-full" style={{
                           width: `${r.pct}%`,
                           background: r.pct > 75 ? C.red : r.pct > 50 ? C.amber : C.emerald,

@@ -128,7 +128,7 @@ export default function ParametersScreen({ onBack }) {
     <div className="animate-fadeIn">
       {/* Header */}
       <div className="px-5 py-3 flex justify-between items-center">
-        <button onClick={onBack} className="bg-transparent border-none cursor-pointer text-sm text-emerald-400 font-medium">
+        <button onClick={onBack} className="bg-transparent border-none cursor-pointer text-sm text-[#C8A03A] font-medium">
           {"←"} Volver
         </button>
         <button onClick={handleReset} disabled={saving} className={`bg-transparent border-none text-xs font-medium ${saving ? 'cursor-default text-slate-500 opacity-60' : 'cursor-pointer text-amber-400'}`}>
@@ -159,7 +159,7 @@ export default function ParametersScreen({ onBack }) {
           <button key={t.key} onClick={() => { setTab(t.key); setSearch(""); setShowForm(false); setEditingItem(null); }} className={`px-3.5 py-2 rounded-xl border-none text-xs font-semibold cursor-pointer whitespace-nowrap ${
             tab === t.key
               ? 'bg-[#1F2A44] text-white shadow-md shadow-emerald-500/20'
-              : 'bg-white/[0.03] text-slate-400 shadow-sm'
+              : 'bg-[#F8F9FB]/[0.03] text-slate-400 shadow-sm'
           }`}>
             {t.icon} {t.label}
           </button>
@@ -169,7 +169,7 @@ export default function ParametersScreen({ onBack }) {
       <div className="px-5 pb-[120px]">
         {/* Search + Add */}
         <div className="flex gap-2 mb-3">
-          <div className="flex-1 flex items-center gap-2 bg-white/[0.03] border border-white/[0.06] rounded-xl px-3 py-2">
+          <div className="flex-1 flex items-center gap-2 bg-[#F8F9FB]/[0.03] border border-white/[0.06] rounded-xl px-3 py-2">
             <span className="text-sm opacity-40">{"🔍"}</span>
             <input
               placeholder="Buscar..."
@@ -178,7 +178,7 @@ export default function ParametersScreen({ onBack }) {
               className="border-none bg-transparent outline-none text-[13px] text-white w-full"
             />
           </div>
-          <button onClick={() => { setEditingItem(null); setShowForm(true); }} disabled={saving} className={`px-4 py-2 rounded-xl border-none text-xs font-semibold text-white cursor-pointer whitespace-nowrap ${saving ? 'bg-white/[0.06] opacity-60' : 'bg-gradient-to-br from-emerald-500 to-emerald-600'}`}>
+          <button onClick={() => { setEditingItem(null); setShowForm(true); }} disabled={saving} className={`px-4 py-2 rounded-xl border-none text-xs font-semibold text-white cursor-pointer whitespace-nowrap ${saving ? 'bg-[#F8F9FB]/[0.06] opacity-60' : 'bg-gradient-to-br from-emerald-500 to-[#C8A03A]'}`}>
             + Nuevo
           </button>
         </div>

@@ -115,7 +115,7 @@ export default function RequestStepItems({
           <select
             value={form.establishment}
             onChange={e => onUpdateForm("establishment", e.target.value)}
-            className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50 ${errors.establishment ? 'border-red-500' : 'border-white/[0.1]'}`}
+            className={`w-full px-3.5 py-2.5 rounded-lg border bg-[#F8F9FB]/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/50 ${errors.establishment ? 'border-red-500' : 'border-white/[0.1]'}`}
           >
             <option value="">Seleccionar...</option>
             {getEstablishments().filter(e => e.active).map(e => <option key={e.name} value={e.name}>{e.name}</option>)}
@@ -127,7 +127,7 @@ export default function RequestStepItems({
           <select
             value={form.sector}
             onChange={e => onUpdateForm("sector", e.target.value)}
-            className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50 ${errors.sector ? 'border-red-500' : 'border-white/[0.1]'}`}
+            className={`w-full px-3.5 py-2.5 rounded-lg border bg-[#F8F9FB]/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/50 ${errors.sector ? 'border-red-500' : 'border-white/[0.1]'}`}
           >
             <option value="">Seleccionar...</option>
             {getSectors().filter(s => s.active).map(s => <option key={s.name} value={s.name}>{s.name}</option>)}
@@ -144,21 +144,21 @@ export default function RequestStepItems({
           onChange={e => { setProductSearch(e.target.value); setShowDropdown(true); setSelectedProduct(null); }}
           onFocus={() => productSearch.length >= 2 && setShowDropdown(true)}
           placeholder="Escribe nombre o código (ej: MAIZ, AGRO-000003)..."
-          className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50"
+          className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-[#F8F9FB]/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/50"
         />
         {/* Dropdown */}
         {showDropdown && (filteredProducts.length > 0 || productSearch.trim().length >= 2) && (
-          <div className="absolute z-20 top-full left-0 right-0 mt-1 max-h-52 overflow-y-auto bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 shadow-xl">
+          <div className="absolute z-20 top-full left-0 right-0 mt-1 max-h-52 overflow-y-auto bg-[#F8F9FB] dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 shadow-xl">
             {filteredProducts.map(p => (
               <button
                 key={p.c}
                 onClick={() => selectProduct(p)}
                 className="w-full text-left px-3 py-2 border-none bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer flex items-center gap-2 transition-colors"
               >
-                <span className="text-[10px] font-mono text-emerald-400 bg-[#1F2A44]/[0.08] px-1.5 py-0.5 rounded">{p.c}</span>
+                <span className="text-[10px] font-mono text-[#C8A03A] bg-[#1F2A44]/[0.08] px-1.5 py-0.5 rounded">{p.c}</span>
                 <span className="text-sm text-white flex-1 truncate">{p.n}</span>
                 {sectorCategory && p.g === sectorCategory && (
-                  <span className="text-[9px] text-emerald-400 bg-[#1F2A44]/[0.1] px-1.5 py-0.5 rounded-full font-medium">{form.sector}</span>
+                  <span className="text-[9px] text-[#C8A03A] bg-[#1F2A44]/[0.1] px-1.5 py-0.5 rounded-full font-medium">{form.sector}</span>
                 )}
                 <span className="text-[10px] text-slate-500">{p.g}</span>
               </button>
@@ -179,7 +179,7 @@ export default function RequestStepItems({
 
       {/* Product selected: compact reference + inputs */}
       {selectedProduct && (
-        <div className="bg-white/[0.03] rounded-xl px-3.5 py-3 border border-white/[0.08]">
+        <div className="bg-[#F8F9FB]/[0.03] rounded-xl px-3.5 py-3 border border-white/[0.08]">
           {/* Compact reference line */}
           <div className="text-[11px] text-slate-400 mb-2.5">
             Ref: <span className="text-white font-medium">{fmtGs(selectedProduct.up)}</span>/{selectedProduct.u}
@@ -199,7 +199,7 @@ export default function RequestStepItems({
                   setItemAmount(qty * itemUnitPrice);
                 }}
                 min={1}
-                className={`w-full px-2.5 py-2 rounded-lg border bg-white/[0.05] text-sm text-white outline-none ${errors.itemQty ? 'border-red-500' : 'border-white/[0.1]'}`}
+                className={`w-full px-2.5 py-2 rounded-lg border bg-[#F8F9FB]/[0.05] text-sm text-white outline-none ${errors.itemQty ? 'border-red-500' : 'border-white/[0.1]'}`}
               />
             </div>
             <div className="flex-1">
@@ -213,7 +213,7 @@ export default function RequestStepItems({
                   setItemAmount(itemQty * up);
                 }}
                 placeholder={selectedProduct.up > 0 ? String(selectedProduct.up) : "0"}
-                className="w-full px-2.5 py-2 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none"
+                className="w-full px-2.5 py-2 rounded-lg border border-white/[0.1] bg-[#F8F9FB]/[0.05] text-sm text-white outline-none"
               />
             </div>
             <button
@@ -226,7 +226,7 @@ export default function RequestStepItems({
 
           {/* Single total line */}
           {itemAmount > 0 && (
-            <div className="text-[11px] text-emerald-400 mt-1.5 font-medium">Total: {fmtGs(itemAmount)}</div>
+            <div className="text-[11px] text-[#C8A03A] mt-1.5 font-medium">Total: {fmtGs(itemAmount)}</div>
           )}
 
           {/* Price deviation warning */}
@@ -240,10 +240,10 @@ export default function RequestStepItems({
 
       {/* Items list */}
       {items.length > 0 && (
-        <div className="bg-white/[0.02] rounded-xl border border-white/[0.06]">
+        <div className="bg-[#F8F9FB]/[0.02] rounded-xl border border-white/[0.06]">
           <div className="px-3 py-2 border-b border-white/[0.06] flex justify-between items-center">
             <span className="text-xs font-semibold text-slate-400">{items.length} item{items.length > 1 ? "s" : ""}</span>
-            <span className="text-xs font-bold text-emerald-400">{fmtGs(totalAmount)}</span>
+            <span className="text-xs font-bold text-[#C8A03A]">{fmtGs(totalAmount)}</span>
           </div>
           {items.map((it, i) => (
             <div key={i} className="px-3 py-2 flex items-center gap-2 border-b border-white/[0.04] last:border-b-0">
@@ -268,10 +268,10 @@ export default function RequestStepItems({
 
       {/* Running total */}
       {totalAmount > 0 && (
-        <div className="bg-[#1F2A44]/[0.06] rounded-lg px-3.5 py-2.5 border border-emerald-500/[0.12] flex justify-between items-center">
+        <div className="bg-[#1F2A44]/[0.06] rounded-lg px-3.5 py-2.5 border border-[#C8A03A]/[0.12] flex justify-between items-center">
           <span className="text-xs text-slate-400 font-medium">TOTAL ESTIMADO</span>
           <div className="text-right">
-            <div className="text-sm font-bold text-emerald-400">{fmtGs(totalAmount)}</div>
+            <div className="text-sm font-bold text-[#C8A03A]">{fmtGs(totalAmount)}</div>
             <div className="text-[10px] text-slate-500">$ {Math.round(totalAmount / usdRate).toLocaleString("en-US")} USD</div>
           </div>
         </div>

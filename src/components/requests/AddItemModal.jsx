@@ -40,7 +40,7 @@ export default function AddItemModal({ onClose, onAdd }) {
           <h3 className="text-lg font-semibold text-white m-0">
             Agregar Item
           </h3>
-          <button onClick={onClose} className="bg-white/[0.06] border-none w-[30px] h-[30px] rounded-lg cursor-pointer text-sm text-white flex items-center justify-center">
+          <button onClick={onClose} className="bg-[#F8F9FB]/[0.06] border-none w-[30px] h-[30px] rounded-lg cursor-pointer text-sm text-white flex items-center justify-center">
             ✕
           </button>
         </div>
@@ -52,7 +52,7 @@ export default function AddItemModal({ onClose, onAdd }) {
               key={t.key}
               onClick={() => setTab(t.key)}
               className={`flex-1 py-2.5 border-none text-xs font-semibold cursor-pointer ${
-                tab === t.key ? 'bg-[#1F2A44] text-white' : 'bg-white/[0.03] text-white'
+                tab === t.key ? 'bg-[#1F2A44] text-white' : 'bg-[#F8F9FB]/[0.03] text-white'
               } ${t.key === "catalogo" ? 'rounded-l-lg' : 'rounded-r-lg'}`}
             >
               {t.label}
@@ -67,7 +67,7 @@ export default function AddItemModal({ onClose, onAdd }) {
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Buscar por código o nombre..."
-                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50 mb-2.5"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-[#F8F9FB]/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/50 mb-2.5"
                 autoFocus
               />
               {filtered.length === 0 ? (
@@ -79,9 +79,9 @@ export default function AddItemModal({ onClose, onAdd }) {
                   <button
                     key={it.code}
                     onClick={() => handleSelectCatalog(it)}
-                    className="w-full text-left px-3 py-2.5 bg-white/[0.03] rounded-lg border border-white/[0.06] mb-1.5 cursor-pointer"
+                    className="w-full text-left px-3 py-2.5 bg-[#F8F9FB]/[0.03] rounded-lg border border-white/[0.06] mb-1.5 cursor-pointer"
                   >
-                    <div className="text-[10px] text-emerald-400 font-semibold">{it.code}</div>
+                    <div className="text-[10px] text-[#C8A03A] font-semibold">{it.code}</div>
                     <div className="text-[13px] font-medium text-white">{it.name}</div>
                     <div className="text-[10px] text-slate-400">{it.type} · {it.group}</div>
                   </button>
@@ -92,30 +92,30 @@ export default function AddItemModal({ onClose, onAdd }) {
             <div className="flex flex-col gap-2.5">
               <div>
                 <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Nombre *</label>
-                <input value={manual.nombre} onChange={e => setManual({ ...manual, nombre: e.target.value })} placeholder="Nombre del item" className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50" autoFocus />
+                <input value={manual.nombre} onChange={e => setManual({ ...manual, nombre: e.target.value })} placeholder="Nombre del item" className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-[#F8F9FB]/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/50" autoFocus />
               </div>
               <div className="flex gap-2">
                 <div className="flex-1">
                   <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Código</label>
-                  <input value={manual.codigo} onChange={e => setManual({ ...manual, codigo: e.target.value })} placeholder="Ej: VET-001" className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50" />
+                  <input value={manual.codigo} onChange={e => setManual({ ...manual, codigo: e.target.value })} placeholder="Ej: VET-001" className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-[#F8F9FB]/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/50" />
                 </div>
                 <div className="w-20">
                   <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Cantidad</label>
-                  <input type="number" value={manual.cantidad} onChange={e => setManual({ ...manual, cantidad: e.target.value })} className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50" />
+                  <input type="number" value={manual.cantidad} onChange={e => setManual({ ...manual, cantidad: e.target.value })} className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-[#F8F9FB]/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/50" />
                 </div>
                 <div className="w-[70px]">
                   <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Unidad</label>
-                  <input value={manual.unidad} onChange={e => setManual({ ...manual, unidad: e.target.value })} placeholder="un" className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50" />
+                  <input value={manual.unidad} onChange={e => setManual({ ...manual, unidad: e.target.value })} placeholder="un" className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-[#F8F9FB]/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/50" />
                 </div>
               </div>
               <div className="flex gap-2">
                 <div className="flex-1">
                   <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Precio Unitario ₲</label>
-                  <input type="number" value={manual.precioUnitario} onChange={e => setManual({ ...manual, precioUnitario: e.target.value })} className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50" />
+                  <input type="number" value={manual.precioUnitario} onChange={e => setManual({ ...manual, precioUnitario: e.target.value })} className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-[#F8F9FB]/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/50" />
                 </div>
                 <div className="flex-1">
                   <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Proveedor</label>
-                  <input value={manual.proveedor} onChange={e => setManual({ ...manual, proveedor: e.target.value })} placeholder="Opcional" className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50" />
+                  <input value={manual.proveedor} onChange={e => setManual({ ...manual, proveedor: e.target.value })} placeholder="Opcional" className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-[#F8F9FB]/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/50" />
                 </div>
               </div>
               <button
@@ -123,8 +123,8 @@ export default function AddItemModal({ onClose, onAdd }) {
                 disabled={!manual.nombre}
                 className={`w-full py-3.5 rounded-xl border-none text-[13px] font-semibold mt-1 ${
                   manual.nombre
-                    ? 'bg-gradient-to-br from-emerald-500 to-emerald-600 text-white cursor-pointer'
-                    : 'bg-white/[0.06] text-slate-500 cursor-default'
+                    ? 'bg-gradient-to-br from-emerald-500 to-[#C8A03A] text-white cursor-pointer'
+                    : 'bg-[#F8F9FB]/[0.06] text-slate-500 cursor-default'
                 }`}
               >
                 Agregar Item

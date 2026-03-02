@@ -43,7 +43,7 @@ export default function AnalysisScreen({ onBack, embedded = false }) {
       {!embedded && (
         <div className="px-5 pt-4 pb-2">
           <button onClick={onBack}
-            className="text-emerald-400 text-sm font-medium hover:text-emerald-300 transition-colors mb-3 flex items-center gap-1">
+            className="text-[#C8A03A] text-sm font-medium hover:text-[#C8A03A] transition-colors mb-3 flex items-center gap-1">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
@@ -53,7 +53,7 @@ export default function AnalysisScreen({ onBack, embedded = false }) {
             <h1 className="text-2xl font-bold text-white tracking-tight">Analisis Estrategico</h1>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white border-none rounded-lg px-3.5 py-2 text-[11px] font-semibold cursor-pointer flex items-center gap-1 shadow-sm"
+              className="bg-gradient-to-br from-emerald-500 to-[#C8A03A] text-white border-none rounded-lg px-3.5 py-2 text-[11px] font-semibold cursor-pointer flex items-center gap-1 shadow-sm"
             >
               + Nuevo
             </button>
@@ -67,7 +67,7 @@ export default function AnalysisScreen({ onBack, embedded = false }) {
           <p className="text-xs text-slate-500">Dashboard ejecutivo — Bloomberg-style analytics</p>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white border-none rounded-lg px-3 py-1.5 text-[11px] font-semibold cursor-pointer"
+            className="bg-gradient-to-br from-emerald-500 to-[#C8A03A] text-white border-none rounded-lg px-3 py-1.5 text-[11px] font-semibold cursor-pointer"
           >
             + Nuevo
           </button>
@@ -80,8 +80,8 @@ export default function AnalysisScreen({ onBack, embedded = false }) {
           <button key={t.key} onClick={() => setActiveTab(t.key)}
             className={`px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
               activeTab === t.key
-                ? 'bg-[#1F2A44]/10 text-emerald-400 border border-emerald-500/30'
-                : 'bg-white/[0.03] text-slate-500 border border-white/[0.06] hover:bg-white/[0.06] hover:text-slate-300'
+                ? 'bg-[#1F2A44]/10 text-[#C8A03A] border border-[#C8A03A]/30'
+                : 'bg-[#F8F9FB]/[0.03] text-slate-500 border border-white/[0.06] hover:bg-[#F8F9FB]/[0.06] hover:text-slate-300'
             }`}>
             {t.label}
           </button>

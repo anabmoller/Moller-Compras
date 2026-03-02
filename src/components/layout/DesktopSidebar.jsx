@@ -50,7 +50,7 @@ export default function DesktopSidebar({ screen, onNavigate, onNewRequest, curre
         onClick={() => onNavigate('profile')}
         className="mx-3 mt-3 mb-1 px-3 py-2.5 bg-[rgba(255,255,255,0.04)] rounded-lg border border-white/[0.06] flex items-center gap-2.5 cursor-pointer hover:bg-[rgba(255,255,255,0.07)] transition-colors"
       >
-        <div className="w-8 h-8 rounded-full bg-[#1F2A44]/10 flex items-center justify-center text-emerald-400 font-semibold text-xs">
+        <div className="w-8 h-8 rounded-full bg-[#1F2A44]/10 flex items-center justify-center text-[#C8A03A] font-semibold text-xs">
           {"AMs"}
         </div>
         <div className="text-sm font-medium text-white truncate flex-1">
@@ -63,7 +63,7 @@ export default function DesktopSidebar({ screen, onNavigate, onNewRequest, curre
         {/* Theme toggle */}
         <button
           onClick={(e) => { e.stopPropagation(); toggleTheme(); }}
-          className="w-7 h-7 rounded-md bg-white/[0.06] border-none cursor-pointer flex items-center justify-center text-sm hover:bg-white/[0.12] transition-colors"
+          className="w-7 h-7 rounded-md bg-[#F8F9FB]/[0.06] border-none cursor-pointer flex items-center justify-center text-sm hover:bg-[#F8F9FB]/[0.12] transition-colors"
           title={theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}
         >
           {theme === 'dark' ? '☀️' : '🌙'}
@@ -177,7 +177,7 @@ function NavItem({ item, active, onClick }) {
       onClick={onClick}
       className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md border-none text-sm cursor-pointer mb-0.5 transition-all ${
         active
-          ? 'bg-[#1F2A44]/10 text-emerald-400 font-semibold'
+          ? 'bg-[#1F2A44]/10 text-[#C8A03A] font-semibold'
           : 'bg-transparent text-slate-400 font-normal hover:bg-[rgba(255,255,255,0.06)] hover:text-slate-200'
       }`}
     >

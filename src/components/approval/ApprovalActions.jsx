@@ -34,7 +34,7 @@ export default function ApprovalActions({ request, currentUser, onApprove, onRej
 
   return (
     <>
-      <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl p-4 border border-white/10 shadow-md">
+      <div className="bg-gradient-to-br from-emerald-500 to-[#C8A03A] rounded-2xl p-4 border border-white/10 shadow-md">
         <div className="text-xs font-semibold text-white/70 mb-1 uppercase tracking-wide">
           Tu autorización requerida
         </div>
@@ -45,7 +45,7 @@ export default function ApprovalActions({ request, currentUser, onApprove, onRej
         <div className="flex gap-2">
           <button
             onClick={() => setShowRevisionModal(true)}
-            className="flex-1 py-3 px-2 rounded-xl border border-white/25 bg-white/[0.08] text-white text-xs font-semibold cursor-pointer"
+            className="flex-1 py-3 px-2 rounded-xl border border-white/25 bg-[#F8F9FB]/[0.08] text-white text-xs font-semibold cursor-pointer"
           >
             ↩ Devolver
           </button>

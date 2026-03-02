@@ -40,7 +40,7 @@ export default function RequestsTable({ requests, onSelectRequest }) {
   };
 
   return (
-    <div className="bg-white/[0.03] rounded-xl border border-white/[0.06] overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.2)]">
+    <div className="bg-[#F8F9FB]/[0.03] rounded-xl border border-white/[0.06] overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.2)]">
       <div className="overflow-x-auto">
         <table className="w-full border-collapse font-sans text-[13px] min-w-[900px]">
           <thead>
@@ -49,7 +49,7 @@ export default function RequestsTable({ requests, onSelectRequest }) {
                 <th
                   key={col.key}
                   onClick={() => toggleSort(col.key)}
-                  className={`px-3.5 py-3 text-left font-semibold text-slate-400 text-[11px] uppercase tracking-wide cursor-pointer whitespace-nowrap select-none bg-white/[0.05] ${col.width !== "w-auto" ? col.width : ""}`}
+                  className={`px-3.5 py-3 text-left font-semibold text-slate-400 text-[11px] uppercase tracking-wide cursor-pointer whitespace-nowrap select-none bg-[#F8F9FB]/[0.05] ${col.width !== "w-auto" ? col.width : ""}`}
                 >
                   {col.label} <SortIcon col={col.key} />
                 </th>
@@ -66,7 +66,7 @@ export default function RequestsTable({ requests, onSelectRequest }) {
                   key={r.id}
                   onClick={() => onSelectRequest(r)}
                   className={`border-b border-white/[0.06] cursor-pointer transition-colors duration-150 ${
-                    i % 2 === 0 ? "bg-transparent" : "bg-white/[0.05]"
+                    i % 2 === 0 ? "bg-transparent" : "bg-[#F8F9FB]/[0.05]"
                   } hover:bg-[#1F2A44]/[0.04]`}
                 >
                   <td className="px-3.5 py-2.5 font-semibold text-emerald-500 text-xs">

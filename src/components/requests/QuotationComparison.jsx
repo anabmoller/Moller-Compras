@@ -9,7 +9,7 @@ function SectionTitle({ children, count }) {
       <div className="text-xs font-semibold text-slate-400 uppercase tracking-wide flex items-center gap-1.5">
         {children}
         {count != null && (
-          <span className="bg-[#1F2A44]/[0.08] text-emerald-400 text-[10px] font-bold px-1.5 py-px rounded-md min-w-[18px] text-center">
+          <span className="bg-[#1F2A44]/[0.08] text-[#C8A03A] text-[10px] font-bold px-1.5 py-px rounded-md min-w-[18px] text-center">
             {count}
           </span>
         )}
@@ -44,7 +44,7 @@ export default function QuotationComparison({
               {canManageQuotations && (
                 <button
                   onClick={onShowQuotations}
-                  className="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white border-none rounded-lg px-3.5 py-1.5 text-[11px] font-semibold cursor-pointer"
+                  className="bg-gradient-to-br from-emerald-500 to-[#C8A03A] text-white border-none rounded-lg px-3.5 py-1.5 text-[11px] font-semibold cursor-pointer"
                 >
                   {quotationCount > 0 ? "Ver / Editar" : "+ Agregar"}
                 </button>
@@ -105,9 +105,9 @@ export default function QuotationComparison({
         return (
           <div className="px-5 py-2">
             <SectionTitle>Comparativo de Cotizaciones</SectionTitle>
-            <div className="bg-white/[0.03] rounded-xl border border-white/[0.06] overflow-hidden mt-3">
+            <div className="bg-[#F8F9FB]/[0.03] rounded-xl border border-white/[0.06] overflow-hidden mt-3">
               {/* Table header */}
-              <div className="grid grid-cols-[1fr_auto_auto] gap-2 px-4 py-2.5 border-b border-white/[0.06] bg-white/[0.02]">
+              <div className="grid grid-cols-[1fr_auto_auto] gap-2 px-4 py-2.5 border-b border-white/[0.06] bg-[#F8F9FB]/[0.02]">
                 <span className="text-[10px] font-semibold text-slate-400 uppercase">Proveedor</span>
                 <span className="text-[10px] font-semibold text-slate-400 uppercase text-right">Precio</span>
                 <span className="text-[10px] font-semibold text-slate-400 uppercase text-right w-16">Entrega</span>
@@ -125,9 +125,9 @@ export default function QuotationComparison({
                     <span className="text-xs text-white font-medium flex items-center gap-1.5 truncate">
                       {isBest && <span className="text-amber-400 text-sm">★</span>}
                       {q.supplier}
-                      {q.selected && <span className="text-[9px] bg-[#1F2A44]/10 text-emerald-400 px-1.5 py-px rounded font-bold">SEL</span>}
+                      {q.selected && <span className="text-[9px] bg-[#1F2A44]/10 text-[#C8A03A] px-1.5 py-px rounded font-bold">SEL</span>}
                     </span>
-                    <span className={`text-xs font-semibold text-right whitespace-nowrap ${isBest ? 'text-emerald-400' : 'text-white'}`}>
+                    <span className={`text-xs font-semibold text-right whitespace-nowrap ${isBest ? 'text-[#C8A03A]' : 'text-white'}`}>
                       {q.currency || "₲"} {(q.price || 0).toLocaleString()}
                     </span>
                     <span className="text-[11px] text-slate-400 text-right w-16">
@@ -138,11 +138,11 @@ export default function QuotationComparison({
               })}
               {/* Recommendation footer */}
               <div className="px-4 py-2.5 border-t border-white/[0.06] bg-[#1F2A44]/[0.03] flex items-center justify-between">
-                <span className="text-[11px] text-emerald-400 font-semibold">
+                <span className="text-[11px] text-[#C8A03A] font-semibold">
                   ★ Recomendado: {cheapest.supplier}
                 </span>
                 {savings > 0 && (
-                  <span className="text-[10px] text-emerald-400/70 font-medium">
+                  <span className="text-[10px] text-[#C8A03A]/70 font-medium">
                     {savings}% más económico
                   </span>
                 )}

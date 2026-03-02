@@ -8,7 +8,7 @@ export default function Header({ currentUser, onToggleDrawer, onNavigate }) {
       {/* Hamburger */}
       <button
         onClick={onToggleDrawer}
-        className="w-9 h-9 rounded-lg bg-transparent border-none cursor-pointer flex items-center justify-center text-white hover:bg-white/[0.06] transition-colors"
+        className="w-9 h-9 rounded-lg bg-transparent border-none cursor-pointer flex items-center justify-center text-white hover:bg-[#F8F9FB]/[0.06] transition-colors"
         aria-label="Abrir menú"
       >
         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
@@ -30,7 +30,7 @@ export default function Header({ currentUser, onToggleDrawer, onNavigate }) {
       {/* Avatar → profile */}
       <button
         onClick={() => onNavigate && onNavigate('profile')}
-        className="w-8 h-8 rounded-full bg-[#1F2A44]/10 flex items-center justify-center text-xs font-semibold text-emerald-400 border-none cursor-pointer"
+        className="w-8 h-8 rounded-full bg-[#1F2A44]/10 flex items-center justify-center text-xs font-semibold text-[#C8A03A] border-none cursor-pointer"
         aria-label="Perfil"
       >
         {"AMs"}

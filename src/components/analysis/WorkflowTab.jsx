@@ -115,7 +115,7 @@ export default function WorkflowTab() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {roadmap.map((q) => (
             <Card key={q.q} hover={false} className="p-4">
-              <h4 className="text-sm font-bold text-emerald-400 mb-3">{q.q}</h4>
+              <h4 className="text-sm font-bold text-[#C8A03A] mb-3">{q.q}</h4>
               <ul className="space-y-2">
                 {q.items.map((item, i) => (
                   <li key={i} className="flex items-start gap-2 text-xs text-slate-400">

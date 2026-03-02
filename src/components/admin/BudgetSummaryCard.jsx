@@ -5,7 +5,7 @@ const barColor = (pct) => pct >= 90 ? '#ef4444' : pct >= 70 ? '#f59e0b' : '#22c5
 export default function BudgetSummaryCard({ totalPlanned, totalConsumed, totalPercent }) {
   return (
     <div className="px-5 mb-4">
-      <div className="bg-white/[0.03] rounded-xl p-4 border border-white/[0.06] shadow-sm">
+      <div className="bg-[#F8F9FB]/[0.03] rounded-xl p-4 border border-white/[0.06] shadow-sm">
         <div className="flex justify-between mb-2.5">
           <div>
             <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">

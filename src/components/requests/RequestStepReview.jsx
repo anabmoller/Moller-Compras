@@ -11,7 +11,7 @@ export default function RequestStepReview({
   return (
     <div className="flex flex-col gap-3.5">
       {/* Items table */}
-      <div className="bg-white/[0.02] rounded-2xl border border-white/[0.06] overflow-hidden">
+      <div className="bg-[#F8F9FB]/[0.02] rounded-2xl border border-white/[0.06] overflow-hidden">
         <div className="px-4 py-2.5 border-b border-white/[0.06]">
           <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Items de la Solicitud</span>
         </div>
@@ -22,7 +22,7 @@ export default function RequestStepReview({
               <div className="text-[10px] text-slate-500">{it.code} &middot; {it.qty} {it.unit}</div>
             </div>
             <div className="text-right">
-              <div className="text-sm font-semibold text-emerald-400">{fmtGs(it.estimatedAmount)}</div>
+              <div className="text-sm font-semibold text-[#C8A03A]">{fmtGs(it.estimatedAmount)}</div>
               <div className="text-[10px] text-slate-500">$ {Math.round(it.estimatedAmount / usdRate).toLocaleString("en-US")}</div>
             </div>
           </div>
@@ -30,14 +30,14 @@ export default function RequestStepReview({
         <div className="px-4 py-3 bg-[#1F2A44]/[0.04] flex justify-between items-center">
           <span className="text-xs font-bold text-white">TOTAL</span>
           <div className="text-right">
-            <div className="text-base font-bold text-emerald-400">{fmtGs(totalAmount)}</div>
+            <div className="text-base font-bold text-[#C8A03A]">{fmtGs(totalAmount)}</div>
             <div className="text-[10px] text-slate-400">$ {Math.round(totalAmount / usdRate).toLocaleString("en-US")} USD</div>
           </div>
         </div>
       </div>
 
       {/* Summary details */}
-      <div className="bg-white/[0.02] rounded-2xl p-4 border border-white/[0.06]">
+      <div className="bg-[#F8F9FB]/[0.02] rounded-2xl p-4 border border-white/[0.06]">
         <div className="text-xs font-semibold text-slate-400 mb-2.5 uppercase tracking-wide">Detalles</div>
         <SummaryRow label="Solicitante" value={form.requester} />
         <SummaryRow label="Establecimiento" value={form.establishment} />
@@ -48,8 +48,8 @@ export default function RequestStepReview({
       </div>
 
       {/* Approval flow visual (C8 / Task 7) */}
-      <div className="bg-[#1F2A44]/[0.04] rounded-xl px-3.5 py-3 border border-emerald-500/[0.08]">
-        <div className="text-xs font-semibold text-emerald-400 mb-2.5">{"🔄"} Flujo de Aprobaci{"ó"}n</div>
+      <div className="bg-[#1F2A44]/[0.04] rounded-xl px-3.5 py-3 border border-[#C8A03A]/[0.08]">
+        <div className="text-xs font-semibold text-[#C8A03A] mb-2.5">{"🔄"} Flujo de Aprobaci{"ó"}n</div>
         <div className="flex items-center gap-0">
           {approvalSteps.map((s, i) => (
             <div key={i} className="flex items-center">

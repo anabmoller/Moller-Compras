@@ -10,7 +10,7 @@ function SectionTitle({ children, count }) {
       <div className="text-xs font-semibold text-slate-400 uppercase tracking-wide flex items-center gap-1.5">
         {children}
         {count != null && (
-          <span className="bg-[#1F2A44]/[0.08] text-emerald-400 text-[10px] font-bold px-1.5 py-px rounded-md min-w-[18px] text-center">
+          <span className="bg-[#1F2A44]/[0.08] text-[#C8A03A] text-[10px] font-bold px-1.5 py-px rounded-md min-w-[18px] text-center">
             {count}
           </span>
         )}
@@ -32,7 +32,7 @@ export default function RequestItemsTable({
     <div className="px-5 py-2">
       <SectionTitle count={items.length}>Items</SectionTitle>
       {items.length > 0 ? (
-        <div className="bg-white/[0.03] rounded-xl border border-white/[0.06] overflow-hidden shadow-sm">
+        <div className="bg-[#F8F9FB]/[0.03] rounded-xl border border-white/[0.06] overflow-hidden shadow-sm">
           {items.map((it, idx) => (
             <div
               key={idx}
@@ -44,7 +44,7 @@ export default function RequestItemsTable({
                     {idx + 1}
                   </span>
                   {(it.codigo || it.code) && (
-                    <span className="text-[10px] text-emerald-400 font-semibold">{it.codigo || it.code}</span>
+                    <span className="text-[10px] text-[#C8A03A] font-semibold">{it.codigo || it.code}</span>
                   )}
                 </div>
                 <div className="text-[13px] font-semibold text-white mt-0.5">
@@ -78,13 +78,13 @@ export default function RequestItemsTable({
             </div>
           ))}
           {/* Total footer */}
-          <div className="px-4 py-2.5 bg-white/[0.02] border-t border-white/[0.06]">
+          <div className="px-4 py-2.5 bg-[#F8F9FB]/[0.02] border-t border-white/[0.06]">
             <div className="flex justify-between items-center">
               <span className="text-xs font-semibold text-slate-400">
                 TOTAL ({items.length} item{items.length !== 1 ? "s" : ""})
               </span>
               <div className="text-right">
-                <span className="text-[15px] font-bold text-emerald-400">
+                <span className="text-[15px] font-bold text-[#C8A03A]">
                   {formatGuaranies(itemsTotal || displayTotal)}
                 </span>
                 <div className="text-[11px] text-slate-500">
@@ -98,10 +98,10 @@ export default function RequestItemsTable({
           </div>
         </div>
       ) : (
-        <div className="bg-white/[0.03] rounded-xl p-5 border border-white/[0.06] text-center">
+        <div className="bg-[#F8F9FB]/[0.03] rounded-xl p-5 border border-white/[0.06] text-center">
           <div className="text-[13px] text-slate-400">Sin items registrados</div>
           {displayTotal > 0 && (
-            <div className="text-sm font-semibold text-emerald-400 mt-1.5">
+            <div className="text-sm font-semibold text-[#C8A03A] mt-1.5">
               Monto estimado: {formatGuaranies(displayTotal)}
               <span className="text-slate-500 font-normal text-xs ml-1">
                 / USD {Math.round(displayTotal / rate).toLocaleString("es-PY")}
@@ -114,7 +114,7 @@ export default function RequestItemsTable({
       {isBorrador && (
         <button
           onClick={onShowAddItem}
-          className="w-full p-3 rounded-xl mt-2 border border-dashed border-emerald-500/25 bg-[#1F2A44]/[0.04] text-emerald-400 text-xs font-semibold cursor-pointer"
+          className="w-full p-3 rounded-xl mt-2 border border-dashed border-[#C8A03A]/25 bg-[#1F2A44]/[0.04] text-[#C8A03A] text-xs font-semibold cursor-pointer"
         >
           + Agregar Item
         </button>

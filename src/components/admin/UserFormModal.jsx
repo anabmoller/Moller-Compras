@@ -27,7 +27,7 @@ function NameComboBox({ value, onChange, existingNames = [] }) {
         value={filter}
         onChange={e => { setFilter(e.target.value); onChange(e.target.value); setOpen(true); }}
         onFocus={() => setOpen(true)}
-        className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50 h-[42px]"
+        className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-[#F8F9FB]/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/50 h-[42px]"
         placeholder="Buscar o escribir nombre..."
       />
       {open && filtered.length > 0 && (
@@ -37,7 +37,7 @@ function NameComboBox({ value, onChange, existingNames = [] }) {
               key={n}
               onClick={() => { onChange(n); setFilter(n); setOpen(false); }}
               className={`w-full text-left px-3.5 py-2 text-sm border-none cursor-pointer transition-colors ${
-                n === value ? 'bg-[#1F2A44]/10 text-emerald-400 font-medium' : 'bg-transparent text-slate-300 hover:bg-white/[0.06]'
+                n === value ? 'bg-[#1F2A44]/10 text-[#C8A03A] font-medium' : 'bg-transparent text-slate-300 hover:bg-[#F8F9FB]/[0.06]'
               }`}
             >
               {n}
@@ -72,8 +72,8 @@ function RoleCheckboxes({ selectedRoles, onChange }) {
               key={key}
               className={`flex items-center gap-2 px-3 py-2.5 rounded-lg cursor-pointer transition-all border ${
                 checked
-                  ? 'bg-white/[0.06] border-emerald-500/30'
-                  : 'bg-white/[0.02] border-white/[0.06] hover:bg-white/[0.04]'
+                  ? 'bg-[#F8F9FB]/[0.06] border-[#C8A03A]/30'
+                  : 'bg-[#F8F9FB]/[0.02] border-white/[0.06] hover:bg-[#F8F9FB]/[0.04]'
               }`}
             >
               <input
@@ -129,7 +129,7 @@ function PositionSelect({ value, onChange }) {
         value={filter}
         onChange={e => { setFilter(e.target.value); onChange(e.target.value); setOpen(true); }}
         onFocus={() => setOpen(true)}
-        className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50 h-[42px]"
+        className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-[#F8F9FB]/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/50 h-[42px]"
         placeholder="Buscar o escribir cargo..."
       />
       {open && filtered.length > 0 && (
@@ -139,7 +139,7 @@ function PositionSelect({ value, onChange }) {
               key={o}
               onClick={() => { onChange(o); setFilter(o); setOpen(false); }}
               className={`w-full text-left px-3.5 py-2 text-sm border-none cursor-pointer transition-colors ${
-                o === value ? 'bg-[#1F2A44]/10 text-emerald-400 font-medium' : 'bg-transparent text-slate-300 hover:bg-white/[0.06]'
+                o === value ? 'bg-[#1F2A44]/10 text-[#C8A03A] font-medium' : 'bg-transparent text-slate-300 hover:bg-[#F8F9FB]/[0.06]'
               }`}
             >
               {o}
@@ -224,7 +224,7 @@ export default function UserFormModal({ user, title, establishments, existingNam
               <input
                 value={form.email}
                 onChange={e => set("email", e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50 h-[42px]"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-[#F8F9FB]/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/50 h-[42px]"
                 placeholder="Ej: juan.rodriguez"
                 autoCapitalize="none"
                 autoCorrect="off"
@@ -238,7 +238,7 @@ export default function UserFormModal({ user, title, establishments, existingNam
           {isEditing && (
             <div>
               <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Usuario (login)</label>
-              <div className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.02] text-sm text-slate-500 h-[42px] flex items-center">
+              <div className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-[#F8F9FB]/[0.02] text-sm text-slate-500 h-[42px] flex items-center">
                 @{user.email || user.username}
               </div>
             </div>
@@ -256,7 +256,7 @@ export default function UserFormModal({ user, title, establishments, existingNam
             <select
               value={form.establishment}
               onChange={e => set("establishment", e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50 h-[42px] cursor-pointer"
+              className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-[#F8F9FB]/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/50 h-[42px] cursor-pointer"
             >
               <option value="">Sin asignar</option>
               {establishments.map(e => <option key={e} value={e}>{e}</option>)}
@@ -298,7 +298,7 @@ export default function UserFormModal({ user, title, establishments, existingNam
               className={`flex-1 py-3 rounded-xl border-none text-sm font-semibold ${
                 loading
                   ? 'bg-slate-500 text-white cursor-default'
-                  : 'bg-gradient-to-br from-emerald-500 to-emerald-600 text-white cursor-pointer shadow-md shadow-emerald-500/20'
+                  : 'bg-gradient-to-br from-emerald-500 to-[#C8A03A] text-white cursor-pointer shadow-md shadow-emerald-500/20'
               }`}
             >
               {loading ? "Guardando..." : "Guardar"}

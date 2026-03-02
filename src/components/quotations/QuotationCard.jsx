@@ -8,7 +8,7 @@ export default function QuotationCard({
       className={`rounded-xl px-4 py-3.5 mb-2 relative ${
         onSelect ? 'cursor-pointer' : ''
       } ${
-        q.selected ? 'bg-green-500/[0.05] border-2 border-green-500' : 'bg-white/[0.03] border border-white/[0.06]'
+        q.selected ? 'bg-green-500/[0.05] border-2 border-green-500' : 'bg-[#F8F9FB]/[0.03] border border-white/[0.06]'
       }`}
     >
       {q.selected && (
@@ -60,7 +60,7 @@ export default function QuotationCard({
       )}
 
       {q.paymentTerms && (
-        <div className="text-[11px] text-slate-400 mt-1.5 bg-white/[0.02] px-2 py-1 rounded inline-block">
+        <div className="text-[11px] text-slate-400 mt-1.5 bg-[#F8F9FB]/[0.02] px-2 py-1 rounded inline-block">
           {q.paymentTerms}
         </div>
       )}
@@ -92,7 +92,7 @@ export default function QuotationCard({
           className={`mt-2 flex items-center gap-1.5 text-[11px] px-2 py-1 rounded border-none transition-colors w-full text-left ${
             q.attachment.data || q.attachment.url
               ? 'text-blue-400 bg-blue-500/[0.06] cursor-pointer hover:bg-blue-500/[0.12]'
-              : 'text-slate-500 bg-white/[0.02] cursor-default'
+              : 'text-slate-500 bg-[#F8F9FB]/[0.02] cursor-default'
           }`}
         >
           {q.attachment.type?.startsWith("image/") ? "🖼" : "📄"} {q.attachment.name}

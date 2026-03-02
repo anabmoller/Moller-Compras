@@ -148,7 +148,7 @@ export default function ParameterForm({ tab, item, onSave, onCancel, saving }) {
   }, [codeManuallyEdited, tab]);
 
   return (
-    <div className="bg-white/[0.02] rounded-2xl p-5 border border-emerald-500/[0.19] mb-4">
+    <div className="bg-[#F8F9FB]/[0.02] rounded-2xl p-5 border border-[#C8A03A]/[0.19] mb-4">
       <div className="text-sm font-semibold text-white mb-4">
         {item ? `Editar: ${item.name}` : "Nuevo Registro"}
       </div>
@@ -176,7 +176,7 @@ export default function ParameterForm({ tab, item, onSave, onCancel, saving }) {
                 value={form[f.key] || ""}
                 onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
                 disabled={saving}
-                className="w-full px-3 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-[13px] text-white outline-none transition-colors focus:border-emerald-500/50"
+                className="w-full px-3 py-2.5 rounded-lg border border-white/[0.1] bg-[#F8F9FB]/[0.05] text-[13px] text-white outline-none transition-colors focus:border-[#C8A03A]/50"
               >
                 <option value="">Seleccionar...</option>
                 {resolveOptions(f).map(o => (
@@ -190,7 +190,7 @@ export default function ParameterForm({ tab, item, onSave, onCancel, saving }) {
                 value={form[f.key] || ""}
                 onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
                 disabled={saving}
-                className="w-full px-3 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-[13px] text-white outline-none transition-colors focus:border-emerald-500/50"
+                className="w-full px-3 py-2.5 rounded-lg border border-white/[0.1] bg-[#F8F9FB]/[0.05] text-[13px] text-white outline-none transition-colors focus:border-[#C8A03A]/50"
               >
                 <option value="">Seleccionar usuario...</option>
                 {(usersByRole[f.roleFilter] || []).map(u => (
@@ -213,7 +213,7 @@ export default function ParameterForm({ tab, item, onSave, onCancel, saving }) {
                 }}
                 placeholder={f.label}
                 disabled={saving}
-                className={`w-full px-3 py-2.5 rounded-lg border bg-white/[0.05] text-[13px] text-white outline-none transition-colors focus:border-emerald-500/50 ${
+                className={`w-full px-3 py-2.5 rounded-lg border bg-[#F8F9FB]/[0.05] text-[13px] text-white outline-none transition-colors focus:border-[#C8A03A]/50 ${
                   senacsaAutoFilled && ["senacsa_code", "senacsa_unidad_zonal", "latitude", "longitude", "departamento", "municipio"].includes(f.key) && form[f.key]
                     ? 'bg-green-500/[0.05] border-green-500/25'
                     : 'border-white/[0.1]'
@@ -248,7 +248,7 @@ export default function ParameterForm({ tab, item, onSave, onCancel, saving }) {
       )}
 
       <div className="flex gap-2 mt-4">
-        <button onClick={onCancel} disabled={saving} className={`flex-1 py-3 rounded-xl border border-white/[0.06] bg-white/[0.03] text-white text-[13px] font-semibold ${saving ? 'cursor-default' : 'cursor-pointer'}`}>
+        <button onClick={onCancel} disabled={saving} className={`flex-1 py-3 rounded-xl border border-white/[0.06] bg-[#F8F9FB]/[0.03] text-white text-[13px] font-semibold ${saving ? 'cursor-default' : 'cursor-pointer'}`}>
           Cancelar
         </button>
         <button
@@ -256,8 +256,8 @@ export default function ParameterForm({ tab, item, onSave, onCancel, saving }) {
           disabled={!canSubmit}
           className={`flex-1 py-3 rounded-xl border-none text-[13px] font-semibold ${
             canSubmit
-              ? 'bg-gradient-to-br from-emerald-500 to-emerald-600 text-white cursor-pointer'
-              : 'bg-white/[0.06] text-slate-500 cursor-default'
+              ? 'bg-gradient-to-br from-emerald-500 to-[#C8A03A] text-white cursor-pointer'
+              : 'bg-[#F8F9FB]/[0.06] text-slate-500 cursor-default'
           }`}
         >
           {saving ? "Guardando..." : (item ? "Guardar Cambios" : "Crear")}

@@ -24,14 +24,14 @@ export default function NotificationsScreen({ onBack, onNavigate }) {
       <div className="px-5 py-3 flex items-center justify-between">
         <button
           onClick={onBack}
-          className="bg-transparent border-none cursor-pointer text-sm text-emerald-400 font-medium"
+          className="bg-transparent border-none cursor-pointer text-sm text-[#C8A03A] font-medium"
         >
           ← Volver
         </button>
         {unreadCount > 0 && (
           <button
             onClick={markAllAsRead}
-            className="bg-transparent border-none cursor-pointer text-xs text-emerald-400 font-medium"
+            className="bg-transparent border-none cursor-pointer text-xs text-[#C8A03A] font-medium"
           >
             Marcar todas como leídas
           </button>
@@ -57,8 +57,8 @@ export default function NotificationsScreen({ onBack, onNavigate }) {
               onClick={() => handleClick(notif)}
               className={`w-full text-left px-4 py-3.5 rounded-xl border cursor-pointer transition-colors flex gap-3 items-start ${
                 notif.read
-                  ? 'bg-white/[0.02] border-white/[0.04] hover:bg-white/[0.05]'
-                  : 'bg-white/[0.04] border-white/[0.08] hover:bg-white/[0.07]'
+                  ? 'bg-[#F8F9FB]/[0.02] border-white/[0.04] hover:bg-[#F8F9FB]/[0.05]'
+                  : 'bg-[#F8F9FB]/[0.04] border-white/[0.08] hover:bg-[#F8F9FB]/[0.07]'
               }`}
             >
               {/* Unread dot */}

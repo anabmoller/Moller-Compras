@@ -150,7 +150,7 @@ export default function BudgetManagementScreen({ onBack }) {
           <select
             value={filterEst}
             onChange={e => setFilterEst(e.target.value)}
-            className="flex-1 px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-[13px] text-white outline-none"
+            className="flex-1 px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-[#F8F9FB]/[0.05] text-[13px] text-white outline-none"
           >
             <option value="all">Todos los establecimientos</option>
             {establishments.map(e => <option key={e} value={e}>{e}</option>)}
@@ -161,7 +161,7 @@ export default function BudgetManagementScreen({ onBack }) {
               setForm({ ...DEFAULT_FORM });
               setShowForm(true);
             }}
-            className="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white border-none rounded-lg px-4 py-2.5 text-xs font-semibold cursor-pointer whitespace-nowrap shadow-md shadow-emerald-500/20"
+            className="bg-gradient-to-br from-emerald-500 to-[#C8A03A] text-white border-none rounded-lg px-4 py-2.5 text-xs font-semibold cursor-pointer whitespace-nowrap shadow-md shadow-emerald-500/20"
           >
             + Nuevo
           </button>
@@ -180,7 +180,7 @@ export default function BudgetManagementScreen({ onBack }) {
         <button
           onClick={() => setShowConfirmReset(true)}
           disabled={saving}
-          className={`w-full p-3 rounded-lg border border-white/[0.06] bg-white/[0.02] text-slate-400 text-xs font-medium ${saving ? 'cursor-default' : 'cursor-pointer'}`}
+          className={`w-full p-3 rounded-lg border border-white/[0.06] bg-[#F8F9FB]/[0.02] text-slate-400 text-xs font-medium ${saving ? 'cursor-default' : 'cursor-pointer'}`}
         >
           Refrescar presupuestos desde servidor
         </button>
@@ -199,7 +199,7 @@ export default function BudgetManagementScreen({ onBack }) {
             <div className="flex gap-2">
               <button
                 onClick={() => setShowConfirmReset(false)}
-                className="flex-1 py-3 rounded-lg border border-white/[0.06] bg-white/[0.03] text-white text-[13px] font-semibold cursor-pointer"
+                className="flex-1 py-3 rounded-lg border border-white/[0.06] bg-[#F8F9FB]/[0.03] text-white text-[13px] font-semibold cursor-pointer"
               >
                 Cancelar
               </button>

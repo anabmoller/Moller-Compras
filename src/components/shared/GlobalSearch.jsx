@@ -68,7 +68,7 @@ export default function GlobalSearch({ onNavigate, requests = [], onClose }) {
             placeholder="Buscar solicitudes, pantallas..."
             className="flex-1 bg-transparent border-none outline-none text-white text-sm placeholder:text-slate-500"
           />
-          <kbd className="hidden sm:inline-flex px-1.5 py-0.5 text-[10px] font-medium text-slate-500 bg-white/[0.06] rounded border border-white/[0.08]">
+          <kbd className="hidden sm:inline-flex px-1.5 py-0.5 text-[10px] font-medium text-slate-500 bg-[#F8F9FB]/[0.06] rounded border border-white/[0.08]">
             ESC
           </kbd>
         </div>
@@ -84,7 +84,7 @@ export default function GlobalSearch({ onNavigate, requests = [], onClose }) {
                 <button
                   key={item.label}
                   onClick={item.action}
-                  className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-white/[0.06] transition-colors"
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-[#F8F9FB]/[0.06] transition-colors"
                 >
                   <span className="text-base">{item.icon}</span>
                   <span className="text-sm text-slate-300">{item.label}</span>
@@ -102,7 +102,7 @@ export default function GlobalSearch({ onNavigate, requests = [], onClose }) {
                 <button
                   key={r.id}
                   onClick={() => { onNavigate('request', r.id); onClose(); }}
-                  className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-white/[0.06] transition-colors"
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-[#F8F9FB]/[0.06] transition-colors"
                 >
                   <span className="text-base">📋</span>
                   <div className="flex-1 min-w-0">

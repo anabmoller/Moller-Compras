@@ -11,7 +11,7 @@ export default function SearchInput({
 }) {
   return (
     <div
-      className={`flex items-center gap-2 bg-white/[0.03] border border-white/[0.08] rounded-xl px-3.5 py-2.5 ${
+      className={`flex items-center gap-2 bg-[#F8F9FB]/[0.03] border border-white/[0.08] rounded-xl px-3.5 py-2.5 ${
         wrapClassName || ""
       }`}
     >

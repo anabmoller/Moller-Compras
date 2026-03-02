@@ -84,7 +84,7 @@ export default function AnalyticsScreen({ requests, statusCounts, onBack, defaul
   return (
     <div className="animate-fade-in">
       <div className="py-3 px-5">
-        <button onClick={onBack} className="bg-transparent border-none cursor-pointer text-sm text-emerald-400 font-medium p-0">
+        <button onClick={onBack} className="bg-transparent border-none cursor-pointer text-sm text-[#C8A03A] font-medium p-0">
           ← Volver
         </button>
       </div>
@@ -106,8 +106,8 @@ export default function AnalyticsScreen({ requests, statusCounts, onBack, defaul
             onClick={() => setSection(s.key)}
             className={`flex-1 px-3 py-2 rounded-lg border text-xs font-semibold cursor-pointer transition-all ${
               section === s.key
-                ? 'bg-[#1F2A44]/15 text-emerald-400 border-emerald-500/30'
-                : 'bg-white/[0.02] text-slate-500 border-white/[0.06] hover:bg-white/[0.05]'
+                ? 'bg-[#1F2A44]/15 text-[#C8A03A] border-[#C8A03A]/30'
+                : 'bg-[#F8F9FB]/[0.02] text-slate-500 border-white/[0.06] hover:bg-[#F8F9FB]/[0.05]'
             }`}
           >
             {s.icon} {s.label}
@@ -129,8 +129,8 @@ export default function AnalyticsScreen({ requests, statusCounts, onBack, defaul
                 onClick={() => setTab(t.key)}
                 className={`flex-1 px-3 py-2.5 rounded-lg border-none text-xs font-semibold cursor-pointer transition-all ${
                   tab === t.key
-                    ? 'bg-[#1F2A44]/15 text-emerald-400 shadow-md'
-                    : 'bg-white/[0.03] text-slate-400 hover:bg-white/[0.06]'
+                    ? 'bg-[#1F2A44]/15 text-[#C8A03A] shadow-md'
+                    : 'bg-[#F8F9FB]/[0.03] text-slate-400 hover:bg-[#F8F9FB]/[0.06]'
                 }`}
               >
                 {t.icon} {t.label}
@@ -159,7 +159,7 @@ function OverviewTab({ stats, requests, statusCounts }) {
         <KPICard label="Emergencias" value={stats.emergencyCount} color="#ef4444" />
       </div>
 
-      <div className="bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-2xl p-5 mb-4 text-white">
+      <div className="bg-gradient-to-br from-[#1F2A44] to-[#1F2A44] rounded-2xl p-5 mb-4 text-white">
         <div className="text-[11px] opacity-70 uppercase tracking-widest mb-1">Monto Total Gestionado</div>
         <div className="text-[28px] font-bold">{formatGuaranies(stats.totalAmount)}</div>
         <div className="text-xs opacity-70 mt-1">Promedio por solicitud: {formatGuaranies(stats.avgAmount)}</div>
@@ -210,7 +210,7 @@ function PurchasesTab({ stats }) {
       <AnalyticsCard title="Compras por Establecimiento" action={
         <button
           onClick={() => setSortBy(sortBy === "amount" ? "count" : "amount")}
-          className="bg-transparent border-none text-[11px] text-emerald-400 cursor-pointer font-medium"
+          className="bg-transparent border-none text-[11px] text-[#C8A03A] cursor-pointer font-medium"
         >
           Por {sortBy === "amount" ? "cantidad" : "monto"}
         </button>
@@ -221,7 +221,7 @@ function PurchasesTab({ stats }) {
               <span className="text-xs text-white">📍 {est}</span>
               <div className="flex gap-3">
                 <span className="text-[11px] text-slate-400">{data.count} sol.</span>
-                <span className="text-xs font-semibold text-emerald-400">{formatGuaranies(data.amount)}</span>
+                <span className="text-xs font-semibold text-[#C8A03A]">{formatGuaranies(data.amount)}</span>
               </div>
             </div>
             <ProgressBar value={data.amount} max={maxEstAmount} color="#10b981" />
@@ -246,7 +246,7 @@ function PurchasesTab({ stats }) {
           <div key={type} className="flex justify-between items-center py-2 border-b border-white/[0.06]">
             <span className="text-xs text-white">{type}</span>
             <div className="text-right">
-              <div className="text-xs font-semibold text-emerald-400">{formatGuaranies(data.amount)}</div>
+              <div className="text-xs font-semibold text-[#C8A03A]">{formatGuaranies(data.amount)}</div>
               <div className="text-[10px] text-slate-500">{data.count} solicitudes</div>
             </div>
           </div>
@@ -262,7 +262,7 @@ function PurchasesTab({ stats }) {
               <div key={month} className="mb-2.5">
                 <div className="flex justify-between mb-0.5">
                   <span className="text-xs text-white capitalize">{monthLabel}</span>
-                  <span className="text-xs font-semibold text-emerald-400">
+                  <span className="text-xs font-semibold text-[#C8A03A]">
                     {formatGuaranies(data.amount)} ({data.count})
                   </span>
                 </div>
@@ -283,7 +283,7 @@ function PurchasesTab({ stats }) {
               <div className="text-sm font-medium text-white">{name}</div>
             </div>
             <div className="text-right">
-              <div className="text-xs font-semibold text-emerald-400">{data.count}</div>
+              <div className="text-xs font-semibold text-[#C8A03A]">{data.count}</div>
               <div className="text-[10px] text-slate-500">{formatGuaranies(data.amount)}</div>
             </div>
           </div>
@@ -307,15 +307,15 @@ function BudgetsTab() {
 
   return (
     <>
-      <div className={`bg-gradient-to-br ${overallPct > 80 ? 'from-red-600 to-red-800' : 'from-emerald-600 to-emerald-800'} rounded-2xl p-5 mb-4 text-white`}>
+      <div className={`bg-gradient-to-br ${overallPct > 80 ? 'from-red-600 to-red-800' : 'from-[#1F2A44] to-[#1F2A44]'} rounded-2xl p-5 mb-4 text-white`}>
         <div className="text-[11px] opacity-70 uppercase tracking-widest mb-1">Presupuesto Global 2026</div>
         <div className="flex justify-between items-baseline">
           <div className="text-2xl font-bold">{overallPct}%</div>
           <div className="text-xs opacity-80">{formatGuaranies(totalConsumed)} / {formatGuaranies(totalPlanned)}</div>
         </div>
-        <div className="h-1.5 rounded-full bg-white/20 mt-3">
+        <div className="h-1.5 rounded-full bg-[#F8F9FB]/20 mt-3">
           <div
-            className="h-full rounded-full bg-white transition-all duration-500"
+            className="h-full rounded-full bg-[#F8F9FB] transition-all duration-500"
             style={{ width: `${Math.min(overallPct, 100)}%` }}
           />
         </div>
@@ -360,7 +360,7 @@ function BudgetsTab() {
 
 function AnalyticsCard({ title, subtitle, action, children }) {
   return (
-    <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-4 mb-3">
+    <div className="bg-[#F8F9FB]/[0.03] border border-white/[0.06] rounded-xl p-4 mb-3">
       <div className="flex justify-between items-center mb-3">
         <div>
           <div className="text-xs font-semibold text-slate-400 uppercase tracking-widest">{title}</div>
@@ -376,7 +376,7 @@ function AnalyticsCard({ title, subtitle, action, children }) {
 function ProgressBar({ value, max, color, height = 4 }) {
   const pct = max > 0 ? Math.max(2, (value / max) * 100) : 0;
   return (
-    <div className="rounded-full bg-white/[0.08]" style={{ height }}>
+    <div className="rounded-full bg-[#F8F9FB]/[0.08]" style={{ height }}>
       <div
         className="h-full rounded-full transition-all duration-500"
         style={{ background: color, width: `${Math.min(pct, 100)}%` }}

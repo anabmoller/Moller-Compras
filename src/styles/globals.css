@@ -137,17 +137,17 @@ body {
   border-color: #e5e7eb !important;
 }
 
-:root.light .bg-white\/\[0\.03\],
-:root.light .bg-white\/\[0\.02\],
-:root.light .bg-white\/\[0\.04\] {
+:root.light .bg-[#F8F9FB]\/\[0\.03\],
+:root.light .bg-[#F8F9FB]\/\[0\.02\],
+:root.light .bg-[#F8F9FB]\/\[0\.04\] {
   background: #ffffff !important;
 }
 
-:root.light .bg-white\/\[0\.05\] {
+:root.light .bg-[#F8F9FB]\/\[0\.05\] {
   background: #f9fafb !important;
 }
 
-:root.light .bg-white\/\[0\.06\] {
+:root.light .bg-[#F8F9FB]\/\[0\.06\] {
   background: #f3f4f6 !important;
 }
 

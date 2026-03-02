@@ -51,7 +51,7 @@ export default function Dashboard({
         <CounterCard label="Por aprobar" value={pendingCount} color="text-amber-400" icon="⏳" />
         <CounterCard label="Borradores" value={draftCount} color="text-slate-400" icon="📝" />
         <CounterCard label="En proceso" value={inProcessCount} color="text-blue-400" icon="🔄" />
-        <CounterCard label="Total ₲" value={formatGuaranies(totalAmount)} color="text-emerald-400" icon="💰" small />
+        <CounterCard label="Total ₲" value={formatGuaranies(totalAmount)} color="text-[#C8A03A]" icon="💰" small />
       </div>
 
       {/* Status filter pills */}
@@ -77,7 +77,7 @@ export default function Dashboard({
       {/* Search & Filters */}
       <div className="px-5 pb-3">
         <div className="flex gap-2 items-center">
-          <div className="flex-1 flex items-center gap-2 bg-white/[0.03] border border-white/[0.06] rounded-lg px-3.5 py-2.5">
+          <div className="flex-1 flex items-center gap-2 bg-[#F8F9FB]/[0.03] border border-white/[0.06] rounded-lg px-3.5 py-2.5">
             <svg width="16" height="16" viewBox="0 0 20 20" className="fill-slate-500 shrink-0">
               <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"/>
             </svg>
@@ -100,23 +100,23 @@ export default function Dashboard({
           <select
             value={filterEstablishment}
             onChange={e => setFilterEstablishment(e.target.value)}
-            className="bg-white/[0.03] border border-white/[0.06] rounded-lg px-3 py-2.5 text-sm text-white cursor-pointer min-w-[110px]"
+            className="bg-[#F8F9FB]/[0.03] border border-white/[0.06] rounded-lg px-3 py-2.5 text-sm text-white cursor-pointer min-w-[110px]"
           >
             <option value="all">Todos estab.</option>
             {getEstablishments().map(e => <option key={e.name} value={e.name}>{e.name}</option>)}
           </select>
           {/* View Toggle (desktop) */}
-          <div className="desktop-view-toggle gap-0.5 bg-white/[0.03] rounded-md p-0.5 border border-white/[0.06]">
+          <div className="desktop-view-toggle gap-0.5 bg-[#F8F9FB]/[0.03] rounded-md p-0.5 border border-white/[0.06]">
             <button
               onClick={() => setViewMode("cards")}
               className={`px-2.5 py-1.5 rounded text-sm border-none cursor-pointer transition-colors ${
-                viewMode === "cards" ? "bg-white/[0.08] text-white" : "bg-transparent text-slate-500"
+                viewMode === "cards" ? "bg-[#F8F9FB]/[0.08] text-white" : "bg-transparent text-slate-500"
               }`}
             >☰</button>
             <button
               onClick={() => setViewMode("table")}
               className={`px-2.5 py-1.5 rounded text-sm border-none cursor-pointer transition-colors ${
-                viewMode === "table" ? "bg-white/[0.08] text-white" : "bg-transparent text-slate-500"
+                viewMode === "table" ? "bg-[#F8F9FB]/[0.08] text-white" : "bg-transparent text-slate-500"
               }`}
             >▤</button>
           </div>
@@ -145,7 +145,7 @@ export default function Dashboard({
 
 function CounterCard({ label, value, color, icon, small }) {
   return (
-    <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-3 text-center">
+    <div className="bg-[#F8F9FB]/[0.03] border border-white/[0.06] rounded-xl p-3 text-center">
       <div className="text-sm mb-1">{icon}</div>
       <div className={`${small ? 'text-[11px]' : 'text-xl'} font-bold ${color} leading-tight`}>
         {value}
@@ -161,8 +161,8 @@ function FilterPill({ active, onClick, label, activeColor }) {
       onClick={onClick}
       className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all border cursor-pointer shrink-0 ${
         active
-          ? 'bg-[#1F2A44]/10 text-emerald-400 border-emerald-500/20'
-          : 'bg-white/[0.03] text-slate-400 border-white/[0.06] hover:bg-white/[0.06]'
+          ? 'bg-[#1F2A44]/10 text-[#C8A03A] border-[#C8A03A]/20'
+          : 'bg-[#F8F9FB]/[0.03] text-slate-400 border-white/[0.06] hover:bg-[#F8F9FB]/[0.06]'
       }`}
     >
       {label}

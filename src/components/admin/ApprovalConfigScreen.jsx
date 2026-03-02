@@ -64,13 +64,13 @@ export default function ApprovalConfigScreen({ onBack }) {
                 </span>
               </div>
               {i < STEPS_DISPLAY.length - 1 && (
-                <div className="w-8 h-0.5 bg-white/[0.06] -mx-px" />
+                <div className="w-8 h-0.5 bg-[#F8F9FB]/[0.06] -mx-px" />
               )}
             </div>
           ))}
           {/* Special step: Vet */}
           <div className="flex items-center">
-            <div className="w-8 h-0.5 bg-white/[0.06] -mx-px" />
+            <div className="w-8 h-0.5 bg-[#F8F9FB]/[0.06] -mx-px" />
             <div
               onClick={() => setActiveStep(activeStep === 4 ? null : 4)}
               className="w-14 h-14 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition-all duration-200"
@@ -115,7 +115,7 @@ export default function ApprovalConfigScreen({ onBack }) {
           {Object.entries(MANAGER_MAP).map(([est, mgr]) => (
             <div key={est} className="flex justify-between items-center py-2 border-b border-white/[0.06]">
               <span className="text-[13px] text-white">📍 {est}</span>
-              <span className="text-xs font-semibold text-emerald-400 bg-[#1F2A44]/[0.06] px-2.5 py-0.5 rounded-lg">
+              <span className="text-xs font-semibold text-[#C8A03A] bg-[#1F2A44]/[0.06] px-2.5 py-0.5 rounded-lg">
                 {USER_DISPLAY_NAMES[mgr] || mgr}
               </span>
             </div>
@@ -162,7 +162,7 @@ export default function ApprovalConfigScreen({ onBack }) {
 
         {/* Special Rules */}
         <Card title="Reglas Especiales" icon="⚡">
-          <div className="bg-white/[0.02] rounded-xl p-3.5 mb-2">
+          <div className="bg-[#F8F9FB]/[0.02] rounded-xl p-3.5 mb-2">
             <div className="text-xs font-semibold text-[#7c6bb5] mb-1">
               💉 Regla Veterinaria (R5)
             </div>
@@ -180,7 +180,7 @@ export default function ApprovalConfigScreen({ onBack }) {
             </div>
           </div>
 
-          <div className="bg-white/[0.02] rounded-xl p-3.5">
+          <div className="bg-[#F8F9FB]/[0.02] rounded-xl p-3.5">
             <div className="text-xs font-semibold text-red-400 mb-1">
               ⚠ Regla Overbudget (R6)
             </div>
@@ -222,7 +222,7 @@ export default function ApprovalConfigScreen({ onBack }) {
 
 function Card({ title, icon, children }) {
   return (
-    <div className="bg-white/[0.03] rounded-2xl p-4 border border-white/[0.06] mb-3 shadow-sm">
+    <div className="bg-[#F8F9FB]/[0.03] rounded-2xl p-4 border border-white/[0.06] mb-3 shadow-sm">
       <div className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wide flex items-center gap-1.5">
         {icon && <span className="text-sm">{icon}</span>}
         {title}
@@ -239,7 +239,7 @@ function ThresholdRow({ label, value, desc }) {
         <div className="text-[13px] text-white font-medium">{label}</div>
         <div className="text-[10px] text-slate-400">{desc}</div>
       </div>
-      <span className="text-sm font-bold text-emerald-400">
+      <span className="text-sm font-bold text-[#C8A03A]">
         {value}
       </span>
     </div>

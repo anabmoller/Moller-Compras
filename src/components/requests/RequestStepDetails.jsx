@@ -62,7 +62,7 @@ export default function RequestStepDetails({ form, errors, onUpdateForm, FieldEr
           onChange={e => onUpdateForm("reason", e.target.value)}
           placeholder="Justificación de la compra..."
           rows={3}
-          className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50 resize-y ${errors.reason ? 'border-red-500' : 'border-white/[0.1]'}`}
+          className={`w-full px-3.5 py-2.5 rounded-lg border bg-[#F8F9FB]/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/50 resize-y ${errors.reason ? 'border-red-500' : 'border-white/[0.1]'}`}
         />
         <FieldError field="reason" />
       </div>
@@ -74,7 +74,7 @@ export default function RequestStepDetails({ form, errors, onUpdateForm, FieldEr
           onChange={e => onUpdateForm("notes", e.target.value)}
           placeholder="Observaciones, especificaciones técnicas..."
           rows={2}
-          className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50 resize-y"
+          className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-[#F8F9FB]/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/50 resize-y"
         />
       </div>
 
@@ -105,7 +105,7 @@ export default function RequestStepDetails({ form, errors, onUpdateForm, FieldEr
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full bg-white/[0.05] flex flex-col items-center justify-center">
+                  <div className="w-full h-full bg-[#F8F9FB]/[0.05] flex flex-col items-center justify-center">
                     <span className="text-lg">📄</span>
                     <span className="text-[8px] text-slate-400">PDF</span>
                   </div>
@@ -127,7 +127,7 @@ export default function RequestStepDetails({ form, errors, onUpdateForm, FieldEr
         {photos.length < MAX_FILES && (
           <button
             onClick={() => fileRef.current?.click()}
-            className="w-full py-2.5 rounded-lg border border-dashed border-white/[0.12] bg-white/[0.02] text-xs text-slate-400 cursor-pointer"
+            className="w-full py-2.5 rounded-lg border border-dashed border-white/[0.12] bg-[#F8F9FB]/[0.02] text-xs text-slate-400 cursor-pointer"
           >
             📷 {photos.length === 0 ? "Agregar fotos o documentos" : `Agregar más (${photos.length}/${MAX_FILES})`}
           </button>

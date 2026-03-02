@@ -244,7 +244,7 @@ export default function NewRequestForm({ onSubmit, onCancel, usdRate = 7800, usd
           {step > 1 && (
             <button
               onClick={() => setStep(s => s - 1)}
-              className="flex-1 py-3.5 rounded-xl border border-white/[0.06] bg-white/[0.03] text-white text-sm font-semibold cursor-pointer"
+              className="flex-1 py-3.5 rounded-xl border border-white/[0.06] bg-[#F8F9FB]/[0.03] text-white text-sm font-semibold cursor-pointer"
             >
               &larr; Anterior
             </button>

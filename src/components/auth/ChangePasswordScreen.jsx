@@ -64,7 +64,7 @@ export default function ChangePasswordScreen() {
         </div>
 
         {/* Change password card */}
-        <div className="bg-white/[0.03] rounded-2xl border border-white/[0.06] shadow-xl px-8 py-9">
+        <div className="bg-[#F8F9FB]/[0.03] rounded-2xl border border-white/[0.06] shadow-xl px-8 py-9">
           {/* Security icon */}
           <div className="w-11 h-11 rounded-lg bg-amber-500/[0.08] flex items-center justify-center mb-4">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -80,7 +80,7 @@ export default function ChangePasswordScreen() {
             {currentUser?.name ? `Hola, ${currentUser.name.split(" ")[0]}. ` : ""}
             Por seguridad, debes cambiar tu contrase&ntilde;a antes de continuar.
           </p>
-          <p className="text-xs text-slate-500 mb-6 mt-0 px-3 py-2 bg-white/[0.02] rounded">
+          <p className="text-xs text-slate-500 mb-6 mt-0 px-3 py-2 bg-[#F8F9FB]/[0.02] rounded">
             La contrase&ntilde;a debe tener al menos 8 caracteres y no puede ser la contrase&ntilde;a por defecto.
           </p>
 
@@ -95,7 +95,7 @@ export default function ChangePasswordScreen() {
                 placeholder="Mínimo 8 caracteres"
                 autoComplete="new-password"
                 autoFocus
-                className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-white/10 h-11 ${error && !newPassword ? 'border-red-500' : 'border-white/[0.1]'}`}
+                className={`w-full px-3.5 py-2.5 rounded-lg border bg-[#F8F9FB]/[0.05] text-sm text-white outline-none transition-colors focus:border-white/10 h-11 ${error && !newPassword ? 'border-red-500' : 'border-white/[0.1]'}`}
               />
             </div>
 
@@ -108,7 +108,7 @@ export default function ChangePasswordScreen() {
                 onChange={(e) => { setConfirmPassword(e.target.value); setError(""); }}
                 placeholder="Repite la nueva contraseña"
                 autoComplete="new-password"
-                className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-white/10 h-11 ${error && newPassword && !confirmPassword ? 'border-red-500' : 'border-white/[0.1]'}`}
+                className={`w-full px-3.5 py-2.5 rounded-lg border bg-[#F8F9FB]/[0.05] text-sm text-white outline-none transition-colors focus:border-white/10 h-11 ${error && newPassword && !confirmPassword ? 'border-red-500' : 'border-white/[0.1]'}`}
               />
             </div>
 

@@ -1,6 +1,6 @@
 export default function KPICard({ label, value, color, icon }) {
   return (
-    <div className="bg-white/[0.03] rounded-xl px-4 py-3.5 border border-white/[0.06] shadow-sm">
+    <div className="bg-[#F8F9FB]/[0.03] rounded-xl px-4 py-3.5 border border-white/[0.06] shadow-sm">
       <div className="flex items-center gap-2">
         {icon && <span className="text-lg">{icon}</span>}
         <div

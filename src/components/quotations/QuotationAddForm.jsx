@@ -22,7 +22,7 @@ function fileToBase64(file) {
   });
 }
 
-const inputCls = "w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-emerald-500/50";
+const inputCls = "w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-[#F8F9FB]/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/50";
 const labelCls = "block text-xs font-medium text-slate-400 mb-1.5 tracking-wide";
 
 export default function QuotationAddForm({ items, currency: initCurrency, onAdd, onCancel }) {
@@ -104,7 +104,7 @@ export default function QuotationAddForm({ items, currency: initCurrency, onAdd,
   };
 
   return (
-    <div className="bg-white/[0.03] rounded-2xl p-4 border border-white/[0.06] mt-2">
+    <div className="bg-[#F8F9FB]/[0.03] rounded-2xl p-4 border border-white/[0.06] mt-2">
       <div className="text-[13px] font-semibold text-white mb-3">Nueva Cotizacion</div>
 
       <div className="flex flex-col gap-2.5">
@@ -124,7 +124,7 @@ export default function QuotationAddForm({ items, currency: initCurrency, onAdd,
               {suggestions.map((s, i) => (
                 <div
                   key={i}
-                  className="px-3 py-2 cursor-pointer hover:bg-white/[0.06] border-b border-white/[0.04] last:border-0"
+                  className="px-3 py-2 cursor-pointer hover:bg-[#F8F9FB]/[0.06] border-b border-white/[0.04] last:border-0"
                   onMouseDown={() => {
                     setSupplier(s.n);
                     setShowSuggestions(false);
@@ -163,7 +163,7 @@ export default function QuotationAddForm({ items, currency: initCurrency, onAdd,
         {/* Per-item pricing table */}
         <div>
           <label className={labelCls}>Precios por Item</label>
-          <div className="bg-white/[0.02] rounded-xl border border-white/[0.06] overflow-hidden">
+          <div className="bg-[#F8F9FB]/[0.02] rounded-xl border border-white/[0.06] overflow-hidden">
             {items.length > 0 ? items.map((it, idx) => (
               <div key={idx} className={`flex items-center gap-2 px-3 py-2 ${idx < items.length - 1 ? 'border-b border-white/[0.06]' : ''}`}>
                 <div className="flex-1 min-w-0">
@@ -179,11 +179,11 @@ export default function QuotationAddForm({ items, currency: initCurrency, onAdd,
                     value={itemPrices[idx] || ""}
                     onChange={e => setItemPrice(idx, e.target.value)}
                     placeholder="P. Unit."
-                    className="w-full px-2.5 py-1.5 rounded-md border border-white/[0.1] bg-white/[0.05] text-xs text-white outline-none focus:border-emerald-500/50 text-right"
+                    className="w-full px-2.5 py-1.5 rounded-md border border-white/[0.1] bg-[#F8F9FB]/[0.05] text-xs text-white outline-none focus:border-[#C8A03A]/50 text-right"
                   />
                 </div>
                 {parseFloat(itemPrices[idx]) > 0 && (
-                  <div className="text-[10px] text-emerald-400 font-semibold w-[70px] text-right flex-shrink-0">
+                  <div className="text-[10px] text-[#C8A03A] font-semibold w-[70px] text-right flex-shrink-0">
                     {((it.quantity || it.cantidad || 0) * parseFloat(itemPrices[idx])).toLocaleString()}
                   </div>
                 )}
@@ -206,9 +206,9 @@ export default function QuotationAddForm({ items, currency: initCurrency, onAdd,
             )}
             {/* Total */}
             {formTotal > 0 && (
-              <div className="px-3 py-2 bg-white/[0.02] border-t border-white/[0.06] flex justify-between items-center">
+              <div className="px-3 py-2 bg-[#F8F9FB]/[0.02] border-t border-white/[0.06] flex justify-between items-center">
                 <span className="text-[11px] font-semibold text-slate-400">TOTAL</span>
-                <span className="text-sm font-bold text-emerald-400">
+                <span className="text-sm font-bold text-[#C8A03A]">
                   {currency} {formTotal.toLocaleString()}
                 </span>
               </div>
@@ -250,7 +250,7 @@ export default function QuotationAddForm({ items, currency: initCurrency, onAdd,
             className="hidden"
           />
           {attachment ? (
-            <div className="flex items-center gap-2 bg-white/[0.03] rounded-lg px-3 py-2 border border-white/[0.06]">
+            <div className="flex items-center gap-2 bg-[#F8F9FB]/[0.03] rounded-lg px-3 py-2 border border-white/[0.06]">
               {attachment.type.startsWith("image/") ? (
                 <img src={attachment.data} alt="" className="w-10 h-10 object-cover rounded" />
               ) : (
@@ -270,7 +270,7 @@ export default function QuotationAddForm({ items, currency: initCurrency, onAdd,
           ) : (
             <button
               onClick={() => fileRef.current?.click()}
-              className="w-full py-2.5 rounded-lg border border-dashed border-white/[0.12] bg-white/[0.02] text-xs text-slate-400 cursor-pointer"
+              className="w-full py-2.5 rounded-lg border border-dashed border-white/[0.12] bg-[#F8F9FB]/[0.02] text-xs text-slate-400 cursor-pointer"
             >
               {"📎"} Seleccionar archivo
             </button>
@@ -281,7 +281,7 @@ export default function QuotationAddForm({ items, currency: initCurrency, onAdd,
         <div className="flex gap-2">
           <button
             onClick={onCancel}
-            className="flex-1 py-3 rounded-xl border border-white/[0.06] bg-white/[0.03] text-white text-[13px] font-semibold cursor-pointer"
+            className="flex-1 py-3 rounded-xl border border-white/[0.06] bg-[#F8F9FB]/[0.03] text-white text-[13px] font-semibold cursor-pointer"
           >
             Cancelar
           </button>
@@ -290,8 +290,8 @@ export default function QuotationAddForm({ items, currency: initCurrency, onAdd,
             disabled={!formValid}
             className={`flex-1 py-3 rounded-xl border-none text-[13px] font-semibold ${
               formValid
-                ? 'bg-gradient-to-br from-emerald-500 to-emerald-600 text-white cursor-pointer'
-                : 'bg-white/[0.06] text-slate-500 cursor-default'
+                ? 'bg-gradient-to-br from-emerald-500 to-[#C8A03A] text-white cursor-pointer'
+                : 'bg-[#F8F9FB]/[0.06] text-slate-500 cursor-default'
             }`}
           >
             Agregar

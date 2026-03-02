@@ -24,8 +24,8 @@ export default function SettingsScreen({ onBack, onNavigate, devMode, onSetDevMo
         </h2>
 
         {/* User Profile Card */}
-        <div className="bg-white/[0.03] rounded-2xl p-5 border border-white/[0.06] mb-4 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-white font-bold text-[22px] mx-auto mb-3">
+        <div className="bg-[#F8F9FB]/[0.03] rounded-2xl p-5 border border-white/[0.06] mb-4 text-center">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-[#C8A03A] flex items-center justify-center text-white font-bold text-[22px] mx-auto mb-3">
             {currentUser.avatar}
           </div>
           <div className="text-lg font-semibold text-white">
@@ -34,13 +34,13 @@ export default function SettingsScreen({ onBack, onNavigate, devMode, onSetDevMo
           <div className="text-[13px] text-slate-400 mt-0.5">
             {currentUser.email}
           </div>
-          <div className="inline-block mt-2 text-[11px] font-semibold text-emerald-400 bg-[#1F2A44]/[0.07] px-3 py-1 rounded-lg">
+          <div className="inline-block mt-2 text-[11px] font-semibold text-[#C8A03A] bg-[#1F2A44]/[0.07] px-3 py-1 rounded-lg">
             {role.label}
           </div>
         </div>
 
         {/* Role Info */}
-        <div className="bg-white/[0.03] rounded-2xl p-4 border border-white/[0.06] mb-4">
+        <div className="bg-[#F8F9FB]/[0.03] rounded-2xl p-4 border border-white/[0.06] mb-4">
           <div className="text-xs font-semibold text-slate-400 mb-2.5 uppercase tracking-wide">
             Tu Rol y Permisos
           </div>
@@ -57,7 +57,7 @@ export default function SettingsScreen({ onBack, onNavigate, devMode, onSetDevMo
         </div>
 
         {/* App Info */}
-        <div className="bg-white/[0.03] rounded-2xl p-4 border border-white/[0.06] mb-4">
+        <div className="bg-[#F8F9FB]/[0.03] rounded-2xl p-4 border border-white/[0.06] mb-4">
           <div className="text-xs font-semibold text-slate-400 mb-2.5 uppercase tracking-wide">
             Información del Sistema
           </div>
@@ -68,7 +68,7 @@ export default function SettingsScreen({ onBack, onNavigate, devMode, onSetDevMo
 
         {/* Data Management */}
         {can("manage_settings") && (
-          <div className="bg-white/[0.03] rounded-2xl p-4 border border-white/[0.06] mb-4">
+          <div className="bg-[#F8F9FB]/[0.03] rounded-2xl p-4 border border-white/[0.06] mb-4">
             <div className="text-xs font-semibold text-slate-400 mb-2.5 uppercase tracking-wide">
               Administración
             </div>
@@ -99,7 +99,7 @@ export default function SettingsScreen({ onBack, onNavigate, devMode, onSetDevMo
 
         {/* Modo Desarrollador — only in development builds */}
         {import.meta.env.DEV && can("manage_users") && (
-          <div className="bg-white/[0.03] rounded-2xl p-4 border border-amber-500/20 mb-4">
+          <div className="bg-[#F8F9FB]/[0.03] rounded-2xl p-4 border border-amber-500/20 mb-4">
             <div className="text-xs font-semibold text-amber-400 mb-2.5 uppercase tracking-wide">
               🛠 Modo Desarrollador
             </div>
@@ -114,11 +114,11 @@ export default function SettingsScreen({ onBack, onNavigate, devMode, onSetDevMo
                   className={`w-full px-3.5 py-2.5 rounded-lg border text-left text-[13px] font-medium cursor-pointer transition-colors flex items-center justify-between ${
                     devMode?.name === u.name
                       ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
-                      : 'bg-white/[0.02] border-white/[0.06] text-slate-300 hover:bg-white/[0.06]'
+                      : 'bg-[#F8F9FB]/[0.02] border-white/[0.06] text-slate-300 hover:bg-[#F8F9FB]/[0.06]'
                   }`}
                 >
                   <span>{u.name} <span className="text-slate-500">({u.label})</span></span>
-                  <span className="text-[11px] font-semibold text-emerald-400">Entrar →</span>
+                  <span className="text-[11px] font-semibold text-[#C8A03A]">Entrar →</span>
                 </button>
               ))}
             </div>
@@ -149,7 +149,7 @@ function AdminButton({ icon, label, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="w-full p-3 rounded-xl border border-emerald-500/25 bg-[#1F2A44]/[0.05] text-emerald-400 text-[13px] font-semibold cursor-pointer mb-2 flex items-center justify-center gap-2"
+      className="w-full p-3 rounded-xl border border-[#C8A03A]/25 bg-[#1F2A44]/[0.05] text-[#C8A03A] text-[13px] font-semibold cursor-pointer mb-2 flex items-center justify-center gap-2"
     >
       <span className="text-base">{icon}</span>
       {label}

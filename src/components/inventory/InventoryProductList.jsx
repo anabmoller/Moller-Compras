@@ -37,14 +37,14 @@ export default function InventoryProductList({ groupedItems, onSelectProduct }) 
                 <div
                   key={item.id}
                   onClick={() => onSelectProduct(item)}
-                  className="bg-white/[0.03] rounded-xl px-3.5 py-3 mb-1 border border-white/[0.06] flex justify-between items-center shadow-[0_1px_2px_rgba(0,0,0,0.3)] cursor-pointer transition-all hover:border-white/[0.12] hover:shadow-[0_1px_3px_rgba(0,0,0,0.4),0_1px_2px_rgba(0,0,0,0.3)]"
+                  className="bg-[#F8F9FB]/[0.03] rounded-xl px-3.5 py-3 mb-1 border border-white/[0.06] flex justify-between items-center shadow-[0_1px_2px_rgba(0,0,0,0.3)] cursor-pointer transition-all hover:border-white/[0.12] hover:shadow-[0_1px_3px_rgba(0,0,0,0.4),0_1px_2px_rgba(0,0,0,0.3)]"
                 >
                   <div className="flex-1">
                     <div className="text-[13px] font-semibold text-white">
                       {item.name}
                     </div>
                     <div className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1.5">
-                      <span className="font-mono text-[10px] bg-white/5 px-1.5 py-px rounded">
+                      <span className="font-mono text-[10px] bg-[#F8F9FB]/5 px-1.5 py-px rounded">
                         {item.code}
                       </span>
                       {item.manufacturer && (

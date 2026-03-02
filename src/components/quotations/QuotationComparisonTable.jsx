@@ -2,7 +2,7 @@ export default function QuotationComparisonTable({
   quotations, items, bestItemPrices, cheapest, fastest,
 }) {
   return (
-    <div className="bg-white/[0.03] rounded-xl border border-white/[0.06] overflow-auto mb-3">
+    <div className="bg-[#F8F9FB]/[0.03] rounded-xl border border-white/[0.06] overflow-auto mb-3">
       <table className="w-full text-xs border-collapse">
         <thead>
           <tr className="border-b border-white/[0.06]">
@@ -40,7 +40,7 @@ export default function QuotationComparisonTable({
             </tr>
           ))}
           {/* Total row */}
-          <tr className="bg-white/[0.02]">
+          <tr className="bg-[#F8F9FB]/[0.02]">
             <td className="px-3 py-2.5 text-white font-bold sticky left-0 bg-[#0a0b0f]">TOTAL</td>
             {quotations.map(q => {
               const isCheapest = q.id === cheapest?.id;
@@ -57,7 +57,7 @@ export default function QuotationComparisonTable({
             {quotations.map(q => {
               const isFastest = q.id === fastest?.id;
               return (
-                <td key={q.id} className={`px-3 py-2 text-center ${isFastest ? 'text-emerald-400 font-semibold' : 'text-slate-400'}`}>
+                <td key={q.id} className={`px-3 py-2 text-center ${isFastest ? 'text-[#C8A03A] font-semibold' : 'text-slate-400'}`}>
                   {q.deliveryDays > 0 ? `${q.deliveryDays}d` : "—"}
                 </td>
               );

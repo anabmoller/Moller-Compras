@@ -9,7 +9,7 @@ export default function BudgetWidget({ establishment, sector, requestAmount, sty
 
   if (!budget) {
     return (
-      <div className="bg-white/[0.02] rounded-xl p-3.5 border border-white/[0.06]" style={style}>
+      <div className="bg-[#F8F9FB]/[0.02] rounded-xl p-3.5 border border-white/[0.06]" style={style}>
         <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wide mb-1.5">
           Presupuesto
         </div>
@@ -37,7 +37,7 @@ export default function BudgetWidget({ establishment, sector, requestAmount, sty
 
   return (
     <div
-      className="bg-white/[0.03] rounded-xl p-3.5 shadow-sm"
+      className="bg-[#F8F9FB]/[0.03] rounded-xl p-3.5 shadow-sm"
       style={{
         border: `1px solid ${wouldExceed ? 'rgba(239,68,68,0.25)' : 'rgba(255,255,255,0.06)'}`,
         ...style,

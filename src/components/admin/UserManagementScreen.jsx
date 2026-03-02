@@ -173,12 +173,12 @@ export default function UserManagementScreen({ onBack }) {
             placeholder="Buscar nombre, usuario o cargo..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="flex-1 min-w-[180px] h-10 px-3 rounded-lg border border-white/[0.1] bg-white/[0.05] text-[13px] text-white outline-none transition-colors focus:border-emerald-500/50"
+            className="flex-1 min-w-[180px] h-10 px-3 rounded-lg border border-white/[0.1] bg-[#F8F9FB]/[0.05] text-[13px] text-white outline-none transition-colors focus:border-[#C8A03A]/50"
           />
           <select
             value={filterEstab}
             onChange={e => setFilterEstab(e.target.value)}
-            className="w-auto h-10 px-2 rounded-lg border border-white/[0.1] bg-white/[0.05] text-xs text-white outline-none cursor-pointer"
+            className="w-auto h-10 px-2 rounded-lg border border-white/[0.1] bg-[#F8F9FB]/[0.05] text-xs text-white outline-none cursor-pointer"
           >
             <option value="all">Todos establec.</option>
             {establishments.map(e => <option key={e} value={e}>{e}</option>)}
@@ -186,7 +186,7 @@ export default function UserManagementScreen({ onBack }) {
           <select
             value={filterActive}
             onChange={e => setFilterActive(e.target.value)}
-            className="w-auto h-10 px-2 rounded-lg border border-white/[0.1] bg-white/[0.05] text-xs text-white outline-none cursor-pointer"
+            className="w-auto h-10 px-2 rounded-lg border border-white/[0.1] bg-[#F8F9FB]/[0.05] text-xs text-white outline-none cursor-pointer"
           >
             <option value="active">Activos</option>
             <option value="inactive">Inactivos</option>
@@ -224,7 +224,7 @@ export default function UserManagementScreen({ onBack }) {
           <button
             onClick={() => setShowResetConfirm(true)}
             disabled={actionLoading}
-            className="w-full p-3 rounded-xl border border-emerald-500/[0.19] bg-[#1F2A44]/[0.05] text-emerald-400 text-[13px] font-semibold cursor-pointer"
+            className="w-full p-3 rounded-xl border border-[#C8A03A]/[0.19] bg-[#1F2A44]/[0.05] text-[#C8A03A] text-[13px] font-semibold cursor-pointer"
           >
             Refrescar lista de usuarios desde servidor
           </button>

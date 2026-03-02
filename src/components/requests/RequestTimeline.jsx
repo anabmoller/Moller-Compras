@@ -16,7 +16,7 @@ function SectionTitle({ children, count, collapsed, onToggle }) {
       <div className="text-xs font-semibold text-slate-400 uppercase tracking-wide flex items-center gap-1.5">
         {children}
         {count != null && (
-          <span className="bg-[#1F2A44]/[0.08] text-emerald-400 text-[10px] font-bold px-1.5 py-px rounded-md min-w-[18px] text-center">
+          <span className="bg-[#1F2A44]/[0.08] text-[#C8A03A] text-[10px] font-bold px-1.5 py-px rounded-md min-w-[18px] text-center">
             {count}
           </span>
         )}
@@ -65,7 +65,7 @@ export default function RequestTimeline({
               };
               const a = actionStyles[entry.action] || { icon: "•", color: "#94a3b8", label: entry.action };
               return (
-                <div key={i} className="flex gap-2.5 mb-1.5 p-2 px-3 rounded-lg bg-white/[0.02] border border-white/[0.06]">
+                <div key={i} className="flex gap-2.5 mb-1.5 p-2 px-3 rounded-lg bg-[#F8F9FB]/[0.02] border border-white/[0.06]">
                   <span className="text-sm">{a.icon}</span>
                   <div className="flex-1 min-w-0">
                     <div className="text-xs font-semibold" style={{ color: a.color }}>
@@ -113,7 +113,7 @@ export default function RequestTimeline({
           }
 
           return (
-            <div className="bg-white/[0.03] rounded-xl px-4 py-3.5 border border-white/[0.06]">
+            <div className="bg-[#F8F9FB]/[0.03] rounded-xl px-4 py-3.5 border border-white/[0.06]">
               {STATUS_FLOW.map((s, i) => {
                 const reached = i <= statusIdx;
                 const performer = statusPerformers[s.key];

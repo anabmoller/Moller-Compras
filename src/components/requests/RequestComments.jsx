@@ -10,7 +10,7 @@ function SectionTitle({ children, count }) {
       <div className="text-xs font-semibold text-slate-400 uppercase tracking-wide flex items-center gap-1.5">
         {children}
         {count != null && (
-          <span className="bg-[#1F2A44]/[0.08] text-emerald-400 text-[10px] font-bold px-1.5 py-px rounded-md min-w-[18px] text-center">
+          <span className="bg-[#1F2A44]/[0.08] text-[#C8A03A] text-[10px] font-bold px-1.5 py-px rounded-md min-w-[18px] text-center">
             {count}
           </span>
         )}
@@ -30,7 +30,7 @@ export default function RequestComments({
   return (
     <div className="px-5 py-2">
       <SectionTitle count={comments.length}>Comentarios</SectionTitle>
-      <div className="bg-white/[0.03] rounded-xl border border-white/[0.06] overflow-hidden">
+      <div className="bg-[#F8F9FB]/[0.03] rounded-xl border border-white/[0.06] overflow-hidden">
         {/* Comment list */}
         {comments.length > 0 ? (
           <div>
@@ -40,7 +40,7 @@ export default function RequestComments({
                 className={`px-4 py-3 ${i < comments.length - 1 ? 'border-b border-white/[0.06]' : ''}`}
               >
                 <div className="flex items-center gap-2 mb-1">
-                  <div className="w-[26px] h-[26px] rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-600 text-white text-[11px] font-bold flex items-center justify-center">
+                  <div className="w-[26px] h-[26px] rounded-lg bg-gradient-to-br from-emerald-500 to-[#C8A03A] text-white text-[11px] font-bold flex items-center justify-center">
                     {(c.avatar || (c.author || c.autor || "?")?.[0] || "?").toUpperCase()}
                   </div>
                   <span className="text-xs font-semibold text-white">{c.author || c.autor}</span>
@@ -66,14 +66,14 @@ export default function RequestComments({
         )}
 
         {/* Comment input */}
-        <div className="px-4 py-2.5 border-t border-white/[0.06] bg-white/[0.02]">
+        <div className="px-4 py-2.5 border-t border-white/[0.06] bg-[#F8F9FB]/[0.02]">
           <div className="flex gap-2">
             <textarea
               value={commentText}
               onChange={e => onCommentTextChange(e.target.value)}
               placeholder="Agregar comentario..."
               rows={1}
-              className="flex-1 border border-white/[0.06] rounded-lg px-3 py-2 text-[13px] text-white bg-white/[0.03] resize-none outline-none"
+              className="flex-1 border border-white/[0.06] rounded-lg px-3 py-2 text-[13px] text-white bg-[#F8F9FB]/[0.03] resize-none outline-none"
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); onAddComment(); }
               }}
@@ -83,8 +83,8 @@ export default function RequestComments({
               disabled={!commentText.trim()}
               className={`border-none rounded-lg px-3.5 text-xs font-semibold ${
                 commentText.trim()
-                  ? 'bg-gradient-to-br from-emerald-500 to-emerald-600 text-white cursor-pointer'
-                  : 'bg-white/[0.06] text-slate-500 cursor-default'
+                  ? 'bg-gradient-to-br from-emerald-500 to-[#C8A03A] text-white cursor-pointer'
+                  : 'bg-[#F8F9FB]/[0.06] text-slate-500 cursor-default'
               }`}
             >
               →

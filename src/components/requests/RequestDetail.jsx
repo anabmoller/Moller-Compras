@@ -32,7 +32,7 @@ import AttachmentUpload from "./AttachmentUpload";
 
 function InfoGrid({ children }) {
   return (
-    <div className="info-grid grid grid-cols-2 gap-0 bg-white/[0.03] rounded-xl border border-white/[0.06] overflow-hidden shadow-sm">
+    <div className="info-grid grid grid-cols-2 gap-0 bg-[#F8F9FB]/[0.03] rounded-xl border border-white/[0.06] overflow-hidden shadow-sm">
       {children}
     </div>
   );
@@ -332,7 +332,7 @@ export default function RequestDetail({
 
           {/* Note (editable) */}
           <div className="px-5 xl:px-0 py-2">
-            <div className="bg-white/[0.03] rounded-xl px-4 py-3 border border-white/[0.06]">
+            <div className="bg-[#F8F9FB]/[0.03] rounded-xl px-4 py-3 border border-white/[0.06]">
               <div className="text-[11px] text-slate-400 font-medium mb-1.5">
                 Nota / Motivo
               </div>
@@ -384,7 +384,7 @@ export default function RequestDetail({
               <div className="text-xs font-semibold text-slate-400 uppercase tracking-wide flex items-center gap-1.5">
                 📎 Adjuntos
                 {attachments.length > 0 && (
-                  <span className="bg-[#1F2A44]/[0.08] text-emerald-400 text-[10px] font-bold px-1.5 py-px rounded-md">
+                  <span className="bg-[#1F2A44]/[0.08] text-[#C8A03A] text-[10px] font-bold px-1.5 py-px rounded-md">
                     {attachments.length}
                   </span>
                 )}
@@ -394,14 +394,14 @@ export default function RequestDetail({
               </span>
             </div>
             {showAttachments && (
-              <div className="bg-white/[0.03] rounded-xl p-4 border border-white/[0.06]">
+              <div className="bg-[#F8F9FB]/[0.03] rounded-xl p-4 border border-white/[0.06]">
                 {isRejected || isCancelado ? (
                   <>
                     {/* Read-only view of existing attachments */}
                     {attachments.length > 0 ? (
                       <div className="flex flex-col gap-1.5">
                         {attachments.map(att => (
-                          <div key={att.id} className="flex items-center gap-2.5 bg-white/[0.02] rounded-lg px-3 py-2 border border-white/[0.06]">
+                          <div key={att.id} className="flex items-center gap-2.5 bg-[#F8F9FB]/[0.02] rounded-lg px-3 py-2 border border-white/[0.06]">
                             <div className="w-11 h-11 rounded bg-[#1F2A44]/[0.06] flex items-center justify-center text-lg flex-shrink-0">
                               {att.type?.startsWith("image/") ? "🖼" : "📄"}
                             </div>
@@ -419,7 +419,7 @@ export default function RequestDetail({
                                   }
                                   if (att.url) window.open(att.url, "_blank");
                                 }}
-                                className="bg-[#1F2A44]/[0.06] border-none rounded px-2 py-1 text-[10px] text-emerald-400 font-semibold cursor-pointer">
+                                className="bg-[#1F2A44]/[0.06] border-none rounded px-2 py-1 text-[10px] text-[#C8A03A] font-semibold cursor-pointer">
                                 Ver
                               </button>
                             )}
@@ -458,7 +458,7 @@ export default function RequestDetail({
               <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-2">
                 Flujo de Aprobación
               </div>
-              <div className="bg-white/[0.03] rounded-xl px-4 py-3.5 border border-white/[0.06]">
+              <div className="bg-[#F8F9FB]/[0.03] rounded-xl px-4 py-3.5 border border-white/[0.06]">
                 <div className="flex xl:flex-col items-center xl:items-stretch gap-0">
                   {approvalChain.map((step, i) => {
                     const isApprovedStep = i < approvedCount;
@@ -587,7 +587,7 @@ export default function RequestDetail({
               onChange={e => setCancelReason(e.target.value)}
               placeholder="Motivo de cancelación (requerido)..."
               rows={3}
-              className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none mb-3 resize-none focus:border-red-500/50"
+              className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-[#F8F9FB]/[0.05] text-sm text-white outline-none mb-3 resize-none focus:border-red-500/50"
               autoFocus
             />
             <div className="flex gap-2">

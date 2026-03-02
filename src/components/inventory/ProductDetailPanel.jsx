@@ -89,7 +89,7 @@ export default function ProductDetailPanel({ product, onClose }) {
                 {product.name}
               </div>
               <div className="text-[11px] text-slate-400 mt-1 flex gap-2 flex-wrap items-center">
-                <span className="font-mono text-[10px] bg-white/5 px-1.5 py-0.5 rounded font-semibold">
+                <span className="font-mono text-[10px] bg-[#F8F9FB]/5 px-1.5 py-0.5 rounded font-semibold">
                   {product.code}
                 </span>
                 <span
@@ -105,7 +105,7 @@ export default function ProductDetailPanel({ product, onClose }) {
             </div>
             <button
               onClick={onClose}
-              className="bg-white/5 border-none rounded-full w-7 h-7 flex items-center justify-center cursor-pointer text-sm text-slate-400 shrink-0 hover:bg-white/10 transition-colors"
+              className="bg-[#F8F9FB]/5 border-none rounded-full w-7 h-7 flex items-center justify-center cursor-pointer text-sm text-slate-400 shrink-0 hover:bg-[#F8F9FB]/10 transition-colors"
             >
               {"✕"}
             </button>
@@ -153,7 +153,7 @@ export default function ProductDetailPanel({ product, onClose }) {
               Cargando historial...
             </div>
           ) : supplierStats.length === 0 ? (
-            <div className="bg-white/5 rounded-xl px-4 py-5 text-center">
+            <div className="bg-[#F8F9FB]/5 rounded-xl px-4 py-5 text-center">
               <div className="text-2xl mb-1.5">{"📋"}</div>
               <div className="text-xs text-slate-400 font-medium">
                 Sin historial de compras registrado
@@ -201,7 +201,7 @@ export default function ProductDetailPanel({ product, onClose }) {
                   {s.minPrice !== s.maxPrice && (
                     <div className="mt-2 flex items-center gap-2 text-[10px] text-slate-400">
                       <span>{fmt(s.minPrice, s.currency)}</span>
-                      <div className="flex-1 h-[3px] bg-white/[0.08] rounded-full relative">
+                      <div className="flex-1 h-[3px] bg-[#F8F9FB]/[0.08] rounded-full relative">
                         <div className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-500/25 to-emerald-500" />
                       </div>
                       <span>{fmt(s.maxPrice, s.currency)}</span>

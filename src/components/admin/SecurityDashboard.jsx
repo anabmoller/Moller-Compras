@@ -42,7 +42,7 @@ const ISO_REFERENCES = [
 
 const PDCA_STEPS = [
   { phase: 'Plan', color: 'text-blue-400', bg: 'bg-blue-500/10', items: ['Definir alcance del SGSI', 'Análisis de riesgos', 'Plan de tratamiento de riesgos'] },
-  { phase: 'Do', color: 'text-emerald-400', bg: 'bg-[#1F2A44]/10', items: ['Implementar controles', 'Capacitación del personal', 'Documentar procedimientos'] },
+  { phase: 'Do', color: 'text-[#C8A03A]', bg: 'bg-[#1F2A44]/10', items: ['Implementar controles', 'Capacitación del personal', 'Documentar procedimientos'] },
   { phase: 'Check', color: 'text-amber-400', bg: 'bg-amber-500/10', items: ['Auditorías internas', 'Revisión de indicadores', 'Evaluación de proveedores'] },
   { phase: 'Act', color: 'text-purple-400', bg: 'bg-purple-500/10', items: ['Acciones correctivas', 'Mejora continua', 'Actualizar políticas'] },
 ];
@@ -82,7 +82,7 @@ function ScoreBar({ value, max = 10 }) {
   const color = pct >= 80 ? 'bg-[#1F2A44]' : pct >= 60 ? 'bg-amber-500' : 'bg-red-500';
   return (
     <div className="flex items-center gap-2">
-      <div className="flex-1 h-2 bg-white/[0.06] rounded-full overflow-hidden">
+      <div className="flex-1 h-2 bg-[#F8F9FB]/[0.06] rounded-full overflow-hidden">
         <div className={`h-full ${color} rounded-full transition-all`} style={{ width: `${pct}%` }} />
       </div>
       <span className="text-xs text-slate-400 w-8 text-right">{value}</span>
@@ -100,7 +100,7 @@ function TabResumen() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <KpiCard label="Políticas ISO" value="8" sub="6 activas, 2 borrador" color="text-blue-400" />
         <KpiCard label="Proveedores Evaluados" value="0 / 29" sub="Pendiente primera evaluación" color="text-amber-400" />
-        <KpiCard label="No Conformidades" value="0" sub="Sin registros aún" color="text-emerald-400" />
+        <KpiCard label="No Conformidades" value="0" sub="Sin registros aún" color="text-[#C8A03A]" />
         <KpiCard label="Score Compliance" value="67%" sub="Objetivo: 85%" color="text-purple-400" />
       </div>
 
@@ -120,7 +120,7 @@ function TabResumen() {
             </thead>
             <tbody>
               {SECURITY_POLICIES.map((p, i) => (
-                <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.02]">
+                <tr key={i} className="border-b border-white/[0.04] hover:bg-[#F8F9FB]/[0.02]">
                   <td className="px-5 py-3 text-slate-200">{p.title}</td>
                   <td className="px-5 py-3 text-slate-400 font-mono text-xs">{p.iso}</td>
                   <td className="px-5 py-3"><StatusBadge status={p.status} /></td>
@@ -141,7 +141,7 @@ function TabAuditoria() {
       <Card className="p-5 border-amber-500/20 bg-amber-500/[0.03]">
         <h3 className="text-sm font-semibold text-amber-400 mb-2">Integración audit_trail</h3>
         <p className="text-xs text-slate-400 leading-relaxed">
-          La tabla <code className="text-amber-300 bg-white/[0.05] px-1 rounded">audit_trail</code> registra
+          La tabla <code className="text-amber-300 bg-[#F8F9FB]/[0.05] px-1 rounded">audit_trail</code> registra
           automáticamente cada INSERT, UPDATE y DELETE en las tablas: purchase_requests, suppliers, products
           y price_history mediante triggers PostgreSQL. Los registros incluyen old_data / new_data en formato
           JSONB para trazabilidad completa.
@@ -165,7 +165,7 @@ function TabAuditoria() {
             </thead>
             <tbody>
               {MOCK_AUDIT_ENTRIES.map((e) => (
-                <tr key={e.id} className="border-b border-white/[0.04] hover:bg-white/[0.02]">
+                <tr key={e.id} className="border-b border-white/[0.04] hover:bg-[#F8F9FB]/[0.02]">
                   <td className="px-5 py-3 text-slate-500 font-mono">#{e.id}</td>
                   <td className="px-5 py-3 text-slate-200 font-mono text-xs">{e.table}</td>
                   <td className="px-5 py-3"><ActionBadge action={e.action} /></td>
@@ -203,7 +203,7 @@ function TabEvaluacion() {
             </thead>
             <tbody>
               {TOP_SUPPLIERS.map((s, i) => (
-                <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.02]">
+                <tr key={i} className="border-b border-white/[0.04] hover:bg-[#F8F9FB]/[0.02]">
                   <td className="px-5 py-3 text-slate-200 font-medium">{s.name}</td>
                   <td className="px-5 py-3"><Badge variant="info">{s.category}</Badge></td>
                   <td className="px-5 py-3"><ScoreBar value={s.quality} /></td>
@@ -223,7 +223,7 @@ function TabEvaluacion() {
         <p className="text-xs text-slate-400 leading-relaxed">
           El formulario de evaluación de proveedores permite registrar scores trimestrales en 4 ejes:
           Calidad, Entrega, Precio y Cumplimiento. Los datos se almacenan en la tabla
-          <code className="text-blue-300 bg-white/[0.05] px-1 rounded mx-1">supplier_evaluations</code>
+          <code className="text-blue-300 bg-[#F8F9FB]/[0.05] px-1 rounded mx-1">supplier_evaluations</code>
           con cálculo automático de total_score. Próximamente disponible en esta sección.
         </p>
       </Card>
@@ -310,15 +310,15 @@ export default function SecurityDashboard({ onBack }) {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-white/[0.03] rounded-lg p-1 border border-white/[0.06]">
+      <div className="flex gap-1 bg-[#F8F9FB]/[0.03] rounded-lg p-1 border border-white/[0.06]">
         {TABS.map((tab) => (
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
             className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md text-sm font-medium transition-all ${
               activeTab === tab.key
-                ? 'bg-white/[0.08] text-white shadow-sm'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]'
+                ? 'bg-[#F8F9FB]/[0.08] text-white shadow-sm'
+                : 'text-slate-400 hover:text-slate-200 hover:bg-[#F8F9FB]/[0.04]'
             }`}
           >
             <span className="text-base">{tab.icon}</span>

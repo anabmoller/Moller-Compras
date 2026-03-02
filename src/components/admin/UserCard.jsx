@@ -6,7 +6,7 @@ export default function UserCard({ user, onEdit, onToggleActive, disabled }) {
 
   return (
     <div
-      className={`bg-white/[0.03] rounded-xl px-3.5 py-3 border border-white/[0.06] flex items-center gap-3 transition-opacity duration-200 ${isActive ? 'opacity-100' : 'opacity-50'}`}
+      className={`bg-[#F8F9FB]/[0.03] rounded-xl px-3.5 py-3 border border-white/[0.06] flex items-center gap-3 transition-opacity duration-200 ${isActive ? 'opacity-100' : 'opacity-50'}`}
     >
       {/* Avatar */}
       <div
@@ -42,7 +42,7 @@ export default function UserCard({ user, onEdit, onToggleActive, disabled }) {
         <button
           onClick={onEdit}
           disabled={disabled}
-          className="w-8 h-8 rounded-lg border-none bg-white/[0.02] cursor-pointer flex items-center justify-center text-sm"
+          className="w-8 h-8 rounded-lg border-none bg-[#F8F9FB]/[0.02] cursor-pointer flex items-center justify-center text-sm"
           title="Editar"
         >
           ✏

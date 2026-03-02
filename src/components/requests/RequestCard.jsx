@@ -20,10 +20,10 @@ export default function RequestCard({ request: r, onClick, usdRate }) {
   return (
     <div
       onClick={onClick}
-      className="bg-white/[0.03] rounded-xl px-4 py-3.5 mb-2 border border-white/[0.06] cursor-pointer transition-all duration-150 relative overflow-hidden hover:border-emerald-500/30 hover:shadow-[0_1px_3px_rgba(0,0,0,0.4),0_1px_2px_rgba(0,0,0,0.3)]"
+      className="bg-[#F8F9FB]/[0.03] rounded-xl px-4 py-3.5 mb-2 border border-white/[0.06] cursor-pointer transition-all duration-150 relative overflow-hidden hover:border-[#C8A03A]/30 hover:shadow-[0_1px_3px_rgba(0,0,0,0.4),0_1px_2px_rgba(0,0,0,0.3)]"
     >
       {/* Progress bar */}
-      <div className="absolute top-0 left-0 right-0 h-0.5 bg-white/[0.06]">
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-[#F8F9FB]/[0.06]">
         <div
           className="h-full transition-[width] duration-300"
           style={{ width: `${progress}%`, background: status.color }}
