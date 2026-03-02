@@ -384,7 +384,7 @@ export default function RequestDetail({
               <div className="text-xs font-semibold text-slate-400 uppercase tracking-wide flex items-center gap-1.5">
                 📎 Adjuntos
                 {attachments.length > 0 && (
-                  <span className="bg-emerald-500/[0.08] text-emerald-400 text-[10px] font-bold px-1.5 py-px rounded-md">
+                  <span className="bg-[#1F2A44]/[0.08] text-emerald-400 text-[10px] font-bold px-1.5 py-px rounded-md">
                     {attachments.length}
                   </span>
                 )}
@@ -402,7 +402,7 @@ export default function RequestDetail({
                       <div className="flex flex-col gap-1.5">
                         {attachments.map(att => (
                           <div key={att.id} className="flex items-center gap-2.5 bg-white/[0.02] rounded-lg px-3 py-2 border border-white/[0.06]">
-                            <div className="w-11 h-11 rounded bg-emerald-500/[0.06] flex items-center justify-center text-lg flex-shrink-0">
+                            <div className="w-11 h-11 rounded bg-[#1F2A44]/[0.06] flex items-center justify-center text-lg flex-shrink-0">
                               {att.type?.startsWith("image/") ? "🖼" : "📄"}
                             </div>
                             <div className="flex-1 min-w-0">
@@ -419,7 +419,7 @@ export default function RequestDetail({
                                   }
                                   if (att.url) window.open(att.url, "_blank");
                                 }}
-                                className="bg-emerald-500/[0.06] border-none rounded px-2 py-1 text-[10px] text-emerald-400 font-semibold cursor-pointer">
+                                className="bg-[#1F2A44]/[0.06] border-none rounded px-2 py-1 text-[10px] text-emerald-400 font-semibold cursor-pointer">
                                 Ver
                               </button>
                             )}

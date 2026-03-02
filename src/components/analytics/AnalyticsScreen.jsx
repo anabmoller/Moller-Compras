@@ -106,7 +106,7 @@ export default function AnalyticsScreen({ requests, statusCounts, onBack, defaul
             onClick={() => setSection(s.key)}
             className={`flex-1 px-3 py-2 rounded-lg border text-xs font-semibold cursor-pointer transition-all ${
               section === s.key
-                ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
+                ? 'bg-[#1F2A44]/15 text-emerald-400 border-emerald-500/30'
                 : 'bg-white/[0.02] text-slate-500 border-white/[0.06] hover:bg-white/[0.05]'
             }`}
           >
@@ -129,7 +129,7 @@ export default function AnalyticsScreen({ requests, statusCounts, onBack, defaul
                 onClick={() => setTab(t.key)}
                 className={`flex-1 px-3 py-2.5 rounded-lg border-none text-xs font-semibold cursor-pointer transition-all ${
                   tab === t.key
-                    ? 'bg-emerald-500/15 text-emerald-400 shadow-md'
+                    ? 'bg-[#1F2A44]/15 text-emerald-400 shadow-md'
                     : 'bg-white/[0.03] text-slate-400 hover:bg-white/[0.06]'
                 }`}
               >
@@ -276,7 +276,7 @@ function PurchasesTab({ stats }) {
       <AnalyticsCard title="Top Solicitantes">
         {reqEntries.map(([name, data], i) => (
           <div key={name} className="flex items-center gap-2.5 py-2 border-b border-white/[0.06]">
-            <span className={`w-6 h-6 rounded-lg flex items-center justify-center text-[11px] font-bold text-white ${i < 3 ? 'bg-emerald-600' : 'bg-slate-600'}`}>
+            <span className={`w-6 h-6 rounded-lg flex items-center justify-center text-[11px] font-bold text-white ${i < 3 ? 'bg-[#1F2A44]' : 'bg-slate-600'}`}>
               {i + 1}
             </span>
             <div className="flex-1">

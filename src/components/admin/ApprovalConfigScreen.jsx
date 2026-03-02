@@ -115,7 +115,7 @@ export default function ApprovalConfigScreen({ onBack }) {
           {Object.entries(MANAGER_MAP).map(([est, mgr]) => (
             <div key={est} className="flex justify-between items-center py-2 border-b border-white/[0.06]">
               <span className="text-[13px] text-white">📍 {est}</span>
-              <span className="text-xs font-semibold text-emerald-400 bg-emerald-500/[0.06] px-2.5 py-0.5 rounded-lg">
+              <span className="text-xs font-semibold text-emerald-400 bg-[#1F2A44]/[0.06] px-2.5 py-0.5 rounded-lg">
                 {USER_DISPLAY_NAMES[mgr] || mgr}
               </span>
             </div>

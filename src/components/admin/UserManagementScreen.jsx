@@ -136,7 +136,7 @@ export default function UserManagementScreen({ onBack }) {
           </h2>
           <button
             onClick={() => { setShowAddForm(true); setEditingUser(null); setActionError(""); }}
-            className="px-4 py-2 rounded-lg border-none bg-emerald-500 text-white text-[13px] font-semibold cursor-pointer"
+            className="px-4 py-2 rounded-lg border-none bg-[#1F2A44] text-white text-[13px] font-semibold cursor-pointer"
           >
             + Nuevo
           </button>
@@ -224,7 +224,7 @@ export default function UserManagementScreen({ onBack }) {
           <button
             onClick={() => setShowResetConfirm(true)}
             disabled={actionLoading}
-            className="w-full p-3 rounded-xl border border-emerald-500/[0.19] bg-emerald-500/[0.05] text-emerald-400 text-[13px] font-semibold cursor-pointer"
+            className="w-full p-3 rounded-xl border border-emerald-500/[0.19] bg-[#1F2A44]/[0.05] text-emerald-400 text-[13px] font-semibold cursor-pointer"
           >
             Refrescar lista de usuarios desde servidor
           </button>

@@ -80,7 +80,7 @@ export default function AnalysisScreen({ onBack, embedded = false }) {
           <button key={t.key} onClick={() => setActiveTab(t.key)}
             className={`px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
               activeTab === t.key
-                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
+                ? 'bg-[#1F2A44]/10 text-emerald-400 border border-emerald-500/30'
                 : 'bg-white/[0.03] text-slate-500 border border-white/[0.06] hover:bg-white/[0.06] hover:text-slate-300'
             }`}>
             {t.label}

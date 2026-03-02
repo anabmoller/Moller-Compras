@@ -21,19 +21,19 @@ export default function Header({ currentUser, onToggleDrawer, onNavigate }) {
         onClick={() => onNavigate && onNavigate('dashboard')}
         className="flex items-center gap-2 cursor-pointer"
       >
-        <div className="w-7 h-7 rounded-md bg-emerald-600 flex items-center justify-center text-white font-bold text-xs">
+        <div className="w-7 h-7 rounded-md bg-[#1F2A44] flex items-center justify-center text-white font-bold text-xs">
           Y
         </div>
-        <div className="text-sm font-bold text-white tracking-tight">YPOTI</div>
+        <div className="text-sm font-bold text-white tracking-tight">AM Soluciones</div>
       </div>
 
       {/* Avatar → profile */}
       <button
         onClick={() => onNavigate && onNavigate('profile')}
-        className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-xs font-semibold text-emerald-400 border-none cursor-pointer"
+        className="w-8 h-8 rounded-full bg-[#1F2A44]/10 flex items-center justify-center text-xs font-semibold text-emerald-400 border-none cursor-pointer"
         aria-label="Perfil"
       >
-        {initial}
+        {"AMs"}
       </button>
     </header>
   );

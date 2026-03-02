@@ -7,7 +7,7 @@ export default function EmptyState({ icon = '📭', title, description, action, 
       {action && (
         <button
           onClick={onAction}
-          className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm font-medium hover:bg-emerald-500/30 transition-colors"
+          className="px-4 py-2 bg-[#1F2A44]/20 text-emerald-400 rounded-lg text-sm font-medium hover:bg-[#1F2A44]/30 transition-colors"
         >
           {action}
         </button>

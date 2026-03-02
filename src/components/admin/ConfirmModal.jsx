@@ -23,7 +23,7 @@ export default function ConfirmModal({ title, message, confirmLabel = "Confirmar
           </button>
           <button
             onClick={onConfirm}
-            className="flex-1 py-3 rounded-xl border-none bg-emerald-500 text-white text-sm font-semibold cursor-pointer"
+            className="flex-1 py-3 rounded-xl border-none bg-[#1F2A44] text-white text-sm font-semibold cursor-pointer"
           >
             {confirmLabel}
           </button>

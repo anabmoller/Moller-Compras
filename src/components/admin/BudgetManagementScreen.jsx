@@ -206,7 +206,7 @@ export default function BudgetManagementScreen({ onBack }) {
               <button
                 onClick={handleReset}
                 disabled={saving}
-                className={`flex-1 py-3 rounded-lg border-none bg-emerald-500 text-white text-[13px] font-semibold ${saving ? 'cursor-default' : 'cursor-pointer'}`}
+                className={`flex-1 py-3 rounded-lg border-none bg-[#1F2A44] text-white text-[13px] font-semibold ${saving ? 'cursor-default' : 'cursor-pointer'}`}
               >
                 {saving ? "Cargando..." : "Refrescar"}
               </button>

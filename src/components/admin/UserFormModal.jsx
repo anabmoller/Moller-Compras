@@ -37,7 +37,7 @@ function NameComboBox({ value, onChange, existingNames = [] }) {
               key={n}
               onClick={() => { onChange(n); setFilter(n); setOpen(false); }}
               className={`w-full text-left px-3.5 py-2 text-sm border-none cursor-pointer transition-colors ${
-                n === value ? 'bg-emerald-500/10 text-emerald-400 font-medium' : 'bg-transparent text-slate-300 hover:bg-white/[0.06]'
+                n === value ? 'bg-[#1F2A44]/10 text-emerald-400 font-medium' : 'bg-transparent text-slate-300 hover:bg-white/[0.06]'
               }`}
             >
               {n}
@@ -139,7 +139,7 @@ function PositionSelect({ value, onChange }) {
               key={o}
               onClick={() => { onChange(o); setFilter(o); setOpen(false); }}
               className={`w-full text-left px-3.5 py-2 text-sm border-none cursor-pointer transition-colors ${
-                o === value ? 'bg-emerald-500/10 text-emerald-400 font-medium' : 'bg-transparent text-slate-300 hover:bg-white/[0.06]'
+                o === value ? 'bg-[#1F2A44]/10 text-emerald-400 font-medium' : 'bg-transparent text-slate-300 hover:bg-white/[0.06]'
               }`}
             >
               {o}

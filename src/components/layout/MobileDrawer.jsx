@@ -47,11 +47,11 @@ export default function MobileDrawer({ open, onClose, screen, onNavigate, onNewR
         {/* Header */}
         <div className="px-5 pt-5 pb-4 border-b border-white/[0.06] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold text-base">
+            <div className="w-9 h-9 rounded-lg bg-[#1F2A44] flex items-center justify-center text-white font-bold text-base">
               Y
             </div>
             <div>
-              <div className="text-lg font-bold text-white tracking-tight leading-tight">YPOTI</div>
+              <div className="text-lg font-bold text-white tracking-tight leading-tight">AM Soluciones</div>
               <div className="text-[10px] font-medium text-slate-500 tracking-wide">Gestión de Compras</div>
             </div>
           </div>
@@ -71,7 +71,7 @@ export default function MobileDrawer({ open, onClose, screen, onNavigate, onNewR
           onClick={() => handleNav('profile')}
           className="mx-3 mt-3 mb-1 px-3 py-2.5 bg-[rgba(255,255,255,0.04)] rounded-lg border border-white/[0.06] flex items-center gap-2.5 cursor-pointer hover:bg-[rgba(255,255,255,0.07)] transition-colors"
         >
-          <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 font-semibold text-xs">
+          <div className="w-8 h-8 rounded-full bg-[#1F2A44]/10 flex items-center justify-center text-emerald-400 font-semibold text-xs">
             {currentUser?.charAt(0)?.toUpperCase() || 'U'}
           </div>
           <div className="text-sm font-medium text-white truncate flex-1">
@@ -88,7 +88,7 @@ export default function MobileDrawer({ open, onClose, screen, onNavigate, onNewR
               onClick={() => handleNav(item.key)}
               className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-md border-none text-sm cursor-pointer mb-0.5 transition-all ${
                 screen === item.key
-                  ? 'bg-emerald-500/10 text-emerald-400 font-semibold'
+                  ? 'bg-[#1F2A44]/10 text-emerald-400 font-semibold'
                   : 'bg-transparent text-slate-400 font-normal hover:bg-[rgba(255,255,255,0.06)]'
               }`}
             >
@@ -111,7 +111,7 @@ export default function MobileDrawer({ open, onClose, screen, onNavigate, onNewR
                   onClick={() => handleNav(item.key)}
                   className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-md border-none text-sm cursor-pointer mb-0.5 transition-all ${
                     screen === item.key
-                      ? 'bg-emerald-500/10 text-emerald-400 font-semibold'
+                      ? 'bg-[#1F2A44]/10 text-emerald-400 font-semibold'
                       : 'bg-transparent text-slate-400 font-normal hover:bg-[rgba(255,255,255,0.06)]'
                   }`}
                 >
@@ -127,7 +127,7 @@ export default function MobileDrawer({ open, onClose, screen, onNavigate, onNewR
             onClick={() => handleNav('settings')}
             className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-md border-none text-sm cursor-pointer mb-0.5 transition-all ${
               screen === 'settings'
-                ? 'bg-emerald-500/10 text-emerald-400 font-semibold'
+                ? 'bg-[#1F2A44]/10 text-emerald-400 font-semibold'
                 : 'bg-transparent text-slate-400 font-normal hover:bg-[rgba(255,255,255,0.06)]'
             }`}
           >
@@ -140,7 +140,7 @@ export default function MobileDrawer({ open, onClose, screen, onNavigate, onNewR
         <div className="px-4 pb-4 pt-2">
           <button
             onClick={() => { onNewRequest(); onClose(); }}
-            className="w-full py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors border-none cursor-pointer"
+            className="w-full py-2.5 rounded-lg bg-[#1F2A44] hover:bg-[#1F2A44] text-white text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors border-none cursor-pointer"
           >
             + Nueva Solicitud
           </button>

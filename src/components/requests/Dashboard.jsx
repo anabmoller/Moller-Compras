@@ -161,7 +161,7 @@ function FilterPill({ active, onClick, label, activeColor }) {
       onClick={onClick}
       className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all border cursor-pointer shrink-0 ${
         active
-          ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+          ? 'bg-[#1F2A44]/10 text-emerald-400 border-emerald-500/20'
           : 'bg-white/[0.03] text-slate-400 border-white/[0.06] hover:bg-white/[0.06]'
       }`}
     >

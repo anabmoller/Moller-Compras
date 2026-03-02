@@ -27,7 +27,7 @@ export default function RequestStepReview({
             </div>
           </div>
         ))}
-        <div className="px-4 py-3 bg-emerald-500/[0.04] flex justify-between items-center">
+        <div className="px-4 py-3 bg-[#1F2A44]/[0.04] flex justify-between items-center">
           <span className="text-xs font-bold text-white">TOTAL</span>
           <div className="text-right">
             <div className="text-base font-bold text-emerald-400">{fmtGs(totalAmount)}</div>
@@ -48,7 +48,7 @@ export default function RequestStepReview({
       </div>
 
       {/* Approval flow visual (C8 / Task 7) */}
-      <div className="bg-emerald-500/[0.04] rounded-xl px-3.5 py-3 border border-emerald-500/[0.08]">
+      <div className="bg-[#1F2A44]/[0.04] rounded-xl px-3.5 py-3 border border-emerald-500/[0.08]">
         <div className="text-xs font-semibold text-emerald-400 mb-2.5">{"🔄"} Flujo de Aprobaci{"ó"}n</div>
         <div className="flex items-center gap-0">
           {approvalSteps.map((s, i) => (

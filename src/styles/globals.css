@@ -240,3 +240,8 @@ input:focus, select:focus, textarea:focus {
     max-width: 1280px !important;
   }
 }
+
+/* AM Soluciones Typography */
+body { font-family: Inter, system-ui, -apple-system, sans-serif; }
+h1,h2,h3,.title { font-family: "Playfair Display", serif; }
+

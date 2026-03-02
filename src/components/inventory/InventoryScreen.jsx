@@ -38,7 +38,7 @@ function FilterPill({ label, active, onClick }) {
       onClick={onClick}
       className={`px-3 py-[5px] rounded-full text-[11px] font-semibold cursor-pointer whitespace-nowrap shrink-0 transition-colors ${
         active
-          ? "bg-emerald-500/10 text-emerald-400 border-2 border-emerald-400"
+          ? "bg-[#1F2A44]/10 text-emerald-400 border-2 border-emerald-400"
           : "bg-white/[0.03] text-slate-400 border border-white/[0.06] hover:bg-white/[0.06]"
       }`}
     >

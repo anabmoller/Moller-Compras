@@ -36,11 +36,11 @@ export default function DesktopSidebar({ screen, onNavigate, onNewRequest, curre
         onClick={() => onNavigate('dashboard')}
         className="px-5 pt-5 pb-4 border-b border-white/[0.06] flex items-center gap-2.5 cursor-pointer hover:opacity-80 transition-opacity"
       >
-        <div className="w-9 h-9 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold text-base">
+        <div className="w-9 h-9 rounded-lg bg-[#1F2A44] flex items-center justify-center text-white font-bold text-base">
           Y
         </div>
         <div>
-          <h1 className="text-lg font-bold text-white tracking-tight leading-tight m-0">YPOTI</h1>
+          <h1 className="text-lg font-bold text-white tracking-tight leading-tight m-0">AM Soluciones</h1>
           <div className="text-[10px] font-medium text-slate-500 tracking-wide">{"Gestión de Compras"}</div>
         </div>
       </div>
@@ -50,8 +50,8 @@ export default function DesktopSidebar({ screen, onNavigate, onNewRequest, curre
         onClick={() => onNavigate('profile')}
         className="mx-3 mt-3 mb-1 px-3 py-2.5 bg-[rgba(255,255,255,0.04)] rounded-lg border border-white/[0.06] flex items-center gap-2.5 cursor-pointer hover:bg-[rgba(255,255,255,0.07)] transition-colors"
       >
-        <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 font-semibold text-xs">
-          {initial}
+        <div className="w-8 h-8 rounded-full bg-[#1F2A44]/10 flex items-center justify-center text-emerald-400 font-semibold text-xs">
+          {"AMs"}
         </div>
         <div className="text-sm font-medium text-white truncate flex-1">
           {currentUser}
@@ -103,7 +103,7 @@ export default function DesktopSidebar({ screen, onNavigate, onNewRequest, curre
       <div className="px-4 pb-3 pt-3">
         <button
           onClick={onNewRequest}
-          className="w-full py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors border-none cursor-pointer"
+          className="w-full py-2.5 rounded-lg bg-[#1F2A44] hover:bg-[#1F2A44] text-white text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors border-none cursor-pointer"
           aria-label="Nueva Solicitud"
         >
           <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor">
@@ -177,7 +177,7 @@ function NavItem({ item, active, onClick }) {
       onClick={onClick}
       className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md border-none text-sm cursor-pointer mb-0.5 transition-all ${
         active
-          ? 'bg-emerald-500/10 text-emerald-400 font-semibold'
+          ? 'bg-[#1F2A44]/10 text-emerald-400 font-semibold'
           : 'bg-transparent text-slate-400 font-normal hover:bg-[rgba(255,255,255,0.06)] hover:text-slate-200'
       }`}
     >

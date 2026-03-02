@@ -67,7 +67,7 @@ export default function RequestsTable({ requests, onSelectRequest }) {
                   onClick={() => onSelectRequest(r)}
                   className={`border-b border-white/[0.06] cursor-pointer transition-colors duration-150 ${
                     i % 2 === 0 ? "bg-transparent" : "bg-white/[0.05]"
-                  } hover:bg-emerald-500/[0.04]`}
+                  } hover:bg-[#1F2A44]/[0.04]`}
                 >
                   <td className="px-3.5 py-2.5 font-semibold text-emerald-500 text-xs">
                     {r.id}

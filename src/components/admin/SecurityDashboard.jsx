@@ -42,7 +42,7 @@ const ISO_REFERENCES = [
 
 const PDCA_STEPS = [
   { phase: 'Plan', color: 'text-blue-400', bg: 'bg-blue-500/10', items: ['Definir alcance del SGSI', 'Análisis de riesgos', 'Plan de tratamiento de riesgos'] },
-  { phase: 'Do', color: 'text-emerald-400', bg: 'bg-emerald-500/10', items: ['Implementar controles', 'Capacitación del personal', 'Documentar procedimientos'] },
+  { phase: 'Do', color: 'text-emerald-400', bg: 'bg-[#1F2A44]/10', items: ['Implementar controles', 'Capacitación del personal', 'Documentar procedimientos'] },
   { phase: 'Check', color: 'text-amber-400', bg: 'bg-amber-500/10', items: ['Auditorías internas', 'Revisión de indicadores', 'Evaluación de proveedores'] },
   { phase: 'Act', color: 'text-purple-400', bg: 'bg-purple-500/10', items: ['Acciones correctivas', 'Mejora continua', 'Actualizar políticas'] },
 ];
@@ -79,7 +79,7 @@ function ActionBadge({ action }) {
 
 function ScoreBar({ value, max = 10 }) {
   const pct = (value / max) * 100;
-  const color = pct >= 80 ? 'bg-emerald-500' : pct >= 60 ? 'bg-amber-500' : 'bg-red-500';
+  const color = pct >= 80 ? 'bg-[#1F2A44]' : pct >= 60 ? 'bg-amber-500' : 'bg-red-500';
   return (
     <div className="flex items-center gap-2">
       <div className="flex-1 h-2 bg-white/[0.06] rounded-full overflow-hidden">

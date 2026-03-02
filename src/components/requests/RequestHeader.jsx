@@ -61,7 +61,7 @@ export default function RequestHeader({
           {/* WhatsApp share */}
           <button
             onClick={() => shareViaWhatsApp(r, rate)}
-            className="w-7 h-7 rounded-md bg-white/[0.06] border-none cursor-pointer flex items-center justify-center text-slate-400 hover:bg-emerald-500/20 hover:text-emerald-400 transition-colors"
+            className="w-7 h-7 rounded-md bg-white/[0.06] border-none cursor-pointer flex items-center justify-center text-slate-400 hover:bg-[#1F2A44]/20 hover:text-emerald-400 transition-colors"
             title="Compartir por WhatsApp"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">

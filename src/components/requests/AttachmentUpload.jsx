@@ -125,7 +125,7 @@ export default function AttachmentUpload({ requestUuid, attachments = [], onAtta
                   className="w-11 h-11 rounded object-cover flex-shrink-0 border border-white/[0.06]"
                 />
               ) : (
-                <div className="w-11 h-11 rounded bg-emerald-500/[0.06] flex items-center justify-center text-lg flex-shrink-0">
+                <div className="w-11 h-11 rounded bg-[#1F2A44]/[0.06] flex items-center justify-center text-lg flex-shrink-0">
                   📄
                 </div>
               )}
@@ -145,7 +145,7 @@ export default function AttachmentUpload({ requestUuid, attachments = [], onAtta
                 {(att.path || att.url) && (
                   <button
                     onClick={() => openAttachment(att)}
-                    className="bg-emerald-500/[0.06] border-none rounded px-2 py-1 text-[10px] text-emerald-400 font-semibold cursor-pointer"
+                    className="bg-[#1F2A44]/[0.06] border-none rounded px-2 py-1 text-[10px] text-emerald-400 font-semibold cursor-pointer"
                   >
                     Ver
                   </button>
@@ -176,7 +176,7 @@ export default function AttachmentUpload({ requestUuid, attachments = [], onAtta
             {/* Camera button */}
             <button
               onClick={() => cameraInputRef.current?.click()}
-              className="flex-1 py-3 px-2.5 rounded-lg border border-emerald-500/[0.19] bg-emerald-500/[0.04] cursor-pointer text-center"
+              className="flex-1 py-3 px-2.5 rounded-lg border border-emerald-500/[0.19] bg-[#1F2A44]/[0.04] cursor-pointer text-center"
             >
               <div className="text-xl mb-1">📸</div>
               <div className="text-[11px] font-semibold text-emerald-400">

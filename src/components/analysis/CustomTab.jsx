@@ -65,7 +65,7 @@ export function CreateAnalysisModal({ onClose, onCreate }) {
                   onClick={() => setChartType(ct.key)}
                   className={`flex-1 py-2.5 rounded-lg text-xs font-semibold border cursor-pointer transition-all ${
                     chartType === ct.key
-                      ? 'bg-emerald-500/[0.12] text-emerald-400 border-emerald-500/30'
+                      ? 'bg-[#1F2A44]/[0.12] text-emerald-400 border-emerald-500/30'
                       : 'bg-white/[0.03] text-slate-400 border-white/[0.06]'
                   }`}
                 >
@@ -202,7 +202,7 @@ export default function CustomTab({ analyses, onRemove, onAdd }) {
           ))}
           <button
             onClick={onAdd}
-            className="w-full py-3.5 rounded-xl border border-dashed border-emerald-500/25 bg-emerald-500/[0.04] text-emerald-400 text-[13px] font-semibold cursor-pointer"
+            className="w-full py-3.5 rounded-xl border border-dashed border-emerald-500/25 bg-[#1F2A44]/[0.04] text-emerald-400 text-[13px] font-semibold cursor-pointer"
           >
             + Nuevo Analisis
           </button>

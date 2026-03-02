@@ -35,7 +35,7 @@ export default class ErrorBoundary extends Component {
           <div className="flex gap-3">
             <button
               onClick={this.handleReset}
-              className="px-6 py-2.5 rounded-xl border-none bg-emerald-500 text-white text-sm font-semibold cursor-pointer"
+              className="px-6 py-2.5 rounded-xl border-none bg-[#1F2A44] text-white text-sm font-semibold cursor-pointer"
             >
               Reintentar
             </button>

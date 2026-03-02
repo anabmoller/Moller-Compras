@@ -10,7 +10,7 @@ function SectionTitle({ children, count }) {
       <div className="text-xs font-semibold text-slate-400 uppercase tracking-wide flex items-center gap-1.5">
         {children}
         {count != null && (
-          <span className="bg-emerald-500/[0.08] text-emerald-400 text-[10px] font-bold px-1.5 py-px rounded-md min-w-[18px] text-center">
+          <span className="bg-[#1F2A44]/[0.08] text-emerald-400 text-[10px] font-bold px-1.5 py-px rounded-md min-w-[18px] text-center">
             {count}
           </span>
         )}

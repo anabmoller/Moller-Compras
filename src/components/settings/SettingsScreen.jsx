@@ -34,7 +34,7 @@ export default function SettingsScreen({ onBack, onNavigate, devMode, onSetDevMo
           <div className="text-[13px] text-slate-400 mt-0.5">
             {currentUser.email}
           </div>
-          <div className="inline-block mt-2 text-[11px] font-semibold text-emerald-400 bg-emerald-500/[0.07] px-3 py-1 rounded-lg">
+          <div className="inline-block mt-2 text-[11px] font-semibold text-emerald-400 bg-[#1F2A44]/[0.07] px-3 py-1 rounded-lg">
             {role.label}
           </div>
         </div>
@@ -149,7 +149,7 @@ function AdminButton({ icon, label, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="w-full p-3 rounded-xl border border-emerald-500/25 bg-emerald-500/[0.05] text-emerald-400 text-[13px] font-semibold cursor-pointer mb-2 flex items-center justify-center gap-2"
+      className="w-full p-3 rounded-xl border border-emerald-500/25 bg-[#1F2A44]/[0.05] text-emerald-400 text-[13px] font-semibold cursor-pointer mb-2 flex items-center justify-center gap-2"
     >
       <span className="text-base">{icon}</span>
       {label}

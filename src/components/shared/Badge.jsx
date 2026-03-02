@@ -1,7 +1,7 @@
 export default function Badge({ children, variant = 'default', size = 'sm', dot = false, className = '' }) {
   const variants = {
     default: 'bg-slate-500/10 text-slate-400',
-    success: 'bg-emerald-500/10 text-emerald-400',
+    success: 'bg-[#1F2A44]/10 text-emerald-400',
     warning: 'bg-amber-500/10 text-amber-400',
     danger: 'bg-red-500/10 text-red-400',
     info: 'bg-blue-500/10 text-blue-400',

@@ -81,7 +81,7 @@ export default function RequestCard({ request: r, onClick, usdRate }) {
       <div className="mt-2 text-[11px] text-slate-500 flex flex-col gap-1 pt-2 border-t border-white/[0.06]">
         {r.requester && (
           <div className="flex items-center gap-1.5">
-            <span className="w-[18px] h-[18px] rounded-full bg-emerald-500/10 text-emerald-500 text-[9px] font-semibold inline-flex items-center justify-center">
+            <span className="w-[18px] h-[18px] rounded-full bg-[#1F2A44]/10 text-emerald-500 text-[9px] font-semibold inline-flex items-center justify-center">
               {r.requester.charAt(0)}
             </span>
             <span className="font-medium text-slate-300">{r.requester}</span>

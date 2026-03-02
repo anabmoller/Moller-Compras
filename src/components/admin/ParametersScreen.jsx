@@ -158,7 +158,7 @@ export default function ParametersScreen({ onBack }) {
         {TABS.map(t => (
           <button key={t.key} onClick={() => { setTab(t.key); setSearch(""); setShowForm(false); setEditingItem(null); }} className={`px-3.5 py-2 rounded-xl border-none text-xs font-semibold cursor-pointer whitespace-nowrap ${
             tab === t.key
-              ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
+              ? 'bg-[#1F2A44] text-white shadow-md shadow-emerald-500/20'
               : 'bg-white/[0.03] text-slate-400 shadow-sm'
           }`}>
             {t.icon} {t.label}

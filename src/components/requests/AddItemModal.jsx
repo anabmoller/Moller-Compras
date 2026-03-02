@@ -52,7 +52,7 @@ export default function AddItemModal({ onClose, onAdd }) {
               key={t.key}
               onClick={() => setTab(t.key)}
               className={`flex-1 py-2.5 border-none text-xs font-semibold cursor-pointer ${
-                tab === t.key ? 'bg-emerald-500 text-white' : 'bg-white/[0.03] text-white'
+                tab === t.key ? 'bg-[#1F2A44] text-white' : 'bg-white/[0.03] text-white'
               } ${t.key === "catalogo" ? 'rounded-l-lg' : 'rounded-r-lg'}`}
             >
               {t.label}

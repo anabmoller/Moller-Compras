@@ -24,11 +24,11 @@ export default function ProfileScreen({ onBack, currentUser }) {
 
       <div className="px-5 flex flex-col items-center pt-4">
         {/* Avatar */}
-        <div className="w-20 h-20 rounded-full bg-emerald-500/15 flex items-center justify-center text-2xl font-bold text-emerald-400 mb-3 border-2 border-emerald-500/20">
+        <div className="w-20 h-20 rounded-full bg-[#1F2A44]/15 flex items-center justify-center text-2xl font-bold text-emerald-400 mb-3 border-2 border-emerald-500/20">
           {initials}
         </div>
         <h2 className="text-xl font-bold text-white m-0">{name}</h2>
-        <span className="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full mt-1.5">
+        <span className="text-xs font-semibold text-emerald-400 bg-[#1F2A44]/10 px-3 py-1 rounded-full mt-1.5">
           {roleLabel}
         </span>
       </div>

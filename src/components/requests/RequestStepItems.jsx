@@ -155,10 +155,10 @@ export default function RequestStepItems({
                 onClick={() => selectProduct(p)}
                 className="w-full text-left px-3 py-2 border-none bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer flex items-center gap-2 transition-colors"
               >
-                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/[0.08] px-1.5 py-0.5 rounded">{p.c}</span>
+                <span className="text-[10px] font-mono text-emerald-400 bg-[#1F2A44]/[0.08] px-1.5 py-0.5 rounded">{p.c}</span>
                 <span className="text-sm text-white flex-1 truncate">{p.n}</span>
                 {sectorCategory && p.g === sectorCategory && (
-                  <span className="text-[9px] text-emerald-400 bg-emerald-500/[0.1] px-1.5 py-0.5 rounded-full font-medium">{form.sector}</span>
+                  <span className="text-[9px] text-emerald-400 bg-[#1F2A44]/[0.1] px-1.5 py-0.5 rounded-full font-medium">{form.sector}</span>
                 )}
                 <span className="text-[10px] text-slate-500">{p.g}</span>
               </button>
@@ -218,7 +218,7 @@ export default function RequestStepItems({
             </div>
             <button
               onClick={addItem}
-              className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold border-none cursor-pointer transition-colors whitespace-nowrap"
+              className="px-4 py-2 rounded-lg bg-[#1F2A44] hover:bg-[#1F2A44] text-white text-sm font-semibold border-none cursor-pointer transition-colors whitespace-nowrap"
             >
               + Agregar
             </button>
@@ -268,7 +268,7 @@ export default function RequestStepItems({
 
       {/* Running total */}
       {totalAmount > 0 && (
-        <div className="bg-emerald-500/[0.06] rounded-lg px-3.5 py-2.5 border border-emerald-500/[0.12] flex justify-between items-center">
+        <div className="bg-[#1F2A44]/[0.06] rounded-lg px-3.5 py-2.5 border border-emerald-500/[0.12] flex justify-between items-center">
           <span className="text-xs text-slate-400 font-medium">TOTAL ESTIMADO</span>
           <div className="text-right">
             <div className="text-sm font-bold text-emerald-400">{fmtGs(totalAmount)}</div>
