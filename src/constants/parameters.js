@@ -5,7 +5,7 @@
 
 import { supabase, supabaseUrl, supabaseAnonKey, getStoredToken } from "../lib/supabase";
 
-// Strip emoji text prefixes from DB names (e.g. "wheat Agricultura" → "Agricultura")
+// Strip legacy icon-text prefixes from DB names (DB stores prefixed names from old system)
 function cleanName(name) {
   if (!name) return "";
   return name

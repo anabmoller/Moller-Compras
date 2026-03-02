@@ -109,16 +109,48 @@ export default function ParametersScreen({ onBack }) {
         if (item.senacsa_code) parts.push(`SENACSA: ${item.senacsa_code}`);
         if (item.senacsa_unidad_zonal) parts.push(item.senacsa_unidad_zonal);
         else if (item.location) parts.push(item.location);
-        return parts.filter(Boolean).join(" · ");
+        const text = parts.filter(Boolean).join(" · ");
+        if (item.latitude && item.longitude) {
+          return (
+            <span>
+              {text}{" · "}
+              <a
+                href={`https://www.google.com/maps?q=${item.latitude},${item.longitude}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sky-400 hover:underline"
+                onClick={e => e.stopPropagation()}
+              >
+                {"📍"} Ver mapa
+              </a>
+            </span>
+          );
+        }
+        return text;
       }
       case "sectors":
         return item.description || "";
       case "productTypes":
         return item.description || "";
-      case "suppliers":
-        return [item.category, item.phone].filter(Boolean).join(" · ");
-      case "companies":
-        return `${item.type === "empresa" ? "Empresa" : "Persona Física"} · Dir: ${formatName(item.director)}`;
+      case "suppliers": {
+        const parts = [
+          item.category,
+          item.ruc ? `RUC: ${item.ruc}` : null,
+          item.phone,
+          item.email,
+        ];
+        return parts.filter(Boolean).join(" · ");
+      }
+      case "companies": {
+        const parts = [
+          item.type === "empresa" ? "Empresa" : "Persona Física",
+          item.ruc ? `RUC: ${item.ruc}` : null,
+          item.director ? `Dir: ${formatName(item.director)}` : null,
+          item.contacto_celular ? `Tel: ${item.contacto_celular}` : null,
+          item.direccion ? item.direccion : null,
+        ];
+        return parts.filter(Boolean).join(" · ");
+      }
       default:
         return "";
     }

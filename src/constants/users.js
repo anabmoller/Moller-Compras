@@ -5,7 +5,12 @@
 
 import { supabase, supabaseUrl, supabaseAnonKey, getStoredToken } from "../lib/supabase";
 
-// ---- Roles & permissions (unchanged) ----
+// ---- Roles & permissions ----
+// NOTE: Legacy aliases still present (kept for backend compatibility):
+//   - "diretoria" is a legacy alias for "director" (same permissions & color)
+//   - "comprador" is a legacy alias for "compras" (same permissions & color)
+// TODO: Future cleanup — consolidate aliases once backend migration is complete.
+//       When reassigning permissions, map diretoria→director and comprador→compras.
 export const ROLES = {
   admin: {
     key: "admin",

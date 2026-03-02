@@ -62,7 +62,7 @@ export default function RequestStepDetails({ form, errors, onUpdateForm, FieldEr
           onChange={e => onUpdateForm("reason", e.target.value)}
           placeholder="Justificación de la compra..."
           rows={3}
-          className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50 resize-y ${errors.reason ? 'border-red-500' : 'border-white/[0.1]'}`}
+          className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/60 resize-y ${errors.reason ? 'border-red-500' : 'border-white/[0.1]'}`}
         />
         <FieldError field="reason" />
       </div>
@@ -74,7 +74,7 @@ export default function RequestStepDetails({ form, errors, onUpdateForm, FieldEr
           onChange={e => onUpdateForm("notes", e.target.value)}
           placeholder="Observaciones, especificaciones técnicas..."
           rows={2}
-          className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50 resize-y"
+          className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/60 resize-y"
         />
       </div>
 

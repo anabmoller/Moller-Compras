@@ -96,7 +96,7 @@ export default function ChangePasswordScreen() {
                 placeholder="Mínimo 8 caracteres"
                 autoComplete="new-password"
                 autoFocus
-                className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50 h-11 placeholder:opacity-40 ${error && !newPassword ? 'border-red-500' : 'border-white/[0.1]'}`}
+                className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/60 h-11 placeholder:opacity-40 ${error && !newPassword ? 'border-red-500' : 'border-white/[0.1]'}`}
               />
             </div>
 
@@ -109,7 +109,7 @@ export default function ChangePasswordScreen() {
                 onChange={(e) => { setConfirmPassword(e.target.value); setError(""); }}
                 placeholder="Repite la nueva contraseña"
                 autoComplete="new-password"
-                className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50 h-11 placeholder:opacity-40 ${error && newPassword && !confirmPassword ? 'border-red-500' : 'border-white/[0.1]'}`}
+                className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/60 h-11 placeholder:opacity-40 ${error && newPassword && !confirmPassword ? 'border-red-500' : 'border-white/[0.1]'}`}
               />
             </div>
 

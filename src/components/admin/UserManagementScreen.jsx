@@ -149,9 +149,11 @@ export default function UserManagementScreen({ onBack }) {
           </div>
         )}
 
-        {/* Role summary pills */}
+        {/* Role summary pills — hide roles with zero active users */}
         <div className="flex flex-wrap gap-1.5 mb-4">
-          {Object.entries(ROLES).map(([key, role]) => (
+          {Object.entries(ROLES)
+            .filter(([key]) => (roleCounts[key] || 0) > 0 || filterRole === key)
+            .map(([key, role]) => (
             <button
               key={key}
               onClick={() => setFilterRole(filterRole === key ? "all" : key)}

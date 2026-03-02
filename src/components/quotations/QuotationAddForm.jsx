@@ -22,7 +22,7 @@ function fileToBase64(file) {
   });
 }
 
-const inputCls = "w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50";
+const inputCls = "w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/60";
 const labelCls = "block text-xs font-medium text-slate-400 mb-1.5 tracking-wide";
 
 export default function QuotationAddForm({ items, currency: initCurrency, onAdd, onCancel }) {
@@ -179,7 +179,7 @@ export default function QuotationAddForm({ items, currency: initCurrency, onAdd,
                     value={itemPrices[idx] || ""}
                     onChange={e => setItemPrice(idx, e.target.value)}
                     placeholder="P. Unit."
-                    className="w-full px-2.5 py-1.5 rounded-md border border-white/[0.1] bg-white/[0.05] text-xs text-white outline-none focus:border-[#6B1E2F]/50 text-right"
+                    className="w-full px-2.5 py-1.5 rounded-md border border-white/[0.1] bg-white/[0.05] text-xs text-white outline-none focus:border-[#C8A03A]/60 text-right"
                   />
                 </div>
                 {parseFloat(itemPrices[idx]) > 0 && (

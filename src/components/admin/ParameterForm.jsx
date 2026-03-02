@@ -72,6 +72,13 @@ const FIELDS = {
     { key: "ruc", label: "RUC" },
     { key: "type", label: "Tipo", type: "select", options: ["empresa", "persona_fisica"] },
     { key: "director", label: "Director", type: "user_select", roleFilter: "diretoria" },
+    { key: "presidente", label: "Presidente", type: "user_select", roleFilter: "gerente" },
+    { key: "contacto_nombre", label: "Contacto (Nombre)" },
+    { key: "contacto_email", label: "Email de Contacto" },
+    { key: "contacto_celular", label: "Teléfono de Contacto" },
+    { key: "direccion", label: "Dirección Fiscal" },
+    { key: "sucursales", label: "Sucursales" },
+    { key: "observaciones", label: "Observaciones" },
   ],
 };
 
@@ -176,7 +183,7 @@ export default function ParameterForm({ tab, item, onSave, onCancel, saving }) {
                 value={form[f.key] || ""}
                 onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
                 disabled={saving}
-                className="w-full px-3 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-[13px] text-white outline-none transition-colors focus:border-[#6B1E2F]/50"
+                className="w-full px-3 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-[13px] text-white outline-none transition-colors focus:border-[#C8A03A]/60"
               >
                 <option value="">Seleccionar...</option>
                 {resolveOptions(f).map(o => (
@@ -190,7 +197,7 @@ export default function ParameterForm({ tab, item, onSave, onCancel, saving }) {
                 value={form[f.key] || ""}
                 onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
                 disabled={saving}
-                className="w-full px-3 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-[13px] text-white outline-none transition-colors focus:border-[#6B1E2F]/50"
+                className="w-full px-3 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-[13px] text-white outline-none transition-colors focus:border-[#C8A03A]/60"
               >
                 <option value="">Seleccionar usuario...</option>
                 {(usersByRole[f.roleFilter] || []).map(u => (
@@ -213,7 +220,7 @@ export default function ParameterForm({ tab, item, onSave, onCancel, saving }) {
                 }}
                 placeholder={f.label}
                 disabled={saving}
-                className={`w-full px-3 py-2.5 rounded-lg border bg-white/[0.05] text-[13px] text-white outline-none transition-colors focus:border-[#6B1E2F]/50 ${
+                className={`w-full px-3 py-2.5 rounded-lg border bg-white/[0.05] text-[13px] text-white outline-none transition-colors focus:border-[#C8A03A]/60 ${
                   senacsaAutoFilled && ["senacsa_code", "senacsa_unidad_zonal", "latitude", "longitude", "departamento", "municipio"].includes(f.key) && form[f.key]
                     ? 'bg-sky-500/[0.05] border-sky-500/25'
                     : 'border-white/[0.1]'

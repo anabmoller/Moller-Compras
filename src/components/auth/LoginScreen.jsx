@@ -63,7 +63,7 @@ export default function LoginScreen() {
                 onChange={(e) => { setUsername(e.target.value); setError(""); }}
                 placeholder="ej: ana.moller"
                 autoComplete="username" autoCapitalize="none"
-                className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50 h-11 placeholder:opacity-40 ${error && !username.trim() ? 'border-red-500' : 'border-white/[0.1]'}`}
+                className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/60 h-11 placeholder:opacity-40 ${error && !username.trim() ? 'border-red-500' : 'border-white/[0.1]'}`}
               />
             </div>
 
@@ -77,7 +77,7 @@ export default function LoginScreen() {
                   onChange={(e) => { setPassword(e.target.value); setError(""); }}
                   placeholder="Ingresa tu contraseña"
                   autoComplete="current-password"
-                  className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50 h-11 pr-11 placeholder:opacity-40 ${error && !password ? 'border-red-500' : 'border-white/[0.1]'}`}
+                  className={`w-full px-3.5 py-2.5 rounded-lg border bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/60 h-11 pr-11 placeholder:opacity-40 ${error && !password ? 'border-red-500' : 'border-white/[0.1]'}`}
                 />
                 <button type="button" onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-0.5 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer px-2.5 py-2 text-sm text-slate-500"

@@ -52,7 +52,7 @@ export default function AddItemModal({ onClose, onAdd }) {
               key={t.key}
               onClick={() => setTab(t.key)}
               className={`flex-1 py-2.5 border-none text-xs font-semibold cursor-pointer ${
-                tab === t.key ? 'bg-[#6B1E2F] text-white' : 'bg-white/[0.03] text-white'
+                tab === t.key ? 'bg-[#C8A03A]/[0.12] text-[#C8A03A]' : 'bg-white/[0.03] text-slate-400'
               } ${t.key === "catalogo" ? 'rounded-l-lg' : 'rounded-r-lg'}`}
             >
               {t.label}
@@ -67,7 +67,7 @@ export default function AddItemModal({ onClose, onAdd }) {
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Buscar por código o nombre..."
-                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50 mb-2.5"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/60 mb-2.5"
                 autoFocus
               />
               {filtered.length === 0 ? (
@@ -92,30 +92,30 @@ export default function AddItemModal({ onClose, onAdd }) {
             <div className="flex flex-col gap-2.5">
               <div>
                 <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Nombre *</label>
-                <input value={manual.nombre} onChange={e => setManual({ ...manual, nombre: e.target.value })} placeholder="Nombre del item" className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50" autoFocus />
+                <input value={manual.nombre} onChange={e => setManual({ ...manual, nombre: e.target.value })} placeholder="Nombre del item" className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/60" autoFocus />
               </div>
               <div className="flex gap-2">
                 <div className="flex-1">
                   <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Código</label>
-                  <input value={manual.codigo} onChange={e => setManual({ ...manual, codigo: e.target.value })} placeholder="Ej: VET-001" className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50" />
+                  <input value={manual.codigo} onChange={e => setManual({ ...manual, codigo: e.target.value })} placeholder="Ej: VET-001" className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/60" />
                 </div>
                 <div className="w-20">
                   <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Cantidad</label>
-                  <input type="number" value={manual.cantidad} onChange={e => setManual({ ...manual, cantidad: e.target.value })} className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50" />
+                  <input type="number" value={manual.cantidad} onChange={e => setManual({ ...manual, cantidad: e.target.value })} className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/60" />
                 </div>
                 <div className="w-[70px]">
                   <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Unidad</label>
-                  <input value={manual.unidad} onChange={e => setManual({ ...manual, unidad: e.target.value })} placeholder="un" className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50" />
+                  <input value={manual.unidad} onChange={e => setManual({ ...manual, unidad: e.target.value })} placeholder="un" className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/60" />
                 </div>
               </div>
               <div className="flex gap-2">
                 <div className="flex-1">
                   <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Precio Unitario ₲</label>
-                  <input type="number" value={manual.precioUnitario} onChange={e => setManual({ ...manual, precioUnitario: e.target.value })} className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50" />
+                  <input type="number" value={manual.precioUnitario} onChange={e => setManual({ ...manual, precioUnitario: e.target.value })} className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/60" />
                 </div>
                 <div className="flex-1">
                   <label className="block text-xs font-medium text-slate-400 mb-1.5 tracking-wide">Proveedor</label>
-                  <input value={manual.proveedor} onChange={e => setManual({ ...manual, proveedor: e.target.value })} placeholder="Opcional" className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50" />
+                  <input value={manual.proveedor} onChange={e => setManual({ ...manual, proveedor: e.target.value })} placeholder="Opcional" className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/60" />
                 </div>
               </div>
               <button

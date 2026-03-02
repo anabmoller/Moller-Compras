@@ -18,7 +18,7 @@ export default function ApprovalFlow({ steps, style }) {
 
   return (
     <div
-      className="bg-white/[0.03] rounded-2xl p-4 border border-white/[0.06] shadow-sm"
+      className="bg-white/[0.03] rounded-2xl p-4 border border-white/[0.06] shadow-[0_10px_30px_rgba(0,0,0,0.35)]"
       style={style}
     >
       <div className="text-xs font-semibold text-slate-400 mb-3.5 uppercase tracking-wide">

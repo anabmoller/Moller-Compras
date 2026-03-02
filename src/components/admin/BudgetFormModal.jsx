@@ -22,7 +22,7 @@ export default function BudgetFormModal({
               value={form.name}
               onChange={e => onUpdate("name", e.target.value)}
               placeholder="Ej: Taller Ypoti"
-              className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50"
+              className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/60"
             />
           </div>
 
@@ -32,7 +32,7 @@ export default function BudgetFormModal({
               <select
                 value={form.establishment}
                 onChange={e => onUpdate("establishment", e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/60"
               >
                 <option value="">Seleccionar...</option>
                 {establishments.map(e => <option key={e} value={e}>{e}</option>)}
@@ -43,7 +43,7 @@ export default function BudgetFormModal({
               <select
                 value={form.sector}
                 onChange={e => onUpdate("sector", e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/60"
               >
                 <option value="">Seleccionar...</option>
                 {sectors.map(s => <option key={s} value={s}>{s}</option>)}
@@ -58,7 +58,7 @@ export default function BudgetFormModal({
                 value={form.period}
                 onChange={e => onUpdate("period", e.target.value)}
                 placeholder="2026"
-                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/60"
               />
             </div>
             <div className="flex-1">
@@ -67,7 +67,7 @@ export default function BudgetFormModal({
                 type="date"
                 value={form.startDate}
                 onChange={e => onUpdate("startDate", e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/60"
               />
             </div>
             <div className="flex-1">
@@ -76,7 +76,7 @@ export default function BudgetFormModal({
                 type="date"
                 value={form.endDate}
                 onChange={e => onUpdate("endDate", e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/60"
               />
             </div>
           </div>
@@ -87,7 +87,7 @@ export default function BudgetFormModal({
               <select
                 value={form.proyecto}
                 onChange={e => onUpdate("proyecto", e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/60"
               >
                 <option value="">Seleccionar...</option>
                 {PROYECTO_OPTIONS.map(p => <option key={p} value={p}>{p}</option>)}
@@ -99,7 +99,7 @@ export default function BudgetFormModal({
                 value={form.centroCostos}
                 onChange={e => onUpdate("centroCostos", e.target.value)}
                 placeholder="Ej: CC-001"
-                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/60"
               />
             </div>
           </div>
@@ -168,7 +168,7 @@ export default function BudgetFormModal({
                 value={form.planned || ""}
                 onChange={e => onUpdate("planned", parseInt(e.target.value) || 0)}
                 placeholder="100000000"
-                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/60"
                 min={0}
               />
               {form.planned > 0 && (
@@ -184,7 +184,7 @@ export default function BudgetFormModal({
                 value={form.consumed || ""}
                 onChange={e => onUpdate("consumed", parseInt(e.target.value) || 0)}
                 placeholder="0"
-                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#6B1E2F]/50"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-white/[0.1] bg-white/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/60"
                 min={0}
               />
               {form.consumed > 0 && (

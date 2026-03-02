@@ -117,7 +117,7 @@ async function tryRefreshToken() {
 // ---- Transformers: Supabase (snake_case) -> Frontend (camelCase) ----
 
 // Strip emoji text prefixes from establishment/sector names (DB cleanup)
-// DB stores names like "wheat Agricultura", "building Feedlot", etc.
+// Strip legacy icon-text prefixes from DB names (old system stored prefixed names)
 function cleanName(name) {
   if (!name) return "";
   return name

@@ -3,7 +3,7 @@ export default function Card({ children, className = '', hover = true, onClick, 
     <div
       className={`
         bg-white/[0.03] border border-white/[0.06] rounded-xl
-        ${hover ? 'hover:bg-white/[0.06] hover:border-white/[0.12] transition-all duration-300' : ''}
+        ${hover ? 'hover:bg-white/[0.06] hover:border-[#C8A03A]/20 transition-all duration-300' : ''}
         ${onClick ? 'cursor-pointer' : ''}
         ${className}
       `}

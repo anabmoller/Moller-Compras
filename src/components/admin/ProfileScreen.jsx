@@ -12,7 +12,7 @@ export default function ProfileScreen({ onBack, currentUser }) {
   const roleLabel = role === "admin" ? "Administrador" : role === "gerente" ? "Gerente" : "Usuario";
 
   return (
-    <div className="pb-10 animate-fade-in">
+    <div className="pb-[120px] animate-fade-in">
       <div className="px-5 py-3 flex items-center gap-3">
         <button
           onClick={onBack}

@@ -18,7 +18,7 @@ export default function SettingsScreen({ onBack, onNavigate, devMode, onSetDevMo
     <div className="animate-fadeIn">
       <BackButton onClick={onBack} />
 
-      <div className="px-5 pb-4">
+      <div className="px-5 pb-[120px]">
         <h2 className="text-[22px] font-semibold text-white mb-5 mt-0">
           Configuración
         </h2>
