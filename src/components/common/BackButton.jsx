@@ -7,7 +7,7 @@ export default function BackButton({ onClick, label = "Volver" }) {
     <div className="py-3 px-5">
       <button
         onClick={onClick}
-        className="bg-transparent border-none cursor-pointer text-sm text-emerald-500 font-medium p-0 flex items-center gap-1"
+        className="bg-transparent border-none cursor-pointer text-sm text-[#C8A03A] hover:text-[#C8A03A]/80 transition-colors font-medium p-0 flex items-center gap-1"
       >
         ← {label}
       </button>

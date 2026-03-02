@@ -106,7 +106,7 @@ export default function AnalyticsScreen({ requests, statusCounts, onBack, defaul
             onClick={() => setSection(s.key)}
             className={`flex-1 px-3 py-2 rounded-lg border text-xs font-semibold cursor-pointer transition-all ${
               section === s.key
-                ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
+                ? 'bg-[#C8A03A]/10 text-[#C8A03A] border-[#C8A03A]/30'
                 : 'bg-white/[0.02] text-slate-500 border-white/[0.06] hover:bg-white/[0.05]'
             }`}
           >
@@ -129,7 +129,7 @@ export default function AnalyticsScreen({ requests, statusCounts, onBack, defaul
                 onClick={() => setTab(t.key)}
                 className={`flex-1 px-3 py-2.5 rounded-lg border-none text-xs font-semibold cursor-pointer transition-all ${
                   tab === t.key
-                    ? 'bg-emerald-500/15 text-emerald-400 shadow-md'
+                    ? 'bg-[#C8A03A]/10 text-[#C8A03A] shadow-md'
                     : 'bg-white/[0.03] text-slate-400 hover:bg-white/[0.06]'
                 }`}
               >
@@ -153,13 +153,13 @@ function OverviewTab({ stats, requests, statusCounts }) {
   return (
     <>
       <div className="grid grid-cols-2 gap-2.5 mb-4">
-        <KPICard label="Total Solicitudes" value={requests.length} color="#10b981" />
+        <KPICard label="Total Solicitudes" value={requests.length} color="#C8A03A" />
         <KPICard label="Pendientes" value={stats.pendingCount} color={stats.pendingCount > 5 ? "#ef4444" : "#f59e0b"} />
         <KPICard label="Completadas" value={stats.completedCount} color="#10b981" />
         <KPICard label="Emergencias" value={stats.emergencyCount} color="#ef4444" />
       </div>
 
-      <div className="bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-2xl p-5 mb-4 text-white">
+      <div className="bg-gradient-to-br from-[#1F2A44] to-[#0B1120] rounded-2xl p-5 mb-4 text-white">
         <div className="text-[11px] opacity-70 uppercase tracking-widest mb-1">Monto Total Gestionado</div>
         <div className="text-[28px] font-bold">{formatGuaranies(stats.totalAmount)}</div>
         <div className="text-xs opacity-70 mt-1">Promedio por solicitud: {formatGuaranies(stats.avgAmount)}</div>
@@ -210,7 +210,7 @@ function PurchasesTab({ stats }) {
       <AnalyticsCard title="Compras por Establecimiento" action={
         <button
           onClick={() => setSortBy(sortBy === "amount" ? "count" : "amount")}
-          className="bg-transparent border-none text-[11px] text-emerald-400 cursor-pointer font-medium"
+          className="bg-transparent border-none text-[11px] text-[#C8A03A] cursor-pointer font-medium"
         >
           Por {sortBy === "amount" ? "cantidad" : "monto"}
         </button>
@@ -221,10 +221,10 @@ function PurchasesTab({ stats }) {
               <span className="text-xs text-white">📍 {est}</span>
               <div className="flex gap-3">
                 <span className="text-[11px] text-slate-400">{data.count} sol.</span>
-                <span className="text-xs font-semibold text-emerald-400">{formatGuaranies(data.amount)}</span>
+                <span className="text-xs font-semibold text-[#C8A03A]">{formatGuaranies(data.amount)}</span>
               </div>
             </div>
-            <ProgressBar value={data.amount} max={maxEstAmount} color="#10b981" />
+            <ProgressBar value={data.amount} max={maxEstAmount} color="#C8A03A" />
           </div>
         ))}
       </AnalyticsCard>
@@ -246,7 +246,7 @@ function PurchasesTab({ stats }) {
           <div key={type} className="flex justify-between items-center py-2 border-b border-white/[0.06]">
             <span className="text-xs text-white">{type}</span>
             <div className="text-right">
-              <div className="text-xs font-semibold text-emerald-400">{formatGuaranies(data.amount)}</div>
+              <div className="text-xs font-semibold text-[#C8A03A]">{formatGuaranies(data.amount)}</div>
               <div className="text-[10px] text-slate-500">{data.count} solicitudes</div>
             </div>
           </div>
@@ -262,11 +262,11 @@ function PurchasesTab({ stats }) {
               <div key={month} className="mb-2.5">
                 <div className="flex justify-between mb-0.5">
                   <span className="text-xs text-white capitalize">{monthLabel}</span>
-                  <span className="text-xs font-semibold text-emerald-400">
+                  <span className="text-xs font-semibold text-[#C8A03A]">
                     {formatGuaranies(data.amount)} ({data.count})
                   </span>
                 </div>
-                <ProgressBar value={data.amount} max={maxM} color="#10b981" />
+                <ProgressBar value={data.amount} max={maxM} color="#C8A03A" />
               </div>
             );
           })}
@@ -276,14 +276,14 @@ function PurchasesTab({ stats }) {
       <AnalyticsCard title="Top Solicitantes">
         {reqEntries.map(([name, data], i) => (
           <div key={name} className="flex items-center gap-2.5 py-2 border-b border-white/[0.06]">
-            <span className={`w-6 h-6 rounded-lg flex items-center justify-center text-[11px] font-bold text-white ${i < 3 ? 'bg-emerald-600' : 'bg-slate-600'}`}>
+            <span className={`w-6 h-6 rounded-lg flex items-center justify-center text-[11px] font-bold text-white ${i < 3 ? 'bg-[#6B1E2F]' : 'bg-slate-600'}`}>
               {i + 1}
             </span>
             <div className="flex-1">
               <div className="text-sm font-medium text-white">{name}</div>
             </div>
             <div className="text-right">
-              <div className="text-xs font-semibold text-emerald-400">{data.count}</div>
+              <div className="text-xs font-semibold text-[#C8A03A]">{data.count}</div>
               <div className="text-[10px] text-slate-500">{formatGuaranies(data.amount)}</div>
             </div>
           </div>
@@ -307,7 +307,7 @@ function BudgetsTab() {
 
   return (
     <>
-      <div className={`bg-gradient-to-br ${overallPct > 80 ? 'from-red-600 to-red-800' : 'from-emerald-600 to-emerald-800'} rounded-2xl p-5 mb-4 text-white`}>
+      <div className={`bg-gradient-to-br ${overallPct > 80 ? 'from-red-600 to-red-800' : 'from-[#1F2A44] to-[#0B1120]'} rounded-2xl p-5 mb-4 text-white`}>
         <div className="text-[11px] opacity-70 uppercase tracking-widest mb-1">Presupuesto Global 2026</div>
         <div className="flex justify-between items-baseline">
           <div className="text-2xl font-bold">{overallPct}%</div>
@@ -323,7 +323,7 @@ function BudgetsTab() {
       </div>
 
       <div className="grid grid-cols-2 gap-2.5 mb-4">
-        <KPICard label="Presupuestos Activos" value={budgets.length} color="#10b981" />
+        <KPICard label="Presupuestos Activos" value={budgets.length} color="#C8A03A" />
         <KPICard label="Sobre 80%" value={budgets.filter(b => (b.consumed / b.planned) * 100 > 80).length} color="#ef4444" />
       </div>
 

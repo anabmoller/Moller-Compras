@@ -158,7 +158,7 @@ export default function ParametersScreen({ onBack }) {
         {TABS.map(t => (
           <button key={t.key} onClick={() => { setTab(t.key); setSearch(""); setShowForm(false); setEditingItem(null); }} className={`px-3.5 py-2 rounded-xl border-none text-xs font-semibold cursor-pointer whitespace-nowrap ${
             tab === t.key
-              ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
+              ? 'bg-[#C8A03A] text-white shadow-md shadow-[#C8A03A]/20'
               : 'bg-white/[0.03] text-slate-400 shadow-sm'
           }`}>
             {t.icon} {t.label}
@@ -178,7 +178,7 @@ export default function ParametersScreen({ onBack }) {
               className="border-none bg-transparent outline-none text-[13px] text-white w-full"
             />
           </div>
-          <button onClick={() => { setEditingItem(null); setShowForm(true); }} disabled={saving} className={`px-4 py-2 rounded-xl border-none text-xs font-semibold text-white cursor-pointer whitespace-nowrap ${saving ? 'bg-white/[0.06] opacity-60' : 'bg-gradient-to-br from-emerald-500 to-emerald-600'}`}>
+          <button onClick={() => { setEditingItem(null); setShowForm(true); }} disabled={saving} className={`px-4 py-2 rounded-xl border-none text-xs font-semibold text-white cursor-pointer whitespace-nowrap ${saving ? 'bg-white/[0.06] opacity-60' : 'bg-[#6B1E2F] hover:bg-[#8A2A3F] shadow-[0_4px_14px_rgba(107,30,47,0.35)]'}`}>
             + Nuevo
           </button>
         </div>
