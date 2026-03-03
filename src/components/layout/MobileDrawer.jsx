@@ -4,7 +4,7 @@
 import { useNotifications } from "../../context/NotificationContext";
 import { useAuth } from "../../context/AuthContext";
 
-export default function MobileDrawer({ open, onClose, screen, onNavigate, onNewRequest, currentUser, canViewAnalytics, canManageUsers }) {
+export default function MobileDrawer({ open, onClose, screen, onNavigate, onNewRequest, currentUser, canViewAnalytics, canManageUsers, canViewGanado }) {
   const { getVisibleNotifications } = useNotifications();
   const auth = useAuth();
   const unreadCount = getVisibleNotifications(auth.currentUser?.name, auth.currentUser?.role).filter(n => !n.read).length;
@@ -13,6 +13,7 @@ export default function MobileDrawer({ open, onClose, screen, onNavigate, onNewR
     { key: 'dashboard', icon: '📋', label: 'Solicitudes' },
     { key: 'notifications', icon: '🔔', label: 'Notificaciones', badge: unreadCount || null },
     { key: 'inventory', icon: '📦', label: 'Inventario' },
+    ...(canViewGanado ? [{ key: 'ganado', icon: '🐄', label: 'Ganado' }] : []),
     ...(canViewAnalytics ? [{ key: 'analytics', icon: '📊', label: 'Análisis' }] : []),
     ...(canManageUsers ? [{ key: 'security', icon: '🛡️', label: 'Seguridad' }] : []),
   ];

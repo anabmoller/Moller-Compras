@@ -12,6 +12,7 @@ import { getCurrentStep, canUserApproveStep, STEP_STATUS } from "../constants/ap
 import { initParameters } from "../constants/parameters";
 import { initBudgets } from "../constants/budgets";
 import { initUsers, hasPermission } from "../constants/users";
+import { initGanado } from "../constants/ganado";
 import { sanitizeName, sanitizeMultiline, sanitizeNumber } from "../utils/sanitize";
 import { useNotifications } from "./NotificationContext";
 import {
@@ -64,6 +65,7 @@ export function AppProvider({ children }) {
           initParameters(),
           initBudgets(),
           initUsers(),
+          initGanado(),
         ]);
 
         // Load all requests with nested data; fall back to sample data for demo

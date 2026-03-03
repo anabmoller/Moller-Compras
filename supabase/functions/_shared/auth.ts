@@ -87,25 +87,74 @@ const ROLE_PERMISSIONS: Record<string, string[]> = {
     "create_request", "view_all_requests", "approve_manager",
     "approve_purchase", "manage_quotations", "advance_status",
     "view_analytics", "view_inventory", "manage_settings", "manage_users",
+    "view_ganado", "create_movimiento_ganado", "validate_movimiento_ganado",
+  ],
+  presidente: [
+    "create_request", "view_all_requests", "approve_manager",
+    "approve_purchase", "view_analytics", "view_inventory", "advance_status",
+    "view_ganado", "create_movimiento_ganado", "validate_movimiento_ganado",
+  ],
+  conselho: [
+    "create_request", "view_all_requests", "approve_manager",
+    "approve_purchase", "view_analytics", "view_inventory",
+    "view_ganado", "create_movimiento_ganado", "validate_movimiento_ganado",
+  ],
+  socio: [
+    "create_request", "view_all_requests", "approve_manager",
+    "approve_purchase", "view_analytics", "view_inventory",
+    "view_ganado", "create_movimiento_ganado", "validate_movimiento_ganado",
+  ],
+  super_approver: [
+    "create_request", "view_all_requests", "approve_manager",
+    "approve_purchase", "manage_quotations", "advance_status",
+    "view_analytics", "view_inventory", "manage_settings",
+    "view_ganado", "create_movimiento_ganado", "validate_movimiento_ganado",
   ],
   diretoria: [
     "create_request", "view_all_requests", "approve_manager",
     "approve_purchase", "view_analytics", "view_inventory", "advance_status",
+    "view_ganado", "create_movimiento_ganado", "validate_movimiento_ganado",
+  ],
+  director: [
+    "create_request", "view_all_requests", "approve_manager",
+    "approve_purchase", "view_analytics", "view_inventory", "advance_status",
+    "view_ganado", "create_movimiento_ganado", "validate_movimiento_ganado",
   ],
   gerente: [
     "create_request", "view_all_requests", "approve_manager",
     "approve_purchase", "view_analytics", "view_inventory", "advance_status",
+    "view_ganado", "create_movimiento_ganado", "validate_movimiento_ganado",
   ],
   lider: [
     "create_request", "view_all_requests", "approve_manager",
     "advance_status", "view_inventory",
+    "view_ganado", "create_movimiento_ganado",
   ],
   comprador: [
     "create_request", "view_all_requests", "manage_quotations",
     "advance_status", "view_inventory",
+    "view_ganado",
+  ],
+  compras: [
+    "create_request", "view_all_requests", "manage_quotations",
+    "advance_status", "view_inventory",
+    "view_ganado",
+  ],
+  administrativo: [
+    "create_request", "view_all_requests", "view_inventory",
+    "view_ganado",
   ],
   solicitante: [
     "create_request", "view_own_requests", "view_inventory",
+    "view_ganado",
+  ],
+  operacional: [
+    "create_request", "view_own_requests",
+    "view_ganado",
+  ],
+  observador: [
+    "view_all_requests", "view_inventory",
+    "view_ganado",
   ],
 };
 

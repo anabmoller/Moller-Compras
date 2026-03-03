@@ -6,7 +6,7 @@ import { useNotifications } from "../../context/NotificationContext";
 import { useAuth } from "../../context/AuthContext";
 import NotificationBell from "../shared/NotificationBell";
 
-export default function DesktopSidebar({ screen, onNavigate, onNewRequest, currentUser, canViewAnalytics, canManageUsers, usdRate, usdLive, onRefreshRate }) {
+export default function DesktopSidebar({ screen, onNavigate, onNewRequest, currentUser, canViewAnalytics, canManageUsers, canViewGanado, usdRate, usdLive, onRefreshRate }) {
   const { theme, toggleTheme } = useTheme();
   const { getVisibleNotifications } = useNotifications();
   const auth = useAuth();
@@ -16,6 +16,7 @@ export default function DesktopSidebar({ screen, onNavigate, onNewRequest, curre
     { key: 'dashboard', icon: '📋', label: 'Solicitudes' },
     { key: 'notifications', icon: '🔔', label: 'Notificaciones', badge: unreadCount || null },
     { key: 'inventory', icon: '📦', label: 'Inventario' },
+    ...(canViewGanado ? [{ key: 'ganado', icon: '🐄', label: 'Ganado' }] : []),
     ...(canViewAnalytics ? [{ key: 'analytics', icon: '📊', label: 'Análisis' }] : []),
     ...(canManageUsers ? [{ key: 'security', icon: '🛡️', label: 'Seguridad' }] : []),
   ];

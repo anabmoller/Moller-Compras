@@ -17,6 +17,7 @@ export const ROLES = {
       "create_request", "view_all_requests", "approve_manager",
       "approve_purchase", "manage_quotations", "advance_status",
       "view_analytics", "view_inventory", "manage_settings", "manage_users",
+      "view_ganado", "create_movimiento_ganado", "validate_movimiento_ganado",
     ],
   },
   presidente: {
@@ -27,6 +28,7 @@ export const ROLES = {
     permissions: [
       "create_request", "view_all_requests", "approve_manager",
       "approve_purchase", "view_analytics", "view_inventory", "advance_status",
+      "view_ganado", "create_movimiento_ganado", "validate_movimiento_ganado",
     ],
   },
   conselho: {
@@ -37,6 +39,7 @@ export const ROLES = {
     permissions: [
       "create_request", "view_all_requests", "approve_manager",
       "approve_purchase", "view_analytics", "view_inventory",
+      "view_ganado", "create_movimiento_ganado", "validate_movimiento_ganado",
     ],
   },
   socio: {
@@ -47,6 +50,7 @@ export const ROLES = {
     permissions: [
       "create_request", "view_all_requests", "approve_manager",
       "approve_purchase", "view_analytics", "view_inventory",
+      "view_ganado", "create_movimiento_ganado", "validate_movimiento_ganado",
     ],
   },
   super_approver: {
@@ -58,6 +62,7 @@ export const ROLES = {
       "create_request", "view_all_requests", "approve_manager",
       "approve_purchase", "manage_quotations", "advance_status",
       "view_analytics", "view_inventory", "manage_settings",
+      "view_ganado", "create_movimiento_ganado", "validate_movimiento_ganado",
     ],
   },
   // Legacy alias — maps to director
@@ -69,6 +74,7 @@ export const ROLES = {
     permissions: [
       "create_request", "view_all_requests", "approve_manager",
       "approve_purchase", "view_analytics", "view_inventory", "advance_status",
+      "view_ganado", "create_movimiento_ganado", "validate_movimiento_ganado",
     ],
   },
   director: {
@@ -79,6 +85,7 @@ export const ROLES = {
     permissions: [
       "create_request", "view_all_requests", "approve_manager",
       "approve_purchase", "view_analytics", "view_inventory", "advance_status",
+      "view_ganado", "create_movimiento_ganado", "validate_movimiento_ganado",
     ],
   },
   gerente: {
@@ -89,6 +96,7 @@ export const ROLES = {
     permissions: [
       "create_request", "view_all_requests", "approve_manager",
       "approve_purchase", "view_analytics", "view_inventory", "advance_status",
+      "view_ganado", "create_movimiento_ganado", "validate_movimiento_ganado",
     ],
   },
   lider: {
@@ -99,6 +107,7 @@ export const ROLES = {
     permissions: [
       "create_request", "view_all_requests", "approve_manager",
       "advance_status", "view_inventory",
+      "view_ganado", "create_movimiento_ganado",
     ],
   },
   // Legacy alias — maps to compras
@@ -110,6 +119,7 @@ export const ROLES = {
     permissions: [
       "create_request", "view_all_requests", "manage_quotations",
       "advance_status", "view_inventory",
+      "view_ganado",
     ],
   },
   compras: {
@@ -120,6 +130,7 @@ export const ROLES = {
     permissions: [
       "create_request", "view_all_requests", "manage_quotations",
       "advance_status", "view_inventory",
+      "view_ganado",
     ],
   },
   administrativo: {
@@ -129,6 +140,7 @@ export const ROLES = {
     color: "#64748b",
     permissions: [
       "create_request", "view_all_requests", "view_inventory",
+      "view_ganado",
     ],
   },
   solicitante: {
@@ -138,6 +150,7 @@ export const ROLES = {
     color: "#6b7280",
     permissions: [
       "create_request", "view_own_requests", "view_inventory",
+      "view_ganado",
     ],
   },
   operacional: {
@@ -147,6 +160,7 @@ export const ROLES = {
     color: "#78716c",
     permissions: [
       "create_request", "view_own_requests",
+      "view_ganado",
     ],
   },
   observador: {
@@ -156,6 +170,7 @@ export const ROLES = {
     color: "#94a3b8",
     permissions: [
       "view_all_requests", "view_inventory",
+      "view_ganado",
     ],
   },
 };

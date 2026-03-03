@@ -31,6 +31,7 @@ const SecurityDashboard = lazy(() => import("./components/admin/SecurityDashboar
 const UserManagementScreen = lazy(() => import("./components/admin/UserManagementScreen"));
 const BudgetManagementScreen = lazy(() => import("./components/admin/BudgetManagementScreen"));
 const ParametersScreen = lazy(() => import("./components/admin/ParametersScreen"));
+const MovimientosScreen = lazy(() => import("./components/ganado/MovimientosScreen"));
 
 function LazyFallback() {
   return (
@@ -237,6 +238,19 @@ function AppContent() {
       );
     }
 
+    if (screen === "ganado" && effectiveCan("view_ganado")) {
+      return (
+        <Suspense fallback={<LazyFallback />}>
+          <MovimientosScreen
+            onBack={() => setScreen("dashboard")}
+            onNavigate={handleNavigate}
+            canCreate={effectiveCan("create_movimiento_ganado")}
+            canValidate={effectiveCan("validate_movimiento_ganado")}
+          />
+        </Suspense>
+      );
+    }
+
     if (screen === "inventory" && effectiveCan("view_inventory")) {
       return <Suspense fallback={<LazyFallback />}><InventoryScreen onBack={() => setScreen("dashboard")} /></Suspense>;
     }
@@ -332,6 +346,7 @@ function AppContent() {
         currentUser={effectiveUser.name}
         canViewAnalytics={effectiveCan("view_analytics")}
         canManageUsers={effectiveCan("manage_users")}
+        canViewGanado={effectiveCan("view_ganado")}
         usdRate={usdRate}
         usdLive={usdLive}
         onRefreshRate={fetchUsdRate}
@@ -357,6 +372,7 @@ function AppContent() {
           currentUser={effectiveUser.name}
           canViewAnalytics={effectiveCan("view_analytics")}
           canManageUsers={effectiveCan("manage_users")}
+          canViewGanado={effectiveCan("view_ganado")}
         />
 
         {renderContent()}
