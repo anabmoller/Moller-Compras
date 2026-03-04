@@ -241,9 +241,11 @@ input:focus, select:focus, textarea:focus {
   }
 }
 
-/* SIGAM Typography */
-body { font-family: Inter, system-ui, -apple-system, sans-serif; }
-h1,h2,h3,.title { font-family: "Playfair Display", serif; }
+/* SIGAM Typography — Inter for UI, Playfair Display for brand logo only */
+body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+h1, .brand-title { font-family: "Playfair Display", serif; }
+input, select, textarea, button { font-family: inherit; }
+::placeholder { font-family: inherit; }
 
 
 /* ---- Light mode brand color fixes ---- */
