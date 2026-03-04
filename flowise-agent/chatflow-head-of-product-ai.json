@@ -1,0 +1,206 @@
+{
+  "nodes": [
+    {
+      "id": "chatAnthropic_0",
+      "position": { "x": 600, "y": 200 },
+      "type": "customNode",
+      "data": {
+        "id": "chatAnthropic_0",
+        "label": "ChatAnthropic",
+        "version": 6,
+        "name": "chatAnthropic",
+        "type": "ChatAnthropic",
+        "baseClasses": ["ChatAnthropic", "BaseChatModel", "BaseLanguageModel", "Runnable"],
+        "category": "Chat Models",
+        "inputs": {
+          "cache": "",
+          "modelName": "claude-sonnet-4-20250514",
+          "temperature": "0.1",
+          "maxTokensToSample": "4096",
+          "topP": "",
+          "topK": "",
+          "allowImageUploads": false
+        },
+        "inputAnchors": [
+          {
+            "id": "chatAnthropic_0-input-cache-BaseCache",
+            "name": "cache",
+            "type": "BaseCache",
+            "optional": true
+          }
+        ],
+        "inputParams": [
+          {
+            "id": "chatAnthropic_0-input-modelName-string",
+            "name": "modelName",
+            "type": "string",
+            "default": "claude-sonnet-4-20250514"
+          },
+          {
+            "id": "chatAnthropic_0-input-temperature-number",
+            "name": "temperature",
+            "type": "number",
+            "default": 0.1
+          },
+          {
+            "id": "chatAnthropic_0-input-maxTokensToSample-number",
+            "name": "maxTokensToSample",
+            "type": "number",
+            "default": 4096
+          }
+        ],
+        "credential": "ANTHROPIC_API_KEY",
+        "outputAnchors": [
+          {
+            "id": "chatAnthropic_0-output-chatAnthropic-ChatAnthropic",
+            "name": "chatAnthropic",
+            "type": "ChatAnthropic"
+          }
+        ]
+      }
+    },
+    {
+      "id": "promptTemplate_0",
+      "position": { "x": 600, "y": 500 },
+      "type": "customNode",
+      "data": {
+        "id": "promptTemplate_0",
+        "label": "Prompt Template",
+        "version": 1,
+        "name": "promptTemplate",
+        "type": "PromptTemplate",
+        "baseClasses": ["PromptTemplate", "BaseStringPromptTemplate", "BasePromptTemplate", "Runnable"],
+        "category": "Prompts",
+        "inputs": {
+          "template": "You are \"Head of Product AI\", a senior product manager specialized in agricultural technology (agtech) and livestock management software. Your job is to analyze customer conversation transcripts and extract structured product insights.\n\n## INPUT\nYou will receive:\n- **transcript**: A conversation transcript from a customer call or meeting (may be in Portuguese or Spanish).\n- **source**: The recording tool used (\"tldv\" or \"plaud\").\n- **date**: The date of the conversation (ISO 8601).\n- **customer_name**: (Optional) The customer's name or company.\n\n## TASK\nAnalyze the transcript carefully and extract:\n1. **summary**: A 2-3 sentence summary of the conversation's key points relevant to product development.\n2. **pain_point**: The single most important pain point the customer expressed. Be specific.\n3. **current_workaround**: How the customer currently handles this pain point (manual process, spreadsheet, another tool, etc.). Write \"None identified\" if not mentioned.\n4. **business_impact**: The concrete business impact of this pain point (lost time, lost money, errors, compliance risk, etc.).\n5. **software_opportunity**: What software capability would solve this pain point. Frame it as a product opportunity.\n6. **suggested_feature**: A specific feature name and one-line description that addresses the opportunity.\n7. **product_module**: Which product module this belongs to. Choose from: \"Ganado\" (livestock), \"Compras\" (purchasing), \"Financeiro\" (financial), \"Estoque\" (inventory), \"Relatorios\" (reports), \"Integrações\" (integrations), \"Outro\" (other).\n8. **priority**: \"Low\", \"Medium\", or \"High\" based on: frequency of mention, severity of impact, number of customers affected, and alignment with product vision.\n9. **customer_quote**: The single most impactful direct quote from the customer that illustrates the pain point. Use their exact words. Write \"No direct quote available\" if transcript is too summarized.\n10. **tags**: An array of 2-5 lowercase keyword tags for categorization (e.g., [\"ganado\", \"rastreabilidade\", \"movimentacao\"]).\n\n## RULES\n- Output ONLY valid JSON. No markdown, no explanation, no text before or after the JSON.\n- Do NOT wrap the JSON in code fences or backticks.\n- Use the exact field names shown above.\n- If the transcript is too short, vague, or unrelated to product insights, still return the JSON schema but fill fields with \"Insufficient data\" where appropriate and set priority to \"Low\".\n- Respond in the SAME LANGUAGE as the transcript (Portuguese, Spanish, or English).\n- Be concise: each field should be 1-3 sentences maximum except summary (2-3 sentences).\n- The tags array must contain 2-5 strings, all lowercase, no spaces (use underscores).\n\n## OUTPUT FORMAT (strict)\n{\"summary\":\"\",\"pain_point\":\"\",\"current_workaround\":\"\",\"business_impact\":\"\",\"software_opportunity\":\"\",\"suggested_feature\":\"\",\"product_module\":\"\",\"priority\":\"Low | Medium | High\",\"customer_quote\":\"\",\"tags\":[]}\n\nTranscript source: {source}\nDate: {date}\nCustomer: {customer_name}\n\nTranscript:\n{transcript}",
+          "promptValues": "{\"transcript\":\"{question}\",\"source\":\"\",\"date\":\"\",\"customer_name\":\"\"}"
+        },
+        "inputParams": [
+          {
+            "id": "promptTemplate_0-input-template-string",
+            "name": "template",
+            "type": "string"
+          }
+        ],
+        "outputAnchors": [
+          {
+            "id": "promptTemplate_0-output-promptTemplate-PromptTemplate",
+            "name": "promptTemplate",
+            "type": "PromptTemplate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "structuredOutputParser_0",
+      "position": { "x": 600, "y": 800 },
+      "type": "customNode",
+      "data": {
+        "id": "structuredOutputParser_0",
+        "label": "Structured Output Parser",
+        "version": 1,
+        "name": "structuredOutputParser",
+        "type": "StructuredOutputParser",
+        "baseClasses": ["StructuredOutputParser", "BaseLLMOutputParser", "Runnable"],
+        "category": "Output Parsers",
+        "inputs": {
+          "autoFix": true,
+          "jsonStructure": "{\"type\":\"object\",\"properties\":{\"summary\":{\"type\":\"string\"},\"pain_point\":{\"type\":\"string\"},\"current_workaround\":{\"type\":\"string\"},\"business_impact\":{\"type\":\"string\"},\"software_opportunity\":{\"type\":\"string\"},\"suggested_feature\":{\"type\":\"string\"},\"product_module\":{\"type\":\"string\",\"enum\":[\"Ganado\",\"Compras\",\"Financeiro\",\"Estoque\",\"Relatorios\",\"Integrações\",\"Outro\"]},\"priority\":{\"type\":\"string\",\"enum\":[\"Low\",\"Medium\",\"High\"]},\"customer_quote\":{\"type\":\"string\"},\"tags\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}}},\"required\":[\"summary\",\"pain_point\",\"current_workaround\",\"business_impact\",\"software_opportunity\",\"suggested_feature\",\"product_module\",\"priority\",\"customer_quote\",\"tags\"]}"
+        },
+        "inputParams": [
+          {
+            "id": "structuredOutputParser_0-input-autoFix-boolean",
+            "name": "autoFix",
+            "type": "boolean"
+          },
+          {
+            "id": "structuredOutputParser_0-input-jsonStructure-string",
+            "name": "jsonStructure",
+            "type": "string"
+          }
+        ],
+        "outputAnchors": [
+          {
+            "id": "structuredOutputParser_0-output-structuredOutputParser-StructuredOutputParser",
+            "name": "structuredOutputParser",
+            "type": "StructuredOutputParser"
+          }
+        ]
+      }
+    },
+    {
+      "id": "llmChain_0",
+      "position": { "x": 1000, "y": 400 },
+      "type": "customNode",
+      "data": {
+        "id": "llmChain_0",
+        "label": "LLM Chain",
+        "version": 3,
+        "name": "llmChain",
+        "type": "LLMChain",
+        "baseClasses": ["LLMChain", "BaseChain", "Runnable"],
+        "category": "Chains",
+        "inputs": {
+          "model": "{{chatAnthropic_0.data.instance}}",
+          "prompt": "{{promptTemplate_0.data.instance}}",
+          "outputParser": "{{structuredOutputParser_0.data.instance}}",
+          "inputVariables": "",
+          "chainName": "head_of_product_ai"
+        },
+        "inputAnchors": [
+          {
+            "id": "llmChain_0-input-model-BaseLanguageModel",
+            "name": "model",
+            "type": "BaseLanguageModel"
+          },
+          {
+            "id": "llmChain_0-input-prompt-BasePromptTemplate",
+            "name": "prompt",
+            "type": "BasePromptTemplate"
+          },
+          {
+            "id": "llmChain_0-input-outputParser-BaseLLMOutputParser",
+            "name": "outputParser",
+            "type": "BaseLLMOutputParser",
+            "optional": true
+          }
+        ],
+        "outputAnchors": [
+          {
+            "id": "llmChain_0-output-llmChain-LLMChain",
+            "name": "llmChain",
+            "type": "LLMChain"
+          },
+          {
+            "id": "llmChain_0-output-outputPrediction-string|json",
+            "name": "outputPrediction",
+            "type": "string|json"
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "chatAnthropic_0",
+      "sourceHandle": "chatAnthropic_0-output-chatAnthropic-ChatAnthropic",
+      "target": "llmChain_0",
+      "targetHandle": "llmChain_0-input-model-BaseLanguageModel",
+      "id": "chatAnthropic_0-llmChain_0"
+    },
+    {
+      "source": "promptTemplate_0",
+      "sourceHandle": "promptTemplate_0-output-promptTemplate-PromptTemplate",
+      "target": "llmChain_0",
+      "targetHandle": "llmChain_0-input-prompt-BasePromptTemplate",
+      "id": "promptTemplate_0-llmChain_0"
+    },
+    {
+      "source": "structuredOutputParser_0",
+      "sourceHandle": "structuredOutputParser_0-output-structuredOutputParser-StructuredOutputParser",
+      "target": "llmChain_0",
+      "targetHandle": "llmChain_0-input-outputParser-BaseLLMOutputParser",
+      "id": "structuredOutputParser_0-llmChain_0"
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "type": "object",
+  "properties": {
+    "summary": {
+      "type": "string",
+      "description": "2-3 sentence summary of conversation key points relevant to product development"
+    },
+    "pain_point": {
+      "type": "string",
+      "description": "The single most important pain point the customer expressed"
+    },
+    "current_workaround": {
+      "type": "string",
+      "description": "How the customer currently handles this pain point"
+    },
+    "business_impact": {
+      "type": "string",
+      "description": "Concrete business impact of the pain point"
+    },
+    "software_opportunity": {
+      "type": "string",
+      "description": "What software capability would solve this pain point"
+    },
+    "suggested_feature": {
+      "type": "string",
+      "description": "Specific feature name and one-line description"
+    },
+    "product_module": {
+      "type": "string",
+      "enum": ["Ganado", "Compras", "Financeiro", "Estoque", "Relatorios", "Integrações", "Outro"],
+      "description": "Which product module this belongs to"
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["Low", "Medium", "High"],
+      "description": "Priority based on frequency, severity, reach, and alignment"
+    },
+    "customer_quote": {
+      "type": "string",
+      "description": "Most impactful direct quote from customer"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 2,
+      "maxItems": 5,
+      "description": "2-5 lowercase keyword tags"
+    }
+  },
+  "required": [
+    "summary", "pain_point", "current_workaround", "business_impact",
+    "software_opportunity", "suggested_feature", "product_module",
+    "priority", "customer_quote", "tags"
+  ],
+  "additionalProperties": false
+}

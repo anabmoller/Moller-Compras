@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  flowise:
+    image: flowiseai/flowise:latest
+    container_name: flowise-product-ai
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - FLOWISE_USERNAME=${FLOWISE_USERNAME:-admin}
+      - FLOWISE_PASSWORD=${FLOWISE_PASSWORD:-}
+      - APIKEY_PATH=/root/.flowise
+      - SECRETKEY_PATH=/root/.flowise
+      - LOG_LEVEL=info
+      - DATABASE_PATH=/root/.flowise
+      - BLOB_STORAGE_PATH=/root/.flowise/storage
+      # Rate limiting
+      - NUMBER_OF_PROXIES=0
+      - RATE_LIMIT_WINDOW_MS=60000
+      - RATE_LIMIT_MAX_REQUESTS=30
+      # Request size
+      - TOOL_FUNCTION_BUILTIN_DEP=crypto,querystring
+      - TOOL_FUNCTION_EXTERNAL_DEP=
+    volumes:
+      - flowise_data:/root/.flowise
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  flowise_data:
+    driver: local
