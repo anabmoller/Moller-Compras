@@ -49,6 +49,7 @@ const ParametersScreen = lazyRetry(() => import("./components/admin/ParametersSc
 const MovimientosScreen = lazyRetry(() => import("./components/ganado/MovimientosScreen"));
 const NuevoMovimientoForm = lazyRetry(() => import("./components/ganado/NuevoMovimientoForm"));
 const MovimientoDetail = lazyRetry(() => import("./components/ganado/MovimientoDetail"));
+const PanelGeneral = lazyRetry(() => import("./components/dashboard/PanelGeneral"));
 
 function LazyFallback() {
   return (
@@ -72,7 +73,7 @@ function AppContent() {
     advanceStatus, cancelRequest, updateRequest, dataLoading, setDevOverride,
   } = useApp();
 
-  const [screen, setScreen] = useState("dashboard");
+  const [screen, setScreen] = useState("panel");
   const [selectedRequestId, setSelectedRequestId] = useState(null);
   const selectedRequest = selectedRequestId ? requests.find(r => r.id === selectedRequestId) : null;
   const [showNewForm, setShowNewForm] = useState(false);
@@ -349,6 +350,14 @@ function AppContent() {
           devMode={devMode}
           onSetDevMode={setDevMode}
         />
+      );
+    }
+
+    if (screen === "panel") {
+      return (
+        <Suspense fallback={<LazyFallback />}>
+          <PanelGeneral onNavigate={handleNavigate} />
+        </Suspense>
       );
     }
 

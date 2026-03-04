@@ -13,6 +13,7 @@ export default function DesktopSidebar({ screen, onNavigate, onNewRequest, curre
   const unreadCount = getVisibleNotifications(auth.currentUser?.name, auth.currentUser?.role).filter(n => !n.read).length;
 
   const mainItems = [
+    { key: 'panel', icon: '🏠', label: 'Panel General' },
     { key: 'dashboard', icon: '📋', label: 'Solicitudes' },
     { key: 'notifications', icon: '🔔', label: 'Notificaciones', badge: unreadCount || null },
     { key: 'inventory', icon: '📦', label: 'Inventario' },
@@ -34,7 +35,7 @@ export default function DesktopSidebar({ screen, onNavigate, onNewRequest, curre
     <aside className="desktop-sidebar bg-[#0d0e14]">
       {/* Brand — clickable to go to Solicitudes */}
       <div
-        onClick={() => onNavigate('dashboard')}
+        onClick={() => onNavigate('panel')}
         className="px-5 pt-5 pb-4 border-b border-white/[0.06] flex items-center gap-2.5 cursor-pointer hover:opacity-80 transition-opacity"
       >
         <div className="w-9 h-9 rounded-lg bg-[#1F2A44] flex items-center justify-center text-white font-bold text-base">

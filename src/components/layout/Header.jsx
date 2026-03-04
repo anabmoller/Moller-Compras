@@ -18,7 +18,7 @@ export default function Header({ currentUser, onToggleDrawer, onNavigate }) {
 
       {/* Logo → home */}
       <div
-        onClick={() => onNavigate && onNavigate('dashboard')}
+        onClick={() => onNavigate && onNavigate('panel')}
         className="flex items-center gap-2 cursor-pointer"
       >
         <div className="w-7 h-7 rounded-md bg-[#1F2A44] flex items-center justify-center text-white font-bold text-xs">

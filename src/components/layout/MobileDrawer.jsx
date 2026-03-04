@@ -10,6 +10,7 @@ export default function MobileDrawer({ open, onClose, screen, onNavigate, onNewR
   const unreadCount = getVisibleNotifications(auth.currentUser?.name, auth.currentUser?.role).filter(n => !n.read).length;
 
   const mainItems = [
+    { key: 'panel', icon: '🏠', label: 'Panel General' },
     { key: 'dashboard', icon: '📋', label: 'Solicitudes' },
     { key: 'notifications', icon: '🔔', label: 'Notificaciones', badge: unreadCount || null },
     { key: 'inventory', icon: '📦', label: 'Inventario' },
