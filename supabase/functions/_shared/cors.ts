@@ -1,5 +1,5 @@
 // ============================================================
-// AMs — CORS Headers for Edge Functions
+// SIGAM — CORS Headers for Edge Functions
 // ============================================================
 
 const ALLOWED_ORIGINS = [

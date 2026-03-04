@@ -1,5 +1,5 @@
 // ============================================================
-// AMs — Currency & number formatting utilities
+// SIGAM — Currency & number formatting utilities
 // Single source of truth for Guaraní / USD display
 // ============================================================
 

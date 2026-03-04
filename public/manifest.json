@@ -1,7 +1,7 @@
 {
-  "name": "Ypoti Compras",
-  "short_name": "Ypoti",
-  "description": "Sistema de Gestión de Compras — Rural Bioenergia S.A.",
+  "name": "SIGAM",
+  "short_name": "SIGAM",
+  "description": "Sistema Integrado de Gestión AM — Plataforma modular para gestión empresarial",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0b0f",

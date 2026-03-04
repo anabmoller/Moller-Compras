@@ -53,13 +53,16 @@ export default function ChangePasswordScreen() {
         {/* Brand header */}
         <div className="text-center mb-10">
           <div className="w-14 h-14 rounded-xl bg-[#1F2A44] inline-flex items-center justify-center mb-4 shadow-lg shadow-black/20">
-            <span className="text-white text-2xl font-bold tracking-tight">AMs</span>
+            <span className="text-white text-2xl font-bold tracking-tight">SIGAM</span>
           </div>
           <h1 className="text-[28px] font-bold text-white mb-1 tracking-tight">
-            
+            SIGAM
           </h1>
           <p className="text-sm text-slate-400 m-0">
-            Sistema de Gesti&oacute;n de Compras
+            Sistema Integrado de Gesti&oacute;n AM
+          </p>
+          <p className="text-xs text-slate-500 m-0 mt-1">
+            Plataforma modular para gesti&oacute;n empresarial
           </p>
         </div>
 

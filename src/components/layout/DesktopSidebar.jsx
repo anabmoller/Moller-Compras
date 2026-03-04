@@ -38,11 +38,11 @@ export default function DesktopSidebar({ screen, onNavigate, onNewRequest, curre
         className="px-5 pt-5 pb-4 border-b border-white/[0.06] flex items-center gap-2.5 cursor-pointer hover:opacity-80 transition-opacity"
       >
         <div className="w-9 h-9 rounded-lg bg-[#1F2A44] flex items-center justify-center text-white font-bold text-base">
-          AMs
+          SIGAM
         </div>
         <div>
-          <h1 className="text-lg font-bold text-white tracking-tight leading-tight m-0">AM Soluciones</h1>
-          <div className="text-[10px] font-medium text-slate-500 tracking-wide">{"Gestión de Compras"}</div>
+          <h1 className="text-lg font-bold text-white tracking-tight leading-tight m-0">SIGAM</h1>
+          <div className="text-[10px] font-medium text-slate-500 tracking-wide">{"Sistema Integrado de Gestión AM"}</div>
         </div>
       </div>
 
@@ -52,7 +52,7 @@ export default function DesktopSidebar({ screen, onNavigate, onNewRequest, curre
         className="mx-3 mt-3 mb-1 px-3 py-2.5 bg-[rgba(255,255,255,0.04)] rounded-lg border border-white/[0.06] flex items-center gap-2.5 cursor-pointer hover:bg-[rgba(255,255,255,0.07)] transition-colors"
       >
         <div className="w-8 h-8 rounded-full bg-[#1F2A44]/10 flex items-center justify-center text-[#C8A03A] font-semibold text-xs">
-          {"AMs"}
+          {"SIGAM"}
         </div>
         <div className="text-sm font-medium text-white truncate flex-1">
           {currentUser}
