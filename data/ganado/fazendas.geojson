@@ -1,0 +1,3881 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -59.8961105,
+          -23.5082493
+        ]
+      },
+      "properties": {
+        "nome": "3 DE NOVIEMBRE",
+        "total_animales": 6,
+        "n_guias": 1,
+        "empresa": "ROSA ESTHER SFILIGOY DE VELAZQUEZ",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.63358,
+          -22.30784
+        ]
+      },
+      "properties": {
+        "nome": "6 DE OCTUBRE",
+        "total_animales": 120,
+        "n_guias": 2,
+        "empresa": "JOSE RIVASSI DA MOTTA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.22709,
+          -26.87753
+        ]
+      },
+      "properties": {
+        "nome": "AGROFORESTAL CAAPUCUMI",
+        "total_animales": 442,
+        "n_guias": 11,
+        "empresa": "AGROFORESTAL CAAPUCU MI S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.856388,
+          -23.936666
+        ]
+      },
+      "properties": {
+        "nome": "AGROGANADERA  JD",
+        "total_animales": 53,
+        "n_guias": 2,
+        "empresa": "JOSE LUIS DURE ZELAYA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.878502,
+          -24.5021381
+        ]
+      },
+      "properties": {
+        "nome": "AGROGANADERA DO\u00d1A BRIGIDA",
+        "total_animales": 180,
+        "n_guias": 3,
+        "empresa": "LUIS FERNANDO RIOS ESPINOLA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -55.8788889,
+          -25.3161111
+        ]
+      },
+      "properties": {
+        "nome": "AGROGANADERA NU\u00d1EZ",
+        "total_animales": 145,
+        "n_guias": 3,
+        "empresa": "JULIO CESAR NU\u00d1EZ CABA\u00d1AS",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -55.92103,
+          -24.16178
+        ]
+      },
+      "properties": {
+        "nome": "AGROGANADERA PORVENIR",
+        "total_animales": 50,
+        "n_guias": 1,
+        "empresa": "EL SURCO S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.38583,
+          -23.25417
+        ]
+      },
+      "properties": {
+        "nome": "AGROGANADERA PRIMAVERA",
+        "total_animales": 25,
+        "n_guias": 3,
+        "empresa": "GRUPO RUIZ MENDEZ SA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.05222,
+          -23.33833
+        ]
+      },
+      "properties": {
+        "nome": "AGROGANADERA SANTA VIRGINIA",
+        "total_animales": 284,
+        "n_guias": 4,
+        "empresa": "VIRGINIA CHRISTIANE FERREIRA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.52919,
+          -23.00455
+        ]
+      },
+      "properties": {
+        "nome": "ANTONIO TORRES PARRON",
+        "total_animales": 70,
+        "n_guias": 1,
+        "empresa": "ANTONIO TORRES PARRON",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.58511,
+          -22.309444
+        ]
+      },
+      "properties": {
+        "nome": "ARACELI",
+        "total_animales": 30,
+        "n_guias": 1,
+        "empresa": "DIEGO FERNANDO VILLAGRA AVILA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.8177795,
+          -22.7547226
+        ]
+      },
+      "properties": {
+        "nome": "ARRECIFE",
+        "total_animales": 1142,
+        "n_guias": 22,
+        "empresa": "GANADERA TROPICAL S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.417305,
+          -24.825277
+        ]
+      },
+      "properties": {
+        "nome": "BONANZA",
+        "total_animales": 61,
+        "n_guias": 2,
+        "empresa": "ESTEBAN NICOLAS SORIA GALEANO",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -58.87619,
+          -23.45036
+        ]
+      },
+      "properties": {
+        "nome": "BUFALO BILL",
+        "total_animales": 41,
+        "n_guias": 1,
+        "empresa": "PEDRO PABLO CARDOZO",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.3303604,
+          -25.7444172
+        ]
+      },
+      "properties": {
+        "nome": "CACERES BENITEZ JULIO",
+        "total_animales": 275,
+        "n_guias": 5,
+        "empresa": "JULIO CESAR CACERES CABALLERO",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.39791,
+          -22.72136
+        ]
+      },
+      "properties": {
+        "nome": "CARMEN DE LA SIERRA",
+        "total_animales": 150,
+        "n_guias": 4,
+        "empresa": "AGRO GANADERA KARAKU SA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.54486,
+          -24.46114
+        ]
+      },
+      "properties": {
+        "nome": "CA\u00d1ADA GODOY- EST.SAN JOSE",
+        "total_animales": 80,
+        "n_guias": 3,
+        "empresa": "GANADERA CA\u00d1ADA GODOY S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.45489,
+          -26.36286
+        ]
+      },
+      "properties": {
+        "nome": "CELSO TROCHE ALVAREZ",
+        "total_animales": 75,
+        "n_guias": 2,
+        "empresa": "CELSO TROCHE",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.32067,
+          -22.7385
+        ]
+      },
+      "properties": {
+        "nome": "CERRO APUA",
+        "total_animales": 63,
+        "n_guias": 1,
+        "empresa": "OSVALDO SANTOS TOMAS",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.33194,
+          -24.46972
+        ]
+      },
+      "properties": {
+        "nome": "CORRALON",
+        "total_animales": 240,
+        "n_guias": 2,
+        "empresa": "FERNANDO MURDOCH",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.3970261,
+          -22.1302223
+        ]
+      },
+      "properties": {
+        "nome": "CUATRO HERMANAS",
+        "total_animales": 13,
+        "n_guias": 2,
+        "empresa": "GENOVEVA BAZZANO VERA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.4272232,
+          -24.7377777
+        ]
+      },
+      "properties": {
+        "nome": "DANIEL COSTA",
+        "total_animales": 27,
+        "n_guias": 1,
+        "empresa": "DANIEL COSTA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.55642,
+          -23.34739
+        ]
+      },
+      "properties": {
+        "nome": "DEONISIO HENTZ",
+        "total_animales": 346,
+        "n_guias": 6,
+        "empresa": "DEONISIO HENTZ",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -55.76305,
+          -22.53508
+        ]
+      },
+      "properties": {
+        "nome": "DIVINA PROVIDENCIA",
+        "total_animales": 40,
+        "n_guias": 1,
+        "empresa": "OSCAR VICENTE BOBADILLA CA\u00d1ETE",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.71717,
+          -25.53053
+        ]
+      },
+      "properties": {
+        "nome": "DOMINGUEZ MIGUEL ANGEL",
+        "total_animales": 135,
+        "n_guias": 4,
+        "empresa": "MIGUEL ANGEL DOMINGUEZ FLORENTIN",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.44609833,
+          -24.67239952
+        ]
+      },
+      "properties": {
+        "nome": "DON JULIO",
+        "total_animales": 80,
+        "n_guias": 4,
+        "empresa": "JULIO CESAR GIMENEZ VERGA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -58.76875,
+          -22.65308
+        ]
+      },
+      "properties": {
+        "nome": "DON MIGUEL",
+        "total_animales": 130,
+        "n_guias": 2,
+        "empresa": "GRUPO VAZQUEZ SAE",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.30167,
+          -22.64892
+        ]
+      },
+      "properties": {
+        "nome": "EL TORITO",
+        "total_animales": 75,
+        "n_guias": 1,
+        "empresa": "RUBEN DARIO AQUINO ROJAS",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.4641685,
+          -22.4683342
+        ]
+      },
+      "properties": {
+        "nome": "EMPRENDIMIENTO V.F.",
+        "total_animales": 143,
+        "n_guias": 3,
+        "empresa": "VERNA FLAK FRIESEN",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -58.40222,
+          -24.01111
+        ]
+      },
+      "properties": {
+        "nome": "EST LA MARGARITA",
+        "total_animales": 9,
+        "n_guias": 1,
+        "empresa": "AGROPECUARIA DON ATILIO S.R.L",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.8027763,
+          -22.8202782
+        ]
+      },
+      "properties": {
+        "nome": "EST VIRGEN SERRANA",
+        "total_animales": 125,
+        "n_guias": 4,
+        "empresa": "VIRINA MAURICIA VILLANUEVA SALINAS",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -58.275,
+          -21.99889
+        ]
+      },
+      "properties": {
+        "nome": "EST. AGOSTO POTY",
+        "total_animales": 420,
+        "n_guias": 6,
+        "empresa": "MANFREDO CONDRADO WOLF",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.07397,
+          -26.47156
+        ]
+      },
+      "properties": {
+        "nome": "EST. AGRO FORESTAL CAAPUCU MI",
+        "total_animales": 214,
+        "n_guias": 10,
+        "empresa": "AGROFORESTAL CAAPUCU MI S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.444,
+          -23.26617
+        ]
+      },
+      "properties": {
+        "nome": "EST. ALAZAN",
+        "total_animales": 145,
+        "n_guias": 2,
+        "empresa": "COND. ANTONIO HILARIO BAGGIO",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -55.70508,
+          -22.922
+        ]
+      },
+      "properties": {
+        "nome": "EST. CERRANO 21",
+        "total_animales": 55,
+        "n_guias": 1,
+        "empresa": "AGROGANADERA PERES S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.3198738,
+          -26.1563549
+        ]
+      },
+      "properties": {
+        "nome": "EST. CHARARA",
+        "total_animales": 413,
+        "n_guias": 9,
+        "empresa": "LUIS MARIA ROMERO RADICE",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.46333,
+          -23.22167
+        ]
+      },
+      "properties": {
+        "nome": "EST. CHE URU",
+        "total_animales": 46,
+        "n_guias": 4,
+        "empresa": "GANADERA DON BERNA S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.02222,
+          -22.94139
+        ]
+      },
+      "properties": {
+        "nome": "EST. DIAMANTE",
+        "total_animales": 240,
+        "n_guias": 3,
+        "empresa": "GONI DE VILLASANTI MARIA CLARA EUGENIA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -58.86889,
+          -22.645
+        ]
+      },
+      "properties": {
+        "nome": "EST. DON MIGUEL OESTE",
+        "total_animales": 15,
+        "n_guias": 1,
+        "empresa": "GRUPO VAZQUEZ SAE",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.56361,
+          -22.63667
+        ]
+      },
+      "properties": {
+        "nome": "EST. DON MOISES",
+        "total_animales": 195,
+        "n_guias": 3,
+        "empresa": "GANADERA LA CELESTINA S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -58.27667,
+          -22.59578
+        ]
+      },
+      "properties": {
+        "nome": "EST. EL ESTRIBO",
+        "total_animales": 190,
+        "n_guias": 3,
+        "empresa": "LOURDES MARIA BRASA VDA. DE GONZALEZ",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -55.8705,
+          -22.52428
+        ]
+      },
+      "properties": {
+        "nome": "EST. E\u00aa CENTURION II",
+        "total_animales": 26,
+        "n_guias": 2,
+        "empresa": "GANADERA NATIVA S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.51647,
+          -23.05986
+        ]
+      },
+      "properties": {
+        "nome": "EST. GANADERA V.N",
+        "total_animales": 37,
+        "n_guias": 2,
+        "empresa": "VALDEIR NUNES",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.61161,
+          -25.36914
+        ]
+      },
+      "properties": {
+        "nome": "EST. GANADERA \u00d1A SARA",
+        "total_animales": 431,
+        "n_guias": 16,
+        "empresa": "PETER HOLDER KENNEDY OTAZU",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -58.21041,
+          -24.01653
+        ]
+      },
+      "properties": {
+        "nome": "EST. INDIANA",
+        "total_animales": 171,
+        "n_guias": 4,
+        "empresa": "GANADERA INDIANA S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -58.2772,
+          -22.5951
+        ]
+      },
+      "properties": {
+        "nome": "EST. INVERNADERO DON ICHON",
+        "total_animales": 25,
+        "n_guias": 1,
+        "empresa": "LEONARDO RAUL GONZALEZ BRAZA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.61889,
+          -22.87667
+        ]
+      },
+      "properties": {
+        "nome": "EST. ISLA LUCIOLE",
+        "total_animales": 373,
+        "n_guias": 8,
+        "empresa": "CELSO FABIAN LOPEZ ROJAS",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -55.56761,
+          -24.4663
+        ]
+      },
+      "properties": {
+        "nome": "EST. KAJABE",
+        "total_animales": 78,
+        "n_guias": 1,
+        "empresa": "AGROPECUARIA SAN FERMIN S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.54264,
+          -22.96625
+        ]
+      },
+      "properties": {
+        "nome": "EST. KUARAHY",
+        "total_animales": 12,
+        "n_guias": 1,
+        "empresa": "OSVALDO SANTOS TOMAS",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.69722,
+          -22.82556
+        ]
+      },
+      "properties": {
+        "nome": "EST. LA BOLOGNESA",
+        "total_animales": 135,
+        "n_guias": 2,
+        "empresa": "GANADERA LA BOLOGNESA S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.40558,
+          -22.89919
+        ]
+      },
+      "properties": {
+        "nome": "EST. LA CAPRICHOSA 1",
+        "total_animales": 80,
+        "n_guias": 2,
+        "empresa": "MAGUARI",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.2747,
+          -22.34597
+        ]
+      },
+      "properties": {
+        "nome": "EST. LA ELVIRA",
+        "total_animales": 455,
+        "n_guias": 7,
+        "empresa": "GANADERA R.P.SA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.3512,
+          -23.33983
+        ]
+      },
+      "properties": {
+        "nome": "EST. LA NELLY",
+        "total_animales": 212,
+        "n_guias": 4,
+        "empresa": "LA TROPA CONSIGNATARIA S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -59.62524,
+          -22.78053
+        ]
+      },
+      "properties": {
+        "nome": "EST. LA SUSANA",
+        "total_animales": 70,
+        "n_guias": 3,
+        "empresa": "LAS TACUARAS S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.2725,
+          -23.23056
+        ]
+      },
+      "properties": {
+        "nome": "EST. LAGUNA MBOHAPY",
+        "total_animales": 162,
+        "n_guias": 4,
+        "empresa": "ANTONIO JAVIER GARCIA GIMENEZ",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -60.88694,
+          -23.70497
+        ]
+      },
+      "properties": {
+        "nome": "EST. LAS COLINAS",
+        "total_animales": 350,
+        "n_guias": 5,
+        "empresa": "AGROFOREST SA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.03194,
+          -23.235
+        ]
+      },
+      "properties": {
+        "nome": "EST. MANUEL GAYOZO CUBILLA",
+        "total_animales": 150,
+        "n_guias": 4,
+        "empresa": "MANUEL GAYOZO CUBILLA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.37778,
+          -23.00333
+        ]
+      },
+      "properties": {
+        "nome": "EST. MARIA AUXILIADORA",
+        "total_animales": 423,
+        "n_guias": 6,
+        "empresa": "GUSTAVO BA\u00d1UELOS TUMA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.36483,
+          -25.44994
+        ]
+      },
+      "properties": {
+        "nome": "EST. MARINA",
+        "total_animales": 75,
+        "n_guias": 1,
+        "empresa": "SEBASTIAN ARROM IRUN",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.35333,
+          -22.8225
+        ]
+      },
+      "properties": {
+        "nome": "EST. MBOREVI",
+        "total_animales": 140,
+        "n_guias": 2,
+        "empresa": "AGROPECUARIA GUALOKYYA S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.61411,
+          -22.86997
+        ]
+      },
+      "properties": {
+        "nome": "EST. NUESTRA SE\u00d1ORA APARECIDA",
+        "total_animales": 145,
+        "n_guias": 4,
+        "empresa": "RONOALDO DUARTE PERGORARO",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.53828,
+          -25.23622
+        ]
+      },
+      "properties": {
+        "nome": "EST. PAEZ LOPEZ FELIPE OLEGARIO",
+        "total_animales": 65,
+        "n_guias": 2,
+        "empresa": "ROQUE ARTURO PAEZ MIGRACION",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.81694,
+          -22.37389
+        ]
+      },
+      "properties": {
+        "nome": "EST. PUERTO RISSO",
+        "total_animales": 541,
+        "n_guias": 8,
+        "empresa": "CABA\u00d1A EL ALAMO S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -55.937,
+          -22.71578
+        ]
+      },
+      "properties": {
+        "nome": "EST. RANCHO MORENO",
+        "total_animales": 130,
+        "n_guias": 2,
+        "empresa": "AGROPECUARIA KM",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.41945,
+          -23.98667
+        ]
+      },
+      "properties": {
+        "nome": "EST. SALINARES",
+        "total_animales": 66,
+        "n_guias": 2,
+        "empresa": "AGUSTO JOSE CANTERO SIENRA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.33597,
+          -23.13036
+        ]
+      },
+      "properties": {
+        "nome": "EST. SAN CAYETANO",
+        "total_animales": 125,
+        "n_guias": 2,
+        "empresa": "MARIA DEL CARMEN ORTIZ OLGUIN",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.52833,
+          -23.47028
+        ]
+      },
+      "properties": {
+        "nome": "EST. SAN EDUARDO",
+        "total_animales": 80,
+        "n_guias": 1,
+        "empresa": "TALAGOY S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.23764,
+          -23.47478
+        ]
+      },
+      "properties": {
+        "nome": "EST. SANTA CLARA",
+        "total_animales": 7238,
+        "n_guias": 134,
+        "empresa": "RURAL BIOENERGIA S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.84747,
+          -24.04881
+        ]
+      },
+      "properties": {
+        "nome": "EST. SANTA IRENE",
+        "total_animales": 66,
+        "n_guias": 1,
+        "empresa": "AGROPECUARIA DON ATILIO S.R.L",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.9562,
+          -23.30175
+        ]
+      },
+      "properties": {
+        "nome": "EST. SANTA LIBRADA",
+        "total_animales": 173,
+        "n_guias": 3,
+        "empresa": "ANTONIO MARIA VILLALBA CABRERA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.8275,
+          -22.4225
+        ]
+      },
+      "properties": {
+        "nome": "EST. SANTA LUISA",
+        "total_animales": 150,
+        "n_guias": 3,
+        "empresa": "GANADERA PYAPY S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.85722,
+          -22.49583
+        ]
+      },
+      "properties": {
+        "nome": "EST. SANTA ROSA",
+        "total_animales": 140,
+        "n_guias": 2,
+        "empresa": "LA QUERENCIA DE DON HUMBERTO S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.6024,
+          -22.8707
+        ]
+      },
+      "properties": {
+        "nome": "EST. SANTA ROSA II",
+        "total_animales": 711,
+        "n_guias": 17,
+        "empresa": "LEONARDO RAUL GONZALEZ BRAZA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -55.93258,
+          -23.47314
+        ]
+      },
+      "properties": {
+        "nome": "EST. SANTA ROSALINA",
+        "total_animales": 810,
+        "n_guias": 18,
+        "empresa": "RAMON FRUTOS",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.33583,
+          -23.10806
+        ]
+      },
+      "properties": {
+        "nome": "EST. TRES HERMANOS",
+        "total_animales": 150,
+        "n_guias": 2,
+        "empresa": "TEMPLANZA S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.12691,
+          -23.57827
+        ]
+      },
+      "properties": {
+        "nome": "EST. TRES MARIAS",
+        "total_animales": 9,
+        "n_guias": 1,
+        "empresa": "CONDOMINIO MARIA LOURDES GARCIA Y OTRA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.26611,
+          -23.14167
+        ]
+      },
+      "properties": {
+        "nome": "EST. TUPA MBA E",
+        "total_animales": 159,
+        "n_guias": 3,
+        "empresa": "GONZALO MATIAS GRIFFITH CABALLERO",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.39825,
+          -23.07425
+        ]
+      },
+      "properties": {
+        "nome": "EST. YPORA",
+        "total_animales": 55,
+        "n_guias": 1,
+        "empresa": "AGROGANADERA DAGUS S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -55.9206,
+          -23.67651
+        ]
+      },
+      "properties": {
+        "nome": "EST. YSYTY PUNTA",
+        "total_animales": 194,
+        "n_guias": 3,
+        "empresa": "RENATO CARRILHO BARBOSA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.06489,
+          -23.40205
+        ]
+      },
+      "properties": {
+        "nome": "EST. YUKYRY GUAZU",
+        "total_animales": 199,
+        "n_guias": 4,
+        "empresa": "ALIPIO CARLOS DIONISIO",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.1882515,
+          -25.7075005
+        ]
+      },
+      "properties": {
+        "nome": "EST. YVERA",
+        "total_animales": 160,
+        "n_guias": 4,
+        "empresa": "ROBERTO TOMAS COLMAN GOMEZ",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.3,
+          -23.20889
+        ]
+      },
+      "properties": {
+        "nome": "EST. \u00d1A PORFIRIA",
+        "total_animales": 100,
+        "n_guias": 3,
+        "empresa": "RENIER AUGUSTO URQUHART QUEVEDO",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.90445,
+          -22.90778
+        ]
+      },
+      "properties": {
+        "nome": "EST. \u00d1U APUA",
+        "total_animales": 197,
+        "n_guias": 5,
+        "empresa": "COGATY S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.28917,
+          -23.25028
+        ]
+      },
+      "properties": {
+        "nome": "EST.ORTIZ ERMELINDA",
+        "total_animales": 34,
+        "n_guias": 4,
+        "empresa": "EDER LUCIO ARANDA ORTIZ",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.53361,
+          -23.06278
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA  AQUIDABAN",
+        "total_animales": 480,
+        "n_guias": 6,
+        "empresa": "GONI DE VILLASANTI MARIA CLARA EUGENIA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.41313,
+          -23.61908
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA 73",
+        "total_animales": 260,
+        "n_guias": 5,
+        "empresa": "GANADERA SESENTA Y TRES S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.66056,
+          -22.52528
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA ALEGRIA",
+        "total_animales": 239,
+        "n_guias": 14,
+        "empresa": "RONIA SOCIEDAD ANONIMA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -55.9781685,
+          -23.1024437
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA ARA ROKE",
+        "total_animales": 315,
+        "n_guias": 4,
+        "empresa": "JOSE FERREIRA BRANCO",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.163944,
+          -25.512083
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA CERRO LEON",
+        "total_animales": 70,
+        "n_guias": 5,
+        "empresa": "GUAPOY S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.46894,
+          -22.94822
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA CERRO MEMBY",
+        "total_animales": 4707,
+        "n_guias": 103,
+        "empresa": "CHACOBRAS SA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.99472,
+          -22.77194
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA CIELO AZUL",
+        "total_animales": 4574,
+        "n_guias": 84,
+        "empresa": "CHACOBRAS SA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.81583,
+          -23.03338
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA COEYU",
+        "total_animales": 60,
+        "n_guias": 1,
+        "empresa": "TAYCYLA DA ROSA DE ZOUSA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.16935,
+          -23.58609
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA CORAZON DE JESUS",
+        "total_animales": 114,
+        "n_guias": 3,
+        "empresa": "EDSON LUIZ DOMINGUEZ",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -59.95,
+          -23.69142
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA ESP\u00cdRITU SANTO",
+        "total_animales": 76,
+        "n_guias": 1,
+        "empresa": "DEL DUERO S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.45083,
+          -23.35167
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA IRENE CARDUZ",
+        "total_animales": 70,
+        "n_guias": 1,
+        "empresa": "ASOCIACION PARAGUAYA DE ACCION",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -58.3699989,
+          -22.5791664
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA ISABEL",
+        "total_animales": 1101,
+        "n_guias": 16,
+        "empresa": "MURRAY S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.95055,
+          -23.35139
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA ITAVERA",
+        "total_animales": 215,
+        "n_guias": 4,
+        "empresa": "AGROPECUARIA SAN LUCAS SA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.17805,
+          -22.73306
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA JAGUARETE MEMBY",
+        "total_animales": 86,
+        "n_guias": 3,
+        "empresa": "GANADERA TATARANDY S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -55.89497,
+          -23.64014
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA LA ESPERANZA",
+        "total_animales": 70,
+        "n_guias": 1,
+        "empresa": "AGRO GANADERA DEL AMAMBAY S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.99453,
+          -22.33805
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA LA SERENA",
+        "total_animales": 35,
+        "n_guias": 2,
+        "empresa": "HILARIO MARTINEZ",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.8163872,
+          -22.8155556
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA LA VICTORIA",
+        "total_animales": 201,
+        "n_guias": 6,
+        "empresa": "RENATO CUEVAS SANCHEZ",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.30597,
+          -23.4332
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA LUSIPAR",
+        "total_animales": 20315,
+        "n_guias": 423,
+        "empresa": "RURAL BIOENERGIA S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.22033,
+          -23.40403
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA MONTE CAFE",
+        "total_animales": 296,
+        "n_guias": 4,
+        "empresa": "JOSE FERREIRA BRANCO",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.50945,
+          -22.90111
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA NAPEGUE",
+        "total_animales": 210,
+        "n_guias": 3,
+        "empresa": "LA QUERENCIA DE DON HUMBERTO S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -58.48336,
+          -21.76105
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA NORICA",
+        "total_animales": 150,
+        "n_guias": 2,
+        "empresa": "MONTE DEL CHACO S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.58506,
+          -23.38414
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA PALO SANTO",
+        "total_animales": 20,
+        "n_guias": 2,
+        "empresa": "CELSO HERNANDO SILVA ROJAS",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.94989,
+          -25.67583
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA PASO TACUARA",
+        "total_animales": 73,
+        "n_guias": 1,
+        "empresa": "GANADERA CU\u00d1ATAI S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -58.95555,
+          -24.00722
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA PICAFLOR",
+        "total_animales": 370,
+        "n_guias": 5,
+        "empresa": "ALTE HEIDE S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.56028,
+          -23.12389
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA RESTRINCA",
+        "total_animales": 10,
+        "n_guias": 1,
+        "empresa": "AGROGANADERA SAN DIEGO S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.46861,
+          -23.18583
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA SAN DIEGO",
+        "total_animales": 41,
+        "n_guias": 2,
+        "empresa": "AGROGANADERA SAN DIEGO S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -55.31828,
+          -24.42311
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA SAN JOSE",
+        "total_animales": 229,
+        "n_guias": 4,
+        "empresa": "GANADERA E INMOBILIARIA DON CLAUDIO S.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -55.7225,
+          -22.833055
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA SAN JUAN RETIRO 2",
+        "total_animales": 210,
+        "n_guias": 3,
+        "empresa": "LA QUERENCIA DE DON HUMBERTO S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.45555,
+          -23.26944
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA SAN MIGUEL",
+        "total_animales": 18,
+        "n_guias": 1,
+        "empresa": "DOMINGO RICARDO GARCIA OLMEDO",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -59.16195,
+          -23.80283
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA SANTA CATALINA",
+        "total_animales": 1050,
+        "n_guias": 14,
+        "empresa": "GANADERA FORESTAL SANTA CATALINA S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -59.1565,
+          -22.68683
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA SANTA EMILIA",
+        "total_animales": 160,
+        "n_guias": 2,
+        "empresa": "AGROPECUARIA GPSA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.30523,
+          -22.65935
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA SANTA TERESA",
+        "total_animales": 60,
+        "n_guias": 1,
+        "empresa": "GOYA S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.46939,
+          -25.61514
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA TEBICUARY",
+        "total_animales": 215,
+        "n_guias": 3,
+        "empresa": "ESTANCIA TEBICUARY SA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -61.08154,
+          -21.10296
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA TRES CA\u00d1ADAS",
+        "total_animales": 544,
+        "n_guias": 9,
+        "empresa": "GANGES  S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.4002762,
+          -23.0886116
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA VITESA",
+        "total_animales": 70,
+        "n_guias": 1,
+        "empresa": "HUGO MEDINA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.0097,
+          -22.7673
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA YARY",
+        "total_animales": 60,
+        "n_guias": 1,
+        "empresa": "AGROPECUARIA KM",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.36806,
+          -23.45361
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA YBU",
+        "total_animales": 438,
+        "n_guias": 6,
+        "empresa": "ESTANCIA YBU S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.35336,
+          -23.2298
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA YBY PORA",
+        "total_animales": 2480,
+        "n_guias": 46,
+        "empresa": "RURAL BIOENERGIA S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -60.9776,
+          -22.22615
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA YERUTI",
+        "total_animales": 30,
+        "n_guias": 1,
+        "empresa": "ANDERSON RODRIGUEZ PULGA  LUCIENE",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.71,
+          -23.33278
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA YPOTI",
+        "total_animales": 29638,
+        "n_guias": 694,
+        "empresa": "RURAL BIOENERGIA S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.71,
+          -23.33278
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA YPOTI 2",
+        "total_animales": 2007,
+        "n_guias": 28,
+        "empresa": "RURAL BIOENERGIA S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.85638754,
+          -22.44555584
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA \u00d1A KUKA",
+        "total_animales": 40,
+        "n_guias": 2,
+        "empresa": "MARCOS DAVID SILVA SCHRAMM",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.4296,
+          -22.08846
+        ]
+      },
+      "properties": {
+        "nome": "ESTRELLA",
+        "total_animales": 422,
+        "n_guias": 8,
+        "empresa": "LUIS RAMON OCARIZ BRITEZ",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.709999,
+          -23.332777
+        ]
+      },
+      "properties": {
+        "nome": "FERIA DON FERNANDO",
+        "total_animales": 38,
+        "n_guias": 1,
+        "empresa": "RURAL YPANE S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.47883,
+          -22.90928
+        ]
+      },
+      "properties": {
+        "nome": "FERREIRA MIGUEL MELITON",
+        "total_animales": 70,
+        "n_guias": 3,
+        "empresa": "ROBSON PERGORARO DUARTE",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.55917,
+          -25.54111
+        ]
+      },
+      "properties": {
+        "nome": "FIRST PARAG COMPANY SRL",
+        "total_animales": 50,
+        "n_guias": 1,
+        "empresa": "MARIA MAGDALENA MORE MORE",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.588585,
+          -26.198153
+        ]
+      },
+      "properties": {
+        "nome": "FRANCISCO JAVIER LOPEZ GIMENEZ",
+        "total_animales": 65,
+        "n_guias": 3,
+        "empresa": "CERRO BONITO SA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.7289429,
+          -26.0979443
+        ]
+      },
+      "properties": {
+        "nome": "GAETE DE RUIZ DIAZ ADELIA",
+        "total_animales": 35,
+        "n_guias": 1,
+        "empresa": "LUCI GRACIELA RUIZ DIAZ GAETE",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.65971,
+          -24.68998
+        ]
+      },
+      "properties": {
+        "nome": "GANADERA DOS HERMANOS",
+        "total_animales": 78,
+        "n_guias": 2,
+        "empresa": "CARLOS ENRIQUE AVEIRO GIMENEZ",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.28447,
+          -22.71164
+        ]
+      },
+      "properties": {
+        "nome": "GANADERA FAVIOLA",
+        "total_animales": 72,
+        "n_guias": 1,
+        "empresa": "MIGUEL OSVALDO MORINIGO ROJAS",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -60.69047,
+          -21.29811
+        ]
+      },
+      "properties": {
+        "nome": "GANADERA FH",
+        "total_animales": 365,
+        "n_guias": 6,
+        "empresa": "FRIESEN S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.664612,
+          -24.588972
+        ]
+      },
+      "properties": {
+        "nome": "GANADERA LA COSTA",
+        "total_animales": 70,
+        "n_guias": 1,
+        "empresa": "EDEN CLAUDIO MORAGA LOPEZ",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.4119148,
+          -25.9998608
+        ]
+      },
+      "properties": {
+        "nome": "GANADERA LAGO YPOA S.A.",
+        "total_animales": 240,
+        "n_guias": 5,
+        "empresa": "GANADERA LAGO YPOA S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.59272,
+          -24.56384
+        ]
+      },
+      "properties": {
+        "nome": "GANADERA LAS MELLIZAS",
+        "total_animales": 55,
+        "n_guias": 1,
+        "empresa": "ANDRES GASPAR BARRETO WRAGUE",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.90697,
+          -25.60417
+        ]
+      },
+      "properties": {
+        "nome": "GANADERA R.D.S.A",
+        "total_animales": 400,
+        "n_guias": 6,
+        "empresa": "GANADERA R.D.S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.62806,
+          -24.09028
+        ]
+      },
+      "properties": {
+        "nome": "GANADERA RAIMUNDO CUE",
+        "total_animales": 75,
+        "n_guias": 3,
+        "empresa": "NIDIA ROSA BENITEZ DE APEZTEGUIA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -55.985168,
+          -23.540722
+        ]
+      },
+      "properties": {
+        "nome": "GANADERA S.A",
+        "total_animales": 148,
+        "n_guias": 2,
+        "empresa": "CLAUDINEI APARECIDO DE SOUZA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -59.9039345,
+          -23.5226002
+        ]
+      },
+      "properties": {
+        "nome": "GANADERA TAGUATO",
+        "total_animales": 69,
+        "n_guias": 2,
+        "empresa": "CIRILO SILVA DUARTE",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -55.96783447,
+          -23.64980507
+        ]
+      },
+      "properties": {
+        "nome": "GANADERA THALIA Y THIAGO",
+        "total_animales": 67,
+        "n_guias": 1,
+        "empresa": "LISANDRA ACOSTA VERA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.441944,
+          -24.683611
+        ]
+      },
+      "properties": {
+        "nome": "GANADERA \u00d1A ANTONIA",
+        "total_animales": 75,
+        "n_guias": 1,
+        "empresa": "MIGUEL ADRIAN CABRERA LEDESMA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.4003067,
+          -25.4063606
+        ]
+      },
+      "properties": {
+        "nome": "GRACIELA FRANCO RAMIREZ",
+        "total_animales": 344,
+        "n_guias": 9,
+        "empresa": "GRACIELA RAMIREZ FRANCO",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.18213,
+          -25.3125
+        ]
+      },
+      "properties": {
+        "nome": "GRACIELA SANABRIA DE GONZALEZ",
+        "total_animales": 40,
+        "n_guias": 1,
+        "empresa": "TAJY PORA S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.9013901,
+          -25.3144722
+        ]
+      },
+      "properties": {
+        "nome": "GRANJA 3 M",
+        "total_animales": 100,
+        "n_guias": 3,
+        "empresa": "PEDRO  TOMAS LEZCANO RODRIGUEZ",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.22781,
+          -22.69067
+        ]
+      },
+      "properties": {
+        "nome": "GRANJA ANDREA",
+        "total_animales": 785,
+        "n_guias": 14,
+        "empresa": "MARCIAL AURELIANO MORINIGO CA\u00d1IZA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.898888,
+          -23.122778
+        ]
+      },
+      "properties": {
+        "nome": "GRANJA BONANZA",
+        "total_animales": 25,
+        "n_guias": 2,
+        "empresa": "BENJAMIN MONGES VILLALBA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.3934441,
+          -22.8353062
+        ]
+      },
+      "properties": {
+        "nome": "GRANJA CERRO PORTE\u00d1O",
+        "total_animales": 375,
+        "n_guias": 10,
+        "empresa": "JUSTINO COLMAN MERCADO",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.51403,
+          -22.92439
+        ]
+      },
+      "properties": {
+        "nome": "GRANJA CHE POA",
+        "total_animales": 38,
+        "n_guias": 2,
+        "empresa": "SILVA CANALE, LUCIANO ABEL",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.09,
+          -23.56194
+        ]
+      },
+      "properties": {
+        "nome": "GRANJA DOLLY",
+        "total_animales": 664,
+        "n_guias": 12,
+        "empresa": "B N EMPRENDIMIENTOS S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -55.74139,
+          -22.851667
+        ]
+      },
+      "properties": {
+        "nome": "GRANJA DON EDU",
+        "total_animales": 21,
+        "n_guias": 1,
+        "empresa": "OSCAR VICENTE BOBADILLA CA\u00d1ETE",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.4021,
+          -23.2789
+        ]
+      },
+      "properties": {
+        "nome": "GRANJA DON FERREIRA",
+        "total_animales": 151,
+        "n_guias": 3,
+        "empresa": "JOSE COSME FERREIRA DA SILVA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -55.7107201,
+          -24.5584297
+        ]
+      },
+      "properties": {
+        "nome": "GRANJA ESPERANZA",
+        "total_animales": 278,
+        "n_guias": 7,
+        "empresa": "CLEBER  RODRIGO MIRANDA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.48861,
+          -23.17917
+        ]
+      },
+      "properties": {
+        "nome": "GRANJA J.L",
+        "total_animales": 5,
+        "n_guias": 1,
+        "empresa": "TERESITA ALARCON BENITEZ",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.48861,
+          -23.17917
+        ]
+      },
+      "properties": {
+        "nome": "GRANJA JL",
+        "total_animales": 132,
+        "n_guias": 4,
+        "empresa": "NIMIA ROSSANA ALARCON DE RAMIREZ",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.4958333,
+          -23.1855556
+        ]
+      },
+      "properties": {
+        "nome": "GRANJA JOSEFINA",
+        "total_animales": 80,
+        "n_guias": 3,
+        "empresa": "LUIS CARLOS NEVES MENEZES",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.6350822,
+          -23.0676384
+        ]
+      },
+      "properties": {
+        "nome": "GRANJA MOREIRA",
+        "total_animales": 4,
+        "n_guias": 1,
+        "empresa": "SEVERINO ALVES MOREIRA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.4114151,
+          -22.8530273
+        ]
+      },
+      "properties": {
+        "nome": "GRANJA OLIMPIA",
+        "total_animales": 127,
+        "n_guias": 4,
+        "empresa": "PEDRO DELGADO CABALLERO",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.6532211,
+          -22.9140282
+        ]
+      },
+      "properties": {
+        "nome": "GRANJA PINDOTY",
+        "total_animales": 530,
+        "n_guias": 12,
+        "empresa": "HUGO CESAR NU\u00d1EZ BENITEZ",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.435833,
+          -23.36925
+        ]
+      },
+      "properties": {
+        "nome": "GRANJA S. TRINIDAD",
+        "total_animales": 40,
+        "n_guias": 2,
+        "empresa": "VICENTE JAVIER PEREZ CENTURION",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.828083,
+          -23.1733055
+        ]
+      },
+      "properties": {
+        "nome": "GY7 DE JULIO",
+        "total_animales": 804,
+        "n_guias": 20,
+        "empresa": "ROSALIA BOGARIN BENITEZ",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.7418556,
+          -23.942812
+        ]
+      },
+      "properties": {
+        "nome": "HDZ BUENA VISTA S.A.",
+        "total_animales": 237,
+        "n_guias": 3,
+        "empresa": "HDZ BUENA VISTA S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.5229454,
+          -23.051527
+        ]
+      },
+      "properties": {
+        "nome": "HOMERO",
+        "total_animales": 596,
+        "n_guias": 22,
+        "empresa": "SINIVALDO ANTONIO DE ZOUZA MAMEDE",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.76167,
+          -22.71667
+        ]
+      },
+      "properties": {
+        "nome": "ISLA POTY",
+        "total_animales": 5,
+        "n_guias": 1,
+        "empresa": "LILIANA MARIA CENTURION GONZALEZ",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.37289,
+          -23.154249
+        ]
+      },
+      "properties": {
+        "nome": "JOSE ATILIO IBARRA AGUERO",
+        "total_animales": 10,
+        "n_guias": 1,
+        "empresa": "LUIS CARLOS NEVES MENEZES",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -55.5313873,
+          -23.2648621
+        ]
+      },
+      "properties": {
+        "nome": "JOSE NERCIO VILLALBA MACENA",
+        "total_animales": 390,
+        "n_guias": 12,
+        "empresa": "DERLIS RAUL VILLABA GIMENEZ",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.3965,
+          -24.69429
+        ]
+      },
+      "properties": {
+        "nome": "JUAN DE DIOS GONZALEZ",
+        "total_animales": 12,
+        "n_guias": 1,
+        "empresa": "JUAN DE DIOS GONZALEZ",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.374279,
+          -24.40661
+        ]
+      },
+      "properties": {
+        "nome": "JUAN RAMON VELASQUE GUILLEN",
+        "total_animales": 160,
+        "n_guias": 2,
+        "empresa": "JUAN RAMON VELAZQUEZ GUILLEN",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -60.75573,
+          -22.71447
+        ]
+      },
+      "properties": {
+        "nome": "LA BUENA ESPERANZA",
+        "total_animales": 800,
+        "n_guias": 10,
+        "empresa": "AGROGANADERA LA BUENA ESPERANZA S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.0565567,
+          -23.0503807
+        ]
+      },
+      "properties": {
+        "nome": "LA JOYA S.A.",
+        "total_animales": 615,
+        "n_guias": 9,
+        "empresa": "LA JOYITA NORTR\u00d1ITA S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -60.55634,
+          -21.33477
+        ]
+      },
+      "properties": {
+        "nome": "LA REINA",
+        "total_animales": 200,
+        "n_guias": 4,
+        "empresa": "LA HACIENDA SA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.6553,
+          -24.3255
+        ]
+      },
+      "properties": {
+        "nome": "LA ROSARINA",
+        "total_animales": 18,
+        "n_guias": 2,
+        "empresa": "LA ROSARINA S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.7556114,
+          -23.2276115
+        ]
+      },
+      "properties": {
+        "nome": "LA SUERTE",
+        "total_animales": 85,
+        "n_guias": 3,
+        "empresa": "JULIO CESAR SILVA TORRES",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.01433,
+          -24.44956
+        ]
+      },
+      "properties": {
+        "nome": "MARIA AUXILIADORA",
+        "total_animales": 80,
+        "n_guias": 3,
+        "empresa": "FERREIRA ORTEGA MANUEL MIGRACION",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.19373,
+          -21.57762
+        ]
+      },
+      "properties": {
+        "nome": "MARIA ESMERALDA",
+        "total_animales": 80,
+        "n_guias": 1,
+        "empresa": "GANADERA DIANA JOSEFINA S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -58.57478,
+          -24.45731
+        ]
+      },
+      "properties": {
+        "nome": "MARIO LINO APODACA GUEX",
+        "total_animales": 60,
+        "n_guias": 1,
+        "empresa": "MARIO LINO APODACA GUEX",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.77278,
+          -22.42694
+        ]
+      },
+      "properties": {
+        "nome": "MBOCAYA 11",
+        "total_animales": 50,
+        "n_guias": 1,
+        "empresa": "BRITEZ VILLALBA LUIS FERNANDO",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -55.96667,
+          -22.575
+        ]
+      },
+      "properties": {
+        "nome": "MEDINA M. ADALBERTO",
+        "total_animales": 46,
+        "n_guias": 3,
+        "empresa": "MEDINA M. ADALBERTO",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -59.84014,
+          -23.11555
+        ]
+      },
+      "properties": {
+        "nome": "MENDOZA ACOSTA SILVESTRE",
+        "total_animales": 50,
+        "n_guias": 2,
+        "empresa": "SILVESTRE MENDOZA ACOSTA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.5103874,
+          -22.1430836
+        ]
+      },
+      "properties": {
+        "nome": "NUEVA ESPERANZA",
+        "total_animales": 296,
+        "n_guias": 7,
+        "empresa": "GRUPO NUEVA ESPERANZA S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.188221,
+          -26.6739159
+        ]
+      },
+      "properties": {
+        "nome": "OCAMPO RODRIGUEZ JORGE AQUILES",
+        "total_animales": 220,
+        "n_guias": 4,
+        "empresa": "VICENTE AQUILES OCAMPO CHANDI",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -59.37561036,
+          -23.00097275
+        ]
+      },
+      "properties": {
+        "nome": "PASO DE LOS TOROS",
+        "total_animales": 381,
+        "n_guias": 6,
+        "empresa": "LAGUNA 75 S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -55.927918,
+          -26.479723
+        ]
+      },
+      "properties": {
+        "nome": "PINDOYU S.A",
+        "total_animales": 65,
+        "n_guias": 1,
+        "empresa": "PINDOYU S.A.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -55.73069,
+          -22.61033
+        ]
+      },
+      "properties": {
+        "nome": "QUIRINO MACHADO MONGES",
+        "total_animales": 75,
+        "n_guias": 1,
+        "empresa": "QUIRINO MACHADO MONGES",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.5327225,
+          -23.0009727
+        ]
+      },
+      "properties": {
+        "nome": "RANCHO ALEGRE",
+        "total_animales": 45,
+        "n_guias": 2,
+        "empresa": "MANUEL DOS SANTOS BARROS",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -55.94392,
+          -24.47747
+        ]
+      },
+      "properties": {
+        "nome": "RANCHO II ANCLA",
+        "total_animales": 363,
+        "n_guias": 5,
+        "empresa": "CLAUDELINO VERA CAMPUZANO",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.37278,
+          -23.30639
+        ]
+      },
+      "properties": {
+        "nome": "RANCHO JEPYTASO",
+        "total_animales": 75,
+        "n_guias": 1,
+        "empresa": "GUALBERTO ANTONIO GAONA ACOSTA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.3148,
+          -23.4019
+        ]
+      },
+      "properties": {
+        "nome": "RANCHO NUEVA ESPERANZA",
+        "total_animales": 300,
+        "n_guias": 4,
+        "empresa": "JOSE ROMULO ROJAS L.",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.4663887,
+          -23.1277771
+        ]
+      },
+      "properties": {
+        "nome": "RANCHO SANTA YSABEL",
+        "total_animales": 40,
+        "n_guias": 1,
+        "empresa": "YSABELINO MLCIADES CASURIAGA SOSA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -55.74367,
+          -22.92478
+        ]
+      },
+      "properties": {
+        "nome": "RIO BLANCO",
+        "total_animales": 55,
+        "n_guias": 2,
+        "empresa": "GRUPO CENCAPAR S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.00203,
+          -22.79731
+        ]
+      },
+      "properties": {
+        "nome": "ROJAS LOREIRO SILVIA",
+        "total_animales": 22,
+        "n_guias": 1,
+        "empresa": "OSCAR VICENTE BOBADILLA CA\u00d1ETE",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.305965,
+          -23.433201
+        ]
+      },
+      "properties": {
+        "nome": "ROSARITO",
+        "total_animales": 190,
+        "n_guias": 6,
+        "empresa": "AGROGANADERA SAN PABLO S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.74417,
+          -26.64222
+        ]
+      },
+      "properties": {
+        "nome": "S.Q.P",
+        "total_animales": 80,
+        "n_guias": 1,
+        "empresa": "FORESTAL GANADERA YVERA S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.2304459,
+          -22.6935005
+        ]
+      },
+      "properties": {
+        "nome": "S/N",
+        "total_animales": 496,
+        "n_guias": 20,
+        "empresa": "OSCAR VICENTE BOBADILLA CA\u00d1ETE",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.27694321,
+          -24.77241707
+        ]
+      },
+      "properties": {
+        "nome": "SAN ANTONIO",
+        "total_animales": 72,
+        "n_guias": 1,
+        "empresa": "JULCI KUSCHEL",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.87874985,
+          -24.02602768
+        ]
+      },
+      "properties": {
+        "nome": "SAN JUAN",
+        "total_animales": 79,
+        "n_guias": 1,
+        "empresa": "JUAN DIOSNEL VAZQUEZ SUAREZ",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.44917,
+          -23.07583
+        ]
+      },
+      "properties": {
+        "nome": "SAN SEBASTIAN",
+        "total_animales": 1,
+        "n_guias": 1,
+        "empresa": "DOMINGO RICARDO GARCIA OLMEDO",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.96389,
+          -23.68083
+        ]
+      },
+      "properties": {
+        "nome": "SANTA CLERIFA",
+        "total_animales": 295,
+        "n_guias": 4,
+        "empresa": "AGROPECUARIA LAS MARIAS SA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.46,
+          -22.73028
+        ]
+      },
+      "properties": {
+        "nome": "SANTA MARIA",
+        "total_animales": 1885,
+        "n_guias": 27,
+        "empresa": "RURAL BIOENERGIA S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.44563,
+          -26.19658
+        ]
+      },
+      "properties": {
+        "nome": "SANTA SOFIA",
+        "total_animales": 70,
+        "n_guias": 1,
+        "empresa": "ARDYNE KENNEDY OTAZU",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.63325,
+          -24.83558
+        ]
+      },
+      "properties": {
+        "nome": "SIN NOMBRE",
+        "total_animales": 722,
+        "n_guias": 17,
+        "empresa": "AGROGANADERA SAN PABLO S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.37942,
+          -22.27714
+        ]
+      },
+      "properties": {
+        "nome": "STA. CLARA",
+        "total_animales": 55,
+        "n_guias": 1,
+        "empresa": "JUAN CARLOS BOBADILLA GARCIA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.09184,
+          -26.12444
+        ]
+      },
+      "properties": {
+        "nome": "STA.LUCILA-ENTRE RIO",
+        "total_animales": 75,
+        "n_guias": 2,
+        "empresa": "HUMBERTO ANTONIO GOROSTIAGA FANEGO",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.49055,
+          -22.875
+        ]
+      },
+      "properties": {
+        "nome": "TAGATIYA",
+        "total_animales": 320,
+        "n_guias": 4,
+        "empresa": "GONI DE VILLASANTI MARIA CLARA EUGENIA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.74122,
+          -23.37397
+        ]
+      },
+      "properties": {
+        "nome": "TAMARINDO",
+        "total_animales": 300,
+        "n_guias": 6,
+        "empresa": "REDSOIL S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.11917,
+          -23.21917
+        ]
+      },
+      "properties": {
+        "nome": "TOTORA",
+        "total_animales": 99,
+        "n_guias": 2,
+        "empresa": "LUIS CARLOS NEUMAN IRALA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -55.76244,
+          -22.73594
+        ]
+      },
+      "properties": {
+        "nome": "VACA RETA",
+        "total_animales": 130,
+        "n_guias": 2,
+        "empresa": "JAVIER ALVAREZ GONZALEZ",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.26222,
+          -23.23778
+        ]
+      },
+      "properties": {
+        "nome": "VIRGEN DEL CAMINO",
+        "total_animales": 220,
+        "n_guias": 9,
+        "empresa": "GUSTAVO ANTONIO PEREZ CENTURION",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.8175,
+          -26.79989
+        ]
+      },
+      "properties": {
+        "nome": "YVERA",
+        "total_animales": 160,
+        "n_guias": 2,
+        "empresa": "FORESTAL GANADERA YVERA S.A",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.11917,
+          -23.21917
+        ]
+      },
+      "properties": {
+        "nome": "\u00d1A DANIELA",
+        "total_animales": 34,
+        "n_guias": 1,
+        "empresa": "LUIS CARLOS NEUMAN IRALA",
+        "role": "origin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.79661,
+          -22.94514
+        ]
+      },
+      "properties": {
+        "nome": "EST. LA NOVIA",
+        "total_animales_recebidos": 70,
+        "n_guias": 1,
+        "empresa": "JULIANO BARBOZA MACHADO",
+        "role": "destination"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.23764,
+          -23.47478
+        ]
+      },
+      "properties": {
+        "nome": "EST. SANTA CLARA",
+        "total_animales_recebidos": 10215,
+        "n_guias": 230,
+        "empresa": "RURAL BIOENERGIA S.A",
+        "role": "destination"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.85639,
+          -22.44555
+        ]
+      },
+      "properties": {
+        "nome": "EST. \u00d1A KUKA",
+        "total_animales_recebidos": 57,
+        "n_guias": 2,
+        "empresa": "AGROGANADERA SIETE CABRILLAS S.A",
+        "role": "destination"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.46894,
+          -22.94822
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA CERRO MEMBY",
+        "total_animales_recebidos": 1809,
+        "n_guias": 47,
+        "empresa": "RURAL BIOENERGIA S.A",
+        "role": "destination"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.99472,
+          -22.77194
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA CIELO AZUL",
+        "total_animales_recebidos": 5561,
+        "n_guias": 119,
+        "empresa": "CHACOBRAS SA",
+        "role": "destination"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.30597,
+          -23.4332
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA LUSIPAR",
+        "total_animales_recebidos": 16615,
+        "n_guias": 355,
+        "empresa": "RURAL BIOENERGIA S.A",
+        "role": "destination"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.35336,
+          -23.2298
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA YBY PORA",
+        "total_animales_recebidos": 4312,
+        "n_guias": 79,
+        "empresa": "RURAL BIOENERGIA S.A",
+        "role": "destination"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.71,
+          -23.33278
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA YPOTI",
+        "total_animales_recebidos": 34751,
+        "n_guias": 712,
+        "empresa": "CHACOBRAS SA",
+        "role": "destination"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.71,
+          -23.33278
+        ]
+      },
+      "properties": {
+        "nome": "ESTANCIA YPOTI 2",
+        "total_animales_recebidos": 5565,
+        "n_guias": 107,
+        "empresa": "RURAL BIOENERGIA S.A",
+        "role": "destination"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.264778,
+          -23.478056
+        ]
+      },
+      "properties": {
+        "nome": "FRIGORIFICO BELEN",
+        "total_animales_recebidos": 3369,
+        "n_guias": 86,
+        "empresa": "BEEF PARAGUAY S.A",
+        "role": "destination"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.4383888,
+          -23.4543896
+        ]
+      },
+      "properties": {
+        "nome": "FRIGORIFICO CONCEPCION S.A.",
+        "total_animales_recebidos": 22857,
+        "n_guias": 550,
+        "empresa": "FRIGORIFICO CONCEPCION S.A.",
+        "role": "destination"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.90697,
+          -25.60417
+        ]
+      },
+      "properties": {
+        "nome": "GANADERA R.D.S.A",
+        "total_animales_recebidos": 30,
+        "n_guias": 1,
+        "empresa": "GANADERA R.D.S.A",
+        "role": "destination"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.4114151,
+          -22.8530273
+        ]
+      },
+      "properties": {
+        "nome": "GRANJA OLIMPIA",
+        "total_animales_recebidos": 60,
+        "n_guias": 1,
+        "empresa": "PEDRO DELGADO CABALLERO",
+        "role": "destination"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -56.828083,
+          -23.1733055
+        ]
+      },
+      "properties": {
+        "nome": "GY7 DE JULIO",
+        "total_animales_recebidos": 66,
+        "n_guias": 3,
+        "empresa": "ROSALIA BOGARIN BENITEZ",
+        "role": "destination"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -58.25222,
+          -22.24361
+        ]
+      },
+      "properties": {
+        "nome": "RANCHO LEON",
+        "total_animales_recebidos": 50,
+        "n_guias": 1,
+        "empresa": "VIVAR S.A.",
+        "role": "destination"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -57.46,
+          -22.73028
+        ]
+      },
+      "properties": {
+        "nome": "SANTA MARIA",
+        "total_animales_recebidos": 8617,
+        "n_guias": 151,
+        "empresa": "RURAL BIOENERGIA S.A",
+        "role": "destination"
+      }
+    }
+  ]
+}

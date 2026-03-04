@@ -1,0 +1,437 @@
+{
+  "top_provedores_volume": [
+    {
+      "nome": "GANADERA FORESTAL SANTA CATALINA S.A.",
+      "n_compras": 11,
+      "total_animales": 4425,
+      "primera_compra": "2021-03-12 00:00:00",
+      "ultima_compra": "2021-04-15 00:00:00"
+    },
+    {
+      "nome": "GANADERA TROPICAL S.A.",
+      "n_compras": 29,
+      "total_animales": 3924,
+      "primera_compra": "2020-04-17 00:00:00",
+      "ultima_compra": "2025-10-06 00:00:00"
+    },
+    {
+      "nome": "PUERTO MAX S.A.",
+      "n_compras": 19,
+      "total_animales": 2498,
+      "primera_compra": "2020-03-04 00:00:00",
+      "ultima_compra": "2022-09-20 00:00:00"
+    },
+    {
+      "nome": "MARIA CLARA EUGENIA GONI",
+      "n_compras": 15,
+      "total_animales": 2095,
+      "primera_compra": "2020-10-20 00:00:00",
+      "ultima_compra": "2025-09-17 00:00:00"
+    },
+    {
+      "nome": "GANADERA VISTA ALEGRE S.A.",
+      "n_compras": 6,
+      "total_animales": 1890,
+      "primera_compra": "2021-10-27 00:00:00",
+      "ultima_compra": "2024-08-23 00:00:00"
+    },
+    {
+      "nome": "RUDI PAETZOLD MACHADO",
+      "n_compras": 10,
+      "total_animales": 1595,
+      "primera_compra": "2017-03-23 00:00:00",
+      "ultima_compra": "2018-09-11 00:00:00"
+    },
+    {
+      "nome": "ROSALIA BOGARIN BENITEZ",
+      "n_compras": 21,
+      "total_animales": 1494,
+      "primera_compra": "2021-09-07 00:00:00",
+      "ultima_compra": "2025-11-12 00:00:00"
+    },
+    {
+      "nome": "GANADERA FORESTAL SANTA CATALINA SA",
+      "n_compras": 5,
+      "total_animales": 1430,
+      "primera_compra": "2024-09-19 00:00:00",
+      "ultima_compra": "2025-07-15 00:00:00"
+    },
+    {
+      "nome": "ESTANCIA SAN LIBERATO",
+      "n_compras": 1,
+      "total_animales": 1400,
+      "primera_compra": "2019-05-20 00:00:00",
+      "ultima_compra": "2019-05-20 00:00:00"
+    },
+    {
+      "nome": "CESAR EDUARDO CABA\u00d1AS MEDINA",
+      "n_compras": 16,
+      "total_animales": 1390,
+      "primera_compra": "2017-12-21 00:00:00",
+      "ultima_compra": "2026-01-22 00:00:00"
+    },
+    {
+      "nome": "CERRO MEMBY S.A.",
+      "n_compras": 6,
+      "total_animales": 1387,
+      "primera_compra": "2023-07-07 00:00:00",
+      "ultima_compra": "2023-07-07 00:00:00"
+    },
+    {
+      "nome": "DIEGO ANDRES CONIGLIARO VALDEZ",
+      "n_compras": 17,
+      "total_animales": 1284,
+      "primera_compra": "2022-01-20 00:00:00",
+      "ultima_compra": "2025-03-28 00:00:00"
+    },
+    {
+      "nome": "SAN JORGE AGROPECUARIA S.A.",
+      "n_compras": 23,
+      "total_animales": 1279,
+      "primera_compra": "2017-01-20 00:00:00",
+      "ultima_compra": "2020-10-05 00:00:00"
+    },
+    {
+      "nome": "JUSTINO COLMAN MERCADO",
+      "n_compras": 23,
+      "total_animales": 1210,
+      "primera_compra": "2023-06-15 00:00:00",
+      "ultima_compra": "2026-02-24 00:00:00"
+    },
+    {
+      "nome": "CARLOS RAMON PEREZ",
+      "n_compras": 5,
+      "total_animales": 1195,
+      "primera_compra": "2020-06-16 00:00:00",
+      "ultima_compra": "2023-06-26 00:00:00"
+    },
+    {
+      "nome": "GANADERA RP S.A.",
+      "n_compras": 17,
+      "total_animales": 1180,
+      "primera_compra": "2023-11-14 00:00:00",
+      "ultima_compra": "2024-11-05 00:00:00"
+    },
+    {
+      "nome": "NORODA S.A.",
+      "n_compras": 3,
+      "total_animales": 1178,
+      "primera_compra": "2020-07-31 00:00:00",
+      "ultima_compra": "2024-11-11 00:00:00"
+    },
+    {
+      "nome": "AGROPECUARIA TRIVENTO S.A.",
+      "n_compras": 3,
+      "total_animales": 1156,
+      "primera_compra": "2017-01-09 00:00:00",
+      "ultima_compra": "2017-01-20 00:00:00"
+    },
+    {
+      "nome": "GANADERA SAN PEDRO S.A.",
+      "n_compras": 6,
+      "total_animales": 1155,
+      "primera_compra": "2023-12-27 00:00:00",
+      "ultima_compra": "2025-03-27 00:00:00"
+    },
+    {
+      "nome": "JOSE NERCIO VILLALBA MACENA",
+      "n_compras": 14,
+      "total_animales": 1118,
+      "primera_compra": "2018-01-05 00:00:00",
+      "ultima_compra": "2026-01-16 00:00:00"
+    }
+  ],
+  "top_provedores_frequency": [
+    {
+      "nome": "GANADERA TROPICAL S.A.",
+      "n_compras": 29,
+      "total_animales": 3924
+    },
+    {
+      "nome": "BPECUARIA S.A.",
+      "n_compras": 29,
+      "total_animales": 236
+    },
+    {
+      "nome": "SAN JORGE AGROPECUARIA S.A.",
+      "n_compras": 23,
+      "total_animales": 1279
+    },
+    {
+      "nome": "JUSTINO COLMAN MERCADO",
+      "n_compras": 23,
+      "total_animales": 1210
+    },
+    {
+      "nome": "ROSALIA BOGARIN BENITEZ",
+      "n_compras": 21,
+      "total_animales": 1494
+    },
+    {
+      "nome": "PUERTO MAX S.A.",
+      "n_compras": 19,
+      "total_animales": 2498
+    },
+    {
+      "nome": "DIEGO ANDRES CONIGLIARO VALDEZ",
+      "n_compras": 17,
+      "total_animales": 1284
+    },
+    {
+      "nome": "GANADERA RP S.A.",
+      "n_compras": 17,
+      "total_animales": 1180
+    },
+    {
+      "nome": "HUGO CESAR NU\u00d1EZ BENITEZ",
+      "n_compras": 17,
+      "total_animales": 691
+    },
+    {
+      "nome": "VIRINA MAURICIA VILLANUEVA SALINAS",
+      "n_compras": 17,
+      "total_animales": 358
+    },
+    {
+      "nome": "CESAR EDUARDO CABA\u00d1AS MEDINA",
+      "n_compras": 16,
+      "total_animales": 1390
+    },
+    {
+      "nome": "MARIA CLARA EUGENIA GONI",
+      "n_compras": 15,
+      "total_animales": 2095
+    },
+    {
+      "nome": "JOSE NERCIO VILLALBA MACENA",
+      "n_compras": 14,
+      "total_animales": 1118
+    },
+    {
+      "nome": "JUAN CARLOS MURRAY SANCHEZ",
+      "n_compras": 13,
+      "total_animales": 980
+    },
+    {
+      "nome": "COOPERATIVA CHORTITZER",
+      "n_compras": 12,
+      "total_animales": 901
+    },
+    {
+      "nome": "GUSTAVO ANTONIO PEREZ CENTURION",
+      "n_compras": 12,
+      "total_animales": 509
+    },
+    {
+      "nome": "GANADERA FORESTAL SANTA CATALINA S.A.",
+      "n_compras": 11,
+      "total_animales": 4425
+    },
+    {
+      "nome": "RUDI PAETZOLD MACHADO",
+      "n_compras": 10,
+      "total_animales": 1595
+    },
+    {
+      "nome": "DOS HERMANAS S.A.",
+      "n_compras": 10,
+      "total_animales": 800
+    },
+    {
+      "nome": "CABA\u00d1A EL ALAMO",
+      "n_compras": 10,
+      "total_animales": 763
+    }
+  ],
+  "yearly_summary": [
+    {
+      "ANO": 2017.0,
+      "n_compras": 58,
+      "total_animales": 6822,
+      "avg_animales": 117.62068965517241
+    },
+    {
+      "ANO": 2018.0,
+      "n_compras": 192,
+      "total_animales": 10503,
+      "avg_animales": 54.703125
+    },
+    {
+      "ANO": 2019.0,
+      "n_compras": 37,
+      "total_animales": 5359,
+      "avg_animales": 144.83783783783784
+    },
+    {
+      "ANO": 2020.0,
+      "n_compras": 234,
+      "total_animales": 20820,
+      "avg_animales": 88.97435897435898
+    },
+    {
+      "ANO": 2021.0,
+      "n_compras": 140,
+      "total_animales": 15365,
+      "avg_animales": 109.75
+    },
+    {
+      "ANO": 2022.0,
+      "n_compras": 264,
+      "total_animales": 19422,
+      "avg_animales": 73.56818181818181
+    },
+    {
+      "ANO": 2023.0,
+      "n_compras": 186,
+      "total_animales": 11784,
+      "avg_animales": 63.354838709677416
+    }
+  ],
+  "by_destination": [
+    {
+      "ESTABLECIMENTO DE DESTINO": "LUSIPAR",
+      "n_compras": 1053,
+      "total_animales": 77039
+    },
+    {
+      "ESTABLECIMENTO DE DESTINO": "YPOTI",
+      "n_compras": 760,
+      "total_animales": 57246
+    },
+    {
+      "ESTABLECIMENTO DE DESTINO": "CIELO AZUL",
+      "n_compras": 186,
+      "total_animales": 14531
+    },
+    {
+      "ESTABLECIMENTO DE DESTINO": "SANTA MARIA",
+      "n_compras": 146,
+      "total_animales": 12970
+    },
+    {
+      "ESTABLECIMENTO DE DESTINO": "YBY POR\u00c3",
+      "n_compras": 172,
+      "total_animales": 11641
+    },
+    {
+      "ESTABLECIMENTO DE DESTINO": "CERRO MEMBY",
+      "n_compras": 91,
+      "total_animales": 8088
+    },
+    {
+      "ESTABLECIMENTO DE DESTINO": "SANTA CLARA",
+      "n_compras": 71,
+      "total_animales": 5742
+    },
+    {
+      "ESTABLECIMENTO DE DESTINO": "ORO VERDE",
+      "n_compras": 44,
+      "total_animales": 2580
+    },
+    {
+      "ESTABLECIMENTO DE DESTINO": "WALLENS",
+      "n_compras": 17,
+      "total_animales": 1773
+    },
+    {
+      "ESTABLECIMENTO DE DESTINO": "IMPERIO",
+      "n_compras": 7,
+      "total_animales": 892
+    }
+  ],
+  "avg_animales_por_compra": 75.57989791912054,
+  "median_animales_por_compra": 65.0,
+  "avg_guias_per_cota": 1.0506655216831258,
+  "avg_animales_per_cota": 48.956204379562045,
+  "guias_duplicadas": 112,
+  "cotas_duplicadas": 112,
+  "fazendas_sem_coordenadas": [
+    "101190045",
+    "ALDO",
+    "ANIBAL QUEVEDO",
+    "BELLO HORIZONTE",
+    "BOQUERON",
+    "BUZARQUIS ENRIQUE",
+    "CANALE ESTANISLAO",
+    "CORRALES SALINAS HECTOR",
+    "ECHAGUE CANTERO WILFRIDO",
+    "EST. NO TIENE",
+    "ESTABLECIMIENTO COEYU",
+    "ESTANCIA MBOKAJA",
+    "ESTANCIA SAN PEDRO",
+    "ESTANCIA SOLE 2424 S.A.",
+    "EULOGIO BENITEZ",
+    "FABIOLA",
+    "GANADERA DON FELIX S.A.",
+    "GANADERA GF",
+    "GANADERA GRACIELA",
+    "GANADERA J.P.",
+    "GANADERA LA NACIENTE",
+    "GANADERA SANTA FE",
+    "GARCETE FRANCO CLAUDIO SALVADOR",
+    "GERMAN ESCOBAR",
+    "GRANJA 3EG",
+    "GRANJA E.R",
+    "GRANJA LA MILAGROSA JC",
+    "GRANJA NOELIA",
+    "GRANJA PIRATITY",
+    "GRANJA SAN BLAS",
+    "GRANJA SAN JORGE",
+    "GRANJA SANTA RITA",
+    "GRUPO MENDEZ S.A.",
+    "LA FAMILIA",
+    "LA HAYITA",
+    "LAS MERCEDES",
+    "LLLL",
+    "LOS CEDRALES",
+    "MBOCAYA",
+    "MENDOZA ESCORCIO APARECIDO",
+    "MORINIGO ALONZO ALEJANDRO",
+    "OSCAR MILCIADES BENITEZ RIOS",
+    "PARAJE ISLA GUAZU",
+    "PEGUAHO POI",
+    "PEREIRA COLMAN LIZ MARLENE",
+    "PYRENDA",
+    "RANCHO BOA ESPERANZA",
+    "ROLANDO",
+    "ROMAN CABRERA BLAS",
+    "SALINAS CUE",
+    "SAN CARLOS",
+    "SAN DANIEL",
+    "SAN JOSE",
+    "SAN VICENTE",
+    "SANTA ANA",
+    "SPINZI GANADERA SAN MARCOS",
+    "TRES J",
+    "YACARE",
+    "ZACARIAS CUBILLA OSCAR ALCIBIADES",
+    "\u00d1ASAINDY",
+    "IMPERIO",
+    "ORO VERDE",
+    "WALLENS"
+  ],
+  "distribucion_categorias": {
+    "DESMAMANTES MACHOS": 172605,
+    "TORETONES": 10444,
+    "DESMAMANTES HEMBRAS": 3385,
+    "VACAS": 2111,
+    "TERNEROS": 1810,
+    "TOROS": 1490,
+    "VAQUILLAS": 381,
+    "TORITOS": 147,
+    "NOVILLOS": 69,
+    "VAQUILLA": 60
+  },
+  "top_departamentos": {
+    "CONCEPCION": 32019,
+    "SAN PEDRO": 17539,
+    "CONCEPCI\u00d3N": 12500,
+    "AMAMBAY": 10178,
+    "PTE. HAYES": 8952,
+    "CAAGUAZU": 7585,
+    "PTE HAYES": 6600,
+    "CONCEPCION ": 6507,
+    "PARAGUARI": 6345,
+    "CANINDEYU": 4924
+  }
+}

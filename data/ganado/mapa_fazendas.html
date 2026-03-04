@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AM Soluciones - Mapa Ganadeiro</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; }
+#map { width: 100%; height: 70vh; border-radius: 12px; margin: 16px auto; max-width: 1400px; }
+.header { padding: 20px 32px; display: flex; align-items: center; gap: 16px; }
+.header h1 { font-size: 1.5rem; font-weight: 700; }
+.header .badge { background: #22c55e; color: #000; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+.stats { display: flex; gap: 16px; padding: 0 32px 16px; flex-wrap: wrap; }
+.stat-card { background: #1e293b; border-radius: 10px; padding: 16px 24px; min-width: 180px; }
+.stat-card .label { font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; }
+.stat-card .value { font-size: 1.5rem; font-weight: 700; color: #f8fafc; margin-top: 4px; }
+.legend { display: flex; gap: 24px; padding: 12px 32px; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
+.legend-dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Mapa Ganadeiro</h1>
+  <span class="badge">AM Soluciones</span>
+</div>
+<div class="stats" id="stats"></div>
+<div class="legend" id="legend"></div>
+<div id="map"></div>
+
+<script>
+const COLORS = {
+  destination: '#22c55e',
+  origin: '#3b82f6',
+  high_volume: '#f59e0b',
+};
+
+const DEST_COLORS = {
+  'ESTANCIA YPOTI': '#22c55e',
+  'ESTANCIA LUSIPAR': '#06b6d4',
+  'EST. SANTA CLARA': '#8b5cf6',
+  'ESTANCIA CIELO AZUL': '#f43f5e',
+  'ESTANCIA YBY PORA': '#f59e0b',
+  'ESTANCIA YPOTI 2': '#10b981',
+  'ESTANCIA CERRO MEMBY': '#ec4899',
+  'SANTA MARIA': '#6366f1',
+};
+
+fetch('fazendas.geojson')
+  .then(r => r.json())
+  .then(data => {
+    const map = L.map('map').setView([-23.3, -56.7], 7);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; CartoDB',
+      maxZoom: 18,
+    }).addTo(map);
+
+    let totalAnimals = 0, nOrigins = 0, nDest = 0;
+    const maxAnimals = Math.max(...data.features.map(f =>
+      f.properties.total_animales || f.properties.total_animales_recebidos || 0));
+
+    data.features.forEach(f => {
+      const p = f.properties;
+      const [lng, lat] = f.geometry.coordinates;
+      const vol = p.total_animales || p.total_animales_recebidos || 0;
+      const isDest = p.role === 'destination';
+
+      if (isDest) { nDest++; } else { nOrigins++; }
+      totalAnimals += vol;
+
+      const radius = isDest ? Math.max(12, Math.sqrt(vol / maxAnimals) * 40)
+                            : Math.max(4, Math.sqrt(vol / maxAnimals) * 25);
+      const color = isDest ? (DEST_COLORS[p.nome] || COLORS.destination) : COLORS.origin;
+
+      L.circleMarker([lat, lng], {
+        radius: radius,
+        fillColor: color,
+        color: isDest ? '#fff' : color,
+        weight: isDest ? 2 : 1,
+        opacity: 0.9,
+        fillOpacity: isDest ? 0.8 : 0.5,
+      }).addTo(map).bindPopup(`
+        <div style="font-family:sans-serif;min-width:200px">
+          <strong style="font-size:1.1em">${p.nome}</strong><br>
+          <span style="color:#888">${isDest ? 'Destino (Propia)' : 'Origen (Proveedor)'}</span>
+          ${p.empresa ? '<br>Empresa: ' + p.empresa : ''}
+          <hr style="margin:8px 0;border-color:#eee">
+          <b>${vol.toLocaleString()}</b> animales<br>
+          <b>${p.n_guias || 0}</b> guías
+        </div>
+      `);
+    });
+
+    document.getElementById('stats').innerHTML = `
+      <div class="stat-card"><div class="label">Fazendas Propias</div><div class="value">${nDest}</div></div>
+      <div class="stat-card"><div class="label">Fazendas Proveedores</div><div class="value">${nOrigins}</div></div>
+      <div class="stat-card"><div class="label">Total Animales (Guías)</div><div class="value">${totalAnimals.toLocaleString()}</div></div>
+      <div class="stat-card"><div class="label">Total Features</div><div class="value">${data.features.length}</div></div>
+    `;
+
+    let legendHtml = '<div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>Proveedores</div>';
+    Object.entries(DEST_COLORS).forEach(([name, color]) => {
+      const short = name.replace('ESTANCIA ', '').replace('EST. ', '');
+      legendHtml += `<div class="legend-item"><div class="legend-dot" style="background:${color}"></div>${short}</div>`;
+    });
+    document.getElementById('legend').innerHTML = legendHtml;
+  });
+</script>
+</body>
+</html>

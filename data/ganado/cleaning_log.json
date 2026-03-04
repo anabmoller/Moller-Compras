@@ -1,0 +1,57 @@
+[
+  {
+    "rule": "Drop empty/unnamed columns",
+    "affected_rows": 42,
+    "detail": "cols: ['Unnamed: 0', ' ', 'Unnamed: 56', 'Unnamed: 57', 'Unnamed: 58']"
+  },
+  {
+    "rule": "Standardize PROPRIETARIO",
+    "affected_rows": 4,
+    "detail": "now 1 unique"
+  },
+  {
+    "rule": "Standardize CATEGORIA",
+    "affected_rows": 0,
+    "detail": "now 10 unique categories"
+  },
+  {
+    "rule": "Standardize DESTINO names",
+    "affected_rows": 0,
+    "detail": "now 10 unique"
+  },
+  {
+    "rule": "Parse FECHA dates",
+    "affected_rows": "0",
+    "detail": "unparseable dates set to NaT"
+  },
+  {
+    "rule": "Remove empty/zero-quantity rows",
+    "affected_rows": "0",
+    "detail": ""
+  },
+  {
+    "rule": "Remove duplicate compras",
+    "affected_rows": "108",
+    "detail": "based on ['FECHA', 'PROVEEDOR', 'ESTABLECIMENTO ORIGEN', 'CANTIDAD TOTAL', 'ESTABLECIMENTO DE DESTINO']"
+  },
+  {
+    "rule": "Fix finalidad typos",
+    "affected_rows": 0,
+    "detail": "standardized to 3 categories"
+  },
+  {
+    "rule": "Invalid origin coordinates",
+    "affected_rows": "3",
+    "detail": "set to NaN"
+  },
+  {
+    "rule": "Remove duplicate guias",
+    "affected_rows": "4",
+    "detail": ""
+  },
+  {
+    "rule": "Filter to relevant sections",
+    "affected_rows": 245,
+    "detail": ""
+  }
+]
