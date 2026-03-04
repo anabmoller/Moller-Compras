@@ -7,7 +7,7 @@ import { createContext, useContext, useState, useCallback, useEffect, useRef, us
 import { STATUS_FLOW, SAMPLE_REQUESTS } from "../constants";
 import { normalizeStatus } from "../utils/statusHelpers";
 import { useAuth } from "./AuthContext";
-import { supabase } from "../lib/supabase";
+import { supabase, supabaseConfigured } from "../lib/supabase";
 import { getCurrentStep, canUserApproveStep, STEP_STATUS } from "../constants/approvalConfig";
 import { initParameters } from "../constants/parameters";
 import { initBudgets } from "../constants/budgets";
@@ -59,6 +59,15 @@ export function AppProvider({ children }) {
     let mounted = true;
 
     async function loadAll() {
+      if (!supabaseConfigured) {
+        console.error("[App] Supabase not configured — skipping data load. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.");
+        if (mounted) {
+          showNotif("Error: variables de entorno no configuradas", "error");
+          setRequests(SAMPLE_REQUESTS);
+        }
+        return;
+      }
+
       try {
         // Init reference data + users in parallel
         await Promise.all([

@@ -24,14 +24,31 @@ import GlobalSearch from "./components/shared/GlobalSearch";
 import ProfileScreen from "./components/admin/ProfileScreen";
 import NotificationsScreen from "./components/shared/NotificationsScreen";
 
+// Retry wrapper: handles stale chunk errors after Vercel deploys
+function lazyRetry(importFn) {
+  return lazy(() =>
+    importFn().catch(() => {
+      // On chunk load failure, reload once to get fresh assets
+      const reloaded = sessionStorage.getItem("ypoti_chunk_reload");
+      if (!reloaded) {
+        sessionStorage.setItem("ypoti_chunk_reload", "1");
+        window.location.reload();
+      }
+      return importFn(); // rethrow if second attempt also fails
+    })
+  );
+}
+
 // Lazy-loaded screens (code-split into separate chunks)
-const InventoryScreen = lazy(() => import("./components/inventory/InventoryScreen"));
-const AnalyticsScreen = lazy(() => import("./components/analytics/AnalyticsScreen"));
-const SecurityDashboard = lazy(() => import("./components/admin/SecurityDashboard.jsx"));
-const UserManagementScreen = lazy(() => import("./components/admin/UserManagementScreen"));
-const BudgetManagementScreen = lazy(() => import("./components/admin/BudgetManagementScreen"));
-const ParametersScreen = lazy(() => import("./components/admin/ParametersScreen"));
-const MovimientosScreen = lazy(() => import("./components/ganado/MovimientosScreen"));
+const InventoryScreen = lazyRetry(() => import("./components/inventory/InventoryScreen"));
+const AnalyticsScreen = lazyRetry(() => import("./components/analytics/AnalyticsScreen"));
+const SecurityDashboard = lazyRetry(() => import("./components/admin/SecurityDashboard.jsx"));
+const UserManagementScreen = lazyRetry(() => import("./components/admin/UserManagementScreen"));
+const BudgetManagementScreen = lazyRetry(() => import("./components/admin/BudgetManagementScreen"));
+const ParametersScreen = lazyRetry(() => import("./components/admin/ParametersScreen"));
+const MovimientosScreen = lazyRetry(() => import("./components/ganado/MovimientosScreen"));
+const NuevoMovimientoForm = lazyRetry(() => import("./components/ganado/NuevoMovimientoForm"));
+const MovimientoDetail = lazyRetry(() => import("./components/ganado/MovimientoDetail"));
 
 function LazyFallback() {
   return (
@@ -59,6 +76,7 @@ function AppContent() {
   const [selectedRequestId, setSelectedRequestId] = useState(null);
   const selectedRequest = selectedRequestId ? requests.find(r => r.id === selectedRequestId) : null;
   const [showNewForm, setShowNewForm] = useState(false);
+  const [selectedMovimientoId, setSelectedMovimientoId] = useState(null);
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterEstablishment, setFilterEstablishment] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -184,9 +202,13 @@ function AppContent() {
     if (target === 'request' && requestId) {
       setSelectedRequestId(requestId);
       setScreen('dashboard');
+    } else if (target === 'ganado-detail' && requestId) {
+      setSelectedMovimientoId(requestId);
+      setScreen('ganado-detail');
     } else {
       setScreen(target);
       setSelectedRequestId(null);
+      setSelectedMovimientoId(null);
       setShowNewForm(false);
     }
   };
@@ -246,6 +268,29 @@ function AppContent() {
             onNavigate={handleNavigate}
             canCreate={effectiveCan("create_movimiento_ganado")}
             canValidate={effectiveCan("validate_movimiento_ganado")}
+          />
+        </Suspense>
+      );
+    }
+
+    if (screen === "ganado-new" && effectiveCan("create_movimiento_ganado")) {
+      return (
+        <Suspense fallback={<LazyFallback />}>
+          <NuevoMovimientoForm
+            onCancel={() => setScreen("ganado")}
+            onCreated={() => setScreen("ganado")}
+          />
+        </Suspense>
+      );
+    }
+
+    if (screen === "ganado-detail" && effectiveCan("view_ganado") && selectedMovimientoId) {
+      return (
+        <Suspense fallback={<LazyFallback />}>
+          <MovimientoDetail
+            movimientoUuid={selectedMovimientoId}
+            onBack={() => { setSelectedMovimientoId(null); setScreen("ganado"); }}
+            onNavigate={handleNavigate}
           />
         </Suspense>
       );
