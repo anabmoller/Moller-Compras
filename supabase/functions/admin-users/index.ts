@@ -4,14 +4,15 @@
 // Authorization: Admin only
 // ============================================================
 
-import { corsHeaders } from "../_shared/cors.ts";
+import { getCorsHeaders } from "../_shared/cors.ts";
 import { createAdminClient, getCallerProfile, assertRole } from "../_shared/auth.ts";
 import { sanitizeName, sanitizeEmail } from "../_shared/sanitize.ts";
 
 Deno.serve(async (req) => {
+  const cors = getCorsHeaders(req);
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return new Response("ok", { headers: cors });
   }
 
   try {
@@ -68,7 +69,7 @@ Deno.serve(async (req) => {
 
         return new Response(
           JSON.stringify({ ok: true, userId: authData.user.id }),
-          { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+          { headers: { ...cors, "Content-Type": "application/json" } },
         );
       }
 
@@ -93,7 +94,7 @@ Deno.serve(async (req) => {
             JSON.stringify({ ok: true, message: "No changes" }),
             {
               headers: {
-                ...corsHeaders,
+                ...cors,
                 "Content-Type": "application/json",
               },
             },
@@ -107,7 +108,7 @@ Deno.serve(async (req) => {
         if (error) throw error;
 
         return new Response(JSON.stringify({ ok: true }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...cors, "Content-Type": "application/json" },
         });
       }
 
@@ -135,7 +136,7 @@ Deno.serve(async (req) => {
           .eq("id", uid);
 
         return new Response(JSON.stringify({ ok: true }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...cors, "Content-Type": "application/json" },
         });
       }
 
@@ -147,7 +148,7 @@ Deno.serve(async (req) => {
     console.error("[admin-users]", message);
     return new Response(JSON.stringify({ error: message }), {
       status: 400,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...cors, "Content-Type": "application/json" },
     });
   }
 });

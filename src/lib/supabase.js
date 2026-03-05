@@ -8,7 +8,7 @@ export const supabaseConfigured = !!(supabaseUrl && supabaseAnonKey);
 
 if (!supabaseConfigured) {
   console.error(
-    "[YPOTI] Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY in .env — " +
+    "[SIGAM] Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY in .env — " +
     "the app will show a configuration error. Set these in Vercel Environment Variables."
   );
 }

@@ -5,7 +5,7 @@
 // Authorization: Admin only
 // ============================================================
 
-import { corsHeaders } from "../_shared/cors.ts";
+import { getCorsHeaders } from "../_shared/cors.ts";
 import { createAdminClient, getCallerProfile, assertRole } from "../_shared/auth.ts";
 import { sanitizeName, sanitizeNumber } from "../_shared/sanitize.ts";
 
@@ -19,8 +19,9 @@ const TABLE_MAP: Record<string, string> = {
 };
 
 Deno.serve(async (req) => {
+  const cors = getCorsHeaders(req);
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return new Response("ok", { headers: cors });
   }
 
   try {
@@ -98,7 +99,7 @@ Deno.serve(async (req) => {
         if (error) throw error;
 
         return new Response(JSON.stringify({ ok: true, data }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...cors, "Content-Type": "application/json" },
         });
       }
 
@@ -151,7 +152,7 @@ Deno.serve(async (req) => {
             JSON.stringify({ ok: true, message: "No changes" }),
             {
               headers: {
-                ...corsHeaders,
+                ...cors,
                 "Content-Type": "application/json",
               },
             },
@@ -165,7 +166,7 @@ Deno.serve(async (req) => {
         if (error) throw error;
 
         return new Response(JSON.stringify({ ok: true }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...cors, "Content-Type": "application/json" },
         });
       }
 
@@ -194,7 +195,7 @@ Deno.serve(async (req) => {
         return new Response(
           JSON.stringify({ ok: true, active: !current.active }),
           {
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
+            headers: { ...cors, "Content-Type": "application/json" },
           },
         );
       }
@@ -224,7 +225,7 @@ Deno.serve(async (req) => {
         if (bErr) throw bErr;
 
         return new Response(JSON.stringify({ ok: true, data: bData }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...cors, "Content-Type": "application/json" },
         });
       }
 
@@ -255,7 +256,7 @@ Deno.serve(async (req) => {
             JSON.stringify({ ok: true, message: "No changes" }),
             {
               headers: {
-                ...corsHeaders,
+                ...cors,
                 "Content-Type": "application/json",
               },
             },
@@ -269,7 +270,7 @@ Deno.serve(async (req) => {
         if (bUpdateErr) throw bUpdateErr;
 
         return new Response(JSON.stringify({ ok: true }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...cors, "Content-Type": "application/json" },
         });
       }
 
@@ -281,7 +282,7 @@ Deno.serve(async (req) => {
     console.error("[admin-data]", message);
     return new Response(JSON.stringify({ error: message }), {
       status: 400,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...cors, "Content-Type": "application/json" },
     });
   }
 });

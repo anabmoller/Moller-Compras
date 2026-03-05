@@ -5,7 +5,7 @@
 // budget consumption, and status transitions SERVER-SIDE.
 // ============================================================
 
-import { corsHeaders } from "../_shared/cors.ts";
+import { getCorsHeaders } from "../_shared/cors.ts";
 import {
   createAdminClient,
   getCallerProfile,
@@ -21,8 +21,9 @@ import {
 import { sanitizeText, sanitizeMultiline } from "../_shared/sanitize.ts";
 
 Deno.serve(async (req) => {
+  const cors = getCorsHeaders(req);
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return new Response("ok", { headers: cors });
   }
 
   try {
@@ -168,7 +169,7 @@ Deno.serve(async (req) => {
         return new Response(
           JSON.stringify({ ok: true, steps: steps.length }),
           {
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
+            headers: { ...cors, "Content-Type": "application/json" },
           },
         );
       }
@@ -295,7 +296,7 @@ Deno.serve(async (req) => {
         return new Response(
           JSON.stringify({ ok: true, allApproved }),
           {
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
+            headers: { ...cors, "Content-Type": "application/json" },
           },
         );
       }
@@ -358,7 +359,7 @@ Deno.serve(async (req) => {
         });
 
         return new Response(JSON.stringify({ ok: true }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...cors, "Content-Type": "application/json" },
         });
       }
 
@@ -418,7 +419,7 @@ Deno.serve(async (req) => {
         });
 
         return new Response(JSON.stringify({ ok: true }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...cors, "Content-Type": "application/json" },
         });
       }
 
@@ -475,7 +476,7 @@ Deno.serve(async (req) => {
         });
 
         return new Response(JSON.stringify({ ok: true }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...cors, "Content-Type": "application/json" },
         });
       }
 
@@ -543,7 +544,7 @@ Deno.serve(async (req) => {
         });
 
         return new Response(JSON.stringify({ ok: true }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...cors, "Content-Type": "application/json" },
         });
       }
 
@@ -555,7 +556,7 @@ Deno.serve(async (req) => {
     console.error("[request-workflow]", message);
     return new Response(JSON.stringify({ error: message }), {
       status: 400,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...cors, "Content-Type": "application/json" },
     });
   }
 });

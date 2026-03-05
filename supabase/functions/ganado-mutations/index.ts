@@ -7,7 +7,7 @@
 //          add-pesaje, update-pesaje, delete-pesaje
 // ============================================================
 
-import { corsHeaders } from "../_shared/cors.ts";
+import { getCorsHeaders } from "../_shared/cors.ts";
 import { createAdminClient, getCallerProfile, hasPermission } from "../_shared/auth.ts";
 import {
   sanitizeName,
@@ -45,8 +45,9 @@ async function logStatusChange(
 }
 
 Deno.serve(async (req) => {
+  const cors = getCorsHeaders(req);
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return new Response("ok", { headers: cors });
   }
 
   try {
@@ -116,7 +117,7 @@ Deno.serve(async (req) => {
 
         return new Response(
           JSON.stringify({ ok: true, movimientoUuid: data.id }),
-          { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+          { headers: { ...cors, "Content-Type": "application/json" } },
         );
       }
 
@@ -170,7 +171,7 @@ Deno.serve(async (req) => {
         }
 
         return new Response(JSON.stringify({ ok: true }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...cors, "Content-Type": "application/json" },
         });
       }
 
@@ -213,7 +214,7 @@ Deno.serve(async (req) => {
         if (error) throw error;
 
         return new Response(JSON.stringify({ ok: true }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...cors, "Content-Type": "application/json" },
         });
       }
 
@@ -242,7 +243,7 @@ Deno.serve(async (req) => {
         }
 
         return new Response(JSON.stringify({ ok: true }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...cors, "Content-Type": "application/json" },
         });
       }
 
@@ -263,7 +264,7 @@ Deno.serve(async (req) => {
         if (error) throw error;
 
         return new Response(JSON.stringify({ ok: true }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...cors, "Content-Type": "application/json" },
         });
       }
 
@@ -303,7 +304,7 @@ Deno.serve(async (req) => {
         await logStatusChange(supabaseAdmin, valUuid, mov.estado, "validado", caller);
 
         return new Response(JSON.stringify({ ok: true }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...cors, "Content-Type": "application/json" },
         });
       }
 
@@ -341,7 +342,7 @@ Deno.serve(async (req) => {
         await logStatusChange(supabaseAdmin, advUuid, advMov.estado, newStatus, caller, comentario);
 
         return new Response(JSON.stringify({ ok: true }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...cors, "Content-Type": "application/json" },
         });
       }
 
@@ -364,7 +365,7 @@ Deno.serve(async (req) => {
         if (error) throw error;
 
         return new Response(JSON.stringify({ ok: true }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...cors, "Content-Type": "application/json" },
         });
       }
 
@@ -385,7 +386,7 @@ Deno.serve(async (req) => {
         if (error) throw error;
 
         return new Response(JSON.stringify({ ok: true }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...cors, "Content-Type": "application/json" },
         });
       }
 
@@ -409,7 +410,7 @@ Deno.serve(async (req) => {
         if (error) throw error;
 
         return new Response(JSON.stringify({ ok: true }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...cors, "Content-Type": "application/json" },
         });
       }
 
@@ -451,7 +452,7 @@ Deno.serve(async (req) => {
         await logStatusChange(supabaseAdmin, anulUuid, anulMov.estado, "anulado", caller, sanitizedReason);
 
         return new Response(JSON.stringify({ ok: true }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...cors, "Content-Type": "application/json" },
         });
       }
 
@@ -511,7 +512,7 @@ Deno.serve(async (req) => {
 
         return new Response(
           JSON.stringify({ ok: true, pesajeId: pesData.id }),
-          { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+          { headers: { ...cors, "Content-Type": "application/json" } },
         );
       }
 
@@ -549,7 +550,7 @@ Deno.serve(async (req) => {
         }
 
         return new Response(JSON.stringify({ ok: true }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...cors, "Content-Type": "application/json" },
         });
       }
 
@@ -571,7 +572,7 @@ Deno.serve(async (req) => {
         if (error) throw error;
 
         return new Response(JSON.stringify({ ok: true }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...cors, "Content-Type": "application/json" },
         });
       }
 
@@ -583,7 +584,7 @@ Deno.serve(async (req) => {
     console.error("[ganado-mutations]", message);
     return new Response(JSON.stringify({ error: message }), {
       status: 400,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...cors, "Content-Type": "application/json" },
     });
   }
 });
