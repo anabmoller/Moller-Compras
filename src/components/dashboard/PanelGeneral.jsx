@@ -408,7 +408,7 @@ function resolveRow(row, estabKey) {
 
 /* ── Main component ────────────────────────────────────────── */
 
-export default function PanelGeneral({ onNavigate, initialModule }) {
+export default function PanelGeneral({ onNavigate }) {
   const [timeRange, setTimeRange] = useState("30d");
   const [activityFilter, setActivityFilter] = useState("todos");
   const [establecimiento, setEstablecimiento] = useState("todos");

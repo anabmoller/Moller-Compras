@@ -50,6 +50,8 @@ const MovimientosScreen = lazyRetry(() => import("./components/ganado/Movimiento
 const NuevoMovimientoForm = lazyRetry(() => import("./components/ganado/NuevoMovimientoForm"));
 const MovimientoDetail = lazyRetry(() => import("./components/ganado/MovimientoDetail"));
 const PanelGeneral = lazyRetry(() => import("./components/dashboard/PanelGeneral"));
+const MateriaPrimaDashboard = lazyRetry(() => import("./components/dashboard/MateriaPrimaDashboard"));
+const CombustibleDashboard = lazyRetry(() => import("./components/dashboard/CombustibleDashboard"));
 
 function LazyFallback() {
   return (
@@ -371,7 +373,7 @@ function AppContent() {
     if (screen === "materia_prima") {
       return (
         <Suspense fallback={<LazyFallback />}>
-          <PanelGeneral key="mp" onNavigate={handleNavigate} initialModule="materia_prima" />
+          <MateriaPrimaDashboard onNavigate={handleNavigate} />
         </Suspense>
       );
     }
@@ -379,7 +381,7 @@ function AppContent() {
     if (screen === "combustible") {
       return (
         <Suspense fallback={<LazyFallback />}>
-          <PanelGeneral key="comb" onNavigate={handleNavigate} initialModule="combustible" />
+          <CombustibleDashboard onNavigate={handleNavigate} />
         </Suspense>
       );
     }
