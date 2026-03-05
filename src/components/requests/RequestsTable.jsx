@@ -3,6 +3,14 @@ import { URGENCY_LEVELS } from "../../constants";
 import { formatGuaranies } from "../../constants/budgets";
 import { getStatusDisplay, getPriorityDisplay } from "../../utils/statusHelpers";
 
+const MODULE_TAGS = {
+  compras: { label: "Compras", color: "#3b82f6", bg: "rgba(59,130,246,0.1)" },
+  ganado: { label: "Ganado", color: "#8b5cf6", bg: "rgba(139,92,246,0.1)" },
+  inventario: { label: "Inventario", color: "#f59e0b", bg: "rgba(245,158,11,0.1)" },
+  fretes: { label: "Frete", color: "#06b6d4", bg: "rgba(6,182,212,0.1)" },
+  otros: { label: "Otros", color: "#6b7280", bg: "rgba(107,114,128,0.1)" },
+};
+
 export default function RequestsTable({ requests, onSelectRequest }) {
   const [sortKey, setSortKey] = useState("date");
   const [sortDir, setSortDir] = useState("desc");
@@ -24,6 +32,7 @@ export default function RequestsTable({ requests, onSelectRequest }) {
   });
 
   const columns = [
+    { key: "module", label: "Módulo", width: "w-[100px]" },
     { key: "id", label: "# SC", width: "w-[110px]" },
     { key: "name", label: "Producto", width: "w-auto" },
     { key: "establishment", label: "Estab.", width: "w-[120px]" },
@@ -42,7 +51,7 @@ export default function RequestsTable({ requests, onSelectRequest }) {
   return (
     <div className="bg-[#F8F9FB]/[0.03] rounded-xl border border-white/[0.06] overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.2)]">
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse font-sans text-[13px] min-w-[900px]">
+        <table className="w-full border-collapse font-sans text-[13px] min-w-[1000px]">
           <thead>
             <tr className="border-b-2 border-white/[0.06]">
               {columns.map(col => (
@@ -60,6 +69,7 @@ export default function RequestsTable({ requests, onSelectRequest }) {
             {sorted.map((r, i) => {
               const status = getStatusDisplay(r.status);
               const urgency = URGENCY_LEVELS.find(u => u.value === (r.priority || r.urgency));
+              const mod = MODULE_TAGS[r.module || "compras"] || MODULE_TAGS.compras;
 
               return (
                 <tr
@@ -69,6 +79,14 @@ export default function RequestsTable({ requests, onSelectRequest }) {
                     i % 2 === 0 ? "bg-transparent" : "bg-[#F8F9FB]/[0.05]"
                   } hover:bg-[#1F2A44]/[0.04]`}
                 >
+                  <td className="px-3.5 py-2.5">
+                    <span
+                      className="text-[10px] font-semibold px-2 py-[2px] rounded whitespace-nowrap"
+                      style={{ color: mod.color, background: mod.bg }}
+                    >
+                      {mod.label}
+                    </span>
+                  </td>
                   <td className="px-3.5 py-2.5 font-semibold text-[#C8A03A] text-xs">
                     {r.id}
                   </td>

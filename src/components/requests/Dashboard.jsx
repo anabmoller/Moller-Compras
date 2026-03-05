@@ -1,12 +1,39 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { getEstablishments } from "../../constants/parameters";
-import { getStatusDisplay, formatGuaranies } from "../../utils/statusHelpers";
+import { formatGuaranies } from "../../utils/statusHelpers";
 import RequestCard from "./RequestCard";
 import RequestsTable from "./RequestsTable";
 import EmptyState from "../shared/EmptyState";
 
+/* ── Filter definitions ───────────────────────────────────── */
+
+const MODULE_FILTERS = [
+  { key: "todas", label: "Todas", icon: "📊" },
+  { key: "compras", label: "Compras", icon: "📋" },
+  { key: "ganado", label: "Ganado", icon: "🐄" },
+  { key: "inventario", label: "Inventario", icon: "📦" },
+  { key: "fretes", label: "Fretes", icon: "🚚" },
+  { key: "otros", label: "Otros", icon: "📎" },
+];
+
+const STATUS_FILTERS = [
+  { key: "todos", label: "Todos" },
+  { key: "pend_aprobacion", label: "Pend. aprobación" },
+  { key: "borrador", label: "Borrador" },
+  { key: "autorizado", label: "Autorizado" },
+  { key: "rechazado", label: "Rechazado" },
+  { key: "en_proceso", label: "En proceso" },
+];
+
+const RELATION_FILTERS = [
+  { key: "todas", label: "Todas" },
+  { key: "creadas", label: "Creadas por mí" },
+  { key: "asignadas", label: "Asignadas a mí" },
+  { key: "pendientes", label: "Pendientes de mi aprobación" },
+];
+
 /**
- * Dashboard principal — dark mode Tailwind
+ * Unified request inbox — Solicitudes
  */
 export default function Dashboard({
   requests,
@@ -22,6 +49,8 @@ export default function Dashboard({
   usdRate,
 }) {
   const [viewMode, setViewMode] = useState("cards");
+  const [moduleFilter, setModuleFilter] = useState("todas");
+  const [relationFilter, setRelationFilter] = useState("todas");
 
   const pendingCount = requests.filter(r => {
     const s = r.status;
@@ -32,43 +61,79 @@ export default function Dashboard({
     const s = r.status;
     return s === "en_cotizacion" || s === "orden_compra" || s === "en_proceso" || s === "cotizacion";
   }).length;
-  const totalAmount = requests.reduce((sum, r) => sum + (r.totalAmount || 0), 0);
+
+  // Apply local module + relation filters on top of already-filtered list
+  const localFiltered = filtered.filter(r => {
+    const mod = r.module || "compras";
+    if (moduleFilter !== "todas" && mod !== moduleFilter) return false;
+    if (relationFilter === "creadas" && r.requester !== "Ana Beatriz Moller") return false;
+    if (relationFilter === "asignadas" && r.assignee !== "Ana Beatriz Moller" && r.assignee !== undefined) return false;
+    if (relationFilter === "pendientes") {
+      const s = r.status;
+      if (s !== "pend_autorizacion" && s !== "pend_aprobacion" && s !== "pendiente_aprobacion" && s !== "aprobacion_gerente" && s !== "pendiente") return false;
+    }
+    return true;
+  });
 
   return (
     <div className="animate-fade-in">
       {/* Page title */}
       <div className="px-5 pt-5">
         <h2 className="text-[22px] font-bold text-white tracking-tight mb-1">
-          Solicitudes de Compra
+          Solicitudes
         </h2>
         <p className="text-sm text-slate-500 m-0">
-          {requests.length} solicitudes · {filtered.length} mostradas
+          Acciones y solicitudes relacionadas contigo
         </p>
       </div>
 
       {/* KPI counters */}
-      <div className="grid grid-cols-4 gap-2.5 px-5 py-4">
+      <div className="grid grid-cols-3 gap-2.5 px-5 py-4">
         <CounterCard label="Por aprobar" value={pendingCount} color="text-amber-400" icon="⏳" />
         <CounterCard label="Borradores" value={draftCount} color="text-slate-400" icon="📝" />
         <CounterCard label="En proceso" value={inProcessCount} color="text-blue-400" icon="🔄" />
-        <CounterCard label="Total ₲" value={formatGuaranies(totalAmount)} color="text-[#C8A03A]" icon="💰" small />
       </div>
 
-      {/* Status filter pills */}
-      <div className="px-5 pb-3">
+      {/* Module filter */}
+      <div className="px-5 pb-2">
+        <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Módulo</div>
         <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-          <FilterPill
-            active={filterStatus === "all"}
-            onClick={() => setFilterStatus("all")}
-            label={`Todos (${requests.length})`}
-          />
-          {statusCounts.filter(s => s.count > 0).map(s => (
+          {MODULE_FILTERS.map(m => (
+            <FilterPill
+              key={m.key}
+              active={moduleFilter === m.key}
+              onClick={() => setModuleFilter(m.key)}
+              label={`${m.icon} ${m.label}`}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Status filter */}
+      <div className="px-5 pb-2">
+        <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Estado</div>
+        <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+          {STATUS_FILTERS.map(s => (
             <FilterPill
               key={s.key}
-              active={filterStatus === s.key}
-              onClick={() => setFilterStatus(s.key)}
-              label={`${s.icon} ${s.label} (${s.count})`}
-              activeColor={s.color}
+              active={filterStatus === (s.key === "todos" ? "all" : s.key)}
+              onClick={() => setFilterStatus(s.key === "todos" ? "all" : s.key)}
+              label={s.label}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Relation filter */}
+      <div className="px-5 pb-3">
+        <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Relación</div>
+        <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+          {RELATION_FILTERS.map(rf => (
+            <FilterPill
+              key={rf.key}
+              active={relationFilter === rf.key}
+              onClick={() => setRelationFilter(rf.key)}
+              label={rf.label}
             />
           ))}
         </div>
@@ -82,7 +147,7 @@ export default function Dashboard({
               <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"/>
             </svg>
             <input
-              placeholder="Buscar solicitud..."
+              placeholder="Buscar por título, producto, proveedor o código..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               className="border-none bg-transparent outline-none text-sm text-white w-full placeholder:text-slate-600"
@@ -123,18 +188,25 @@ export default function Dashboard({
         </div>
       </div>
 
+      {/* Results summary */}
+      <div className="px-5 pb-2">
+        <p className="text-[11px] text-slate-500 m-0">
+          {localFiltered.length} de {requests.length} solicitudes
+        </p>
+      </div>
+
       {/* Requests List / Table */}
       <div className="px-5 pb-[120px]">
         {viewMode === "table" ? (
-          <RequestsTable requests={filtered} onSelectRequest={onSelectRequest} />
-        ) : filtered.length === 0 ? (
+          <RequestsTable requests={localFiltered} onSelectRequest={onSelectRequest} />
+        ) : localFiltered.length === 0 ? (
           <EmptyState
             icon="📋"
             title="No se encontraron solicitudes"
             description="Intenta cambiar los filtros o crea una nueva solicitud"
           />
         ) : (
-          filtered.map(r => (
+          localFiltered.map(r => (
             <RequestCard key={r.id} request={r} onClick={() => onSelectRequest(r)} usdRate={usdRate} />
           ))
         )}
@@ -143,11 +215,11 @@ export default function Dashboard({
   );
 }
 
-function CounterCard({ label, value, color, icon, small }) {
+function CounterCard({ label, value, color, icon }) {
   return (
     <div className="bg-[#F8F9FB]/[0.03] border border-white/[0.06] rounded-xl p-3 text-center">
       <div className="text-sm mb-1">{icon}</div>
-      <div className={`${small ? 'text-[11px]' : 'text-xl'} font-bold ${color} leading-tight`}>
+      <div className={`text-xl font-bold ${color} leading-tight`}>
         {value}
       </div>
       <div className="text-[10px] text-slate-500 font-medium mt-0.5">{label}</div>
@@ -155,7 +227,7 @@ function CounterCard({ label, value, color, icon, small }) {
   );
 }
 
-function FilterPill({ active, onClick, label, activeColor }) {
+function FilterPill({ active, onClick, label }) {
   return (
     <button
       onClick={onClick}

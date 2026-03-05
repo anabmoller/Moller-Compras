@@ -2,6 +2,14 @@ import { getStatusDisplay, getStatusProgress, getPriorityDisplay, formatGuaranie
 import { getSectors } from "../../constants/parameters";
 import { STEP_STATUS } from "../../constants/approvalConfig";
 
+const MODULE_TAGS = {
+  compras: { label: "Compras", color: "#3b82f6", bg: "rgba(59,130,246,0.1)" },
+  ganado: { label: "Ganado", color: "#8b5cf6", bg: "rgba(139,92,246,0.1)" },
+  inventario: { label: "Inventario", color: "#f59e0b", bg: "rgba(245,158,11,0.1)" },
+  fretes: { label: "Frete", color: "#06b6d4", bg: "rgba(6,182,212,0.1)" },
+  otros: { label: "Otros", color: "#6b7280", bg: "rgba(107,114,128,0.1)" },
+};
+
 function getItemNames(r) {
   const items = r.items || [];
   if (items.length === 0) return r.name;
@@ -16,6 +24,7 @@ export default function RequestCard({ request: r, onClick, usdRate }) {
   const progress = getStatusProgress(r.status);
   const displayName = getItemNames(r);
   const rate = usdRate || 7800;
+  const mod = MODULE_TAGS[r.module || "compras"] || MODULE_TAGS.compras;
 
   return (
     <div
@@ -30,11 +39,19 @@ export default function RequestCard({ request: r, onClick, usdRate }) {
         />
       </div>
 
-      {/* Top row: ID + Priority */}
+      {/* Top row: Module tag + ID + Priority */}
       <div className="flex justify-between items-center mb-1.5 pt-0.5">
-        <span className="text-[11px] text-slate-500 font-medium font-sans">
-          {r.id} · {r.date}
-        </span>
+        <div className="flex items-center gap-2">
+          <span
+            className="text-[10px] font-semibold px-2 py-[2px] rounded"
+            style={{ color: mod.color, background: mod.bg }}
+          >
+            {mod.label}
+          </span>
+          <span className="text-[11px] text-slate-500 font-medium font-sans">
+            {r.id} · {r.date}
+          </span>
+        </div>
         <span
           className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
           style={{ color: priority.color, background: priority.colorLight }}

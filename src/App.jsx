@@ -194,8 +194,16 @@ function AppContent() {
   const filtered = visibleRequests.filter(r => {
     if (filterStatus !== "all" && normalizeStatus(r.status) !== filterStatus) return false;
     if (filterEstablishment !== "all" && r.establishment !== filterEstablishment) return false;
-    if (searchQuery && !r.name?.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        !r.id?.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      const nameMatch = r.name?.toLowerCase().includes(q);
+      const idMatch = r.id?.toLowerCase().includes(q);
+      const itemMatch = (r.items || []).some(i =>
+        (i.product || i.name || i.nombre || "").toLowerCase().includes(q) ||
+        (i.provider || i.proveedor || "").toLowerCase().includes(q)
+      );
+      if (!nameMatch && !idMatch && !itemMatch) return false;
+    }
     return true;
   });
 
