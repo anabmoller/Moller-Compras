@@ -1,11 +1,11 @@
 {
-  "name": "Ypoti Compras",
-  "short_name": "Ypoti",
-  "description": "Sistema de Gestión de Compras — Rural Bioenergia S.A.",
+  "name": "AMs",
+  "short_name": "AMs",
+  "description": "Gestión de Compras",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0b0f",
-  "theme_color": "#10b981",
+  "background_color": "#0B1120",
+  "theme_color": "#0B1120",
   "icons": [
     {
       "src": "/favicon.svg",

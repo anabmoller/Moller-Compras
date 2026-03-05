@@ -40,9 +40,9 @@ export function AppProvider({ children }) {
   const [notification, setNotification] = useState(null);
   const [dataLoading, setDataLoading] = useState(true);
 
-  // Dev mode override: when active, permission checks use this instead of currentUser
+  // Dev mode override: only active in development builds
   const [devOverride, setDevOverride] = useState(null);
-  const effectiveUser = useMemo(() => devOverride || currentUser, [devOverride, currentUser]);
+  const effectiveUser = useMemo(() => (import.meta.env.DEV ? devOverride : null) || currentUser, [devOverride, currentUser]);
 
   const showNotif = useCallback((msg, type = "success") => {
     setNotification({ msg, type });
@@ -80,7 +80,7 @@ export function AppProvider({ children }) {
         // Load all requests with nested data; fall back to sample data for demo
         const reqs = await fetchAllRequests();
         if (mounted) {
-          setRequests(reqs.length > 0 ? reqs : SAMPLE_REQUESTS);
+          setRequests(reqs.length > 0 ? reqs : (import.meta.env.DEV ? SAMPLE_REQUESTS : []));
         }
       } catch (err) {
         console.error("[App] Data load failed:", err);
@@ -235,11 +235,20 @@ export function AppProvider({ children }) {
   // ---- Approve current step ----
   const approveStep = useCallback(async (reqId, comment = "") => {
     const req = requests.find(r => r.id === reqId);
-    if (!req || !req.approvalSteps) return;
+    if (!req || !req.approvalSteps) {
+      showNotif("Solicitud no encontrada o sin flujo de aprobación", "error");
+      return;
+    }
 
     const currentStep = getCurrentStep(req.approvalSteps);
-    if (!currentStep) return;
-    if (!canUserApproveStep(effectiveUser, currentStep, req.totalAmount)) return;
+    if (!currentStep) {
+      showNotif("No hay paso pendiente de aprobación", "error");
+      return;
+    }
+    if (!canUserApproveStep(effectiveUser, currentStep, req.totalAmount)) {
+      showNotif(`No tienes permiso para aprobar este paso. Aprobador requerido: ${currentStep.approverName || currentStep.approverUsername}`, "error");
+      return;
+    }
 
     // Block approval if quotations exist but no winner selected
     if (req.quotations?.length > 0 && !req.quotations.some(q => q.selected)) {
@@ -273,11 +282,20 @@ export function AppProvider({ children }) {
     }
 
     const req = requests.find(r => r.id === reqId);
-    if (!req || !req.approvalSteps) return;
+    if (!req || !req.approvalSteps) {
+      showNotif("Solicitud no encontrada o sin flujo de aprobación", "error");
+      return;
+    }
 
     const currentStep = getCurrentStep(req.approvalSteps);
-    if (!currentStep) return;
-    if (!canUserApproveStep(effectiveUser, currentStep, req.totalAmount)) return;
+    if (!currentStep) {
+      showNotif("No hay paso pendiente de aprobación", "error");
+      return;
+    }
+    if (!canUserApproveStep(effectiveUser, currentStep, req.totalAmount)) {
+      showNotif(`No tienes permiso para rechazar este paso. Aprobador requerido: ${currentStep.approverName || currentStep.approverUsername}`, "error");
+      return;
+    }
 
     try {
       // Edge Function verifies approver and handles rejection
@@ -468,7 +486,7 @@ export function AppProvider({ children }) {
       cancelRequest,
       updateRequest,
       effectiveUser,
-      setDevOverride,
+      setDevOverride: import.meta.env.DEV ? setDevOverride : () => {},
     }}>
       {children}
     </AppContext.Provider>

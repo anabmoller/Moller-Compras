@@ -77,12 +77,6 @@ export const USER_DISPLAY_NAMES = {
   "pedro.moller": "Pedro Moller",
 };
 
-// Legacy alias for code that imports MANAGER_BY_ESTABLISHMENT
-export const MANAGER_BY_ESTABLISHMENT = MANAGER_MAP;
-
-// Legacy alias for code that imports DIRECTOR_BY_COMPANY
-export const DIRECTOR_BY_COMPANY = COMPANY_MAP;
-
 // ---- Overbudget Approver (condicional — R6) ----
 export const OVERBUDGET_APPROVER = "mauricio";
 

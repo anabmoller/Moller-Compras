@@ -39,18 +39,6 @@ export function sanitizeNumber(input, { min = 0, max = Number.MAX_SAFE_INTEGER }
 }
 
 /**
- * Sanitize an email/username input
- */
-export function sanitizeEmail(input) {
-  if (typeof input !== "string") return "";
-  return input
-    .replace(/<[^>]*>/g, "")
-    .trim()
-    .toLowerCase()
-    .slice(0, 254);
-}
-
-/**
  * Sanitize a multiline text field (notes, comments, reasons)
  */
 export function sanitizeMultiline(input, maxLength = 2000) {
