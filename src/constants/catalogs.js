@@ -210,7 +210,13 @@ export const FULL_PRODUCT_CATALOG = [
   { c: "VET-000010", n: "DECTOMAX INY X 500 ML", g: "Veterinaria", u: "unidad", d: "FARMACIA", ap: 13454545, up: 336363, lp: 13454545, ld: "2025-07-24", ls: "CIAVET S.R.L", tp: 1, ss: ["CIAVET S.R.L"] },
   { c: "VET-000011", n: "IVERGEN PLAT 3.15 500 ML", g: "Veterinaria", u: "unidad", d: "FARMACIA", ap: 4654545, up: 290909, lp: 4654545, ld: "2025-07-11", ls: "AGROVETERINARIA CONSULT-PEC S.R.L.", tp: 1, ss: ["AGROVETERINARIA CONSULT-PEC S.R.L."] },
   { c: "VET-000012", n: "CIDENTAL 250 ML", g: "Veterinaria", u: "unidad", d: "ALMACEN GENERAL", ap: 9626400, up: 19100, lp: 9626400, ld: "2025-07-25", ls: "AZURE PARAGUAY S.A", tp: 1, ss: ["AZURE PARAGUAY S.A"] },
-  { c: "VET-000013", n: "POLICLOSTRIGEN 250 ML 50 DOSIS", g: "Veterinaria", u: "unidad", d: "ALMACEN GENERAL", ap: 2761364, up: 1840, lp: 2761364, ld: "2025-08-01", ls: "AGROVETERINARIA CONSULT-PEC S.R.L.", tp: 1, ss: ["AGROVETERINARIA CONSULT-PEC S.R.L."] }
+  { c: "VET-000013", n: "POLICLOSTRIGEN 250 ML 50 DOSIS", g: "Veterinaria", u: "unidad", d: "ALMACEN GENERAL", ap: 2761364, up: 1840, lp: 2761364, ld: "2025-08-01", ls: "AGROVETERINARIA CONSULT-PEC S.R.L.", tp: 1, ss: ["AGROVETERINARIA CONSULT-PEC S.R.L."] },
+  // ---- Combustible (Fuel Products) ----
+  { c: "COMB-000001", n: "NAFTA", g: "Combustible", u: "litro", d: "TANQUE COMBUSTIBLE", ap: 6050000, up: 6050, lp: 6050000, ld: "2026-02-03", ls: "COMERCIAL PROGRESO S.A.C.I.", tp: 83, ss: ["COMERCIAL 9 S.A.", "COMERCIAL PROGRESO S.A.C.I.", "LINA CONCEPCIÓN NUÑEZ RAMIREZ"] },
+  { c: "COMB-000002", n: "NAFTA 93", g: "Combustible", u: "litro", d: "TANQUE COMBUSTIBLE", ap: 6350000, up: 6350, lp: 6350000, ld: "2026-01-28", ls: "COMERCIAL PROGRESO S.A.C.I.", tp: 12, ss: ["COMERCIAL PROGRESO S.A.C.I."] },
+  { c: "COMB-000003", n: "GASOIL", g: "Combustible", u: "litro", d: "TANQUE COMBUSTIBLE", ap: 5822000, up: 5822, lp: 5900000, ld: "2026-01-22", ls: "COMERCIAL PROGRESO S.A.C.I.", tp: 108, ss: ["TORO PAMPA S.A.", "COMERCIAL PROGRESO S.A.C.I.", "COMERCIAL 9 S.A.", "PETROQUIM S.A"] },
+  { c: "COMB-000004", n: "GASOIL ADITIVADO", g: "Combustible", u: "litro", d: "TANQUE COMBUSTIBLE", ap: 6200000, up: 6200, lp: 6400000, ld: "2026-01-15", ls: "PETROQUIM S.A", tp: 24, ss: ["PETROQUIM S.A", "COMERCIAL PROGRESO S.A.C.I."] },
+  { c: "COMB-000005", n: "DIESEL", g: "Combustible", u: "litro", d: "TANQUE COMBUSTIBLE", ap: 5750000, up: 5750, lp: 5800000, ld: "2026-02-01", ls: "TORO PAMPA S.A.", tp: 45, ss: ["TORO PAMPA S.A.", "COMERCIAL PROGRESO S.A.C.I.", "CERRO MEMBY S.A"] },
 ];
 
 // ---- Full Supplier Catalog (187 suppliers) ----
