@@ -1,12 +1,5 @@
 import { GROUP_COLORS } from "../../constants";
 
-const ALL_GROUP_COLORS = {
-  ...GROUP_COLORS,
-  "Mercadería": "#6366F1",
-  "Agrícola": "#2563EB",
-  "Otro": "#9CA3AF",
-};
-
 export default function InventoryProductList({ groupedItems, onSelectProduct }) {
   return (
     <div className="px-5 pt-1 pb-[120px]">
@@ -21,11 +14,11 @@ export default function InventoryProductList({ groupedItems, onSelectProduct }) 
             <div key={group}>
               <div
                 className="text-[10px] font-bold uppercase tracking-[1.5px] pt-3.5 pb-1.5 flex items-center gap-2"
-                style={{ color: ALL_GROUP_COLORS[group] || "#94a3b8" }}
+                style={{ color: GROUP_COLORS[group] || "#94a3b8" }}
               >
                 <span
                   className="w-2 h-2 rounded-full"
-                  style={{ background: ALL_GROUP_COLORS[group] || "#94a3b8" }}
+                  style={{ background: GROUP_COLORS[group] || "#94a3b8" }}
                 />
                 {group}
                 <span className="font-medium text-[10px] text-slate-400">
@@ -58,11 +51,11 @@ export default function InventoryProductList({ groupedItems, onSelectProduct }) 
                     <span
                       className="text-[10px] px-2 py-[3px] rounded-md font-semibold whitespace-nowrap"
                       style={{
-                        background: (ALL_GROUP_COLORS[item.group] || "#5B0B14") + "12",
-                        color: ALL_GROUP_COLORS[item.group] || "#5B0B14",
+                        background: (GROUP_COLORS[item.group] || "#9CA3AF") + "12",
+                        color: GROUP_COLORS[item.group] || "#9CA3AF",
                       }}
                     >
-                      {item.presentation || item.unit || item.category}
+                      {item.presentation || item.unit || item.group}
                     </span>
                     <span className="text-xs text-slate-500">{"›"}</span>
                   </div>

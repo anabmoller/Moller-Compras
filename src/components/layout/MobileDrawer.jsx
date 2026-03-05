@@ -12,7 +12,7 @@ export default function MobileDrawer({ open, onClose, screen, onNavigate, onNewR
   const mainItems = [
     { key: 'panel', icon: '🏠', label: 'Panel General' },
     { key: 'notifications', icon: '🔔', label: 'Notificaciones', badge: unreadCount || null },
-    { key: 'inventory', icon: '📦', label: 'Inventario' },
+    { key: 'inventory', icon: '📦', label: 'Catálogo' },
     ...(canViewGanado ? [{ key: 'ganado', icon: '🐄', label: 'Ganado' }] : []),
     { key: 'materia_prima', icon: '🧪', label: 'Materia Prima' },
     { key: 'combustible', icon: '⛽', label: 'Combustible' },

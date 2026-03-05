@@ -4,7 +4,7 @@
 export default function BottomNav({ screen, onNavigate, onNewRequest }) {
   const items = [
     { key: 'panel', icon: '🏠', label: 'Panel' },
-    { key: 'inventory', icon: '📦', label: 'Inventario' },
+    { key: 'inventory', icon: '📦', label: 'Catálogo' },
     { key: 'analytics', icon: '📊', label: 'Análisis' },
     { key: 'settings', icon: '⚙️', label: 'Config' },
   ];

@@ -34,19 +34,25 @@ export const EXTRA_STATUSES = [
   { key: "cancelado", label: "Cancelado", color: "#6B7280", colorLight: "#F3F4F6", icon: "🚫" },
 ];
 
-// ---- Product group colors (UI only) ----
+// ---- Master catalog group colors (6 categories + fallback) ----
 export const GROUP_COLORS = {
   Veterinaria: "#DC2626",
-  "Nutrición": "#1F2A44",
+  "Materia Prima": "#1F2A44",
   "Agrícola": "#2563EB",
-  "Mercadería": "#8B5CF6",
-  Operacional: "#F97316",
-  Mantenimiento: "#8B5CF6",
-  Taller: "#6B7280",
-  "Ganadería": "#D97706",
   Hacienda: "#006633",
-  Personal: "#EC4899",
   Combustible: "#F59E0B",
+  Equipos: "#8B5CF6",
+  Otro: "#9CA3AF",
+};
+
+// Module → catalog categories (for permission-based filtering)
+export const MODULE_CATEGORIES = {
+  ganado: ["Hacienda", "Veterinaria"],
+  veterinaria: ["Veterinaria"],
+  materia_prima: ["Materia Prima"],
+  combustible: ["Combustible"],
+  agricola: ["Agrícola"],
+  deposito: ["Equipos"],
 };
 
 // ---- SAP Catalog items (PDR 6) — Full 204-product catalog ----

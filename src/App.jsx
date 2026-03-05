@@ -306,7 +306,14 @@ function AppContent() {
     }
 
     if (screen === "inventory" && effectiveCan("view_inventory")) {
-      return <Suspense fallback={<LazyFallback />}><InventoryScreen onBack={() => setScreen("panel")} /></Suspense>;
+      const mods = [];
+      if (effectiveCan("view_ganado")) mods.push("ganado", "veterinaria");
+      if (effectiveCan("view_inventory")) mods.push("materia_prima", "combustible", "agricola", "deposito");
+      return (
+        <Suspense fallback={<LazyFallback />}>
+          <InventoryScreen onBack={() => setScreen("panel")} accessibleModules={mods} />
+        </Suspense>
+      );
     }
 
     if ((screen === "analytics" || screen === "analysis") && effectiveCan("view_analytics")) {

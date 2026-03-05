@@ -2,13 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { GROUP_COLORS } from "../../constants";
 import { supabase } from "../../lib/supabase";
 
-// ---- Extend GROUP_COLORS for new groups ----
-const ALL_GROUP_COLORS = {
-  ...GROUP_COLORS,
-  "Mercadería": "#6366F1",
-  "Agrícola": "#2563EB",
-  "Otro": "#9CA3AF",
-};
+// GROUP_COLORS already includes all master catalog categories
 
 function InfoField({ label, value }) {
   return (
@@ -95,8 +89,8 @@ export default function ProductDetailPanel({ product, onClose }) {
                 <span
                   className="px-2 py-0.5 rounded-md text-[10px] font-semibold"
                   style={{
-                    background: (ALL_GROUP_COLORS[product.group] || "#5B0B14") + "15",
-                    color: ALL_GROUP_COLORS[product.group] || "#5B0B14",
+                    background: (GROUP_COLORS[product.group] || "#9CA3AF") + "15",
+                    color: GROUP_COLORS[product.group] || "#9CA3AF",
                   }}
                 >
                   {product.group}

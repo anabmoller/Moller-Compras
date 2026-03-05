@@ -9,7 +9,7 @@ const MODULES = [
   { key: "todos", label: "Todos", icon: "📊" },
   { key: "compras", label: "Compras", icon: "📋" },
   { key: "ganado", label: "Ganado", icon: "🐄" },
-  { key: "inventario", label: "Inventario", icon: "📦" },
+  { key: "catalogo", label: "Catálogo", icon: "📦" },
   { key: "materia_prima", label: "Materia Prima", icon: "🏭" },
   { key: "combustible", label: "Combustible", icon: "⛽" },
 ];
@@ -23,9 +23,9 @@ const SUMMARY_CARDS = {
     { label: "Alertas sanitarias", value: 3, icon: "🚨", color: "#ef4444" },
     { label: "Movimientos recientes", value: 8, icon: "🚚", color: "#8b5cf6" },
   ],
-  inventario: [
-    { label: "Stock crítico", value: 7, icon: "⚠️", color: "#f59e0b" },
-    { label: "Reposiciones", value: 4, icon: "📥", color: "#22c55e" },
+  catalogo: [
+    { label: "Productos registrados", value: 204, icon: "📦", color: "#8b5cf6" },
+    { label: "Categorías activas", value: 6, icon: "🏷️", color: "#3b82f6" },
   ],
   materia_prima: [
     { label: "Lotes activos", value: 15, icon: "📦", color: "#3b82f6" },
@@ -40,7 +40,7 @@ const SUMMARY_CARDS = {
 const MODULE_META = {
   compras: { label: "Compras", variant: "info", icon: "📋" },
   ganado: { label: "Ganado", variant: "purple", icon: "🐄" },
-  inventario: { label: "Inventario", variant: "warning", icon: "📦" },
+  catalogo: { label: "Catálogo", variant: "info", icon: "📦" },
   materia_prima: { label: "Materia Prima", variant: "success", icon: "🏭" },
   combustible: { label: "Combustible", variant: "warning", icon: "⛽" },
 };
@@ -48,10 +48,10 @@ const MODULE_META = {
 const ACTIVITY_FEED = [
   { id: 1, module: "compras", text: "Solicitud SC-2024-089 aprobada por Gerencia", time: "Hace 15 min", icon: "✅" },
   { id: 2, module: "ganado", text: "Nuevo movimiento MG-0045 registrado — 120 cabezas", time: "Hace 32 min", icon: "🐄" },
-  { id: 3, module: "inventario", text: "Alerta: Stock crítico en Producto X", time: "Hace 1 hora", icon: "⚠️" },
+  { id: 3, module: "catalogo", text: "Nuevo producto registrado: Ivermectina 3.15%", time: "Hace 1 hora", icon: "📦" },
   { id: 4, module: "compras", text: "Cotización recibida de Proveedor ABC", time: "Hace 2 horas", icon: "📄" },
   { id: 5, module: "ganado", text: "Alerta sanitaria: Vacunación pendiente Est. Norte", time: "Hace 3 horas", icon: "🚨" },
-  { id: 6, module: "inventario", text: "Reposición completada — 50 unidades ingresadas", time: "Hace 4 horas", icon: "📥" },
+  { id: 6, module: "catalogo", text: "Categoría Equipos actualizada — 3 productos añadidos", time: "Hace 4 horas", icon: "🏷️" },
   { id: 7, module: "combustible", text: "Carga de 3.200 L diésel — Est. Ypoti", time: "Hace 5 horas", icon: "⛽" },
   { id: 8, module: "combustible", text: "Alerta: consumo elevado en Est. Lusipar (+18%)", time: "Hace 6 horas", icon: "🚨" },
 ];
