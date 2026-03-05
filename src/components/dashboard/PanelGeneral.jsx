@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Card from "../shared/Card";
 import Badge from "../shared/Badge";
+import { ESTABLECIMIENTOS_PROPIOS } from "../../constants/establecimientos";
 
 /* ── Mock data ─────────────────────────────────────────────── */
 
@@ -11,6 +12,12 @@ const TIME_RANGES = [
   { key: "mes", label: "Mes" },
   { key: "ano", label: "Año" },
 ];
+
+/*
+ * Each tile/row/activity entry carries an `establecimiento` key (or array)
+ * so the establishment filter can slice mock data per location.
+ * "todos" or omitted = visible in all establishments.
+ */
 
 const PRIMARY_TILES = [
   {
@@ -25,6 +32,18 @@ const PRIMARY_TILES = [
       { label: "Recepciones MP pend.", value: 5 },
     ],
     drillRoute: "dashboard",
+    // Per-establishment mock breakdown (value overrides when filtered)
+    byEstab: {
+      ypoti:        { value: 8,  subMetrics: [{ label: "Compras pendientes", value: 4 }, { label: "Mov. ganado abiertos", value: 3 }, { label: "Recepciones MP pend.", value: 1 }] },
+      cerro_moimbi: { value: 5,  subMetrics: [{ label: "Compras pendientes", value: 2 }, { label: "Mov. ganado abiertos", value: 2 }, { label: "Recepciones MP pend.", value: 1 }] },
+      santa_clara:  { value: 4,  subMetrics: [{ label: "Compras pendientes", value: 2 }, { label: "Mov. ganado abiertos", value: 1 }, { label: "Recepciones MP pend.", value: 1 }] },
+      ouro_verde:   { value: 3,  subMetrics: [{ label: "Compras pendientes", value: 1 }, { label: "Mov. ganado abiertos", value: 1 }, { label: "Recepciones MP pend.", value: 1 }] },
+      serrumbi:     { value: 2,  subMetrics: [{ label: "Compras pendientes", value: 1 }, { label: "Mov. ganado abiertos", value: 1 }, { label: "Recepciones MP pend.", value: 0 }] },
+      ibirora:      { value: 1,  subMetrics: [{ label: "Compras pendientes", value: 1 }, { label: "Mov. ganado abiertos", value: 0 }, { label: "Recepciones MP pend.", value: 0 }] },
+      ibirapita:    { value: 1,  subMetrics: [{ label: "Compras pendientes", value: 1 }, { label: "Mov. ganado abiertos", value: 0 }, { label: "Recepciones MP pend.", value: 0 }] },
+      vila_azul:    { value: 1,  subMetrics: [{ label: "Compras pendientes", value: 0 }, { label: "Mov. ganado abiertos", value: 1 }, { label: "Recepciones MP pend.", value: 0 }] },
+      santa_maria_das_neves: { value: 0, subMetrics: [{ label: "Compras pendientes", value: 0 }, { label: "Mov. ganado abiertos", value: 0 }, { label: "Recepciones MP pend.", value: 0 }] },
+    },
   },
   {
     key: "monto",
@@ -38,6 +57,13 @@ const PRIMARY_TILES = [
       { label: "Combustible mes", value: "Gs 112M" },
     ],
     drillRoute: "dashboard",
+    byEstab: {
+      ypoti:        { value: "Gs 280M", subMetrics: [{ label: "En aprobación", value: "Gs 95M" }, { label: "En proceso", value: "Gs 140M" }, { label: "Combustible mes", value: "Gs 45M" }] },
+      cerro_moimbi: { value: "Gs 185M", subMetrics: [{ label: "En aprobación", value: "Gs 75M" }, { label: "En proceso", value: "Gs 85M" }, { label: "Combustible mes", value: "Gs 25M" }] },
+      santa_clara:  { value: "Gs 142M", subMetrics: [{ label: "En aprobación", value: "Gs 60M" }, { label: "En proceso", value: "Gs 65M" }, { label: "Combustible mes", value: "Gs 17M" }] },
+      ouro_verde:   { value: "Gs 98M",  subMetrics: [{ label: "En aprobación", value: "Gs 40M" }, { label: "En proceso", value: "Gs 48M" }, { label: "Combustible mes", value: "Gs 10M" }] },
+      serrumbi:     { value: "Gs 62M",  subMetrics: [{ label: "En aprobación", value: "Gs 25M" }, { label: "En proceso", value: "Gs 32M" }, { label: "Combustible mes", value: "Gs 5M" }] },
+    },
   },
   {
     key: "inventario",
@@ -51,6 +77,13 @@ const PRIMARY_TILES = [
       { label: "Sin precio reciente", value: 2 },
     ],
     drillRoute: "inventory",
+    byEstab: {
+      ypoti:        { value: 3, subMetrics: [{ label: "Productos críticos", value: 1 }, { label: "Lotes por vencer", value: 1 }, { label: "Sin precio reciente", value: 1 }] },
+      cerro_moimbi: { value: 2, subMetrics: [{ label: "Productos críticos", value: 1 }, { label: "Lotes por vencer", value: 1 }, { label: "Sin precio reciente", value: 0 }] },
+      santa_clara:  { value: 2, subMetrics: [{ label: "Productos críticos", value: 1 }, { label: "Lotes por vencer", value: 0 }, { label: "Sin precio reciente", value: 1 }] },
+      ouro_verde:   { value: 1, subMetrics: [{ label: "Productos críticos", value: 1 }, { label: "Lotes por vencer", value: 0 }, { label: "Sin precio reciente", value: 0 }] },
+      serrumbi:     { value: 1, subMetrics: [{ label: "Productos críticos", value: 0 }, { label: "Lotes por vencer", value: 1 }, { label: "Sin precio reciente", value: 0 }] },
+    },
   },
   {
     key: "alertas",
@@ -64,6 +97,12 @@ const PRIMARY_TILES = [
       { label: "Divergencias", value: 2 },
     ],
     drillRoute: "notifications",
+    byEstab: {
+      ypoti:        { value: 3, subMetrics: [{ label: "Alertas sanitarias", value: 1 }, { label: "Docs pendientes", value: 1 }, { label: "Divergencias", value: 1 }] },
+      cerro_moimbi: { value: 2, subMetrics: [{ label: "Alertas sanitarias", value: 1 }, { label: "Docs pendientes", value: 1 }, { label: "Divergencias", value: 0 }] },
+      santa_clara:  { value: 1, subMetrics: [{ label: "Alertas sanitarias", value: 1 }, { label: "Docs pendientes", value: 0 }, { label: "Divergencias", value: 0 }] },
+      serrumbi:     { value: 1, subMetrics: [{ label: "Alertas sanitarias", value: 0 }, { label: "Docs pendientes", value: 0 }, { label: "Divergencias", value: 1 }] },
+    },
   },
 ];
 
@@ -78,6 +117,13 @@ const AREA_ROWS = [
     ],
     status: { label: "12 pendientes", variant: "warning" },
     route: "dashboard",
+    byEstab: {
+      ypoti:        { metrics: [{ label: "Pendientes", value: 4 }, { label: "En proceso", value: 2 }], status: { label: "4 pendientes", variant: "warning" } },
+      cerro_moimbi: { metrics: [{ label: "Pendientes", value: 3 }, { label: "En proceso", value: 1 }], status: { label: "3 pendientes", variant: "warning" } },
+      santa_clara:  { metrics: [{ label: "Pendientes", value: 2 }, { label: "En proceso", value: 1 }], status: { label: "2 pendientes", variant: "warning" } },
+      ouro_verde:   { metrics: [{ label: "Pendientes", value: 2 }, { label: "En proceso", value: 1 }], status: { label: "2 pendientes", variant: "warning" } },
+      serrumbi:     { metrics: [{ label: "Pendientes", value: 1 }, { label: "En proceso", value: 0 }], status: { label: "1 pendiente", variant: "default" } },
+    },
   },
   {
     key: "ganado",
@@ -89,6 +135,11 @@ const AREA_ROWS = [
     ],
     status: { label: "3 alertas", variant: "danger" },
     route: "ganado",
+    byEstab: {
+      ypoti:        { metrics: [{ label: "Por validar", value: 2 }, { label: "En tránsito", value: 1 }], status: { label: "1 alerta", variant: "danger" } },
+      cerro_moimbi: { metrics: [{ label: "Por validar", value: 1 }, { label: "En tránsito", value: 1 }], status: { label: "1 alerta", variant: "danger" } },
+      santa_clara:  { metrics: [{ label: "Por validar", value: 1 }, { label: "En tránsito", value: 1 }], status: { label: "1 alerta", variant: "danger" } },
+    },
   },
   {
     key: "materia_prima",
@@ -100,6 +151,12 @@ const AREA_ROWS = [
     ],
     status: { label: "2 por vencer", variant: "warning" },
     route: "materia_prima",
+    byEstab: {
+      ypoti:        { metrics: [{ label: "Lotes activos", value: 6 }, { label: "Por vencer", value: 1 }], status: { label: "1 por vencer", variant: "warning" } },
+      cerro_moimbi: { metrics: [{ label: "Lotes activos", value: 4 }, { label: "Por vencer", value: 1 }], status: { label: "1 por vencer", variant: "warning" } },
+      santa_clara:  { metrics: [{ label: "Lotes activos", value: 3 }, { label: "Por vencer", value: 0 }], status: { label: "Normal", variant: "success" } },
+      ouro_verde:   { metrics: [{ label: "Lotes activos", value: 2 }, { label: "Por vencer", value: 0 }], status: { label: "Normal", variant: "success" } },
+    },
   },
   {
     key: "combustible",
@@ -111,6 +168,13 @@ const AREA_ROWS = [
     ],
     status: { label: "Normal", variant: "success" },
     route: "combustible",
+    byEstab: {
+      ypoti:        { metrics: [{ label: "Consumo (L)", value: "4.200" }, { label: "Gasto (Gs)", value: "2.8M" }], status: { label: "Normal", variant: "success" } },
+      cerro_moimbi: { metrics: [{ label: "Consumo (L)", value: "3.100" }, { label: "Gasto (Gs)", value: "2.1M" }], status: { label: "+18%", variant: "warning" } },
+      santa_clara:  { metrics: [{ label: "Consumo (L)", value: "2.600" }, { label: "Gasto (Gs)", value: "1.7M" }], status: { label: "Normal", variant: "success" } },
+      ouro_verde:   { metrics: [{ label: "Consumo (L)", value: "1.550" }, { label: "Gasto (Gs)", value: "1.0M" }], status: { label: "Normal", variant: "success" } },
+      serrumbi:     { metrics: [{ label: "Consumo (L)", value: "1.000" }, { label: "Gasto (Gs)", value: "0.6M" }], status: { label: "Normal", variant: "success" } },
+    },
   },
   {
     key: "catalogo",
@@ -122,6 +186,7 @@ const AREA_ROWS = [
     ],
     status: { label: "Actualizado", variant: "success" },
     route: "inventory",
+    // Catálogo is global — no per-establishment breakdown
   },
 ];
 
@@ -143,14 +208,14 @@ const MODULE_META = {
 };
 
 const ACTIVITY_FEED = [
-  { id: 1, module: "compras", text: "Solicitud SC-2024-089 aprobada por Gerencia", time: "Hace 15 min", icon: "✅", route: "dashboard" },
-  { id: 2, module: "ganado", text: "Nuevo movimiento MG-0045 registrado — 120 cabezas", time: "Hace 32 min", icon: "🐄", route: "ganado" },
-  { id: 3, module: "catalogo", text: "Nuevo producto registrado: Ivermectina 3.15%", time: "Hace 1 hora", icon: "📦", route: "inventory" },
-  { id: 4, module: "compras", text: "Cotización recibida de Proveedor ABC", time: "Hace 2 horas", icon: "📄", route: "dashboard" },
-  { id: 5, module: "ganado", text: "Alerta sanitaria: Vacunación pendiente Est. Norte", time: "Hace 3 horas", icon: "🚨", route: "ganado" },
-  { id: 6, module: "combustible", text: "Carga de 3.200 L diésel — Est. Ypoti", time: "Hace 5 horas", icon: "⛽", route: "combustible" },
-  { id: 7, module: "materia_prima", text: "Lote MP-0412 recibido — Maíz Amarillo 25 ton", time: "Hace 5 horas", icon: "🧪", route: "materia_prima" },
-  { id: 8, module: "combustible", text: "Alerta: consumo elevado en Est. Lusipar (+18%)", time: "Hace 6 horas", icon: "🚨", route: "combustible" },
+  { id: 1, module: "compras", establecimiento: "ypoti", text: "Solicitud SC-2024-089 aprobada por Gerencia", time: "Hace 15 min", icon: "✅", route: "dashboard" },
+  { id: 2, module: "ganado", establecimiento: "cerro_moimbi", text: "Nuevo movimiento MG-0045 registrado — 120 cabezas", time: "Hace 32 min", icon: "🐄", route: "ganado" },
+  { id: 3, module: "catalogo", establecimiento: null, text: "Nuevo producto registrado: Ivermectina 3.15%", time: "Hace 1 hora", icon: "📦", route: "inventory" },
+  { id: 4, module: "compras", establecimiento: "santa_clara", text: "Cotización recibida de Proveedor ABC", time: "Hace 2 horas", icon: "📄", route: "dashboard" },
+  { id: 5, module: "ganado", establecimiento: "ypoti", text: "Alerta sanitaria: Vacunación pendiente Ypotí", time: "Hace 3 horas", icon: "🚨", route: "ganado" },
+  { id: 6, module: "combustible", establecimiento: "ypoti", text: "Carga de 3.200 L diésel — Ypotí", time: "Hace 5 horas", icon: "⛽", route: "combustible" },
+  { id: 7, module: "materia_prima", establecimiento: "ouro_verde", text: "Lote MP-0412 recibido — Maíz Amarillo 25 ton", time: "Hace 5 horas", icon: "🧪", route: "materia_prima" },
+  { id: 8, module: "combustible", establecimiento: "cerro_moimbi", text: "Alerta: consumo elevado en Cerro Moimbí (+18%)", time: "Hace 6 horas", icon: "🚨", route: "combustible" },
 ];
 
 /* ── Sub-components ────────────────────────────────────────── */
@@ -283,16 +348,84 @@ function ActivityEntry({ entry, onNavigate }) {
   );
 }
 
+/* ── Establishment dropdown ────────────────────────────────── */
+
+function EstablecimientoSelect({ value, onChange }) {
+  return (
+    <div className="relative">
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="appearance-none bg-[#F8F9FB]/[0.03] border border-white/[0.06] rounded-lg pl-3 pr-8 py-1.5 text-[11px] font-semibold text-slate-300 cursor-pointer hover:bg-[#F8F9FB]/[0.06] hover:border-white/[0.12] transition-colors focus:outline-none focus:border-[#C8A03A]/40"
+      >
+        <option value="todos">Todos</option>
+        {ESTABLECIMIENTOS_PROPIOS.map((e) => (
+          <option key={e.key} value={e.key}>
+            {e.nombre}
+          </option>
+        ))}
+      </select>
+      <svg className="w-3.5 h-3.5 text-slate-500 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+      </svg>
+    </div>
+  );
+}
+
+/* ── Filter helpers ────────────────────────────────────────── */
+
+/** Resolve a tile's values for the selected establishment */
+function resolveTile(tile, estabKey) {
+  if (estabKey === "todos" || !tile.byEstab) return tile;
+  const override = tile.byEstab[estabKey];
+  if (!override) {
+    // Establishment exists but has no data for this tile — show zeros
+    return {
+      ...tile,
+      value: typeof tile.value === "string" ? "Gs 0" : 0,
+      subMetrics: tile.subMetrics.map((sm) => ({
+        ...sm,
+        value: typeof sm.value === "string" ? "Gs 0" : 0,
+      })),
+    };
+  }
+  return { ...tile, ...override };
+}
+
+/** Resolve a row's metrics/status for the selected establishment */
+function resolveRow(row, estabKey) {
+  if (estabKey === "todos" || !row.byEstab) return row;
+  const override = row.byEstab[estabKey];
+  if (!override) {
+    return {
+      ...row,
+      metrics: row.metrics.map((m) => ({ ...m, value: typeof m.value === "string" ? "0" : 0 })),
+      status: { label: "Sin datos", variant: "default" },
+    };
+  }
+  return { ...row, ...override };
+}
+
 /* ── Main component ────────────────────────────────────────── */
 
 export default function PanelGeneral({ onNavigate, initialModule }) {
   const [timeRange, setTimeRange] = useState("30d");
   const [activityFilter, setActivityFilter] = useState("todos");
+  const [establecimiento, setEstablecimiento] = useState("todos");
 
-  const filteredActivity =
-    activityFilter === "todos"
-      ? ACTIVITY_FEED
-      : ACTIVITY_FEED.filter((a) => a.module === activityFilter);
+  // Filter activity feed by module AND establishment
+  const filteredActivity = useMemo(() => {
+    let items = ACTIVITY_FEED;
+    if (activityFilter !== "todos") {
+      items = items.filter((a) => a.module === activityFilter);
+    }
+    if (establecimiento !== "todos") {
+      items = items.filter(
+        (a) => !a.establecimiento || a.establecimiento === establecimiento
+      );
+    }
+    return items;
+  }, [activityFilter, establecimiento]);
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 animate-fade-in">
@@ -306,15 +439,26 @@ export default function PanelGeneral({ onNavigate, initialModule }) {
             Control operativo consolidado
           </p>
         </div>
-        <div className="flex gap-1.5 overflow-x-auto scrollbar-none">
-          {TIME_RANGES.map((tr) => (
-            <TimeRangePill
-              key={tr.key}
-              label={tr.label}
-              active={timeRange === tr.key}
-              onClick={() => setTimeRange(tr.key)}
-            />
-          ))}
+        <div className="flex items-center gap-3">
+          {/* Establishment selector */}
+          <div className="flex items-center gap-1.5">
+            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide whitespace-nowrap hidden sm:inline">
+              Establecimiento
+            </span>
+            <EstablecimientoSelect value={establecimiento} onChange={setEstablecimiento} />
+          </div>
+
+          {/* Period pills */}
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-none">
+            {TIME_RANGES.map((tr) => (
+              <TimeRangePill
+                key={tr.key}
+                label={tr.label}
+                active={timeRange === tr.key}
+                onClick={() => setTimeRange(tr.key)}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
@@ -327,7 +471,7 @@ export default function PanelGeneral({ onNavigate, initialModule }) {
           {PRIMARY_TILES.map((tile) => (
             <PrimaryTile
               key={tile.key}
-              tile={tile}
+              tile={resolveTile(tile, establecimiento)}
               onClick={() => onNavigate?.(tile.drillRoute)}
             />
           ))}
@@ -343,7 +487,7 @@ export default function PanelGeneral({ onNavigate, initialModule }) {
           {AREA_ROWS.map((row) => (
             <AreaRow
               key={row.key}
-              row={row}
+              row={resolveRow(row, establecimiento)}
               onClick={() => onNavigate?.(row.route)}
             />
           ))}
@@ -375,7 +519,7 @@ export default function PanelGeneral({ onNavigate, initialModule }) {
           ) : (
             <div className="p-6 text-center">
               <p className="text-sm text-slate-500">
-                No hay actividad reciente para este módulo
+                No hay actividad reciente para este filtro
               </p>
             </div>
           )}
