@@ -41,7 +41,7 @@ export default function ApprovalConfigScreen({ onBack }) {
         />
       </div>
 
-      <div className="px-5 pb-[120px]">
+      <div className="px-5 pb-[120px] md:pb-8">
         {/* Visual Pipeline */}
         <div className="flex items-center justify-center gap-0 mb-6 py-4">
           {STEPS_DISPLAY.map((step, i) => (

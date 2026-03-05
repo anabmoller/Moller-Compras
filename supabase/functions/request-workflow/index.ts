@@ -209,6 +209,15 @@ Deno.serve(async (req) => {
           );
         }
 
+        // Require a selected quotation if quotations exist
+        const { data: quotations } = await supabaseAdmin
+          .from("quotations")
+          .select("id, selected")
+          .eq("request_id", requestUuid);
+        if (quotations && quotations.length > 0 && !quotations.some((q: Record<string, unknown>) => q.selected)) {
+          throw new Error("Debe seleccionar una cotización ganadora antes de aprobar");
+        }
+
         const now = new Date().toISOString();
 
         // Update the step
@@ -360,19 +369,25 @@ Deno.serve(async (req) => {
         const { requestUuid, reason } = payload;
         if (!requestUuid) throw new Error("requestUuid is required");
 
-        // Authorization
-        if (
-          !hasPermission(caller, "approve_manager") &&
-          !hasPermission(caller, "approve_purchase")
-        ) {
-          throw new Error("No permission to send for revision");
-        }
-
-        // Reset all approval steps to pending
+        // Load steps
         const { data: steps } = await supabaseAdmin
           .from("approval_steps")
-          .select("id")
-          .eq("request_id", requestUuid);
+          .select("*")
+          .eq("request_id", requestUuid)
+          .order("step_order", { ascending: true });
+
+        const currentStep = (steps || []).find(
+          (s: Record<string, unknown>) => s.status === "pending",
+        );
+        if (!currentStep) throw new Error("No pending step found");
+
+        // Authorization: caller must be the designated approver (same as approve/reject)
+        const { data: reqForRevision } = await supabaseAdmin
+          .from("requests").select("total_amount").eq("id", requestUuid).single();
+        const revisionAmount = Number(reqForRevision?.total_amount) || 0;
+        if (!canUserApproveStep(caller.username, { approverUsername: currentStep.approver_username }, revisionAmount)) {
+          throw new Error("Not authorized to send this step for revision");
+        }
 
         if (steps && steps.length > 0) {
           const stepIds = steps.map((s: { id: string }) => s.id);

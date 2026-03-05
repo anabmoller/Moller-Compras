@@ -55,8 +55,8 @@ export default function PreciosTab() {
             <XAxis dataKey="period" tick={TICK} interval={2} />
             <YAxis tick={TICK_DIM} domain={[1.75, 2.40]} tickFormatter={(v) => v.toFixed(2)} />
             <Tooltip content={<DarkTooltip />} />
-            <Line type="monotone" dataKey="usd" name="USD/kg" stroke={C.emerald}
-              strokeWidth={2.5} dot={{ r: 3, fill: C.emerald }} activeDot={{ r: 5 }} />
+            <Line type="monotone" dataKey="usd" name="USD/kg" stroke={C.gold}
+              strokeWidth={2.5} dot={{ r: 3, fill: C.gold }} activeDot={{ r: 5 }} />
           </LineChart>
         </ResponsiveContainer>
       </ChartCard>
@@ -71,8 +71,8 @@ export default function PreciosTab() {
             <Legend iconType="circle" iconSize={8} formatter={legendFmt} />
             <Area type="monotone" dataKey="soja" name="Soja" stroke={C.amber}
               fill={C.amber} fillOpacity={0.08} strokeWidth={2} />
-            <Area type="monotone" dataKey="maiz" name="Maiz" stroke={C.emerald}
-              fill={C.emerald} fillOpacity={0.08} strokeWidth={2} />
+            <Area type="monotone" dataKey="maiz" name="Maiz" stroke={C.gold}
+              fill={C.gold} fillOpacity={0.08} strokeWidth={2} />
             <Area type="monotone" dataKey="sorgo" name="Sorgo" stroke={C.purple}
               fill={C.purple} fillOpacity={0.08} strokeWidth={2} />
           </AreaChart>

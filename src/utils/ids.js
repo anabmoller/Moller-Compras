@@ -14,22 +14,6 @@ export function generateRequestId() {
 }
 
 /**
- * Generate a unique budget ID
- */
-export function generateBudgetId() {
-  return `b${generateRandomString(6)}`;
-}
-
-/**
- * Generate a unique user ID
- */
-export function generateUserId() {
-  const array = new Uint32Array(1);
-  crypto.getRandomValues(array);
-  return `u${array[0].toString(36)}`;
-}
-
-/**
  * Generate a unique comment ID
  */
 export function generateCommentId() {

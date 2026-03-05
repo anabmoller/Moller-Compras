@@ -50,7 +50,7 @@ export default function BudgetGroupList({ grouped, filterEst, onEdit }) {
                   </div>
 
                   {/* Mini progress bar */}
-                  <div className="bg-[#0a0b0f] rounded h-[5px] overflow-hidden">
+                  <div className="bg-[#0B1120] rounded h-[5px] overflow-hidden">
                     <div
                       className="h-full rounded"
                       style={{ width: `${Math.min(pct, 100)}%`, background: barColor(pct) }}

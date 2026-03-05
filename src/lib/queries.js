@@ -7,6 +7,7 @@
 // ============================================================
 
 import { supabase, supabaseUrl, supabaseAnonKey, getStoredToken, setStoredToken } from "./supabase";
+import { cleanName } from "../constants/parameters";
 
 // ---- Edge Function helper: direct fetch, no supabase-js dependency ----
 // Exported for reuse in constants/users.js, constants/budgets.js, constants/parameters.js
@@ -119,14 +120,7 @@ async function tryRefreshToken() {
 
 // ---- Transformers: Supabase (snake_case) -> Frontend (camelCase) ----
 
-// Strip emoji text prefixes from establishment/sector names (DB cleanup)
-// DB stores names like "wheat Agricultura", "building Feedlot", etc.
-function cleanName(name) {
-  if (!name) return "";
-  return name
-    .replace(/^(wheat|office|building|pill|cow|tractor|wrench|truck|factory|seedling|ear_of_rice|syringe|package|hammer|gear|fuel|bolt)\s+/i, "")
-    .replace(/^[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}]\s*/u, "");
-}
+// cleanName imported from constants/parameters.js — single source of truth
 
 function transformRequest(row, items = [], quotations = [], comments = [], steps = [], history = []) {
   return {
@@ -139,7 +133,7 @@ function transformRequest(row, items = [], quotations = [], comments = [], steps
     establishment: cleanName(row.establishment),
     company: row.company,
     sector: cleanName(row.sector),
-    type: row.type,
+    type: cleanName(row.type),
     priority: row.priority,
     status: row.status,
     totalAmount: Number(row.total_amount) || 0,
