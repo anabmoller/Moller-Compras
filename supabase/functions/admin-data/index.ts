@@ -47,6 +47,18 @@ Deno.serve(async (req) => {
           row.manager = item.manager || "";
           row.location = item.location || "";
           row.active = true;
+          // Extended fields
+          if (item.senacsa_code !== undefined) row.senacsa_code = item.senacsa_code;
+          if (item.senacsa_unidad_zonal !== undefined) row.senacsa_unidad_zonal = item.senacsa_unidad_zonal;
+          if (item.departamento !== undefined) row.departamento = item.departamento;
+          if (item.municipio !== undefined) row.municipio = item.municipio;
+          if (item.latitude !== undefined) row.latitude = item.latitude || null;
+          if (item.longitude !== undefined) row.longitude = item.longitude || null;
+          // Entity classification
+          if (item.tipo_entidad) row.tipo_entidad = item.tipo_entidad;
+          if (item.regimen_control !== undefined) row.regimen_control = item.regimen_control || null;
+          if (item.notas !== undefined) row.notas = item.notas;
+          if (item.metadata_json !== undefined) row.metadata_json = item.metadata_json;
           if (item.companyId) {
             row.company_id = item.companyId;
           } else if (item.company) {
@@ -113,6 +125,18 @@ Deno.serve(async (req) => {
         if (updates.type !== undefined) row.type = updates.type;
         if (updates.director !== undefined) row.director = updates.director;
         if (updates.active !== undefined) row.active = updates.active;
+        // Extended establishment fields
+        if (updates.senacsa_code !== undefined) row.senacsa_code = updates.senacsa_code;
+        if (updates.senacsa_unidad_zonal !== undefined) row.senacsa_unidad_zonal = updates.senacsa_unidad_zonal;
+        if (updates.departamento !== undefined) row.departamento = updates.departamento;
+        if (updates.municipio !== undefined) row.municipio = updates.municipio;
+        if (updates.latitude !== undefined) row.latitude = updates.latitude || null;
+        if (updates.longitude !== undefined) row.longitude = updates.longitude || null;
+        // Entity classification
+        if (updates.tipo_entidad !== undefined) row.tipo_entidad = updates.tipo_entidad;
+        if (updates.regimen_control !== undefined) row.regimen_control = updates.regimen_control || null;
+        if (updates.notas !== undefined) row.notas = updates.notas;
+        if (updates.metadata_json !== undefined) row.metadata_json = updates.metadata_json;
         if (updates.company !== undefined) {
           const { data: comp } = await supabaseAdmin
             .from("companies")

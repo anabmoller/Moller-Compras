@@ -1,10 +1,12 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import {
   getParameters, addParameterItem, updateParameterItem,
   toggleParameterItem, initParameters,
 } from "../../constants/parameters";
+import { TIPO_ENTIDAD_LABELS, REGIMEN_CONTROL_LABELS } from "../../constants/establecimientos";
 import ParameterForm from "./ParameterForm";
 import ParameterItemList from "./ParameterItemList";
+import EntityDetailModal from "./EntityDetailModal";
 
 const TABS = [
   { key: "establishments", label: "Establecimientos", icon: "📍" },
@@ -33,13 +35,40 @@ export default function ParametersScreen({ onBack }) {
   const [actionError, setActionError] = useState(null);
   const [sortKey, setSortKey] = useState("name");
   const [sortDir, setSortDir] = useState("asc");
+  // Establishment-specific filters
+  const [filterTipo, setFilterTipo] = useState("todos");
+  const [filterRegimen, setFilterRegimen] = useState("todos");
+  const [filterOrigen, setFilterOrigen] = useState("todos");
+  // Entity detail modal
+  const [detailItem, setDetailItem] = useState(null);
 
   const refresh = useCallback(() => setParams({ ...getParameters() }), []);
 
   const items = params[tab] || [];
-  const filtered = items.filter(i =>
-    !search || (i.name || "").toLowerCase().includes(search.toLowerCase())
-  );
+
+  // Get unique departamentos for the Origen filter
+  const departamentos = useMemo(() => {
+    if (tab !== "establishments") return [];
+    const deps = [...new Set(items.map(i => i.departamento).filter(Boolean))].sort();
+    return deps;
+  }, [tab, items]);
+
+  const filtered = items.filter(i => {
+    // Text search across name, code, senacsa_code, departamento
+    if (search) {
+      const q = search.toLowerCase();
+      const haystack = [i.name, i.code, i.senacsa_code, i.departamento, i.company]
+        .filter(Boolean).join(" ").toLowerCase();
+      if (!haystack.includes(q)) return false;
+    }
+    // Establishment-specific filters
+    if (tab === "establishments") {
+      if (filterTipo !== "todos" && i.tipo_entidad !== filterTipo) return false;
+      if (filterRegimen !== "todos" && i.regimen_control !== filterRegimen) return false;
+      if (filterOrigen !== "todos" && i.departamento !== filterOrigen) return false;
+    }
+    return true;
+  });
   const activeCount = items.filter(i => i.active !== false).length;
 
   const sorted = [...filtered].sort((a, b) => {
@@ -156,7 +185,7 @@ export default function ParametersScreen({ onBack }) {
       {/* Tab Bar */}
       <div className="flex gap-1 px-5 pb-3 overflow-x-auto scrollbar-none">
         {TABS.map(t => (
-          <button key={t.key} onClick={() => { setTab(t.key); setSearch(""); setShowForm(false); setEditingItem(null); }} className={`px-3.5 py-2 rounded-xl border-none text-xs font-semibold cursor-pointer whitespace-nowrap ${
+          <button key={t.key} onClick={() => { setTab(t.key); setSearch(""); setShowForm(false); setEditingItem(null); setFilterTipo("todos"); setFilterRegimen("todos"); setFilterOrigen("todos"); setDetailItem(null); }} className={`px-3.5 py-2 rounded-xl border-none text-xs font-semibold cursor-pointer whitespace-nowrap ${
             tab === t.key
               ? 'bg-[#1F2A44] text-white shadow-md shadow-black/20'
               : 'bg-[#F8F9FB]/[0.03] text-slate-400 shadow-sm'
@@ -182,6 +211,57 @@ export default function ParametersScreen({ onBack }) {
             + Nuevo
           </button>
         </div>
+
+        {/* Establishment Filters */}
+        {tab === "establishments" && (
+          <div className="mb-3 flex flex-col gap-2">
+            {/* Tipo chips */}
+            <div className="flex gap-1.5 overflow-x-auto scrollbar-none">
+              {[
+                { key: "todos", label: "Todos" },
+                { key: "establecimiento", label: "Bajo Gesti\u00f3n" },
+                { key: "proveedor_ganado", label: "Prov. Ganado" },
+                { key: "proveedor_granos", label: "Prov. Granos" },
+                { key: "industria", label: "Industrias" },
+              ].map(opt => (
+                <button
+                  key={opt.key}
+                  onClick={() => setFilterTipo(opt.key)}
+                  className={`px-3 py-1.5 rounded-full border-none text-[11px] font-semibold cursor-pointer whitespace-nowrap transition-colors ${
+                    filterTipo === opt.key
+                      ? "bg-[#C8A03A] text-[#0B1120]"
+                      : "bg-[#F8F9FB]/[0.04] text-slate-400 hover:text-white"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+            {/* R\u00e9gimen + Origen selects row */}
+            <div className="flex gap-2">
+              <select
+                value={filterRegimen}
+                onChange={e => setFilterRegimen(e.target.value)}
+                className="flex-1 px-2.5 py-1.5 rounded-lg border border-white/[0.06] bg-[#F8F9FB]/[0.03] text-[11px] text-slate-300 outline-none"
+              >
+                <option value="todos">R\u00e9gimen: Todos</option>
+                {Object.entries(REGIMEN_CONTROL_LABELS).map(([k, v]) => (
+                  <option key={k} value={k}>{v}</option>
+                ))}
+              </select>
+              <select
+                value={filterOrigen}
+                onChange={e => setFilterOrigen(e.target.value)}
+                className="flex-1 px-2.5 py-1.5 rounded-lg border border-white/[0.06] bg-[#F8F9FB]/[0.03] text-[11px] text-slate-300 outline-none"
+              >
+                <option value="todos">Origen: Todos</option>
+                {departamentos.map(d => (
+                  <option key={d} value={d}>{d}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        )}
 
         {/* Count badge */}
         <div className="text-[11px] text-slate-400 mb-2.5 font-medium">
@@ -209,9 +289,19 @@ export default function ParametersScreen({ onBack }) {
           onToggleSort={toggleSort}
           onEdit={(item) => { setEditingItem(item); setShowForm(true); }}
           onToggle={handleToggle}
+          onDetail={tab === "establishments" ? (item) => setDetailItem(item) : null}
           renderSubtitle={renderSubtitle}
         />
       </div>
+
+      {/* Entity Detail Modal */}
+      {detailItem && (
+        <EntityDetailModal
+          item={detailItem}
+          onClose={() => setDetailItem(null)}
+          onEdit={(item) => { setDetailItem(null); setEditingItem(item); setShowForm(true); }}
+        />
+      )}
     </div>
   );
 }

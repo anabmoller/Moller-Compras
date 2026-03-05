@@ -41,16 +41,29 @@ function autoGenerateCode(name) {
 const FIELDS = {
   establishments: [
     { key: "name", label: "Nombre del Establecimiento", required: true },
-    { key: "code", label: "Código (auto)", required: true, hint: "Se genera automáticamente del nombre" },
-    { key: "senacsa_code", label: "Código SENACSA", hint: "Se auto-completa al escribir el nombre" },
+    { key: "code", label: "C\u00f3digo (auto)", required: true, hint: "Se genera autom\u00e1ticamente del nombre" },
+    { key: "tipo_entidad", label: "Tipo de Entidad", type: "select", options: [
+      { value: "establecimiento", label: "Establecimiento" },
+      { value: "proveedor_ganado", label: "Proveedor Ganado" },
+      { value: "proveedor_granos", label: "Proveedor Granos" },
+      { value: "industria", label: "Industria" },
+    ]},
+    { key: "regimen_control", label: "R\u00e9gimen de Control", type: "select", options: [
+      { value: "", label: "N/A" },
+      { value: "propio", label: "Propio" },
+      { value: "arrendado", label: "Arrendado" },
+      { value: "cenabico", label: "CENABICO" },
+    ], hint: "Solo para establecimientos bajo gesti\u00f3n" },
+    { key: "senacsa_code", label: "C\u00f3digo SENACSA", hint: "Se auto-completa al escribir el nombre" },
     { key: "senacsa_unidad_zonal", label: "Unidad Zonal SENACSA" },
     { key: "company", label: "Empresa", type: "select", options: "companies", required: true },
     { key: "manager", label: "Gerente Responsable", type: "user_select", roleFilter: "gerente" },
     { key: "departamento", label: "Departamento" },
     { key: "municipio", label: "Municipio" },
-    { key: "location", label: "Ubicación (texto libre)" },
+    { key: "location", label: "Ubicaci\u00f3n (texto libre)" },
     { key: "latitude", label: "Latitud", hint: "Ej: -23.3154" },
     { key: "longitude", label: "Longitud", hint: "Ej: -56.7123" },
+    { key: "notas", label: "Notas", type: "textarea" },
   ],
   sectors: [
     { key: "name", label: "Nombre", required: true },
@@ -116,8 +129,10 @@ export default function ParameterForm({ tab, item, onSave, onCancel, saving }) {
   const canSubmit = !saving && fields.filter(f => f.required).every(f => (form[f.key] || "").toString().trim());
 
   const resolveOptions = (f) => {
-    if (f.options === "companies") return companyOptions;
-    if (Array.isArray(f.options)) return f.options;
+    if (f.options === "companies") return companyOptions.map(o => ({ value: o, label: o }));
+    if (Array.isArray(f.options)) {
+      return f.options.map(o => typeof o === "string" ? { value: o, label: o } : o);
+    }
     return [];
   };
 
@@ -171,7 +186,16 @@ export default function ParameterForm({ tab, item, onSave, onCancel, saving }) {
                 {f.hint}
               </div>
             )}
-            {f.type === "select" ? (
+            {f.type === "textarea" ? (
+              <textarea
+                value={form[f.key] || ""}
+                onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
+                placeholder={f.label}
+                disabled={saving}
+                rows={3}
+                className="w-full px-3 py-2.5 rounded-lg border border-white/[0.1] bg-[#F8F9FB]/[0.05] text-[13px] text-white outline-none transition-colors focus:border-[#C8A03A]/50 resize-none"
+              />
+            ) : f.type === "select" ? (
               <select
                 value={form[f.key] || ""}
                 onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
@@ -180,8 +204,8 @@ export default function ParameterForm({ tab, item, onSave, onCancel, saving }) {
               >
                 <option value="">Seleccionar...</option>
                 {resolveOptions(f).map(o => (
-                  <option key={o} value={o}>
-                    {o === "empresa" ? "Empresa" : o === "persona_fisica" ? "Persona Física" : o}
+                  <option key={o.value} value={o.value}>
+                    {o.label}
                   </option>
                 ))}
               </select>

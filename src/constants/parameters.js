@@ -58,13 +58,18 @@ export async function initParameters() {
         companyId: e.company_id,
         manager: e.manager,
         location: e.location,
-        // New fields
         senacsa_code: e.senacsa_code || "",
         senacsa_unidad_zonal: e.senacsa_unidad_zonal || "",
         departamento: e.departamento || "",
         municipio: e.municipio || "",
         latitude: e.latitude || "",
         longitude: e.longitude || "",
+        // Entity classification
+        tipo: e.tipo || "propio",
+        tipo_entidad: e.tipo_entidad || "establecimiento",
+        regimen_control: e.regimen_control || null,
+        notas: e.notas || "",
+        metadata_json: e.metadata_json || {},
         active: e.active !== false,
       })),
       sectors: (sectors.data || []).map(s => ({

@@ -1,7 +1,6 @@
 // ============================================================
-// ESTABLECIMIENTOS — Group-owned establishments (tipo = 'propio')
-// These are internal properties and NEVER include providers
-// or external destinations (frigoríficos, terceros).
+// ESTABLECIMIENTOS — Group-owned establishments
+// These are internal properties managed by the group.
 // ============================================================
 
 /**
@@ -22,11 +21,41 @@ export const ESTABLECIMIENTOS_PROPIOS = [
 ];
 
 /**
- * Map an establishment DB record to the standard shape.
- * Only returns records where tipo = 'propio' and active = true.
+ * Entity type labels for UI display
  */
-export function filterGroupEstablishments(dbEstablishments = []) {
+export const TIPO_ENTIDAD_LABELS = {
+  establecimiento:  "Establecimiento",
+  proveedor_ganado: "Proveedor Ganado",
+  proveedor_granos: "Proveedor Granos",
+  industria:        "Industria",
+};
+
+/**
+ * Regimen control labels for UI display
+ */
+export const REGIMEN_CONTROL_LABELS = {
+  propio:    "Propio",
+  arrendado: "Arrendado",
+  cenabico:  "CENABICO",
+};
+
+/**
+ * Filter group-managed establishments (tipo_entidad = 'establecimiento')
+ * Accepts optional regimen filter.
+ */
+export function filterGroupEstablishments(dbEstablishments = [], regimen = null) {
   return dbEstablishments.filter(
-    (e) => e.tipo === "propio" && e.active !== false
+    (e) =>
+      e.tipo_entidad === "establecimiento" &&
+      e.active !== false &&
+      (!regimen || e.regimen_control === regimen)
   );
+}
+
+/**
+ * Filter by tipo_entidad
+ */
+export function filterByTipoEntidad(dbEstablishments = [], tipo) {
+  if (!tipo || tipo === "todos") return dbEstablishments;
+  return dbEstablishments.filter((e) => e.tipo_entidad === tipo);
 }
