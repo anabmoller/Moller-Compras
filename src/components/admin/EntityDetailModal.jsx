@@ -53,12 +53,12 @@ export default function EntityDetailModal({ item, onClose, onEdit }) {
     <div className="fixed inset-0 z-50 flex items-end justify-center" onClick={onClose}>
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <div
-        className="relative w-full max-w-lg max-h-[85vh] overflow-y-auto bg-[#0F1729] rounded-t-2xl border-t border-x border-white/[0.08] animate-fadeIn"
+        className="relative w-full max-w-lg max-h-[85vh] overflow-y-auto bg-[var(--color-modal)] rounded-t-2xl border-t border-x border-[var(--color-border)] animate-fadeIn"
         onClick={e => e.stopPropagation()}
         style={{ WebkitOverflowScrolling: "touch" }}
       >
         {/* Header */}
-        <div className="sticky top-0 z-10 bg-[#0F1729] border-b border-white/[0.06] px-5 py-4">
+        <div className="sticky top-0 z-10 bg-[var(--color-modal)] border-b border-[var(--color-border)] px-5 py-4">
           <div className="flex justify-between items-start">
             <div className="flex-1 min-w-0">
               <h3 className="text-lg font-bold text-white m-0 truncate">{item.name}</h3>

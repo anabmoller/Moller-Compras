@@ -177,10 +177,10 @@ export default function NewRequestForm({ onSubmit, onCancel, usdRate = 7800, usd
     <div className="pb-10 animate-fadeIn">
       {/* Header */}
       <div className="px-5 py-3 flex justify-between items-center">
-        <button onClick={onCancel} className="bg-transparent border-none cursor-pointer text-sm text-blue-400 font-medium">
+        <button onClick={onCancel} className="bg-transparent border-none cursor-pointer text-sm text-blue-500 font-medium">
           &larr; Cancelar
         </button>
-        <span className="text-xs text-slate-400 font-medium">Paso {step} de 3</span>
+        <span className="text-xs text-[var(--color-textSecondary)] font-medium">Paso {step} de 3</span>
       </div>
 
       <div className="px-5">
@@ -192,7 +192,7 @@ export default function NewRequestForm({ onSubmit, onCancel, usdRate = 7800, usd
             <span className="text-[11px] font-semibold uppercase tracking-wide">{requestType.label}</span>
           </div>
         )}
-        <h2 className="text-[22px] font-semibold text-white mb-1 mt-0">{stepTitles[step - 1].title}</h2>
+        <h2 className="text-[22px] font-semibold text-[var(--color-text)] mb-1 mt-0">{stepTitles[step - 1].title}</h2>
         <div className="text-[13px] text-slate-400 mb-5">{stepTitles[step - 1].sub}</div>
 
         {/* Step indicators */}
@@ -201,7 +201,7 @@ export default function NewRequestForm({ onSubmit, onCancel, usdRate = 7800, usd
             <div
               key={s}
               className="flex-1 h-1 rounded-sm transition-colors duration-300"
-              style={{ background: s <= step ? (s < step ? '#5B0B14' : '#C8A03A') : 'rgba(255,255,255,0.06)' }}
+              style={{ background: s <= step ? (s < step ? '#5B0B14' : '#C8A03A') : 'var(--color-border)' }}
             />
           ))}
         </div>
@@ -252,18 +252,18 @@ export default function NewRequestForm({ onSubmit, onCancel, usdRate = 7800, usd
           {step > 1 && (
             <button
               onClick={() => setStep(s => s - 1)}
-              className="flex-1 py-3.5 rounded-xl border border-white/[0.06] bg-[#F8F9FB]/[0.03] text-white text-sm font-semibold cursor-pointer"
+              className="flex-1 py-3.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text)] text-sm font-semibold cursor-pointer"
             >
               &larr; Anterior
             </button>
           )}
           <button
             onClick={handleNext}
-            className="py-3.5 rounded-xl border-none text-white text-sm font-semibold cursor-pointer shadow-md"
+            className="py-3.5 rounded-xl border-none text-on-dark text-sm font-semibold cursor-pointer shadow-md"
             style={{
               flex: step > 1 ? 1 : undefined,
               width: step === 1 ? "100%" : undefined,
-              background: step === 3 ? '#6366f1' : '#5B0B14',
+              background: step === 3 ? '#6366f1' : 'var(--color-primary, #5B0B14)',
             }}
           >
             {step === 3 ? "Crear Solicitud ✓" : "Siguiente →"}

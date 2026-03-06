@@ -57,10 +57,10 @@ export default function GlobalSearch({ onNavigate, requests = [], onClose }) {
     >
       <div
         onClick={e => e.stopPropagation()}
-        className="bg-[#12131a] border border-white/[0.08] rounded-2xl w-full max-w-md shadow-2xl animate-slide-up overflow-hidden"
+        className="bg-[var(--color-modal)] border border-[var(--color-border)] rounded-2xl w-full max-w-md shadow-2xl animate-slide-up overflow-hidden"
       >
         {/* Search input */}
-        <div className="flex items-center gap-3 px-4 py-3 border-b border-white/[0.06]">
+        <div className="flex items-center gap-3 px-4 py-3 border-b border-[var(--color-border)]">
           <svg className="w-4 h-4 text-slate-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
@@ -69,9 +69,9 @@ export default function GlobalSearch({ onNavigate, requests = [], onClose }) {
             value={query}
             onChange={e => setQuery(e.target.value)}
             placeholder="Buscar solicitudes, pantallas..."
-            className="flex-1 bg-transparent border-none outline-none text-white text-sm placeholder:text-slate-500"
+            className="flex-1 bg-transparent border-none outline-none text-[var(--color-text)] text-sm placeholder:text-slate-500"
           />
-          <kbd className="hidden sm:inline-flex px-1.5 py-0.5 text-[10px] font-medium text-slate-500 bg-[#F8F9FB]/[0.06] rounded border border-white/[0.08]">
+          <kbd className="hidden sm:inline-flex px-1.5 py-0.5 text-[10px] font-medium text-slate-500 bg-[var(--color-surface)] rounded border border-[var(--color-border)]">
             ESC
           </kbd>
         </div>

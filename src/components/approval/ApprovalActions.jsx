@@ -107,10 +107,9 @@ export default function ApprovalActions({ request, currentUser, onApprove, onRej
 function ReasonModal({ title, placeholder, confirmLabel, confirmColor, reason, setReason, onConfirm, onCancel }) {
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-end md:items-center justify-center z-[1000] p-0 md:p-4">
-      <div className="w-full max-w-md rounded-t-2xl md:rounded-2xl px-5 pt-6 pb-8 animate-slideUp shadow-2xl"
-        style={{ background: '#1a1b23', border: '1px solid rgba(255,255,255,0.08)' }}
+      <div className="w-full max-w-md rounded-t-2xl md:rounded-2xl px-5 pt-6 pb-8 animate-slideUp shadow-2xl bg-[var(--color-modal)] border border-[var(--color-border)]"
       >
-        <div className="text-base font-semibold text-white mb-4">
+        <div className="text-base font-semibold text-[var(--color-text)] mb-4">
           {title}
         </div>
         <textarea
@@ -118,13 +117,13 @@ function ReasonModal({ title, placeholder, confirmLabel, confirmColor, reason, s
           onChange={e => setReason(e.target.value)}
           placeholder={placeholder}
           rows={3}
-          className="w-full rounded-xl border-[1.5px] border-white/[0.06] px-3.5 py-3 text-sm bg-[#0a0b0f] text-white resize-none box-border outline-none"
+          className="w-full rounded-xl border-[1.5px] border-[var(--color-border)] px-3.5 py-3 text-sm bg-[var(--color-surface)] text-[var(--color-text)] resize-none box-border outline-none"
           autoFocus
         />
         <div className="flex gap-2.5 mt-4">
           <button
             onClick={onCancel}
-            className="flex-1 py-3.5 rounded-xl border border-white/[0.06] bg-[#0a0b0f] text-white text-sm font-medium cursor-pointer"
+            className="flex-1 py-3.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text)] text-sm font-medium cursor-pointer"
           >
             Cancelar
           </button>

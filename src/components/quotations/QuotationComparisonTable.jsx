@@ -6,7 +6,7 @@ export default function QuotationComparisonTable({
       <table className="w-full text-xs border-collapse">
         <thead>
           <tr className="border-b border-white/[0.06]">
-            <th className="text-left px-3 py-2.5 text-slate-400 font-semibold sticky left-0 bg-[#0a0b0f] min-w-[100px]">Item</th>
+            <th className="text-left px-3 py-2.5 text-slate-400 font-semibold sticky left-0 bg-[var(--color-bg)] min-w-[100px]">Item</th>
             {quotations.map(q => (
               <th key={q.id} className="text-center px-3 py-2.5 text-white font-semibold min-w-[90px]">
                 <div className="truncate max-w-[90px]">{q.supplier}</div>
@@ -18,7 +18,7 @@ export default function QuotationComparisonTable({
         <tbody>
           {items.map((it, idx) => (
             <tr key={idx} className="border-b border-white/[0.06]">
-              <td className="px-3 py-2 text-white sticky left-0 bg-[#0a0b0f]">
+              <td className="px-3 py-2 text-white sticky left-0 bg-[var(--color-bg)]">
                 <div className="font-medium truncate max-w-[100px]">{it.name || it.nombre || "Item"}</div>
                 <div className="text-[10px] text-slate-400">{it.quantity || it.cantidad || 0} {it.unit || it.unidad || "un"}</div>
               </td>
@@ -41,7 +41,7 @@ export default function QuotationComparisonTable({
           ))}
           {/* Total row */}
           <tr className="bg-[#F8F9FB]/[0.02]">
-            <td className="px-3 py-2.5 text-white font-bold sticky left-0 bg-[#0a0b0f]">TOTAL</td>
+            <td className="px-3 py-2.5 text-white font-bold sticky left-0 bg-[var(--color-bg)]">TOTAL</td>
             {quotations.map(q => {
               const isCheapest = q.id === cheapest?.id;
               return (
@@ -53,7 +53,7 @@ export default function QuotationComparisonTable({
           </tr>
           {/* Delivery row */}
           <tr>
-            <td className="px-3 py-2 text-slate-400 sticky left-0 bg-[#0a0b0f]">Entrega</td>
+            <td className="px-3 py-2 text-slate-400 sticky left-0 bg-[var(--color-bg)]">Entrega</td>
             {quotations.map(q => {
               const isFastest = q.id === fastest?.id;
               return (

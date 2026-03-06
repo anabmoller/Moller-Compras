@@ -188,7 +188,7 @@ function AppContent() {
   // Loading spinner
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a0b0f] flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--color-bg)] flex items-center justify-center">
         <div className="text-center">
           <div className="w-12 h-12 rounded-xl bg-[#1F2A44] inline-flex items-center justify-center mb-4 shadow-lg shadow-black/20">
             <span className="text-white text-xl font-bold">AM</span>
@@ -205,7 +205,7 @@ function AppContent() {
   // Data loading
   if (dataLoading) {
     return (
-      <div className="min-h-screen bg-[#0a0b0f] flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--color-bg)] flex items-center justify-center">
         <div className="text-center">
           <div className="w-12 h-12 rounded-xl bg-[#1F2A44] inline-flex items-center justify-center mb-4 shadow-lg shadow-black/20">
             <span className="text-white text-xl font-bold">AM</span>
@@ -537,7 +537,7 @@ function AppContent() {
   const newRequestHandler = effectiveCan("create_request") ? handleNewRequest : () => showNotif("Sin permiso", "error");
 
   return (
-    <div className="min-h-screen bg-[#0a0b0f]">
+    <div className="min-h-screen bg-[var(--color-bg)]">
       {isDevModeActive && (
         <div className="bg-red-600 text-white text-sm font-medium text-center py-2 px-4 flex items-center justify-center gap-3 sticky top-0 z-50">
           <span>Modo Dev: Viendo como {devMode.name} ({devMode.label})</span>

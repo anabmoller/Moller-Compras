@@ -4,11 +4,11 @@
 export default function Header({ currentUser, onToggleDrawer, onNavigate }) {
   const initial = currentUser?.charAt(0)?.toUpperCase() || 'U';
   return (
-    <header className="bg-[#0d0e14] border-b border-white/[0.06] px-4 py-3 flex justify-between items-center sticky top-0 z-40">
+    <header className="bg-[var(--color-sidebar-bg)] border-b border-[var(--color-border)] px-4 py-3 flex justify-between items-center sticky top-0 z-40">
       {/* Hamburger */}
       <button
         onClick={onToggleDrawer}
-        className="w-9 h-9 rounded-lg bg-transparent border-none cursor-pointer flex items-center justify-center text-white hover:bg-[#F8F9FB]/[0.06] transition-colors"
+        className="w-9 h-9 rounded-lg bg-transparent border-none cursor-pointer flex items-center justify-center text-[var(--color-text)] hover:bg-[var(--color-surface)] transition-colors"
         aria-label="Abrir menú"
       >
         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
@@ -24,7 +24,7 @@ export default function Header({ currentUser, onToggleDrawer, onNavigate }) {
         <div className="w-7 h-7 rounded-md bg-[#1F2A44] flex items-center justify-center text-white font-bold text-xs">
           AM
         </div>
-        <div className="text-sm font-bold text-white tracking-tight">SIGAM</div>
+        <div className="text-sm font-bold text-[var(--color-text)] tracking-tight">SIGAM</div>
       </div>
 
       {/* Avatar → profile */}

@@ -189,7 +189,7 @@ export default function BudgetManagementScreen({ onBack }) {
       {/* Confirm reset modal */}
       {showConfirmReset && (
         <ModalBackdrop onClose={() => setShowConfirmReset(false)} variant="center">
-          <div className="bg-[#111218] rounded-2xl p-6 max-w-[340px] w-full">
+          <div className="bg-[var(--color-modal)] rounded-2xl p-6 max-w-[340px] w-full border border-[var(--color-border)]">
             <div className="text-base font-bold text-white mb-2">
               Refrescar presupuestos
             </div>

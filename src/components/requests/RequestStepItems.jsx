@@ -156,7 +156,7 @@ export default function RequestStepItems({
                 className="w-full text-left px-3 py-2 border-none bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer flex items-center gap-2 transition-colors"
               >
                 <span className="text-[10px] font-mono text-[#C8A03A] bg-[#1F2A44]/[0.08] px-1.5 py-0.5 rounded">{p.c}</span>
-                <span className="text-sm text-white flex-1 truncate">{p.n}</span>
+                <span className="text-sm text-slate-800 dark:text-white flex-1 truncate">{p.n}</span>
                 {sectorCategory && p.g === sectorCategory && (
                   <span className="text-[9px] text-[#C8A03A] bg-[#1F2A44]/[0.1] px-1.5 py-0.5 rounded-full font-medium">{form.sector}</span>
                 )}
@@ -182,7 +182,7 @@ export default function RequestStepItems({
         <div className="bg-[#F8F9FB]/[0.03] rounded-xl px-3.5 py-3 border border-white/[0.08]">
           {/* Compact reference line */}
           <div className="text-[11px] text-slate-400 mb-2.5">
-            Ref: <span className="text-white font-medium">{fmtGs(selectedProduct.up)}</span>/{selectedProduct.u}
+            Ref: <span className="text-[var(--color-text)] font-medium">{fmtGs(selectedProduct.up)}</span>/{selectedProduct.u}
             {selectedProduct.ld && <span className="text-slate-500"> · {selectedProduct.ls} ({selectedProduct.ld})</span>}
           </div>
 
@@ -248,7 +248,7 @@ export default function RequestStepItems({
           {items.map((it, i) => (
             <div key={i} className="px-3 py-2 flex items-center gap-2 border-b border-white/[0.04] last:border-b-0">
               <div className="flex-1 min-w-0">
-                <div className="text-sm text-white font-medium truncate flex items-center gap-1.5">
+                <div className="text-sm text-[var(--color-text)] font-medium truncate flex items-center gap-1.5">
                   {it.product}
                   {it.isFreeItem && <span className="text-[9px] text-amber-400 bg-amber-500/[0.1] px-1.5 py-0.5 rounded-full font-medium">Producto libre</span>}
                 </div>

@@ -10,7 +10,7 @@ import Card from '../shared/Card';
 export function DarkTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-[#1a1b23] border border-white/10 rounded-lg px-3 py-2 shadow-xl text-xs">
+    <div className="bg-[var(--color-modal)] border border-[var(--color-border)] rounded-lg px-3 py-2 shadow-xl text-xs">
       <p className="text-slate-400 mb-1 font-medium">{label}</p>
       {payload.map((p, i) => (
         <p key={i} className="font-semibold" style={{ color: p.color }}>

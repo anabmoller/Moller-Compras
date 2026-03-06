@@ -5,10 +5,10 @@ export default function ConfirmModal({ title, message, confirmLabel = "Confirmar
       onClick={onCancel}
     >
       <div
-        className="bg-[#111218] rounded-2xl p-6 w-full max-w-[360px] shadow-2xl"
+        className="bg-[var(--color-modal)] rounded-2xl p-6 w-full max-w-[360px] shadow-2xl border border-[var(--color-border)]"
         onClick={e => e.stopPropagation()}
       >
-        <h3 className="text-[17px] font-semibold text-white mb-2 mt-0">
+        <h3 className="text-[17px] font-semibold text-[var(--color-text)] mb-2 mt-0">
           {title}
         </h3>
         <p className="text-[13px] text-slate-400 mb-5 mt-0 leading-relaxed">
@@ -17,7 +17,7 @@ export default function ConfirmModal({ title, message, confirmLabel = "Confirmar
         <div className="flex gap-2.5">
           <button
             onClick={onCancel}
-            className="flex-1 py-3 rounded-xl border border-white/[0.06] bg-transparent text-white text-sm font-medium cursor-pointer"
+            className="flex-1 py-3 rounded-xl border border-[var(--color-border)] bg-transparent text-[var(--color-text)] text-sm font-medium cursor-pointer"
           >
             Cancelar
           </button>

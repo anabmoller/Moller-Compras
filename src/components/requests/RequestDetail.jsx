@@ -531,7 +531,7 @@ export default function RequestDetail({
       </div>
 
       {/* ===== MOBILE BOTTOM ACTION BAR (hidden on md+) ===== */}
-      <div className="mobile-bottom-action-bar fixed bottom-16 left-0 right-0 px-5 py-2.5 bg-[rgba(10,11,15,0.95)] backdrop-blur-xl border-t border-white/[0.06] flex gap-2 z-30">
+      <div className="mobile-bottom-action-bar fixed bottom-16 left-0 right-0 px-5 py-2.5 bg-[var(--color-modal)]/95 backdrop-blur-xl border-t border-[var(--color-border)] flex gap-2 z-30">
         {isBorrador && onConfirm && (
           <ActionBtn label="Confirmar ✓" color="#C8A03A" bg="linear-gradient(135deg, #5B0B14, #4A0910)" onClick={() => onConfirm(r.id)} flex={2} />
         )}
@@ -580,7 +580,7 @@ export default function RequestDetail({
       )}
       {showCancelModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowCancelModal(false)}>
-          <div className="bg-[#1a1b23] rounded-2xl w-full max-w-md border border-white/[0.08] p-5" onClick={e => e.stopPropagation()}>
+          <div className="bg-[var(--color-modal)] rounded-2xl w-full max-w-md border border-[var(--color-border)] p-5" onClick={e => e.stopPropagation()}>
             <div className="text-base font-semibold text-white mb-1">Cancelar Solicitud</div>
             <div className="text-xs text-slate-400 mb-4">Esta acción no se puede deshacer. La solicitud quedará en estado cancelado.</div>
             <textarea

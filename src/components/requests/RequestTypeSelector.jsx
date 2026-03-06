@@ -12,10 +12,10 @@ import { X } from "lucide-react";
 export default function RequestTypeSelector({ types = [], onSelect, onClose }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="relative w-full max-w-md mx-4 rounded-2xl bg-[#111827] border border-white/10 shadow-2xl p-6">
+      <div className="relative w-full max-w-md mx-4 rounded-2xl bg-[var(--color-modal)] border border-[var(--color-border)] shadow-2xl p-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-white text-lg font-semibold">
+          <h2 className="text-[var(--color-text)] text-lg font-semibold">
             Tipo de Solicitud
           </h2>
           <button
@@ -35,10 +35,10 @@ export default function RequestTypeSelector({ types = [], onSelect, onClose }) {
                 key={type.key}
                 onClick={() => onSelect(type)}
                 className="flex items-center gap-4 w-full p-4 rounded-xl
-                  bg-white/5 border border-white/10 hover:bg-white/10
+                  bg-[var(--color-surface)] border border-[var(--color-border)] hover:bg-[var(--color-surface-hover)]
                   hover:border-[#C8A03A]/40 transition-all text-left group"
               >
-                <span className="flex items-center justify-center w-10 h-10 rounded-lg bg-white/10 text-[#C8A03A] group-hover:bg-[#C8A03A]/20 transition-colors">
+                <span className="flex items-center justify-center w-10 h-10 rounded-lg bg-[var(--color-surface-hover)] text-[#C8A03A] group-hover:bg-[#C8A03A]/20 transition-colors">
                   {Icon && (typeof Icon === "function" || (typeof Icon === "object" && Icon.$$typeof)) ? (
                     <Icon size={20} />
                   ) : (
@@ -46,11 +46,11 @@ export default function RequestTypeSelector({ types = [], onSelect, onClose }) {
                   )}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-white text-sm font-medium truncate">
+                  <p className="text-[var(--color-text)] text-sm font-medium truncate">
                     {type.label}
                   </p>
                   {type.description && (
-                    <p className="text-gray-400 text-xs mt-0.5 truncate">
+                    <p className="text-[var(--color-text-muted)] text-xs mt-0.5 truncate">
                       {type.description}
                     </p>
                   )}

@@ -42,8 +42,8 @@ export default function RequestStepDetails({ form, errors, onUpdateForm, FieldEr
               onClick={() => onUpdateForm("urgency", u.value)}
               className="flex-1 px-1.5 py-3 rounded-lg text-center transition-all duration-150 cursor-pointer"
               style={{
-                border: form.urgency === u.value ? `2px solid ${u.color}` : '1px solid rgba(255,255,255,0.06)',
-                background: form.urgency === u.value ? (u.colorLight || u.color + "10") : 'rgba(255,255,255,0.03)',
+                border: form.urgency === u.value ? `2px solid ${u.color}` : '1px solid var(--color-border)',
+                background: form.urgency === u.value ? (u.colorLight || u.color + "10") : 'var(--color-surface)',
               }}
             >
               <div className="text-base">{u.icon}</div>

@@ -57,17 +57,17 @@ export default function MobileDrawer({ open, onClose, screen, onNavigate, onNewR
 
       {/* Drawer */}
       <div
-        className="fixed top-0 left-0 bottom-0 w-[280px] bg-[#0d0e14] z-[101] shadow-2xl transition-transform duration-300 flex flex-col"
+        className="fixed top-0 left-0 bottom-0 w-[280px] bg-[var(--color-sidebar-bg)] z-[101] shadow-2xl transition-transform duration-300 flex flex-col"
         style={{ transform: open ? 'translateX(0)' : 'translateX(-100%)' }}
       >
         {/* Header */}
-        <div className="px-5 pt-5 pb-4 border-b border-white/[0.06] flex items-center justify-between">
+        <div className="px-5 pt-5 pb-4 border-b border-[var(--color-border)] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-lg bg-[#1F2A44] flex items-center justify-center text-white font-bold text-base">
               AM
             </div>
             <div>
-              <div className="text-lg font-bold text-white tracking-tight leading-tight">SIGAM</div>
+              <div className="text-lg font-bold text-[var(--color-text)] tracking-tight leading-tight">SIGAM</div>
               <div className="text-[10px] font-medium text-slate-500 tracking-wide">Sistema Integrado de Gestión</div>
             </div>
           </div>
@@ -83,12 +83,12 @@ export default function MobileDrawer({ open, onClose, screen, onNavigate, onNewR
         {/* User card */}
         <div
           onClick={() => handleNav('profile')}
-          className="mx-3 mt-3 mb-1 px-3 py-2.5 bg-[rgba(255,255,255,0.04)] rounded-lg border border-white/[0.06] flex items-center gap-2.5 cursor-pointer hover:bg-[rgba(255,255,255,0.07)] transition-colors"
+          className="mx-3 mt-3 mb-1 px-3 py-2.5 bg-[var(--color-surface)] rounded-lg border border-[var(--color-border)] flex items-center gap-2.5 cursor-pointer hover:bg-[var(--color-surface-hover)] transition-colors"
         >
           <div className="w-8 h-8 rounded-full bg-[#1F2A44]/10 flex items-center justify-center text-[#C8A03A] font-semibold text-xs">
             {currentUser?.charAt(0)?.toUpperCase() || 'U'}
           </div>
-          <div className="text-sm font-medium text-white truncate flex-1">
+          <div className="text-sm font-medium text-[var(--color-text)] truncate flex-1">
             {currentUser}
           </div>
         </div>
@@ -103,7 +103,7 @@ export default function MobileDrawer({ open, onClose, screen, onNavigate, onNewR
               className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-md border-none text-sm cursor-pointer mb-0.5 transition-all ${
                 screen === item.key
                   ? 'bg-[#1F2A44]/10 text-[#C8A03A] font-semibold'
-                  : 'bg-transparent text-slate-400 font-normal hover:bg-[rgba(255,255,255,0.06)]'
+                  : 'bg-transparent text-slate-400 font-normal hover:bg-[var(--color-surface-hover)]'
               }`}
             >
               <span className="w-5 flex items-center justify-center flex-shrink-0">{item.icon}</span>
@@ -126,7 +126,7 @@ export default function MobileDrawer({ open, onClose, screen, onNavigate, onNewR
                   className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-md border-none text-sm cursor-pointer mb-0.5 transition-all ${
                     screen === item.key
                       ? 'bg-[#1F2A44]/10 text-[#C8A03A] font-semibold'
-                      : 'bg-transparent text-slate-400 font-normal hover:bg-[rgba(255,255,255,0.06)]'
+                      : 'bg-transparent text-slate-400 font-normal hover:bg-[var(--color-surface-hover)]'
                   }`}
                 >
                   <span className="w-5 flex items-center justify-center flex-shrink-0">{item.icon}</span>
@@ -142,7 +142,7 @@ export default function MobileDrawer({ open, onClose, screen, onNavigate, onNewR
             className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-md border-none text-sm cursor-pointer mb-0.5 transition-all ${
               screen === 'settings'
                 ? 'bg-[#1F2A44]/10 text-[#C8A03A] font-semibold'
-                : 'bg-transparent text-slate-400 font-normal hover:bg-[rgba(255,255,255,0.06)]'
+                : 'bg-transparent text-slate-400 font-normal hover:bg-[var(--color-surface-hover)]'
             }`}
           >
             <span className="w-5 flex items-center justify-center flex-shrink-0"><Settings size={ICON_SIZE} /></span>
@@ -154,7 +154,7 @@ export default function MobileDrawer({ open, onClose, screen, onNavigate, onNewR
         <div className="px-4 pb-4 pt-2">
           <button
             onClick={() => { onNewRequest(); onClose(); }}
-            className="w-full py-2.5 rounded-lg bg-[#1F2A44] hover:bg-[#1F2A44] text-white text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors border-none cursor-pointer"
+            className="w-full py-2.5 rounded-lg bg-[var(--color-accent,#5B0B14)] hover:opacity-90 text-on-dark text-sm font-semibold flex items-center justify-center gap-1.5 transition-colors border-none cursor-pointer"
           >
             <Plus size={14} />
             Nueva Solicitud

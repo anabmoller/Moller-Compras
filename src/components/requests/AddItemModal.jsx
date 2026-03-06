@@ -34,10 +34,10 @@ export default function AddItemModal({ onClose, onAdd }) {
 
   return (
     <ModalBackdrop onClose={onClose} variant="center">
-      <div className="bg-[#0a0b0f] rounded-2xl w-full max-w-lg max-h-[80vh] overflow-hidden flex flex-col animate-slideUp">
+      <div className="bg-[var(--color-modal)] rounded-2xl w-full max-w-lg max-h-[80vh] overflow-hidden flex flex-col animate-slideUp border border-[var(--color-border)]">
         {/* Header */}
         <div className="px-5 pt-5 pb-3 flex justify-between items-center">
-          <h3 className="text-lg font-semibold text-white m-0">
+          <h3 className="text-lg font-semibold text-[var(--color-text)] m-0">
             Agregar Item
           </h3>
           <button onClick={onClose} className="bg-[#F8F9FB]/[0.06] border-none w-[30px] h-[30px] rounded-lg cursor-pointer text-sm text-white flex items-center justify-center">

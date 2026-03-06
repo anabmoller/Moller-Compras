@@ -188,6 +188,10 @@ body {
 :root.light .text-white {
   color: #111827 !important;
 }
+/* Force white text on dark/colored CTA backgrounds in light mode */
+.text-on-dark {
+  color: #ffffff !important;
+}
 :root.light .text-white\/70 {
   color: rgba(17, 24, 39, 0.7) !important;
 }

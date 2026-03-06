@@ -9,7 +9,7 @@ export default function BudgetFormModal({
 
   return (
     <ModalBackdrop onClose={onClose} variant="center">
-      <div className="bg-[#111218] rounded-2xl px-5 pt-5 pb-6 max-w-[520px] w-full max-h-[85vh] overflow-y-auto animate-fadeIn">
+      <div className="bg-[var(--color-modal)] rounded-2xl px-5 pt-5 pb-6 max-w-[520px] w-full max-h-[85vh] overflow-y-auto animate-fadeIn border border-[var(--color-border)]">
 
         <h3 className="text-xl font-semibold text-white mb-4 mt-0">
           {editingId ? "Editar Presupuesto" : "Nuevo Presupuesto"}

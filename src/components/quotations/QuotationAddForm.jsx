@@ -121,7 +121,7 @@ export default function QuotationAddForm({ items, currency: initCurrency, onAdd,
             className={inputCls}
           />
           {showSuggestions && suggestions.length > 0 && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-[#1a1b23] border border-white/[0.1] rounded-lg shadow-xl z-50 max-h-[180px] overflow-auto">
+            <div className="absolute top-full left-0 right-0 mt-1 bg-[var(--color-modal)] border border-[var(--color-border)] rounded-lg shadow-xl z-50 max-h-[180px] overflow-auto">
               {suggestions.map((s, i) => (
                 <div
                   key={i}

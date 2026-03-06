@@ -102,22 +102,22 @@ function MovDrawer({ mov, estabMap, catMap, onClose }) {
   return (
     <>
       <div className="fixed inset-0 bg-black/50 z-[199]" onClick={onClose} />
-      <div className="fixed right-0 top-0 bottom-0 w-[380px] bg-[#0d0e14] border-l border-[#C8A03A]/30 shadow-[-6px_0_32px_rgba(0,0,0,0.3)] flex flex-col z-[200] overflow-y-auto">
+      <div className="fixed right-0 top-0 bottom-0 w-[380px] bg-[var(--color-sidebar-bg)] border-l border-[var(--color-border)] shadow-[-6px_0_32px_rgba(0,0,0,0.15)] flex flex-col z-[200] overflow-y-auto">
         {/* Header */}
-        <div className="bg-[#0a0b0f] px-6 py-[22px]">
+        <div className="bg-[var(--color-surface)] px-6 py-[22px]">
           <div className="flex justify-between items-start">
             <div>
               <div className="text-[10px] uppercase tracking-[0.14em] font-mono mb-1" style={{ color: tipo.color }}>
                 {tipo.icon} {tipo.label}
               </div>
-              <div className="text-[22px] font-bold text-white/95 leading-none">{mov.id || "—"}</div>
-              <div className="text-[13px] text-white/55 mt-1">
+              <div className="text-[22px] font-bold text-[var(--color-text)] leading-none">{mov.id || "—"}</div>
+              <div className="text-[13px] text-slate-400 mt-1">
                 Guía: {mov.nroGuia || "—"} · Cota: {mov.nroCota || "—"}
               </div>
             </div>
             <button
               onClick={onClose}
-              className="bg-white/[0.08] border-none text-white/70 w-8 h-8 rounded-[7px] cursor-pointer text-base flex items-center justify-center hover:bg-white/[0.12] transition-colors"
+              className="bg-[var(--color-surface-hover)] border-none text-slate-400 w-8 h-8 rounded-[7px] cursor-pointer text-base flex items-center justify-center hover:bg-[var(--color-surface)] transition-colors"
             >
               ✕
             </button>
@@ -140,9 +140,9 @@ function MovDrawer({ mov, estabMap, catMap, onClose }) {
               ["Precio/kg",      mov.precioPorKg > 0 ? `${fmtNum(mov.precioPorKg)} ${mov.moneda || ""}` : "—"],
               ["Precio total",   mov.precioTotal > 0 ? `${fmtNum(mov.precioTotal)} ${mov.moneda || ""}` : "—"],
             ].map(([l, v]) => (
-              <div key={l} className="bg-[#F8F9FB]/[0.03] border border-white/[0.06] rounded-lg px-3 py-2.5">
+              <div key={l} className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg px-3 py-2.5">
                 <div className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider mb-1">{l}</div>
-                <div className="text-[13px] font-mono font-medium text-slate-200">{v}</div>
+                <div className="text-[13px] font-mono font-medium text-[var(--color-text)]">{v}</div>
               </div>
             ))}
           </div>
@@ -156,8 +156,8 @@ function MovDrawer({ mov, estabMap, catMap, onClose }) {
               {mov.categorias.map((c, i) => {
                 const cat = catMap[c.categoriaId];
                 return (
-                  <div key={c.id || i} className="flex items-center gap-3 py-2 border-b border-white/[0.04] last:border-0">
-                    <span className="text-[13px] text-slate-300 flex-1">
+                  <div key={c.id || i} className="flex items-center gap-3 py-2 border-b border-[var(--color-border)] last:border-0">
+                    <span className="text-[13px] text-slate-400 flex-1">
                       {cat?.codigo || cat?.nombre || c.categoriaId?.slice?.(0, 8) || "—"}
                     </span>
                     <span className="text-xs text-slate-400 font-mono">{c.cantidad} cab.</span>

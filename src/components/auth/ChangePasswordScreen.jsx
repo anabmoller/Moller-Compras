@@ -48,7 +48,7 @@ export default function ChangePasswordScreen() {
   };
 
   return (
-    <div className="bg-[#0a0b0f] min-h-screen flex items-center justify-center p-5">
+    <div className="bg-[var(--color-bg)] min-h-screen flex items-center justify-center p-5">
       <div className="w-full max-w-[440px]">
         {/* Brand header */}
         <div className="text-center mb-10">

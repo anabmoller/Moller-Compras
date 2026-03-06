@@ -19,7 +19,7 @@ export default function RequestStepReview({
         {items.map((it, i) => (
           <div key={i} className="px-4 py-2.5 flex justify-between items-center border-b border-white/[0.04] last:border-b-0">
             <div>
-              <div className="text-sm text-white font-medium">{it.product}</div>
+              <div className="text-sm text-[var(--color-text)] font-medium">{it.product}</div>
               <div className="text-[10px] text-slate-500">{it.code} &middot; {it.qty} {it.unit}</div>
             </div>
             <div className="text-right">
@@ -29,7 +29,7 @@ export default function RequestStepReview({
           </div>
         ))}
         <div className="px-4 py-3 bg-[#1F2A44]/[0.04] flex justify-between items-center">
-          <span className="text-xs font-bold text-white">TOTAL</span>
+          <span className="text-xs font-bold text-[var(--color-text)]">TOTAL</span>
           <div className="text-right">
             <div className="text-base font-bold text-[#C8A03A]">{fmtGs(totalAmount)}</div>
             <div className="text-[10px] text-slate-400">$ {Math.round(totalAmount / usdRate).toLocaleString("en-US")} USD</div>
@@ -60,7 +60,7 @@ export default function RequestStepReview({
                   {i + 1}
                 </div>
                 <div className="text-[9px] text-slate-400 text-center leading-tight max-w-[80px]">{s.label}</div>
-                <div className="text-[9px] text-white font-medium text-center max-w-[80px] truncate">{s.person}</div>
+                <div className="text-[9px] text-[var(--color-text)] font-medium text-center max-w-[80px] truncate">{s.person}</div>
               </div>
             </div>
           ))}

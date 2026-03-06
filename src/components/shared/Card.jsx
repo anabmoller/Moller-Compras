@@ -2,8 +2,8 @@ export default function Card({ children, className = '', hover = true, onClick, 
   return (
     <div
       className={`
-        bg-[#F8F9FB]/[0.03] border border-white/[0.06] rounded-xl
-        ${hover ? 'hover:bg-[#F8F9FB]/[0.06] hover:border-white/[0.12] transition-all duration-300' : ''}
+        bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl
+        ${hover ? 'hover:bg-[var(--color-surface-hover)] hover:border-[var(--color-border)] transition-all duration-300' : ''}
         ${onClick ? 'cursor-pointer' : ''}
         ${className}
       `}

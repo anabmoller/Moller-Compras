@@ -45,7 +45,7 @@ export function CreateAnalysisModal({ onClose, onCreate }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 z-[1000] flex items-center justify-center px-5">
-      <div className="bg-[#12131a] rounded-2xl max-w-[420px] w-full shadow-xl border border-white/[0.08]">
+      <div className="bg-[var(--color-modal)] rounded-2xl max-w-[420px] w-full shadow-xl border border-[var(--color-border)]">
         <div className="px-5 pt-5 pb-3 flex justify-between items-center border-b border-white/[0.06]">
           <h3 className="text-lg font-semibold text-white">Nuevo Analisis</h3>
           <button onClick={onClose} className="bg-[#F8F9FB]/[0.06] border-none w-8 h-8 rounded-lg cursor-pointer text-base text-white flex items-center justify-center">
