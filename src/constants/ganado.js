@@ -383,6 +383,84 @@ export async function fetchPesajesByMovimiento(movimientoUuid) {
 }
 
 // ============================================================
+// HATO (HERD INVENTORY) — Derive from movements
+// ============================================================
+
+/**
+ * Fetch all non-anulado movements with category details for herd derivation.
+ * Lightweight query (no divergencias/archivos) for the Hato view.
+ */
+export async function fetchHatoData({ establishmentId = null } = {}) {
+  let movQuery = supabase
+    .from("movimientos_ganado")
+    .select("id, movimiento_number, tipo_operacion, estado, cantidad_total, peso_total_kg, establecimiento_origen_id, establecimiento_destino_id, destino_nombre, fecha_emision, nro_guia, nro_cota, finalidad, precio_por_kg, precio_total, moneda, observaciones, created_by_name, created_at, updated_at")
+    .neq("estado", "anulado")
+    .order("fecha_emision", { ascending: false })
+    .limit(5000);
+
+  if (establishmentId) {
+    movQuery = movQuery.or(
+      `establecimiento_origen_id.eq.${establishmentId},establecimiento_destino_id.eq.${establishmentId}`
+    );
+  }
+
+  const [movRes, detRes] = await Promise.all([
+    movQuery,
+    supabase
+      .from("detalle_movimiento_categorias")
+      .select("id, movimiento_id, categoria_id, cantidad, peso_kg, peso_promedio_kg")
+      .limit(10000),
+  ]);
+
+  if (movRes.error) throw movRes.error;
+
+  const movements = movRes.data || [];
+  const details = detRes.data || [];
+
+  // Group details by movement
+  const movIds = new Set(movements.map(m => m.id));
+  const detByMov = {};
+  for (const d of details) {
+    if (!movIds.has(d.movimiento_id)) continue;
+    if (!detByMov[d.movimiento_id]) detByMov[d.movimiento_id] = [];
+    detByMov[d.movimiento_id].push(d);
+  }
+
+  // Transform to JS objects
+  const result = movements.map(m => ({
+    _uuid: m.id,
+    id: m.movimiento_number,
+    tipoOperacion: m.tipo_operacion,
+    estado: m.estado,
+    cantidadTotal: m.cantidad_total || 0,
+    pesoTotalKg: Number(m.peso_total_kg) || 0,
+    establecimientoOrigenId: m.establecimiento_origen_id,
+    establecimientoDestinoId: m.establecimiento_destino_id,
+    destinoNombre: m.destino_nombre,
+    fechaEmision: m.fecha_emision,
+    nroGuia: m.nro_guia,
+    nroCota: m.nro_cota,
+    finalidad: m.finalidad,
+    precioPorKg: Number(m.precio_por_kg) || 0,
+    precioTotal: Number(m.precio_total) || 0,
+    moneda: m.moneda,
+    observaciones: m.observaciones,
+    createdBy: m.created_by_name || "",
+    createdAt: m.created_at,
+    updatedAt: m.updated_at,
+    categorias: (detByMov[m.id] || []).map(d => ({
+      id: d.id,
+      categoriaId: d.categoria_id,
+      cantidad: d.cantidad,
+      pesoKg: Number(d.peso_kg) || 0,
+      pesoPromedioKg: Number(d.peso_promedio_kg) || 0,
+    })),
+  }));
+
+  return result;
+}
+
+// ============================================================
 // ETL ANALYTICS — Read from normalized pipeline tables
 // ============================================================
 
