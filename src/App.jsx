@@ -310,11 +310,11 @@ function AppContent() {
       );
     }
 
-    if (screen === "ganado" && canAccessModule(effectiveUser, 'ganado')) {
+    if (screen === "ganado") {
       return (
         <Suspense fallback={<LazyFallback />}>
           <MovimientosScreen
-            onBack={() => setScreen("dashboard")}
+            onBack={() => setScreen("panel")}
             onNavigate={handleNavigate}
             canCreate={effectiveCan("create_movimiento_ganado")}
             canValidate={effectiveCan("validate_movimiento_ganado")}
@@ -323,7 +323,7 @@ function AppContent() {
       );
     }
 
-    if (screen === "ganado-new" && canAccessModule(effectiveUser, 'ganado') && effectiveCan("create_movimiento_ganado")) {
+    if (screen === "ganado-new" && effectiveCan("create_movimiento_ganado")) {
       return (
         <Suspense fallback={<LazyFallback />}>
           <NuevoMovimientoForm
@@ -334,7 +334,7 @@ function AppContent() {
       );
     }
 
-    if (screen === "ganado-detail" && canAccessModule(effectiveUser, 'ganado') && selectedMovimientoId) {
+    if (screen === "ganado-detail" && selectedMovimientoId) {
       return (
         <Suspense fallback={<LazyFallback />}>
           <MovimientoDetail
@@ -346,7 +346,7 @@ function AppContent() {
       );
     }
 
-    if (screen === "animals" && canAccessModule(effectiveUser, 'ganado')) {
+    if (screen === "animals") {
       return (
         <Suspense fallback={<LazyFallback />}>
           <AnimalsScreen
@@ -357,7 +357,7 @@ function AppContent() {
       );
     }
 
-    if (screen === "trutest-import" && canAccessModule(effectiveUser, 'ganado')) {
+    if (screen === "trutest-import") {
       return (
         <Suspense fallback={<LazyFallback />}>
           <TruTestImportPanel
@@ -368,7 +368,7 @@ function AppContent() {
       );
     }
 
-    if (screen === "guide-custody" && canAccessModule(effectiveUser, 'ganado') && selectedGuideInfo) {
+    if (screen === "guide-custody" && selectedGuideInfo) {
       return (
         <Suspense fallback={<LazyFallback />}>
           <GuideCustodyPanel
@@ -380,7 +380,7 @@ function AppContent() {
       );
     }
 
-    if (screen === "compliance" && canAccessModule(effectiveUser, 'ganado')) {
+    if (screen === "compliance") {
       return (
         <Suspense fallback={<LazyFallback />}>
           <ComplianceTasksPanel
@@ -391,7 +391,7 @@ function AppContent() {
       );
     }
 
-    if (screen === "cattle-economics" && canAccessModule(effectiveUser, 'ganado')) {
+    if (screen === "cattle-economics") {
       return (
         <Suspense fallback={<LazyFallback />}>
           <CattleEconomicsScreen
@@ -402,7 +402,7 @@ function AppContent() {
       );
     }
 
-    if (screen === "slaughter" && canAccessModule(effectiveUser, 'ganado')) {
+    if (screen === "slaughter") {
       return (
         <Suspense fallback={<LazyFallback />}>
           <SlaughterScreen onBack={() => setScreen("ganado")} />
