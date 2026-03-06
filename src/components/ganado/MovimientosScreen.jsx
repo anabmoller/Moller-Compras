@@ -8,7 +8,8 @@ import {
   fetchMovimientos,
   fetchGanadoMetrics,
 } from "../../constants/ganado";
-import { Clock, Truck, DollarSign } from "lucide-react";
+import { getHaciendaKPIs } from "../../lib/hacendaService";
+import { ShoppingCart, ArrowDownCircle, ArrowUpCircle, Skull, DollarSign } from "lucide-react";
 import { BullIcon } from "../icons";
 import PageHeader from "../common/PageHeader";
 import SearchInput from "../common/SearchInput";
@@ -57,21 +58,29 @@ export default function MovimientosScreen({ onBack, onNavigate }) {
   const [metrics, setMetrics] = useState(null);
   const [metricsLoading, setMetricsLoading] = useState(true);
 
-  // Load movimientos + metrics in parallel
+  // Purchase-centric KPIs from hacendaService
+  const [hKpis, setHKpis] = useState(null);
+  const [hKpisLoading, setHKpisLoading] = useState(true);
+
+  // Load movimientos + metrics + hacienda KPIs in parallel
   useEffect(() => {
     async function load() {
       setLoading(true);
       setMetricsLoading(true);
+      setHKpisLoading(true);
 
-      const [data, metricsData] = await Promise.all([
+      const [data, metricsData, hData] = await Promise.all([
         fetchMovimientos(),
         fetchGanadoMetrics(),
+        getHaciendaKPIs(),
       ]);
 
       setMovimientos(data);
       setMetrics(metricsData);
+      setHKpis(hData);
       setLoading(false);
       setMetricsLoading(false);
+      setHKpisLoading(false);
     }
     load();
   }, []);
@@ -157,18 +166,13 @@ export default function MovimientosScreen({ onBack, onNavigate }) {
         onBack={onBack}
       />
 
-      {/* KPI cards */}
+      {/* KPI cards — purchase-centric */}
       <div className="flex gap-3 overflow-x-auto pb-2 mb-6 scrollbar-hide">
-        <KpiCard label="Por Validar" value={kpis.porValidar} icon={<Clock size={18} />} color="#f59e0b" loading={metricsLoading} />
-        <KpiCard label="En Tránsito" value={kpis.enTransito} icon={<Truck size={18} />} color="#8b5cf6" loading={metricsLoading} />
-        <KpiCard label="Total Cabezas" value={kpis.totalCabezas.toLocaleString("es-PY")} icon={<BullIcon size={18} />} color="#3b82f6" loading={metricsLoading} />
-        <KpiCard
-          label="Total Gs."
-          value={`Gs. ${kpis.totalGs.toLocaleString("es-PY")}`}
-          icon={<DollarSign size={18} />}
-          color="#C8A03A"
-          loading={metricsLoading}
-        />
+        <KpiCard label="Compras del Mes" value={hKpis?.monthlyPurchases ?? "—"} icon={<ShoppingCart size={18} />} color="#22c55e" loading={hKpisLoading} />
+        <KpiCard label="Entradas Mes" value={hKpis?.monthlyEntries ?? "—"} icon={<ArrowDownCircle size={18} />} color="#3b82f6" loading={hKpisLoading} />
+        <KpiCard label="Total Cabezas" value={(hKpis?.totalAnimals ?? kpis.totalCabezas).toLocaleString("es-PY")} icon={<BullIcon size={18} />} color="#8b5cf6" loading={hKpisLoading} />
+        <KpiCard label="Ventas Mes" value={hKpis?.monthlySales ?? "—"} icon={<ArrowUpCircle size={18} />} color="#C8A03A" loading={hKpisLoading} />
+        <KpiCard label="Mortalidades" value={hKpis?.totalMortalities ?? "—"} icon={<Skull size={18} />} color="#ef4444" loading={hKpisLoading} />
       </div>
 
       {/* Filters */}
