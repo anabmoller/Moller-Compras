@@ -1,50 +1,38 @@
-import { useState, useMemo } from "react";
-import { Fuel, DollarSign, Truck, BarChart3, AlertTriangle, FileText } from "lucide-react";
+import { useState, useEffect, useMemo, useCallback } from "react";
+import {
+  Fuel, DollarSign, Truck, BarChart3, AlertTriangle,
+  FileText, Droplets, Gauge, Calendar,
+} from "lucide-react";
 import Card from "../shared/Card";
 import Badge from "../shared/Badge";
 import PageHeader from "../common/PageHeader";
 import { ESTABLECIMIENTOS_PROPIOS } from "../../constants/establecimientos";
+import {
+  getFuelKPIs,
+  getFuelPurchases,
+  getDispenseEvents,
+  getFuelBalances,
+  detectFuelAnomalies,
+} from "../../lib/fuelService";
 
-/* ── Mock data (MVP — will be replaced by Supabase RPC) ────── */
+/* ── helpers ───────────────────────────────────────────────── */
 
-const KPI_DATA = {
-  todos: [
-    { key: "consumo_mes", label: "Consumo Mes (L)", value: "12.450", icon: <Fuel size={18} />, color: "#3b82f6" },
-    { key: "gasto_mes", label: "Gasto Mes (Gs)", value: "8.2M", icon: <DollarSign size={18} />, color: "#C8A03A" },
-    { key: "cargas", label: "Cargas", value: 38, icon: <Truck size={18} />, color: "#8b5cf6" },
-    { key: "precio_lt", label: "Precio/Lt (Gs)", value: "6.580", icon: <BarChart3 size={18} />, color: "#10b981" },
-  ],
-  ypoti: [
-    { key: "consumo_mes", label: "Consumo Mes (L)", value: "4.200", icon: <Fuel size={18} />, color: "#3b82f6" },
-    { key: "gasto_mes", label: "Gasto Mes (Gs)", value: "2.8M", icon: <DollarSign size={18} />, color: "#C8A03A" },
-    { key: "cargas", label: "Cargas", value: 14, icon: <Truck size={18} />, color: "#8b5cf6" },
-    { key: "precio_lt", label: "Precio/Lt (Gs)", value: "6.580", icon: <BarChart3 size={18} />, color: "#10b981" },
-  ],
-  cerro_memby: [
-    { key: "consumo_mes", label: "Consumo Mes (L)", value: "3.100", icon: <Fuel size={18} />, color: "#3b82f6" },
-    { key: "gasto_mes", label: "Gasto Mes (Gs)", value: "2.1M", icon: <DollarSign size={18} />, color: "#C8A03A" },
-    { key: "cargas", label: "Cargas", value: 10, icon: <Truck size={18} />, color: "#8b5cf6" },
-    { key: "precio_lt", label: "Precio/Lt (Gs)", value: "6.580", icon: <BarChart3 size={18} />, color: "#10b981" },
-  ],
-};
+function fmtNumber(n) {
+  if (n == null) return "—";
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
+  return String(n);
+}
 
-const PROVIDERS = [
-  { id: 1, name: "Petropar", items: "Diésel, Gasolina", lastDelivery: "1 Mar 2026", status: "active" },
-  { id: 2, name: "Copetrol S.A.", items: "Diésel Premium", lastDelivery: "27 Feb 2026", status: "active" },
-  { id: 3, name: "Puma Energy", items: "Diésel", lastDelivery: "22 Feb 2026", status: "active" },
-];
-
-const RECENT_ACTIVITY = [
-  { id: 1, text: "Carga de 3.200 L diésel — Ypoti", time: "Hace 5 horas", icon: <Fuel size={14} />, estab: "ypoti" },
-  { id: 2, text: "Alerta: consumo elevado en Cerro Memby (+18%)", time: "Hace 6 horas", icon: <AlertTriangle size={14} />, estab: "cerro_memby" },
-  { id: 3, text: "Carga de 2.500 L diésel — Santa Clara", time: "Hace 1 día", icon: <Fuel size={14} />, estab: "santa_clara" },
-  { id: 4, text: "Factura procesada — Petropar Febrero", time: "Hace 2 días", icon: <FileText size={14} />, estab: null },
-  { id: 5, text: "Carga de 1.800 L gasolina — Oro Verde", time: "Hace 3 días", icon: <Fuel size={14} />, estab: "oro_verde" },
-];
+function fmtDate(dateStr) {
+  if (!dateStr) return "—";
+  const d = new Date(dateStr);
+  return d.toLocaleDateString("es-PY", { day: "numeric", month: "short", year: "numeric" });
+}
 
 /* ── Sub-components ─────────────────────────────────────────── */
 
-function KpiCard({ label, value, icon, color }) {
+function KpiCard({ label, value, icon, color, loading }) {
   return (
     <div className="bg-[#13141a] border border-white/[0.06] rounded-xl p-4 flex-1 min-w-[140px]">
       <div className="flex items-center gap-2 mb-1">
@@ -52,37 +40,86 @@ function KpiCard({ label, value, icon, color }) {
         <span className="text-[10px] text-slate-500 uppercase tracking-wider font-medium">{label}</span>
       </div>
       <div className="text-2xl font-bold" style={{ color: color || "#fff" }}>
-        {value}
+        {loading ? (
+          <span className="inline-block w-16 h-7 bg-white/[0.04] rounded animate-pulse" />
+        ) : value}
       </div>
     </div>
   );
 }
 
-function ProviderRow({ provider }) {
+function PurchaseRow({ purchase }) {
   return (
     <div className="flex items-center gap-3 px-4 py-3 hover:bg-[#F8F9FB]/[0.04] transition-colors">
-      <span className="shrink-0"><Fuel size={18} /></span>
+      <span className="shrink-0"><FileText size={16} className="text-slate-500" /></span>
       <div className="flex-1 min-w-0">
-        <div className="text-[13px] font-semibold text-white truncate">{provider.name}</div>
-        <div className="text-[11px] text-slate-500">{provider.items} · Última entrega: {provider.lastDelivery}</div>
+        <div className="text-[13px] font-semibold text-white truncate">
+          {purchase.supplier?.name || "—"} — {fmtNumber(Number(purchase.quantity))} L {purchase.fuel_type}
+        </div>
+        <div className="text-[11px] text-slate-500">
+          {fmtDate(purchase.purchase_date)}
+          {purchase.invoice_number ? ` · Fact: ${purchase.invoice_number}` : ""}
+          {purchase.unit_price ? ` · ${fmtNumber(Number(purchase.unit_price))} Gs/L` : ""}
+        </div>
       </div>
-      <Badge variant={provider.status === "active" ? "success" : "default"} size="xs" dot>
-        {provider.status === "active" ? "Activo" : "Inactivo"}
+      <div className="text-[12px] font-bold text-[#C8A03A]">
+        {purchase.total_cost ? `${fmtNumber(Number(purchase.total_cost))} Gs` : "—"}
+      </div>
+    </div>
+  );
+}
+
+function DispenseRow({ event }) {
+  return (
+    <div className="flex items-center gap-3 px-4 py-3 hover:bg-[#F8F9FB]/[0.04] transition-colors">
+      <span className="shrink-0"><Droplets size={16} className="text-slate-500" /></span>
+      <div className="flex-1 min-w-0">
+        <div className="text-[13px] font-semibold text-white truncate">
+          {event.vehicle?.plate || "Sin vehículo"} — {fmtNumber(Number(event.quantity))} L
+        </div>
+        <div className="text-[11px] text-slate-500">
+          {fmtDate(event.dispense_date)} · {event.fuel_type || "diésel"}
+          {event.operator_name ? ` · ${event.operator_name}` : ""}
+        </div>
+      </div>
+      {event.vehicle?.vehicle_type && (
+        <Badge variant="default" size="xs">
+          {event.vehicle.vehicle_type}
+        </Badge>
+      )}
+    </div>
+  );
+}
+
+function AnomalyRow({ anomaly }) {
+  return (
+    <div className="flex items-center gap-3 px-4 py-3 hover:bg-[#F8F9FB]/[0.04] transition-colors bg-red-500/[0.03]">
+      <span className="shrink-0"><AlertTriangle size={16} className="text-red-400" /></span>
+      <div className="flex-1 min-w-0">
+        <div className="text-[13px] font-semibold text-white truncate">
+          {anomaly.plate || "Vehículo"} — {fmtNumber(anomaly.quantity)} L ({anomaly.ratio}x promedio)
+        </div>
+        <div className="text-[11px] text-slate-500">
+          {fmtDate(anomaly.date)} · Promedio: {fmtNumber(anomaly.average)} L
+        </div>
+      </div>
+      <Badge variant="error" size="xs" dot>
+        Anómalo
       </Badge>
     </div>
   );
 }
 
-function ActivityRow({ entry }) {
-  return (
-    <div className="flex gap-3 items-start px-4 py-3 hover:bg-[#F8F9FB]/[0.04] transition-colors">
-      <span className="text-sm mt-0.5 shrink-0">{entry.icon}</span>
-      <div className="flex-1 min-w-0">
-        <div className="text-[13px] text-white leading-snug">{entry.text}</div>
-        <div className="text-[10px] text-slate-500 mt-0.5">{entry.time}</div>
+function SkeletonRows({ count = 3 }) {
+  return Array.from({ length: count }).map((_, i) => (
+    <div key={i} className="flex items-center gap-3 px-4 py-3">
+      <span className="w-4 h-4 bg-white/[0.04] rounded animate-pulse" />
+      <div className="flex-1 space-y-1.5">
+        <span className="block w-3/4 h-3 bg-white/[0.04] rounded animate-pulse" />
+        <span className="block w-1/2 h-2.5 bg-white/[0.04] rounded animate-pulse" />
       </div>
     </div>
-  );
+  ));
 }
 
 /* ── Main component ─────────────────────────────────────────── */
@@ -90,14 +127,54 @@ function ActivityRow({ entry }) {
 export default function CombustibleDashboard({ onNavigate }) {
   const [establecimiento, setEstablecimiento] = useState("todos");
 
-  const kpis = useMemo(() => {
-    return KPI_DATA[establecimiento] || KPI_DATA.todos;
+  // Data state
+  const [kpis, setKpis] = useState(null);
+  const [purchases, setPurchases] = useState([]);
+  const [dispenses, setDispenses] = useState([]);
+  const [anomalies, setAnomalies] = useState([]);
+
+  // Loading state
+  const [loadingKpis, setLoadingKpis] = useState(true);
+  const [loadingPurchases, setLoadingPurchases] = useState(true);
+  const [loadingDispenses, setLoadingDispenses] = useState(true);
+  const [loadingAnomalies, setLoadingAnomalies] = useState(true);
+
+  const estId = useMemo(() => {
+    return establecimiento === "todos" ? null : establecimiento;
   }, [establecimiento]);
 
-  const filteredActivity = useMemo(() => {
-    if (establecimiento === "todos") return RECENT_ACTIVITY;
-    return RECENT_ACTIVITY.filter(a => !a.estab || a.estab === establecimiento);
-  }, [establecimiento]);
+  const fetchData = useCallback(async () => {
+    setLoadingKpis(true);
+    setLoadingPurchases(true);
+    setLoadingDispenses(true);
+    setLoadingAnomalies(true);
+
+    const kpiPromise = getFuelKPIs(estId)
+      .then(d => { setKpis(d); setLoadingKpis(false); })
+      .catch(() => { setKpis(null); setLoadingKpis(false); });
+
+    const purchasePromise = getFuelPurchases({ establishmentId: estId, limit: 10 })
+      .then(d => { setPurchases(d); setLoadingPurchases(false); })
+      .catch(() => { setPurchases([]); setLoadingPurchases(false); });
+
+    const dispensePromise = getDispenseEvents({ establishmentId: estId, limit: 10 })
+      .then(d => { setDispenses(d); setLoadingDispenses(false); })
+      .catch(() => { setDispenses([]); setLoadingDispenses(false); });
+
+    // Anomalies only when specific establishment is selected
+    if (estId) {
+      detectFuelAnomalies(estId, 30)
+        .then(d => { setAnomalies(d); setLoadingAnomalies(false); })
+        .catch(() => { setAnomalies([]); setLoadingAnomalies(false); });
+    } else {
+      setAnomalies([]);
+      setLoadingAnomalies(false);
+    }
+
+    await Promise.allSettled([kpiPromise, purchasePromise, dispensePromise]);
+  }, [estId]);
+
+  useEffect(() => { fetchData(); }, [fetchData]);
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 animate-fade-in">
@@ -105,7 +182,7 @@ export default function CombustibleDashboard({ onNavigate }) {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6">
         <PageHeader
           title="Combustible"
-          subtitle="Consumo, cargas y control de gastos"
+          subtitle="Compras, despachos y control de consumo"
         />
         <div className="flex items-center gap-1.5 px-5 sm:px-0">
           <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide whitespace-nowrap hidden sm:inline">
@@ -131,38 +208,93 @@ export default function CombustibleDashboard({ onNavigate }) {
 
       {/* KPI cards */}
       <div className="flex gap-3 overflow-x-auto pb-2 mb-6 scrollbar-hide px-5 sm:px-0">
-        {kpis.map(k => (
-          <KpiCard key={k.key} {...k} />
-        ))}
+        <KpiCard
+          label="Consumo Mes (L)"
+          value={fmtNumber(kpis?.monthlyLiters ?? 0)}
+          icon={<Fuel size={18} />}
+          color="#3b82f6"
+          loading={loadingKpis}
+        />
+        <KpiCard
+          label="Gasto Mes (Gs)"
+          value={fmtNumber(kpis?.monthlySpend ?? 0)}
+          icon={<DollarSign size={18} />}
+          color="#C8A03A"
+          loading={loadingKpis}
+        />
+        <KpiCard
+          label="Despachos"
+          value={kpis?.dispenseCount ?? 0}
+          icon={<Truck size={18} />}
+          color="#8b5cf6"
+          loading={loadingKpis}
+        />
+        <KpiCard
+          label="Precio/Lt (Gs)"
+          value={fmtNumber(kpis?.avgPricePerLiter ?? 0)}
+          icon={<BarChart3 size={18} />}
+          color="#10b981"
+          loading={loadingKpis}
+        />
       </div>
 
-      {/* Two-column layout: Providers + Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 px-5 sm:px-0">
-        {/* Providers */}
-        <div>
-          <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest px-1 mb-3">
-            Proveedores
+      {/* Anomaly banner (if any) */}
+      {anomalies.length > 0 && (
+        <div className="mb-4 px-5 sm:px-0">
+          <div className="bg-red-500/[0.06] border border-red-500/20 rounded-xl p-3">
+            <div className="flex items-center gap-2 mb-2">
+              <AlertTriangle size={16} className="text-red-400" />
+              <span className="text-[11px] font-bold text-red-400 uppercase tracking-wide">
+                {anomalies.length} anomalía{anomalies.length > 1 ? "s" : ""} detectada{anomalies.length > 1 ? "s" : ""}
+              </span>
+            </div>
+            <div className="divide-y divide-red-500/10 rounded-lg overflow-hidden">
+              {anomalies.slice(0, 3).map((a, i) => (
+                <AnomalyRow key={i} anomaly={a} />
+              ))}
+            </div>
           </div>
-          <Card hover={false} className="p-0 divide-y divide-white/[0.04] overflow-hidden">
-            {PROVIDERS.map(p => (
-              <ProviderRow key={p.id} provider={p} />
-            ))}
-          </Card>
         </div>
+      )}
 
-        {/* Recent Activity */}
+      {/* Two-column layout: Purchases + Dispenses */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 px-5 sm:px-0">
+
+        {/* Recent Purchases */}
         <div>
           <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest px-1 mb-3">
-            Actividad Reciente
+            Compras Recientes
           </div>
           <Card hover={false} className="p-0 divide-y divide-white/[0.04] overflow-hidden">
-            {filteredActivity.length > 0 ? (
-              filteredActivity.map(entry => (
-                <ActivityRow key={entry.id} entry={entry} />
+            {loadingPurchases ? (
+              <SkeletonRows count={4} />
+            ) : purchases.length > 0 ? (
+              purchases.slice(0, 6).map(p => (
+                <PurchaseRow key={p.id} purchase={p} />
               ))
             ) : (
               <div className="p-6 text-center">
-                <p className="text-sm text-slate-500">No hay actividad reciente</p>
+                <p className="text-sm text-slate-500">Sin compras recientes</p>
+              </div>
+            )}
+          </Card>
+        </div>
+
+        {/* Recent Dispenses */}
+        <div>
+          <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest px-1 mb-3">
+            Despachos Recientes
+          </div>
+          <Card hover={false} className="p-0 divide-y divide-white/[0.04] overflow-hidden">
+            {loadingDispenses ? (
+              <SkeletonRows count={4} />
+            ) : dispenses.length > 0 ? (
+              dispenses.slice(0, 6).map(d => (
+                <DispenseRow key={d.id} event={d} />
+              ))
+            ) : (
+              <div className="p-6 text-center">
+                <p className="text-sm text-slate-500">Sin despachos recientes</p>
               </div>
             )}
           </Card>

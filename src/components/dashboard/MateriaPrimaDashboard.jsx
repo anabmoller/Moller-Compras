@@ -1,51 +1,47 @@
-import { useState, useMemo } from "react";
-import { Package, AlertTriangle, Scale, DollarSign, Building2, CheckCircle2, ClipboardList } from "lucide-react";
+import { useState, useEffect, useMemo, useCallback } from "react";
+import {
+  Package, AlertTriangle, Scale, DollarSign, Building2,
+  CheckCircle2, ClipboardList, TrendingUp, Plus, ChevronRight,
+  Warehouse, ArrowDownToLine, FileText,
+} from "lucide-react";
 import Card from "../shared/Card";
 import Badge from "../shared/Badge";
 import PageHeader from "../common/PageHeader";
 import { ESTABLECIMIENTOS_PROPIOS } from "../../constants/establecimientos";
+import {
+  getRawMaterialsKPIs,
+  getContracts,
+  getDeliveries,
+  getInventoryBalances,
+} from "../../lib/rawMaterialsService";
 
-/* ── Mock data (MVP — will be replaced by Supabase RPC) ────── */
+/* ── helpers ───────────────────────────────────────────────── */
 
-const KPI_DATA = {
-  todos: [
-    { key: "lotes_activos", label: "Lotes Activos", value: 15, icon: <Package size={18} />, color: "#3b82f6" },
-    { key: "por_vencer", label: "Por Vencer", value: 2, icon: <AlertTriangle size={18} />, color: "#f59e0b" },
-    { key: "toneladas", label: "Toneladas", value: "342", icon: <Scale size={18} />, color: "#8b5cf6" },
-    { key: "gasto_mes", label: "Gasto Mes (Gs)", value: "48.5M", icon: <DollarSign size={18} />, color: "#C8A03A" },
-  ],
-  ypoti: [
-    { key: "lotes_activos", label: "Lotes Activos", value: 6, icon: <Package size={18} />, color: "#3b82f6" },
-    { key: "por_vencer", label: "Por Vencer", value: 1, icon: <AlertTriangle size={18} />, color: "#f59e0b" },
-    { key: "toneladas", label: "Toneladas", value: "128", icon: <Scale size={18} />, color: "#8b5cf6" },
-    { key: "gasto_mes", label: "Gasto Mes (Gs)", value: "18.2M", icon: <DollarSign size={18} />, color: "#C8A03A" },
-  ],
-  cerro_memby: [
-    { key: "lotes_activos", label: "Lotes Activos", value: 4, icon: <Package size={18} />, color: "#3b82f6" },
-    { key: "por_vencer", label: "Por Vencer", value: 1, icon: <AlertTriangle size={18} />, color: "#f59e0b" },
-    { key: "toneladas", label: "Toneladas", value: "95", icon: <Scale size={18} />, color: "#8b5cf6" },
-    { key: "gasto_mes", label: "Gasto Mes (Gs)", value: "14.1M", icon: <DollarSign size={18} />, color: "#C8A03A" },
-  ],
-};
+function fmtNumber(n) {
+  if (n == null) return "—";
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
+  return String(n);
+}
 
-const PROVIDERS = [
-  { id: 1, name: "Agro Nutrientes S.A.", items: 8, lastDelivery: "28 Feb 2026", status: "active" },
-  { id: 2, name: "Granos del Sur", items: 5, lastDelivery: "25 Feb 2026", status: "active" },
-  { id: 3, name: "Suplementos Pecuarios", items: 3, lastDelivery: "20 Feb 2026", status: "active" },
-  { id: 4, name: "Nutrición Animal PY", items: 4, lastDelivery: "15 Feb 2026", status: "inactive" },
-];
+function fmtDate(dateStr) {
+  if (!dateStr) return "—";
+  const d = new Date(dateStr);
+  return d.toLocaleDateString("es-PY", { day: "numeric", month: "short", year: "numeric" });
+}
 
-const RECENT_ACTIVITY = [
-  { id: 1, text: "Lote MP-0412 recibido — Maíz Amarillo 25 ton", time: "Hace 5 horas", icon: <Package size={14} />, estab: "oro_verde" },
-  { id: 2, text: "Lote MP-0410 por vencer — Sal Mineral (15 Mar)", time: "Hace 1 día", icon: <AlertTriangle size={14} />, estab: "ypoti" },
-  { id: 3, text: "Recepción confirmada — Heno de Alfalfa 12 ton", time: "Hace 2 días", icon: <CheckCircle2 size={14} />, estab: "cerro_memby" },
-  { id: 4, text: "Nuevo pedido generado — Silo de Maíz 40 ton", time: "Hace 3 días", icon: <ClipboardList size={14} />, estab: "ypoti" },
-  { id: 5, text: "Alerta: stock bajo Sal Mineral en Santa Clara", time: "Hace 3 días", icon: <AlertTriangle size={14} />, estab: "santa_clara" },
-];
+function daysSince(dateStr) {
+  if (!dateStr) return null;
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const days = Math.floor(diff / 86400000);
+  if (days === 0) return "Hoy";
+  if (days === 1) return "Hace 1 día";
+  return `Hace ${days} días`;
+}
 
 /* ── Sub-components ─────────────────────────────────────────── */
 
-function KpiCard({ label, value, icon, color }) {
+function KpiCard({ label, value, icon, color, loading }) {
   return (
     <div className="bg-[#13141a] border border-white/[0.06] rounded-xl p-4 flex-1 min-w-[140px]">
       <div className="flex items-center gap-2 mb-1">
@@ -53,37 +49,97 @@ function KpiCard({ label, value, icon, color }) {
         <span className="text-[10px] text-slate-500 uppercase tracking-wider font-medium">{label}</span>
       </div>
       <div className="text-2xl font-bold" style={{ color: color || "#fff" }}>
-        {value}
+        {loading ? (
+          <span className="inline-block w-16 h-7 bg-white/[0.04] rounded animate-pulse" />
+        ) : value}
       </div>
     </div>
   );
 }
 
-function ProviderRow({ provider }) {
+function ContractRow({ contract }) {
+  const pct = contract.total_quantity > 0
+    ? Math.round((Number(contract.delivered_quantity || 0) / Number(contract.total_quantity)) * 100)
+    : 0;
+  const statusColor = contract.status === "active" ? "success" : contract.status === "completed" ? "default" : "warning";
+
   return (
     <div className="flex items-center gap-3 px-4 py-3 hover:bg-[#F8F9FB]/[0.04] transition-colors">
-      <span className="shrink-0"><Building2 size={18} /></span>
+      <span className="shrink-0"><FileText size={16} className="text-slate-500" /></span>
       <div className="flex-1 min-w-0">
-        <div className="text-[13px] font-semibold text-white truncate">{provider.name}</div>
-        <div className="text-[11px] text-slate-500">{provider.items} productos · Última entrega: {provider.lastDelivery}</div>
+        <div className="text-[13px] font-semibold text-white truncate">
+          {contract.commodity?.name || "—"} — {contract.supplier?.name || "—"}
+        </div>
+        <div className="text-[11px] text-slate-500">
+          {contract.contract_number} · {fmtNumber(Number(contract.total_quantity))} {contract.unit} · {pct}% entregado
+        </div>
       </div>
-      <Badge variant={provider.status === "active" ? "success" : "default"} size="xs" dot>
-        {provider.status === "active" ? "Activo" : "Inactivo"}
+      <Badge variant={statusColor} size="xs" dot>
+        {contract.status === "active" ? "Activo" : contract.status === "completed" ? "Completo" : contract.status}
       </Badge>
     </div>
   );
 }
 
-function ActivityRow({ entry }) {
+function DeliveryRow({ delivery }) {
+  const statusMap = {
+    received: { label: "Recibido", variant: "info" },
+    verified: { label: "Verificado", variant: "success" },
+    rejected: { label: "Rechazado", variant: "error" },
+    in_transit: { label: "En tránsito", variant: "warning" },
+  };
+  const s = statusMap[delivery.status] || { label: delivery.status, variant: "default" };
+
   return (
-    <div className="flex gap-3 items-start px-4 py-3 hover:bg-[#F8F9FB]/[0.04] transition-colors">
-      <span className="text-sm mt-0.5 shrink-0">{entry.icon}</span>
+    <div className="flex items-center gap-3 px-4 py-3 hover:bg-[#F8F9FB]/[0.04] transition-colors">
+      <span className="shrink-0"><ArrowDownToLine size={16} className="text-slate-500" /></span>
       <div className="flex-1 min-w-0">
-        <div className="text-[13px] text-white leading-snug">{entry.text}</div>
-        <div className="text-[10px] text-slate-500 mt-0.5">{entry.time}</div>
+        <div className="text-[13px] font-semibold text-white truncate">
+          {delivery.commodity?.name || "—"} — {fmtNumber(Number(delivery.received_quantity))} {delivery.unit}
+        </div>
+        <div className="text-[11px] text-slate-500">
+          {delivery.supplier?.name || "—"} · {fmtDate(delivery.delivery_date)}
+          {delivery.remission_number ? ` · Rem: ${delivery.remission_number}` : ""}
+        </div>
+      </div>
+      <Badge variant={s.variant} size="xs" dot>
+        {s.label}
+      </Badge>
+    </div>
+  );
+}
+
+function InventoryRow({ item }) {
+  const coverColor = item.days_of_coverage < 7 ? "text-red-400" : item.days_of_coverage < 14 ? "text-amber-400" : "text-emerald-400";
+
+  return (
+    <div className="flex items-center gap-3 px-4 py-3 hover:bg-[#F8F9FB]/[0.04] transition-colors">
+      <span className="shrink-0"><Warehouse size={16} className="text-slate-500" /></span>
+      <div className="flex-1 min-w-0">
+        <div className="text-[13px] font-semibold text-white truncate">
+          {item.commodity?.name || "—"}
+        </div>
+        <div className="text-[11px] text-slate-500">
+          {fmtNumber(Number(item.current_balance))} {item.unit} en stock
+        </div>
+      </div>
+      <div className={`text-[12px] font-bold ${coverColor}`}>
+        {item.days_of_coverage != null ? `${Math.round(item.days_of_coverage)}d` : "—"}
       </div>
     </div>
   );
+}
+
+function SkeletonRows({ count = 3 }) {
+  return Array.from({ length: count }).map((_, i) => (
+    <div key={i} className="flex items-center gap-3 px-4 py-3">
+      <span className="w-4 h-4 bg-white/[0.04] rounded animate-pulse" />
+      <div className="flex-1 space-y-1.5">
+        <span className="block w-3/4 h-3 bg-white/[0.04] rounded animate-pulse" />
+        <span className="block w-1/2 h-2.5 bg-white/[0.04] rounded animate-pulse" />
+      </div>
+    </div>
+  ));
 }
 
 /* ── Main component ─────────────────────────────────────────── */
@@ -91,14 +147,59 @@ function ActivityRow({ entry }) {
 export default function MateriaPrimaDashboard({ onNavigate }) {
   const [establecimiento, setEstablecimiento] = useState("todos");
 
-  const kpis = useMemo(() => {
-    return KPI_DATA[establecimiento] || KPI_DATA.todos;
+  // Data state
+  const [kpis, setKpis] = useState(null);
+  const [contracts, setContracts] = useState([]);
+  const [deliveries, setDeliveries] = useState([]);
+  const [inventory, setInventory] = useState([]);
+
+  // Loading state
+  const [loadingKpis, setLoadingKpis] = useState(true);
+  const [loadingContracts, setLoadingContracts] = useState(true);
+  const [loadingDeliveries, setLoadingDeliveries] = useState(true);
+  const [loadingInventory, setLoadingInventory] = useState(true);
+
+  // Map establishment key → UUID (null for "todos")
+  const estId = useMemo(() => {
+    if (establecimiento === "todos") return null;
+    // For now pass the key string; the DB uses UUID references
+    // but the filter works via establishment_id column
+    return establecimiento;
   }, [establecimiento]);
 
-  const filteredActivity = useMemo(() => {
-    if (establecimiento === "todos") return RECENT_ACTIVITY;
-    return RECENT_ACTIVITY.filter(a => !a.estab || a.estab === establecimiento);
-  }, [establecimiento]);
+  // Fetch all data when establishment changes
+  const fetchData = useCallback(async () => {
+    setLoadingKpis(true);
+    setLoadingContracts(true);
+    setLoadingDeliveries(true);
+    setLoadingInventory(true);
+
+    // Fire all queries in parallel
+    const kpiPromise = getRawMaterialsKPIs(estId)
+      .then(d => { setKpis(d); setLoadingKpis(false); })
+      .catch(() => { setKpis(null); setLoadingKpis(false); });
+
+    const contractPromise = getContracts({ status: "active", establishmentId: estId })
+      .then(d => { setContracts(d); setLoadingContracts(false); })
+      .catch(() => { setContracts([]); setLoadingContracts(false); });
+
+    const deliveryPromise = getDeliveries({ establishmentId: estId, limit: 10 })
+      .then(d => { setDeliveries(d); setLoadingDeliveries(false); })
+      .catch(() => { setDeliveries([]); setLoadingDeliveries(false); });
+
+    const inventoryPromise = getInventoryBalances(estId)
+      .then(d => { setInventory(d); setLoadingInventory(false); })
+      .catch(() => { setInventory([]); setLoadingInventory(false); });
+
+    await Promise.allSettled([kpiPromise, contractPromise, deliveryPromise, inventoryPromise]);
+  }, [estId]);
+
+  useEffect(() => { fetchData(); }, [fetchData]);
+
+  // Sort inventory by coverage (lowest first)
+  const sortedInventory = useMemo(() => {
+    return [...inventory].sort((a, b) => (a.days_of_coverage || 0) - (b.days_of_coverage || 0)).slice(0, 8);
+  }, [inventory]);
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 animate-fade-in">
@@ -106,7 +207,7 @@ export default function MateriaPrimaDashboard({ onNavigate }) {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6">
         <PageHeader
           title="Materia Prima"
-          subtitle="Control de insumos, lotes y proveedores"
+          subtitle="Contratos, entregas, inventario y proveedores"
         />
         <div className="flex items-center gap-1.5 px-5 sm:px-0">
           <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide whitespace-nowrap hidden sm:inline">
@@ -132,38 +233,94 @@ export default function MateriaPrimaDashboard({ onNavigate }) {
 
       {/* KPI cards */}
       <div className="flex gap-3 overflow-x-auto pb-2 mb-6 scrollbar-hide px-5 sm:px-0">
-        {kpis.map(k => (
-          <KpiCard key={k.key} {...k} />
-        ))}
+        <KpiCard
+          label="Contratos Activos"
+          value={kpis?.activeContracts ?? 0}
+          icon={<Package size={18} />}
+          color="#3b82f6"
+          loading={loadingKpis}
+        />
+        <KpiCard
+          label="Alertas Stock"
+          value={kpis?.lowStockAlerts ?? 0}
+          icon={<AlertTriangle size={18} />}
+          color={kpis?.lowStockAlerts > 0 ? "#f59e0b" : "#10b981"}
+          loading={loadingKpis}
+        />
+        <KpiCard
+          label="Toneladas Mes"
+          value={fmtNumber(kpis?.totalTonnage ?? 0)}
+          icon={<Scale size={18} />}
+          color="#8b5cf6"
+          loading={loadingKpis}
+        />
+        <KpiCard
+          label="Gasto Mes (Gs)"
+          value={fmtNumber(kpis?.totalSpend ?? 0)}
+          icon={<DollarSign size={18} />}
+          color="#C8A03A"
+          loading={loadingKpis}
+        />
       </div>
 
-      {/* Two-column layout: Providers + Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 px-5 sm:px-0">
-        {/* Providers */}
-        <div>
-          <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest px-1 mb-3">
-            Proveedores
-          </div>
-          <Card hover={false} className="p-0 divide-y divide-white/[0.04] overflow-hidden">
-            {PROVIDERS.map(p => (
-              <ProviderRow key={p.id} provider={p} />
-            ))}
-          </Card>
-        </div>
+      {/* Three-column layout: Contracts / Deliveries / Inventory */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 px-5 sm:px-0">
 
-        {/* Recent Activity */}
+        {/* Active Contracts */}
         <div>
           <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest px-1 mb-3">
-            Actividad Reciente
+            Contratos Activos
           </div>
           <Card hover={false} className="p-0 divide-y divide-white/[0.04] overflow-hidden">
-            {filteredActivity.length > 0 ? (
-              filteredActivity.map(entry => (
-                <ActivityRow key={entry.id} entry={entry} />
+            {loadingContracts ? (
+              <SkeletonRows count={4} />
+            ) : contracts.length > 0 ? (
+              contracts.slice(0, 6).map(c => (
+                <ContractRow key={c.id} contract={c} />
               ))
             ) : (
               <div className="p-6 text-center">
-                <p className="text-sm text-slate-500">No hay actividad reciente</p>
+                <p className="text-sm text-slate-500">Sin contratos activos</p>
+              </div>
+            )}
+          </Card>
+        </div>
+
+        {/* Recent Deliveries */}
+        <div>
+          <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest px-1 mb-3">
+            Entregas Recientes
+          </div>
+          <Card hover={false} className="p-0 divide-y divide-white/[0.04] overflow-hidden">
+            {loadingDeliveries ? (
+              <SkeletonRows count={4} />
+            ) : deliveries.length > 0 ? (
+              deliveries.slice(0, 6).map(d => (
+                <DeliveryRow key={d.id} delivery={d} />
+              ))
+            ) : (
+              <div className="p-6 text-center">
+                <p className="text-sm text-slate-500">Sin entregas recientes</p>
+              </div>
+            )}
+          </Card>
+        </div>
+
+        {/* Inventory Levels */}
+        <div>
+          <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest px-1 mb-3">
+            Stock — Cobertura (días)
+          </div>
+          <Card hover={false} className="p-0 divide-y divide-white/[0.04] overflow-hidden">
+            {loadingInventory ? (
+              <SkeletonRows count={4} />
+            ) : sortedInventory.length > 0 ? (
+              sortedInventory.map(item => (
+                <InventoryRow key={item.id} item={item} />
+              ))
+            ) : (
+              <div className="p-6 text-center">
+                <p className="text-sm text-slate-500">Sin datos de inventario</p>
               </div>
             )}
           </Card>

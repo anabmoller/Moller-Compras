@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import {
   RefreshCw, DollarSign, Package, AlertTriangle,
   ShoppingCart, Fuel, CheckCircle, FileText,
+  Truck, Database, Scale,
 } from "lucide-react";
 import { BullIcon, CornIcon } from "../icons";
 import Card from "../shared/Card";
@@ -182,6 +183,28 @@ const AREA_ROWS = [
     },
   },
   {
+    key: "flete",
+    icon: <Truck size={18} />,
+    label: "Flete",
+    metrics: [
+      { label: "En tránsito", value: 3 },
+      { label: "Programados", value: 5 },
+    ],
+    status: { label: "3 activos", variant: "info" },
+    route: "freight",
+  },
+  {
+    key: "conciliacion",
+    icon: <Database size={18} />,
+    label: "Conciliación",
+    metrics: [
+      { label: "Alertas", value: 0 },
+      { label: "Snapshots", value: 8 },
+    ],
+    status: { label: "Reconciliado", variant: "success" },
+    route: "reconciliation",
+  },
+  {
     key: "catalogo",
     icon: <Package size={18} />,
     label: "Catálogo",
@@ -201,6 +224,8 @@ const ACTIVITY_MODULES = [
   { key: "ganado", label: "Ganado" },
   { key: "materia_prima", label: "Materia Prima" },
   { key: "combustible", label: "Combustible" },
+  { key: "flete", label: "Flete" },
+  { key: "conciliacion", label: "Conciliación" },
   { key: "catalogo", label: "Catálogo" },
 ];
 
@@ -210,6 +235,8 @@ const MODULE_META = {
   catalogo: { label: "Catálogo", variant: "info", icon: <Package size={14} /> },
   materia_prima: { label: "Materia Prima", variant: "success", icon: <CornIcon size={14} /> },
   combustible: { label: "Combustible", variant: "warning", icon: <Fuel size={14} /> },
+  flete: { label: "Flete", variant: "info", icon: <Truck size={14} /> },
+  conciliacion: { label: "Conciliación", variant: "default", icon: <Database size={14} /> },
 };
 
 const ACTIVITY_FEED = [

@@ -57,6 +57,16 @@ const MateriaPrimaDashboard = lazyRetry(() => import("./components/dashboard/Mat
 const CombustibleDashboard = lazyRetry(() => import("./components/dashboard/CombustibleDashboard"));
 const PermissionsScreen = lazyRetry(() => import("./components/admin/PermissionsScreen"));
 
+// Hacienda deep screens
+const AnimalsScreen = lazyRetry(() => import("./components/ganado/AnimalsScreen"));
+const TruTestImportPanel = lazyRetry(() => import("./components/ganado/TruTestImportPanel"));
+const GuideCustodyPanel = lazyRetry(() => import("./components/ganado/GuideCustodyPanel"));
+const ComplianceTasksPanel = lazyRetry(() => import("./components/ganado/ComplianceTasksPanel"));
+const CattleEconomicsScreen = lazyRetry(() => import("./components/ganado/CattleEconomicsScreen"));
+const SlaughterScreen = lazyRetry(() => import("./components/ganado/SlaughterScreen"));
+const FreightScreen = lazyRetry(() => import("./components/ganado/FreightScreen"));
+const ReconciliationScreen = lazyRetry(() => import("./components/ganado/ReconciliationScreen"));
+
 function LazyFallback() {
   return (
     <div className="flex items-center justify-center py-20">
@@ -87,6 +97,7 @@ function AppContent() {
   const [showTypeSelector, setShowTypeSelector] = useState(false);
   const [selectedRequestType, setSelectedRequestType] = useState(null);
   const [selectedMovimientoId, setSelectedMovimientoId] = useState(null);
+  const [selectedGuideInfo, setSelectedGuideInfo] = useState(null); // { movimientoId, guideNumber }
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterEstablishment, setFilterEstablishment] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -222,17 +233,22 @@ function AppContent() {
     return true;
   });
 
-  const handleNavigate = (target, requestId) => {
-    if (target === 'request' && requestId) {
-      setSelectedRequestId(requestId);
+  const handleNavigate = (target, payload) => {
+    if (target === 'request' && payload) {
+      setSelectedRequestId(payload);
       setScreen('panel');
-    } else if (target === 'ganado-detail' && requestId) {
-      setSelectedMovimientoId(requestId);
+    } else if (target === 'ganado-detail' && payload) {
+      setSelectedMovimientoId(payload);
       setScreen('ganado-detail');
+    } else if (target === 'guide-custody' && payload) {
+      // payload = { movimientoId, guideNumber }
+      setSelectedGuideInfo(payload);
+      setScreen('guide-custody');
     } else {
       setScreen(target);
       setSelectedRequestId(null);
       setSelectedMovimientoId(null);
+      setSelectedGuideInfo(null);
       setShowNewForm(false);
       setShowTypeSelector(false);
       setSelectedRequestType(null);
@@ -326,6 +342,86 @@ function AppContent() {
             onBack={() => { setSelectedMovimientoId(null); setScreen("ganado"); }}
             onNavigate={handleNavigate}
           />
+        </Suspense>
+      );
+    }
+
+    if (screen === "animals" && canAccessModule(effectiveUser, 'ganado')) {
+      return (
+        <Suspense fallback={<LazyFallback />}>
+          <AnimalsScreen
+            onBack={() => setScreen("ganado")}
+            onNavigate={handleNavigate}
+          />
+        </Suspense>
+      );
+    }
+
+    if (screen === "trutest-import" && canAccessModule(effectiveUser, 'ganado')) {
+      return (
+        <Suspense fallback={<LazyFallback />}>
+          <TruTestImportPanel
+            onBack={() => setScreen("animals")}
+            onNavigate={handleNavigate}
+          />
+        </Suspense>
+      );
+    }
+
+    if (screen === "guide-custody" && canAccessModule(effectiveUser, 'ganado') && selectedGuideInfo) {
+      return (
+        <Suspense fallback={<LazyFallback />}>
+          <GuideCustodyPanel
+            movimientoId={selectedGuideInfo.movimientoId}
+            guideNumber={selectedGuideInfo.guideNumber}
+            onBack={() => { setSelectedGuideInfo(null); setScreen("ganado"); }}
+          />
+        </Suspense>
+      );
+    }
+
+    if (screen === "compliance" && canAccessModule(effectiveUser, 'ganado')) {
+      return (
+        <Suspense fallback={<LazyFallback />}>
+          <ComplianceTasksPanel
+            onBack={() => setScreen("ganado")}
+            onNavigate={handleNavigate}
+          />
+        </Suspense>
+      );
+    }
+
+    if (screen === "cattle-economics" && canAccessModule(effectiveUser, 'ganado')) {
+      return (
+        <Suspense fallback={<LazyFallback />}>
+          <CattleEconomicsScreen
+            onBack={() => setScreen("ganado")}
+            onNavigate={handleNavigate}
+          />
+        </Suspense>
+      );
+    }
+
+    if (screen === "slaughter" && canAccessModule(effectiveUser, 'ganado')) {
+      return (
+        <Suspense fallback={<LazyFallback />}>
+          <SlaughterScreen onBack={() => setScreen("ganado")} />
+        </Suspense>
+      );
+    }
+
+    if (screen === "freight") {
+      return (
+        <Suspense fallback={<LazyFallback />}>
+          <FreightScreen onBack={() => setScreen("panel")} />
+        </Suspense>
+      );
+    }
+
+    if (screen === "reconciliation" && (isAdmin || effectiveCan("view_analytics"))) {
+      return (
+        <Suspense fallback={<LazyFallback />}>
+          <ReconciliationScreen onBack={() => setScreen("panel")} />
         </Suspense>
       );
     }

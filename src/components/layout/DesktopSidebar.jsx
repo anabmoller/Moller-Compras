@@ -10,6 +10,7 @@ import {
   LayoutDashboard, Bell, ShoppingCart, Fuel, Package,
   BarChart3, Shield, Users, Wallet, SlidersHorizontal, RotateCcw,
   Settings, MessageCircle, Sun, Moon, Plus, KeyRound,
+  Truck, Database,
 } from "lucide-react";
 import { BullIcon, CornIcon } from "../icons";
 
@@ -28,8 +29,10 @@ export default function DesktopSidebar({ screen, onNavigate, onNewRequest, curre
     ...(canViewGanado ? [{ key: 'ganado', icon: <BullIcon size={ICON_SIZE} />, label: 'Hacienda' }] : []),
     { key: 'materia_prima', icon: <CornIcon size={ICON_SIZE} />, label: 'Materia Prima' },
     { key: 'combustible', icon: <Fuel size={ICON_SIZE} />, label: 'Combustible' },
+    { key: 'freight', icon: <Truck size={ICON_SIZE} />, label: 'Flete' },
     { key: 'inventory', icon: <Package size={ICON_SIZE} />, label: 'Inventario' },
     ...(canViewAnalytics ? [{ key: 'analytics', icon: <BarChart3 size={ICON_SIZE} />, label: 'Análisis' }] : []),
+    ...(canViewAnalytics ? [{ key: 'reconciliation', icon: <Database size={ICON_SIZE} />, label: 'Conciliación' }] : []),
     ...(canManageUsers ? [{ key: 'security', icon: <Shield size={ICON_SIZE} />, label: 'Seguridad' }] : []),
   ];
 
