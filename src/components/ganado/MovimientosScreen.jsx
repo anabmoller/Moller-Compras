@@ -153,7 +153,7 @@ export default function MovimientosScreen({ onBack, onNavigate }) {
     <div className="max-w-6xl mx-auto px-4 py-6">
       <PageHeader
         title="Movimientos de Ganado"
-        subtitle={`${totalMovimientos} movimientos registrados`}
+        subtitle={`${totalMovimientos} movimientos — Compras, ventas y traslados operativos`}
         onBack={onBack}
       />
 

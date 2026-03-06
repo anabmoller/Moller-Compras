@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import {
   Search, Filter, Upload, ChevronRight, Scale, Calendar,
   Tag, MapPin, AlertTriangle, CheckCircle2, Clock,
+  ShoppingCart, ArrowDownCircle, ArrowUpCircle, Skull,
 } from "lucide-react";
 import { BullIcon } from "../icons";
 import Card from "../shared/Card";
@@ -170,7 +171,7 @@ export default function AnimalsScreen({ onBack, onNavigate }) {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6">
         <PageHeader
           title="Animales"
-          subtitle="Registro individual de ganado"
+          subtitle="Trazabilidad operativa — desde la entrada al sistema"
           onBack={onBack}
         />
         <div className="flex items-center gap-2 px-5 sm:px-0">
@@ -198,12 +199,13 @@ export default function AnimalsScreen({ onBack, onNavigate }) {
         </div>
       </div>
 
-      {/* KPIs */}
+      {/* KPIs — Purchase-centric: purchases, entries, exits, mortalities first */}
       <div className="flex gap-3 overflow-x-auto pb-2 mb-5 scrollbar-hide px-5 sm:px-0">
-        <KpiCard label="Animales Activos" value={kpis?.totalAnimals ?? 0} icon={<BullIcon size={18} />} color="#C8A03A" loading={kpisLoading} />
-        <KpiCard label="Lotes Activos" value={kpis?.activeBatches ?? 0} icon={<Tag size={18} />} color="#3b82f6" loading={kpisLoading} />
-        <KpiCard label="Tareas Vencidas" value={kpis?.overdueTasks ?? 0} icon={<AlertTriangle size={18} />} color={kpis?.overdueTasks > 0 ? "#ef4444" : "#10b981"} loading={kpisLoading} />
-        <KpiCard label="Movimientos Mes" value={kpis?.monthlyMovements ?? 0} icon={<MapPin size={18} />} color="#8b5cf6" loading={kpisLoading} />
+        <KpiCard label="Compras del Mes" value={kpis?.monthlyPurchases ?? 0} icon={<ShoppingCart size={18} />} color="#C8A03A" loading={kpisLoading} />
+        <KpiCard label="Entradas Mes" value={kpis?.monthlyEntries ?? 0} icon={<ArrowDownCircle size={18} />} color="#10b981" loading={kpisLoading} />
+        <KpiCard label="Animales Activos" value={kpis?.totalAnimals ?? 0} icon={<BullIcon size={18} />} color="#3b82f6" loading={kpisLoading} />
+        <KpiCard label="Ventas Mes" value={kpis?.monthlySales ?? 0} icon={<ArrowUpCircle size={18} />} color="#8b5cf6" loading={kpisLoading} />
+        <KpiCard label="Mortalidades" value={kpis?.totalMortalities ?? 0} icon={<Skull size={18} />} color={kpis?.totalMortalities > 0 ? "#ef4444" : "#10b981"} loading={kpisLoading} />
       </div>
 
       {/* Search + Status Filters */}

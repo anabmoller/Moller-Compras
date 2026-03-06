@@ -499,8 +499,11 @@ export function invalidateGanadoMetrics() {
   _metricsCache = { data: null, ts: 0, key: "" };
 }
 
-/** Raw ETL fazendas with coordinates (for map) */
-export async function fetchETLFazendas() {
+/** Raw ETL fazendas with coordinates (for map).
+ *  By default, only returns fazendas in the active provider network.
+ *  Pass showAll=true for exploration mode (all providers).
+ */
+export async function fetchETLFazendas({ showAll = false } = {}) {
   const { data, error } = await supabase
     .from("etl_fazendas")
     .select("id, nome, tipo, latitude, longitude, departamento, distrito")
@@ -510,5 +513,8 @@ export async function fetchETLFazendas() {
     console.error("[Ganado ETL] fetchETLFazendas:", error.message);
     return [];
   }
-  return data || [];
+  if (showAll) return data || [];
+  // Import lazily to avoid circular deps
+  const { filterActiveNetwork } = await import("./establecimientos");
+  return filterActiveNetwork(data || [], { showAll, nameField: "nome" });
 }

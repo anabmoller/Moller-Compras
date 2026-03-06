@@ -258,7 +258,11 @@ export async function importTruTestCSV(fileStoreId, records, establishmentId, ba
           last_weigh_date: rec.weight ? rec.date : null,
         });
 
-        // Create entry event
+        // Create entry event — traceability starts at entry into our system
+        // If weight >= 90kg, infer purchased animal (not born on farm)
+        const entryNote = (rec.weight && rec.weight >= 90)
+          ? `TruTest import — entrada (compra inferida, peso ${rec.weight}kg)`
+          : `TruTest import — entrada`;
         await createEvent({
           animal_id: animal.id,
           batch_id: batchId,
@@ -266,7 +270,7 @@ export async function importTruTestCSV(fileStoreId, records, establishmentId, ba
           event_date: rec.date,
           weight: rec.weight,
           establishment_id: establishmentId,
-          notes: `TruTest import - entrada`,
+          notes: entryNote,
           created_by: importedBy,
         });
         newCount++;
@@ -372,44 +376,105 @@ export async function completeComplianceTask(taskId, completedBy, evidenceFileId
 // ============================================================
 
 export async function getHaciendaKPIs(establishmentId = null) {
-  // Total active animals
+  const startOfMonth = new Date();
+  startOfMonth.setDate(1);
+  const startOfMonthISO = startOfMonth.toISOString();
+  const todayISO = new Date().toISOString().split('T')[0];
+
+  // ── Purchase-centric KPIs ──────────────────────────────────
+  // Priority order: purchases, entries, exits, mortalities,
+  // active animals, providers, then secondary metrics.
+
+  // 1. Total active animals
   let animalsQuery = supabase
     .from('cattle_animals')
     .select('id', { count: 'exact', head: true })
     .eq('current_status', 'active');
   if (establishmentId) animalsQuery = animalsQuery.eq('current_establishment_id', establishmentId);
-  const { count: totalAnimals } = await animalsQuery;
 
-  // Active batches
+  // 2. Active batches
   let batchesQuery = supabase
     .from('cattle_batches')
     .select('id', { count: 'exact', head: true })
     .eq('is_active', true);
   if (establishmentId) batchesQuery = batchesQuery.eq('current_establishment_id', establishmentId);
-  const { count: activeBatches } = await batchesQuery;
 
-  // Overdue compliance tasks
+  // 3. Overdue compliance tasks
   let complianceQuery = supabase
     .from('compliance_tasks')
     .select('id', { count: 'exact', head: true })
-    .lt('due_date', new Date().toISOString().split('T')[0])
+    .lt('due_date', todayISO)
     .neq('status', 'completed');
   if (establishmentId) complianceQuery = complianceQuery.eq('establishment_id', establishmentId);
-  const { count: overdueTasks } = await complianceQuery;
 
-  // Recent movements (this month)
-  const startOfMonth = new Date();
-  startOfMonth.setDate(1);
+  // 4. Monthly movements (total)
   let movQuery = supabase
     .from('movimientos_ganado')
     .select('id', { count: 'exact', head: true })
-    .gte('created_at', startOfMonth.toISOString());
-  const { count: monthlyMovements } = await movQuery;
+    .gte('created_at', startOfMonthISO);
+
+  // 5. Monthly PURCHASES (compras) — primary KPI
+  let purchaseQuery = supabase
+    .from('movimientos_ganado')
+    .select('id', { count: 'exact', head: true })
+    .eq('tipo_operacion', 'compra')
+    .gte('created_at', startOfMonthISO)
+    .neq('estado', 'anulado');
+  if (establishmentId) purchaseQuery = purchaseQuery.eq('establecimiento_origen_id', establishmentId);
+
+  // 6. Monthly SALES (ventas) — animals leaving
+  let salesQuery = supabase
+    .from('movimientos_ganado')
+    .select('id', { count: 'exact', head: true })
+    .eq('tipo_operacion', 'venta')
+    .gte('created_at', startOfMonthISO)
+    .neq('estado', 'anulado');
+
+  // 7. Mortalities — animals that died
+  let mortalityQuery = supabase
+    .from('cattle_animals')
+    .select('id', { count: 'exact', head: true })
+    .eq('current_status', 'dead');
+
+  // 8. Animals entered this month (entries)
+  let entriesQuery = supabase
+    .from('cattle_animals')
+    .select('id', { count: 'exact', head: true })
+    .gte('entry_date', todayISO.slice(0, 7) + '-01');
+  if (establishmentId) entriesQuery = entriesQuery.eq('current_establishment_id', establishmentId);
+
+  // Execute all in parallel
+  const [
+    { count: totalAnimals },
+    { count: activeBatches },
+    { count: overdueTasks },
+    { count: monthlyMovements },
+    { count: monthlyPurchases },
+    { count: monthlySales },
+    { count: totalMortalities },
+    { count: monthlyEntries },
+  ] = await Promise.all([
+    animalsQuery,
+    batchesQuery,
+    complianceQuery,
+    movQuery,
+    purchaseQuery,
+    salesQuery,
+    mortalityQuery,
+    entriesQuery,
+  ]);
 
   return {
+    // Primary purchase-centric KPIs
+    monthlyPurchases: monthlyPurchases || 0,
+    monthlyEntries: monthlyEntries || 0,
+    monthlySales: monthlySales || 0,
+    totalMortalities: totalMortalities || 0,
+    // Herd overview
     totalAnimals: totalAnimals || 0,
     activeBatches: activeBatches || 0,
-    overdueTasks: overdueTasks || 0,
+    // Operations
     monthlyMovements: monthlyMovements || 0,
+    overdueTasks: overdueTasks || 0,
   };
 }
