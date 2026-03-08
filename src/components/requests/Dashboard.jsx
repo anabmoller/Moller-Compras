@@ -4,7 +4,7 @@ import {
   Clock, FileEdit, RefreshCw, ClipboardList,
 } from "lucide-react";
 import { BullIcon } from "../icons";
-import { getEstablishments } from "../../constants/parameters";
+import { useEntityScope } from "../../hooks/useEntityScope";
 import { formatGuaranies } from "../../utils/statusHelpers";
 import RequestCard from "./RequestCard";
 import RequestsTable from "./RequestsTable";
@@ -53,6 +53,7 @@ export default function Dashboard({
   onSelectRequest,
   usdRate,
 }) {
+  const { scopedEstablishments } = useEntityScope();
   const [viewMode, setViewMode] = useState("cards");
   const [moduleFilter, setModuleFilter] = useState("todas");
   const [relationFilter, setRelationFilter] = useState("todas");
@@ -173,7 +174,7 @@ export default function Dashboard({
             className="bg-[#F8F9FB]/[0.03] border border-white/[0.06] rounded-lg px-3 py-2.5 text-sm text-white cursor-pointer min-w-[110px]"
           >
             <option value="all">Todos estab.</option>
-            {getEstablishments().map(e => <option key={e.name} value={e.name}>{e.name}</option>)}
+            {scopedEstablishments.map(e => <option key={e.name} value={e.name}>{e.name}</option>)}
           </select>
           {/* View Toggle (desktop) */}
           <div className="desktop-view-toggle gap-0.5 bg-[#F8F9FB]/[0.03] rounded-md p-0.5 border border-white/[0.06]">

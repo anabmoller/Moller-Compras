@@ -27,6 +27,52 @@ export function AuthProvider({ children }) {
   const inactivityTimer = useRef(null);
   const profileFetchRef = useRef(false);                  // prevent duplicate fetches
 
+  // ---- Entity scope (loaded after login) ----
+  const [entityScope, setEntityScope] = useState({
+    allowedEstablishmentIds: [],
+    allowedFiscalEntityIds: [],
+    defaultEstablishmentId: null,
+    defaultFiscalEntityId: null,
+    scopeLoaded: false,
+  });
+
+  // ---- Load entity scope from junction tables ----
+  const loadEntityScope = useCallback(async (userId) => {
+    if (!userId) return;
+    const token = getStoredToken();
+    const headers = {
+      "apikey": supabaseAnonKey,
+      ...(token ? { "Authorization": `Bearer ${token}` } : {}),
+    };
+
+    try {
+      const [estRes, feRes] = await Promise.all([
+        fetch(
+          `${supabaseUrl}/rest/v1/user_establishments?user_id=eq.${userId}&select=establishment_id,is_default`,
+          { headers }
+        ),
+        fetch(
+          `${supabaseUrl}/rest/v1/user_fiscal_entities?user_id=eq.${userId}&select=fiscal_entity_id,is_default`,
+          { headers }
+        ),
+      ]);
+
+      const estRows = estRes.ok ? await estRes.json() : [];
+      const feRows  = feRes.ok  ? await feRes.json()  : [];
+
+      setEntityScope({
+        allowedEstablishmentIds: estRows.map(r => r.establishment_id),
+        allowedFiscalEntityIds: feRows.map(r => r.fiscal_entity_id),
+        defaultEstablishmentId: estRows.find(r => r.is_default)?.establishment_id || estRows[0]?.establishment_id || null,
+        defaultFiscalEntityId: feRows.find(r => r.is_default)?.fiscal_entity_id || feRows[0]?.fiscal_entity_id || null,
+        scopeLoaded: true,
+      });
+    } catch (err) {
+      console.error("[Auth] Failed to load entity scope:", err);
+      setEntityScope(prev => ({ ...prev, scopeLoaded: true }));
+    }
+  }, []);
+
   // ---- Derive currentUser from profile (backward-compat shape) ----
   const currentUser = profile ? {
     id: profile.id,
@@ -42,6 +88,12 @@ export function AuthProvider({ children }) {
     isSuperApprover: profile.is_super_approver || false,
     canApprove: profile.can_approve || false,
     phone: profile.phone || null,
+    // Entity scope fields
+    allowedEstablishmentIds: entityScope.allowedEstablishmentIds,
+    allowedFiscalEntityIds: entityScope.allowedFiscalEntityIds,
+    defaultEstablishmentId: entityScope.defaultEstablishmentId,
+    defaultFiscalEntityId: entityScope.defaultFiscalEntityId,
+    scopeLoaded: entityScope.scopeLoaded,
   } : null;
 
   const isAuthenticated = !!currentUser && currentUser.active !== false;
@@ -113,7 +165,10 @@ export function AuthProvider({ children }) {
               profileFetchRef.current = true;
               try {
                 const p = await loadProfile(newSession.user.id);
-                if (mounted && p) setProfile(p);
+                if (mounted && p) {
+                  setProfile(p);
+                  loadEntityScope(newSession.user.id);
+                }
               } catch (err) {
                 console.error("[Auth] Profile load failed:", err);
               } finally {
@@ -296,6 +351,9 @@ export function AuthProvider({ children }) {
       setProfile(p);
       profileFetchRef.current = false;
 
+      // Step 6: Load entity scope (non-blocking)
+      loadEntityScope(authUser.id);
+
       return { success: true, user: p };
     } catch (err) {
       const isAbort = err.name === "AbortError";
@@ -315,6 +373,7 @@ export function AuthProvider({ children }) {
     setSession(null);
     setProfile(null);
     setAuthError(null);
+    setEntityScope({ allowedEstablishmentIds: [], allowedFiscalEntityIds: [], defaultEstablishmentId: null, defaultFiscalEntityId: null, scopeLoaded: false });
   }, []);
 
   // ---- Permission check ----

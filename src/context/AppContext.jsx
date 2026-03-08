@@ -9,11 +9,12 @@ import { normalizeStatus } from "../utils/statusHelpers";
 import { useAuth } from "./AuthContext";
 import { supabase, supabaseConfigured } from "../lib/supabase";
 import { getCurrentStep, canUserApproveStep, STEP_STATUS } from "../constants/approvalConfig";
-import { initParameters } from "../constants/parameters";
+import { initParameters, getEstablishments } from "../constants/parameters";
 import { initBudgets } from "../constants/budgets";
 import { initUsers, hasPermission } from "../constants/users";
 import { initGanado } from "../constants/ganado";
 import { initPermissions, isSuperAdmin, getAllowedModules, buildRecordsFilter, canAccessModule } from "../lib/permissions";
+import { initFiscalEntities } from "../hooks/useEntityScope";
 import { sanitizeName, sanitizeMultiline, sanitizeNumber } from "../utils/sanitize";
 import { useNotifications } from "./NotificationContext";
 import {
@@ -77,10 +78,22 @@ export function AppProvider({ children }) {
           initUsers(),
           initGanado(),
           initPermissions(currentUser?.id),
+          initFiscalEntities(),
         ]);
 
+        // Build scope filter: map allowed establishment UUIDs to names for request query
+        const allowedIds = currentUser?.allowedEstablishmentIds || [];
+        let scopeFilter = {};
+        if (allowedIds.length > 0) {
+          const allEstabs = getEstablishments();
+          const names = allEstabs
+            .filter(e => allowedIds.includes(e._uuid))
+            .map(e => e.name);
+          if (names.length > 0) scopeFilter = { establishmentNames: names };
+        }
+
         // Load all requests with nested data; fall back to sample data for demo
-        const reqs = await fetchAllRequests();
+        const reqs = await fetchAllRequests(scopeFilter);
         if (mounted) {
           setRequests(reqs.length > 0 ? reqs : SAMPLE_REQUESTS);
         }

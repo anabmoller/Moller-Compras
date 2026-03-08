@@ -8,7 +8,7 @@
 // ============================================================
 
 import { getCorsHeaders } from "../_shared/cors.ts";
-import { createAdminClient, getCallerProfile, hasPermission } from "../_shared/auth.ts";
+import { createAdminClient, getCallerProfile, hasPermission, getCallerScope, assertEstablishmentInScope } from "../_shared/auth.ts";
 import {
   sanitizeName,
   sanitizeText,
@@ -66,6 +66,10 @@ Deno.serve(async (req) => {
 
         const m = payload.movimiento;
         if (!m) throw new Error("movimiento object is required");
+
+        // Scope validation: ensure origin establishment is within caller's scope
+        const scope = await getCallerScope(supabaseAdmin, caller.id);
+        assertEstablishmentInScope(scope, m.establecimientoOrigenId);
 
         // Insert main movement (without animal details - those go in detalle)
         const { data, error } = await supabaseAdmin

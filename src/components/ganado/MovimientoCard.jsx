@@ -1,5 +1,5 @@
 import { GANADO_STATUS_FLOW, GANADO_EXTRA_STATUSES, getCategorias } from "../../constants/ganado";
-import { getEstablishments, getCompanies } from "../../constants/parameters";
+import { useEntityScope } from "../../hooks/useEntityScope";
 
 function getStatusInfo(estado) {
   const all = [...GANADO_STATUS_FLOW, ...GANADO_EXTRA_STATUSES];
@@ -7,13 +7,14 @@ function getStatusInfo(estado) {
 }
 
 export default function MovimientoCard({ movimiento, onClick }) {
+  const { scopedEstablishments, scopedCompanies } = useEntityScope();
   const status = getStatusInfo(movimiento.estado);
   const allCategorias = getCategorias();
-  const origen = getEstablishments().find(e => e._uuid === movimiento.establecimientoOrigenId);
+  const origen = scopedEstablishments.find(e => e._uuid === movimiento.establecimientoOrigenId);
 
   const destino = movimiento.destinoNombre
-    || getCompanies().find(c => c._uuid === movimiento.empresaDestinoId)?.name
-    || getEstablishments().find(e => e._uuid === movimiento.establecimientoDestinoId)?.name
+    || scopedCompanies.find(c => c._uuid === movimiento.empresaDestinoId)?.name
+    || scopedEstablishments.find(e => e._uuid === movimiento.establecimientoDestinoId)?.name
     || "—";
 
   // Build category summary from detail rows

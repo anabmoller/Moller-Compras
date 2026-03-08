@@ -2,11 +2,11 @@ import { useState, useEffect, useMemo } from "react";
 import { BullIcon } from "../icons";
 import { useAuth } from "../../context/AuthContext";
 import { hasPermission } from "../../constants/users";
-import { getEstablishments, getCompanies } from "../../constants/parameters";
+import { useEntityScope } from "../../hooks/useEntityScope";
 import {
   GANADO_STATUS_FLOW, GANADO_EXTRA_STATUSES,
   FINALIDAD_OPTIONS, TIPO_OPERACION_OPTIONS,
-  getCategorias, getFrigorificos,
+  getCategorias,
   fetchSingleMovimiento, validateMovimiento, advanceGanadoStatus,
   addDivergencia, resolveDivergencia, anularMovimiento, updateMovimiento,
   addPesaje, deletePesaje, invalidateGanadoMetrics,
@@ -69,17 +69,16 @@ export default function MovimientoDetail({ movimientoUuid, onBack, onNavigate })
 
   useEffect(() => { load(); }, [movimientoUuid]);
 
-  const establishments = getEstablishments();
+  const { scopedEstablishments: establishments, scopedCompanies: companies } = useEntityScope();
   const allCategorias = getCategorias();
-  const frigorificos = getFrigorificos();
 
   const origen = useMemo(() => establishments.find(e => e._uuid === mov?.establecimientoOrigenId), [mov, establishments]);
   const destino = useMemo(() => {
     if (mov?.destinoNombre) return { name: mov.destinoNombre };
-    if (mov?.empresaDestinoId) return getCompanies().find(c => c._uuid === mov.empresaDestinoId);
+    if (mov?.empresaDestinoId) return companies.find(c => c._uuid === mov.empresaDestinoId);
     if (mov?.establecimientoDestinoId) return establishments.find(e => e._uuid === mov.establecimientoDestinoId);
     return null;
-  }, [mov, establishments]);
+  }, [mov, establishments, companies]);
   const status = mov ? getStatusInfo(mov.estado) : null;
 
   // Build category display list

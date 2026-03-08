@@ -239,9 +239,16 @@ function groupBy(arr, key) {
 // FETCH OPERATIONS (anon client + RLS)
 // ============================================================
 
-export async function fetchAllRequests() {
+export async function fetchAllRequests({ establishmentNames } = {}) {
+  let reqQuery = supabase.from("requests").select("*").order("created_at", { ascending: false }).limit(500);
+
+  // Scope filter: only requests for allowed establishments (requests store name, not UUID)
+  if (Array.isArray(establishmentNames) && establishmentNames.length > 0) {
+    reqQuery = reqQuery.in("establishment", establishmentNames);
+  }
+
   const [reqRes, itemsRes, quotRes, commRes, stepsRes, histRes] = await Promise.all([
-    supabase.from("requests").select("*").order("created_at", { ascending: false }).limit(500),
+    reqQuery,
     supabase.from("request_items").select("*").limit(500),
     supabase.from("quotations").select("*").limit(500),
     supabase.from("comments").select("*").order("created_at", { ascending: true }).limit(500),

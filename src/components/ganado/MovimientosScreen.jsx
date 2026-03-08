@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { hasPermission } from "../../constants/users";
-import { getEstablishments } from "../../constants/parameters";
+import { useEntityScope } from "../../hooks/useEntityScope";
 import {
   GANADO_STATUS_FLOW, GANADO_EXTRA_STATUSES,
   fetchMovimientos,
@@ -85,8 +85,12 @@ export default function MovimientosScreen({ onBack, onNavigate }) {
       setMetricsLoading(true);
       setHKpisLoading(true);
 
+      const scopeFilter = allowedEstablishmentIds?.length > 0
+        ? { establishmentIds: allowedEstablishmentIds }
+        : {};
+
       const [data, metricsData, hData] = await Promise.all([
-        fetchMovimientos(),
+        fetchMovimientos(scopeFilter),
         fetchGanadoMetrics(),
         getHaciendaKPIs(),
       ]);
@@ -99,7 +103,7 @@ export default function MovimientosScreen({ onBack, onNavigate }) {
       setHKpisLoading(false);
     }
     load();
-  }, []);
+  }, [allowedEstablishmentIds]);
 
   // Re-fetch metrics when establishment filter changes (server-side filtering)
   const refreshMetrics = useCallback(async (estId) => {
@@ -171,7 +175,7 @@ export default function MovimientosScreen({ onBack, onNavigate }) {
     });
   }, [movimientos, filterStatus, filterEstablishment, search]);
 
-  const establishments = getEstablishments();
+  const { scopedEstablishments: establishments, allowedEstablishmentIds } = useEntityScope();
   const canCreate = hasPermission(currentUser, "create_movimiento_ganado");
 
   const subtitles = {

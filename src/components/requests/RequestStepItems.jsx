@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
-import { getEstablishments, getSectors } from "../../constants/parameters";
+import { getSectors } from "../../constants/parameters";
+import { useEntityScope } from "../../hooks/useEntityScope";
 
 const SECTOR_CATEGORY_MAP = {
   "Agricultura": "Agrícola",
@@ -29,6 +30,7 @@ export default function RequestStepItems({
   onUpdateForm, onSetItems, onSetErrors,
   FieldError,
 }) {
+  const { scopedEstablishments } = useEntityScope();
   const [productSearch, setProductSearch] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [itemQty, setItemQty] = useState(1);
@@ -118,7 +120,7 @@ export default function RequestStepItems({
             className={`w-full px-3.5 py-2.5 rounded-lg border bg-[#F8F9FB]/[0.05] text-sm text-white outline-none transition-colors focus:border-[#C8A03A]/50 ${errors.establishment ? 'border-red-500' : 'border-white/[0.1]'}`}
           >
             <option value="">Seleccionar...</option>
-            {getEstablishments().filter(e => e.active).map(e => <option key={e.name} value={e.name}>{e.name}</option>)}
+            {scopedEstablishments.map(e => <option key={e.name} value={e.name}>{e.name}</option>)}
           </select>
           <FieldError field="establishment" />
         </div>

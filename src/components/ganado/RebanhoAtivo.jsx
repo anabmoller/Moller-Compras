@@ -3,7 +3,7 @@ import { Users, Truck, AlertTriangle, Scale, LayoutList } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { isSuperAdmin } from "../../lib/permissions";
 import { fetchHatoData, getCategorias, initGanado } from "../../constants/ganado";
-import { getEstablishments } from "../../constants/parameters";
+import { useEntityScope } from "../../hooks/useEntityScope";
 import { BullIcon } from "../icons";
 import Badge from "../shared/Badge";
 import SearchInput from "../common/SearchInput";
@@ -37,14 +37,13 @@ const fmtDate = d => {
 };
 const fmtNum = n => (n != null && n > 0) ? n.toLocaleString("es-PY") : "—";
 
-function buildEstabLookup() {
-  const list = getEstablishments();
+function buildEstabMap(list) {
   const map = {};
   for (const e of list) {
     map[e._uuid] = e.name;
     if (e.id) map[e.id] = e.name;
   }
-  return { list, map };
+  return map;
 }
 
 // ─── Sidebar panels ────────────────────────────────────────
@@ -195,19 +194,16 @@ export default function RebanhoAtivo() {
   const [sortDir, setSortDir]           = useState("desc");
   const [selected, setSelected]         = useState(null);
 
-  // Establishment lookup
-  const { list: estabList, map: estabMap } = useMemo(() => buildEstabLookup(), []);
+  // Scoped establishment data from centralized hook
+  const { scopedEstablishments, allowedEstablishmentIds } = useEntityScope();
+  const estabMap = useMemo(() => buildEstabMap(scopedEstablishments), [scopedEstablishments]);
   const isAdmin = useMemo(() => isSuperAdmin(currentUser), [currentUser]);
 
-  // Scope: admin → all; normal user → their establishment
+  // Scope: use first allowed establishment for non-admin users (hook handles visibility)
   const scopedEstabId = useMemo(() => {
     if (isAdmin) return null;
-    if (!currentUser?.establishment) return null;
-    const match = estabList.find(e =>
-      e.name === currentUser.establishment || e.code === currentUser.establishment
-    );
-    return match?._uuid || null;
-  }, [currentUser, estabList, isAdmin]);
+    return allowedEstablishmentIds?.[0] || null;
+  }, [isAdmin, allowedEstablishmentIds]);
 
   // Category lookup
   const [catMap, setCatMap] = useState({});
@@ -505,7 +501,7 @@ export default function RebanhoAtivo() {
                         }`}
                       >
                         <td className="px-3.5 py-2.5">
-                          <span className="font-mono text-[13px] text-[#C8A03A] font-medium">{m.id || "—"}</span>
+                          <span className="font-mono text-[13px] text-[#C8A03A] font-medium">{m.id || m.nroGuia || "—"}</span>
                         </td>
                         <td className="px-3.5 py-2.5 font-mono text-[13px] text-slate-300">{m.nroGuia || "—"}</td>
                         <td className="px-3.5 py-2.5 text-[13px] text-slate-400">{fmtDate(m.fechaEmision)}</td>

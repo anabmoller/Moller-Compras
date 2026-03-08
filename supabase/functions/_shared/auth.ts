@@ -172,3 +172,50 @@ export function hasPermission(
 ): boolean {
   return ROLE_PERMISSIONS[profile.role]?.includes(permission) ?? false;
 }
+
+// ---- Entity Scope ----
+
+export interface CallerScope {
+  establishmentIds: string[];
+  fiscalEntityIds: string[];
+}
+
+/**
+ * Load the caller's allowed establishment and fiscal entity IDs
+ * from the junction tables. Used for server-side scope validation.
+ */
+export async function getCallerScope(
+  supabaseAdmin: ReturnType<typeof createClient>,
+  userId: string,
+): Promise<CallerScope> {
+  const [estRes, feRes] = await Promise.all([
+    supabaseAdmin
+      .from("user_establishments")
+      .select("establishment_id")
+      .eq("user_id", userId),
+    supabaseAdmin
+      .from("user_fiscal_entities")
+      .select("fiscal_entity_id")
+      .eq("user_id", userId),
+  ]);
+
+  return {
+    establishmentIds: (estRes.data || []).map((r: { establishment_id: string }) => r.establishment_id),
+    fiscalEntityIds: (feRes.data || []).map((r: { fiscal_entity_id: string }) => r.fiscal_entity_id),
+  };
+}
+
+/**
+ * Assert that a given establishment ID is within the caller's scope.
+ * Throws if not authorized.
+ */
+export function assertEstablishmentInScope(
+  scope: CallerScope,
+  establishmentId: string | null | undefined,
+): void {
+  if (!establishmentId) return; // null origin is allowed (e.g. external purchase)
+  if (scope.establishmentIds.length === 0) return; // no scope = full access (backward compat)
+  if (!scope.establishmentIds.includes(establishmentId)) {
+    throw new Error("Establishment is not within your authorized scope");
+  }
+}

@@ -1,9 +1,9 @@
 import { useState, useMemo } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { getEstablishments } from "../../constants/parameters";
+import { useEntityScope } from "../../hooks/useEntityScope";
 import {
   FINALIDAD_OPTIONS, TIPO_OPERACION_OPTIONS,
-  getCategorias, getFrigorificos,
+  getCategorias,
   insertMovimiento, invalidateGanadoMetrics,
 } from "../../constants/ganado";
 
@@ -79,8 +79,7 @@ export default function NuevoMovimientoForm({ onCancel, onCreated }) {
     observaciones: "",
   });
 
-  const establishments = getEstablishments();
-  const frigorificos = getFrigorificos();
+  const { scopedEstablishments: establishments, scopedFrigorificos: frigorificos } = useEntityScope();
   const allCategorias = getCategorias();
 
   const set = (key, val) => setForm(prev => ({ ...prev, [key]: val }));

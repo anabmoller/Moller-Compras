@@ -214,9 +214,18 @@ function groupBy(arr, key) {
   return map;
 }
 
-export async function fetchMovimientos() {
+export async function fetchMovimientos({ establishmentIds } = {}) {
+  let movQuery = supabase.from("movimientos_ganado").select("*").order("created_at", { ascending: false }).limit(500);
+
+  // Scope filter: only movimientos where origen OR destino is within the user's allowed establishments
+  if (Array.isArray(establishmentIds) && establishmentIds.length > 0) {
+    movQuery = movQuery.or(
+      `establecimiento_origen_id.in.(${establishmentIds.join(",")}),establecimiento_destino_id.in.(${establishmentIds.join(",")})`,
+    );
+  }
+
   const [movRes, catRes, divRes, archRes] = await Promise.all([
-    supabase.from("movimientos_ganado").select("*").order("created_at", { ascending: false }).limit(500),
+    movQuery,
     supabase.from("detalle_movimiento_categorias").select("*").limit(2000),
     supabase.from("movimiento_divergencias").select("*").limit(500),
     supabase.from("movimiento_archivos").select("*").limit(500),
