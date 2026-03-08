@@ -91,6 +91,12 @@ export function assertRole(
 //     earlier entries (which included ganado permissions) were lost.
 //     Each role now appears exactly ONCE with all intended permissions.
 const ROLE_PERMISSIONS: Record<string, string[]> = {
+  superadmin: [
+    "create_request", "view_all_requests", "approve_manager",
+    "approve_purchase", "manage_quotations", "advance_status",
+    "view_analytics", "view_inventory", "manage_settings", "manage_users",
+    "view_ganado", "create_movimiento_ganado", "validate_movimiento_ganado",
+  ],
   admin: [
     "create_request", "view_all_requests", "approve_manager",
     "approve_purchase", "manage_quotations", "advance_status",
