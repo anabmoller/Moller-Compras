@@ -78,16 +78,19 @@ export default function MovimientosScreen({ onBack, onNavigate }) {
   const [hKpis, setHKpis] = useState(null);
   const [hKpisLoading, setHKpisLoading] = useState(true);
 
+  // Entity scope — must be called before any useEffect that depends on it
+  const { scopedEstablishments: establishments, allowedEstablishmentIds } = useEntityScope();
+  const canCreate = hasPermission(currentUser, "create_movimiento_ganado");
+
   // Load movimientos + metrics + hacienda KPIs in parallel
   useEffect(() => {
     async function load() {
+      if (!allowedEstablishmentIds?.length) return;
       setLoading(true);
       setMetricsLoading(true);
       setHKpisLoading(true);
 
-      const scopeFilter = allowedEstablishmentIds?.length > 0
-        ? { establishmentIds: allowedEstablishmentIds }
-        : {};
+      const scopeFilter = { establishmentIds: allowedEstablishmentIds };
 
       const [data, metricsData, hData] = await Promise.all([
         fetchMovimientos(scopeFilter),
@@ -174,9 +177,6 @@ export default function MovimientosScreen({ onBack, onNavigate }) {
       return true;
     });
   }, [movimientos, filterStatus, filterEstablishment, search]);
-
-  const { scopedEstablishments: establishments, allowedEstablishmentIds } = useEntityScope();
-  const canCreate = hasPermission(currentUser, "create_movimiento_ganado");
 
   const subtitles = {
     movimientos: `${totalMovimientos} movimientos — Compras, ventas y traslados operativos`,
